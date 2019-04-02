@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.search.model.Definition;
 import org.egov.search.model.Pagination;
 import org.egov.search.model.Params;
@@ -14,14 +13,13 @@ import org.egov.search.model.SearchDefinition;
 import org.egov.search.model.SearchParams;
 import org.egov.search.model.SearchRequest;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONArray;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-
-import org.json.JSONArray;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -32,18 +30,18 @@ public class SearchUtils {
 	public static final Logger logger = LoggerFactory.getLogger(SearchUtils.class);
 
 	@Value("${pagination.default.page.size}")
-	private String defaultPageSize;
+	private Integer defaultPageSize;
 
 	@Value("${pagination.default.offset}")
-	private String defaultOffset;
+	private Integer defaultOffset;
 
-	public String buildQuery(SearchRequest searchRequest, SearchParams searchParam, Query query) {
+	public String buildQuery(SearchRequest searchRequest, SearchParams searchParam, Query query,Map<String, Object> preparedSt ) {
 		StringBuilder queryString = new StringBuilder();
 		StringBuilder where = new StringBuilder();
 		String finalQuery = null;
 		queryString.append(query.getBaseQuery());
-		String whereClause = buildWhereClause(searchRequest, searchParam);
-		String paginationClause = getPaginationClause(searchRequest, searchParam.getPagination());
+		String whereClause = buildWhereClause(searchRequest, searchParam,preparedSt);
+		String paginationClause = getPaginationClause(searchRequest, searchParam.getPagination(),preparedSt);
 		if (null == whereClause) {
 			return whereClause;
 		}
@@ -60,13 +58,12 @@ public class SearchUtils {
 		}
 		finalQuery = queryString.toString().replace("$where", where.toString());
 		finalQuery = finalQuery.replace("$pagination", paginationClause);
-
 		logger.info("Final Query: " + finalQuery);
 
 		return finalQuery;
 	}
 
-	public String buildWhereClause(SearchRequest searchRequest, SearchParams searchParam) {
+	public String buildWhereClause(SearchRequest searchRequest, SearchParams searchParam,Map<String, Object> preparedSt) {
 		StringBuilder whereClause = new StringBuilder();
 		ObjectMapper mapper = new ObjectMapper();
 		String condition = searchParam.getCondition();
@@ -77,19 +74,18 @@ public class SearchUtils {
 				if (null == paramValue) {
 					continue;
 				}
-			} catch (Exception e) {
-				continue;
-			}
-			if (paramValue instanceof net.minidev.json.JSONArray) { // TODO: might need to add some more types
-				net.minidev.json.JSONArray array = (net.minidev.json.JSONArray) paramValue;
-				StringBuilder paramBuilder = new StringBuilder();
-				for (int i = 0; i < array.size(); i++) {
-					paramBuilder.append("'" + array.get(i) + "'");
-					if (i < array.size() - 1)
-						paramBuilder.append(",");
+				} catch (Exception e) {
+					continue;
 				}
-				whereClause.append(param.getName()).append(" IN ").append("(").append(paramBuilder.toString())
+			if (paramValue instanceof net.minidev.json.JSONArray) { 
+				net.minidev.json.JSONArray array = (net.minidev.json.JSONArray) paramValue;
+				List<String>paramValueList=new ArrayList();
+				for (int i = 0; i < array.size(); i++) {
+				paramValueList.add(array.get(i).toString());
+				}
+				whereClause.append(param.getName()).append(" IN ").append("(").append(":"+param.getName())
 						.append(")");
+				preparedSt.put(param.getName(),paramValueList);
 			} else {
 				logger.debug("param: " + param.getName());
 				String operator = (null != param.getOperator() && !param.getOperator().isEmpty()) ? param.getOperator()
@@ -100,9 +96,11 @@ public class SearchUtils {
 					operator = "<=";
 				if (operator.equals("LIKE")) {
 					paramValue = "%" + paramValue + "%";
-					whereClause.append(param.getName()).append(" " + operator + " ").append("'" + paramValue + "'");
+					whereClause.append(param.getName()).append(" " + operator + " ").append(":"+param.getName());
+					preparedSt.put(param.getName(), paramValue);
 				} else {
-					whereClause.append(param.getName()).append(" " + operator + " ").append("'" + paramValue + "'");
+					whereClause.append(param.getName()).append(" " + operator + " ").append(":"+param.getName());
+					preparedSt.put(param.getName(), paramValue);
 				}
 			}
 			whereClause.append(" " + condition + " ");
@@ -112,11 +110,13 @@ public class SearchUtils {
 		return where;
 	}
 
-	public String getPaginationClause(SearchRequest searchRequest, Pagination pagination) {
+	public String getPaginationClause(SearchRequest searchRequest, Pagination pagination,Map<String, Object> preparedSt) {
 		StringBuilder paginationClause = new StringBuilder();
 		ObjectMapper mapper = new ObjectMapper();
-		Object limit = null;
-		Object offset = null;
+		Integer limit = null;
+		Integer offset = null;
+		Integer limitValue=null;
+		Integer offsetValue=null;
 		if (null != pagination) {
 			try {
 				limit = JsonPath.read(mapper.writeValueAsString(searchRequest), pagination.getNoOfRecords());
@@ -125,13 +125,19 @@ public class SearchUtils {
 				logger.error("Error while fetching limit and offset, using default values.");
 			}
 		}
-		paginationClause.append(" LIMIT ")
-				.append((!StringUtils.isEmpty((null != limit) ? limit.toString() : null) ? limit.toString()
-						: defaultPageSize))
-				.append(" OFFSET ")
-				.append((!StringUtils.isEmpty((null != offset) ? offset.toString() : null) ? offset.toString()
-						: defaultOffset));
-
+		if(limit!=null)
+			limitValue=limit;
+		else
+			limitValue=defaultPageSize;
+		if(offset!=null)
+			offsetValue=offset;
+		else
+			offsetValue=defaultOffset;
+			
+		paginationClause.append(" LIMIT ").append(":Limit");
+		preparedSt.put("Limit", limitValue);
+		paginationClause.append(" OFFSET ").append(":Offset");
+		preparedSt.put("Offset", offsetValue);
 		return paginationClause.toString();
 	}
 

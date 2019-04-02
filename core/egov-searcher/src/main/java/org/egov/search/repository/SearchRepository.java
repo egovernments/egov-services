@@ -3,7 +3,9 @@ package org.egov.search.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.search.model.Definition;
 import org.egov.search.model.SearchRequest;
@@ -15,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 
@@ -24,7 +26,8 @@ import org.springframework.stereotype.Repository;
 public class SearchRepository {
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
 	
 	@Value("${max.sql.execution.time.millisec:45000}")
 	private Long maxExecutionTime;
@@ -36,14 +39,15 @@ public class SearchRepository {
 		
 	public List<String> searchData(SearchRequest searchRequest, Definition definition) {
 		List<String> result = new ArrayList<>();
+		 Map<String, Object> preparedSt = new HashMap<>();
 		String query = null;
 		try{
-			query = searchUtils.buildQuery(searchRequest, definition.getSearchParams(), definition.getQuery());
+			query = searchUtils.buildQuery(searchRequest, definition.getSearchParams(), definition.getQuery(),preparedSt);
 		}catch(CustomException e){
 			throw e;
 		}
 		Long startTime = new Date().getTime();
-		List<PGobject> maps = jdbcTemplate.queryForList(query,PGobject.class);
+		List<PGobject> maps=namedParameterJdbcTemplate.queryForList(query, preparedSt,PGobject.class);
 		Long endTime = new Date().getTime();
 		Long totalExecutionTime = endTime - startTime;
 		LOGGER.info("Query execution time in millisec: "+totalExecutionTime);

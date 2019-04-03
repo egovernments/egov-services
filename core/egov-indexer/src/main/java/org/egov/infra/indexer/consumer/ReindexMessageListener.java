@@ -35,10 +35,6 @@ public class ReindexMessageListener implements MessageListener<String, String> {
 	 * Messages listener which acts as consumer. This message listener is injected inside a kafkaContainer.
 	 * This consumer is a start point to the following index jobs:
 	 * 1. Re-index
-	 * 2. Legacy Index
-	 * 3. PGR custom index
-	 * 4. PT custom index
-	 * 5. Core indexing
 	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
 		log.info("Topic: " + data.topic());		

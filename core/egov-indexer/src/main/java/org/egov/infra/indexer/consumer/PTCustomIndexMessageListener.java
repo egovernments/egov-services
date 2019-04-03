@@ -34,8 +34,7 @@ public class PTCustomIndexMessageListener implements MessageListener<String, Str
 	/**
 	 * Messages listener which acts as consumer. This message listener is injected
 	 * inside a kafkaContainer. This consumer is a start point to the following
-	 * index jobs: 1. Re-index 2. Legacy Index 3. PGR custom index 4. PT custom
-	 * index 5. Core indexing
+	 * index jobs: 1. PT custom index
 	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
 		log.info("Topic: " + data.topic());

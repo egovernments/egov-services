@@ -138,7 +138,7 @@ public class DemandService {
 
 		generateAndSetIdsForNewDemands(demands, auditDetail);
 		save(demandRequest);
-		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
+		//producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 
@@ -220,7 +220,7 @@ public class DemandService {
 		generateAndSetIdsForNewDemands(newDemands, auditDetail);
 
 		update(demandRequest);
-		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
+		//producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 

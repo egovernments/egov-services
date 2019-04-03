@@ -19,8 +19,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class TL {
 	
-	private List<Map<String, String>> ulbCovered;
+	private List<Map<String, Object>> ulbCovered;
 	
-	private List<Map<String, String>> licenseIssued;
+	private List<Map<String, Object>> licenseIssued;
 
 }

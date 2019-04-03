@@ -1,6 +1,7 @@
 package org.egov.win.model;
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Body {
 	
-	private List<String> header;
+	private List<Map<String, Object>> header;
 	
 	private StateWide stateWide;
 	

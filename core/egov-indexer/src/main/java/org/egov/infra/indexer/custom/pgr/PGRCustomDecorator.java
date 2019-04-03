@@ -54,7 +54,8 @@ public class PGRCustomDecorator {
 			object.setActionHistory(serviceResponse.getActionHistory().get(i));
 			for(ActionInfo action: serviceResponse.getActionHistory().get(i).getActions()) {
 				if(!StringUtils.isEmpty(action.getBy())) {
-					if(action.getBy().contains("Grievance Routing Officer") || action.getBy().contains("Department Grievance Routing Officer")) {
+					if(action.getBy().contains("Grievance Routing Officer") || action.getBy().contains("Department Grievance Routing Officer")
+							|| action.getBy().contains("GRO") || action.getBy().contains("DGRO	")) {
 						object.setGro(action.getBy().split(":")[0]);
 						if(!StringUtils.isEmpty(action.getAssignee())) {
 							object.setAssignee(action.getAssignee());

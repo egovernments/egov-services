@@ -93,15 +93,13 @@ public class DemandQueryBuilder {
 			+ "createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid,additionaldetails)" 
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
-	public static final String DEMAND_UPDATE_QUERY = "UPDATE egbs_demand SET "
-			+ "id=?,consumerCode=?,consumerType=?,businessService=?,payer=?,taxPeriodFrom=?,"
+	public static final String DEMAND_UPDATE_QUERY = "UPDATE egbs_demand SET " + "payer=?,taxPeriodFrom=?,"
 			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?,"
 			+ " status=?,additionaldetails=? WHERE id=? AND tenantid=?;";
 
-	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET "
-			+ "id=?,demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,"
-			+ "lastModifiedby=?,lastModifiedtime=?, additionaldetails=? WHERE id=? AND tenantid=?;";
-	
+	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET taxamount=?,collectionamount=?,"
+			+ "lastModifiedby=?,lastModifiedtime=?, additionaldetails=? WHERE id=? AND demandid=? AND tenantid=?;";
+
 	public static final String DEMAND_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demand_audit "
 			+ "(demandid,consumerCode,consumerType,businessService,payer,taxPeriodFrom,taxPeriodTo,"
 			+ "minimumAmountPayable,createdby,createdtime,tenantid, status, additionaldetails,id) "

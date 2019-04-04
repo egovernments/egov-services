@@ -260,26 +260,22 @@ public class DemandRepository {
 			@Override
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
 				Demand demand = oldDemands.get(rowNum);
-				
+
 				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
 				String payerUuid = null != demand.getPayer() ? demand.getPayer().getUuid() : null;
 				AuditDetails auditDetail = demand.getAuditDetails();
-				ps.setString(1, demand.getId());
-				ps.setString(2, demand.getConsumerCode());
-				ps.setString(3, demand.getConsumerType());
-				ps.setString(4, demand.getBusinessService());
-				ps.setString(5, payerUuid);
-				ps.setLong(6, demand.getTaxPeriodFrom());
-				ps.setLong(7, demand.getTaxPeriodTo());
-				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
-				ps.setString(9, auditDetail.getLastModifiedBy());
-				ps.setLong(10, auditDetail.getLastModifiedTime());
+
+				ps.setString(1, payerUuid);
+				ps.setLong(2, demand.getTaxPeriodFrom());
+				ps.setLong(3, demand.getTaxPeriodTo());
+				ps.setBigDecimal(4, demand.getMinimumAmountPayable());
+				ps.setString(5, auditDetail.getLastModifiedBy());
+				ps.setLong(6, auditDetail.getLastModifiedTime());
+				ps.setString(7, demand.getTenantId());
+				ps.setString(8, status);
+				ps.setObject(9, getPGObject(demand.getAdditionalDetails()));
+				ps.setString(10, demand.getId());
 				ps.setString(11, demand.getTenantId());
-				ps.setString(12, status);
-				ps.setObject(13, getPGObject(demand.getAdditionalDetails()));
-				ps.setString(14, demand.getId());
-				ps.setString(15, demand.getTenantId());
-				
 			}
 
 			@Override
@@ -294,17 +290,15 @@ public class DemandRepository {
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
 				DemandDetail demandDetail = oldDemandDetails.get(rowNum);
 				AuditDetails auditDetail = demandDetail.getAuditDetails();
-				ps.setString(1, demandDetail.getId());
-				ps.setString(2, demandDetail.getDemandId());
-				ps.setString(3, demandDetail.getTaxHeadMasterCode());
-				ps.setBigDecimal(4, demandDetail.getTaxAmount());
-				ps.setBigDecimal(5, demandDetail.getCollectionAmount());
-				ps.setString(6, auditDetail.getLastModifiedBy());
-				ps.setLong(7, auditDetail.getLastModifiedTime());
-				ps.setObject(8, getPGObject(demandDetail.getAdditionalDetails()));
-				ps.setString(9, demandDetail.getId());
-				ps.setString(10, demandDetail.getTenantId());
-				
+
+				ps.setBigDecimal(1, demandDetail.getTaxAmount());
+				ps.setBigDecimal(2, demandDetail.getCollectionAmount());
+				ps.setString(3, auditDetail.getLastModifiedBy());
+				ps.setLong(4, auditDetail.getLastModifiedTime());
+				ps.setObject(5, getPGObject(demandDetail.getAdditionalDetails()));
+				ps.setString(6, demandDetail.getId());
+				ps.setString(7, demandDetail.getDemandId());
+				ps.setString(8, demandDetail.getTenantId());
 			}
 
 			@Override

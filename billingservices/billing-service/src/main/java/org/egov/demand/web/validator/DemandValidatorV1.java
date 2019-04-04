@@ -396,15 +396,18 @@ public class DemandValidatorV1 {
 
 			BigDecimal tax = demandDetail.getTaxAmount();
 			BigDecimal collection = demandDetail.getCollectionAmount();
-			if (tax.compareTo(BigDecimal.ZERO) > 0 && tax.compareTo(collection) < 0) {
+			if (tax.compareTo(BigDecimal.ZERO) >= 0
+					&& (tax.compareTo(collection) < 0 || collection.compareTo(BigDecimal.ZERO) < 0)) {
+				
 				errors.add(INVALID_DEMAND_DETAIL_ERROR_MSG
 						.replace(INVALID_DEMAND_DETAIL_COLLECTION_TEXT, collection.toString())
 						.replace(INVALID_DEMAND_DETAIL_TAX_TEXT, tax.toString()));
-			} else if (tax.doubleValue() < 0 && (collection.doubleValue() != 0 && collection.compareTo(tax) != 0)) {
+			} else if (tax.compareTo(BigDecimal.ZERO) < 0 && collection.compareTo(BigDecimal.ZERO) != 0 && collection.compareTo(tax) != 0) {
 
-				errors.add(INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG
-						.replace(INVALID_DEMAND_DETAIL_COLLECTION_TEXT, collection.toString())
-						.replace(INVALID_DEMAND_DETAIL_TAX_TEXT, tax.toString()));
+					errors.add(INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG
+							.replace(INVALID_DEMAND_DETAIL_COLLECTION_TEXT, collection.toString())
+							.replace(INVALID_DEMAND_DETAIL_TAX_TEXT, tax.toString()));
+				
 			}
 		}
 		if (!CollectionUtils.isEmpty(errors))

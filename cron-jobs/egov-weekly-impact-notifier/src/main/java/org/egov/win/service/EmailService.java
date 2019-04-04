@@ -1,8 +1,10 @@
 package org.egov.win.service;
 
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.egov.win.model.Body;
 import org.egov.win.model.Email;
@@ -10,6 +12,7 @@ import org.egov.win.model.PGR;
 import org.egov.win.model.PT;
 import org.egov.win.model.StateWide;
 import org.egov.win.model.TL;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,23 +21,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmailService {
 	
-	public VelocityContext formatEmail(Email email) {
+	@Autowired
+	private CronService service;
+	
+	public String formatEmail(Email email) {
+        Template t = service.getVelocityTemplate();
         VelocityContext context = new VelocityContext();
         buildEmailBody(email.getBody(), context);
-        buildEmailHeader(email);
-        return context;
+        StringWriter writer = new StringWriter(10000);
+        t.merge(context, writer);
+
+        return writer.toString();
 	}
-	
 
 	
-	private void buildEmailHeader(Email email) {
-		email.setFrom("abc@abc.com");
-		email.setTo("xyz@xyz.com");
-		email.setSubject("Impact by Rainmaker");
-		email.setBcc("mno@mno.com");
-	}
-	
 	private void buildEmailBody(Body body, VelocityContext context) {
+		enrichHeaderData(body.getHeader(), context);
 		if(null != body.getStateWide()) 
 			enrichStateWideData(body.getStateWide(), context);
 		if(null != body.getPgr())
@@ -43,6 +45,10 @@ public class EmailService {
 			enrichPTData(body.getPt(), context);
 		if(null != body.getTl())
 			enrichTLData(body.getTl(), context);
+	}
+	
+	private void enrichHeaderData(List<Map<String, Object>> header, VelocityContext context) {
+		fillData(header, context);
 	}
 	
 	private void enrichStateWideData(StateWide stateWide, VelocityContext context) {
@@ -73,10 +79,11 @@ public class EmailService {
 	}
 		
 	private void fillData(List<Map<String, Object>> dataFromQuery, VelocityContext context) {
-		log.info("dataFromQuery: "+dataFromQuery);
 		dataFromQuery.forEach(record -> {
-			for(String key: record.keySet())
+			for(String key: record.keySet()) {
+				log.info("key: "+key +" AND "+record.get(key));
 				context.put(key, record.get(key));
+			}
 		});
 	}
 

@@ -1,6 +1,8 @@
 package org.egov.win.utils;
 
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Formatter;
 import java.util.HashMap;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -68,7 +70,8 @@ public class CronUtils {
 	public String getDayAndMonth(Long epochTime) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(epochTime);
-		return calendar.get(Calendar.DAY_OF_MONTH) + "th" + calendar.get(Calendar.MONTH);
+		return calendar.get(Calendar.DAY_OF_MONTH) + "th " 
+					+ new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)];
 	}
 
 }

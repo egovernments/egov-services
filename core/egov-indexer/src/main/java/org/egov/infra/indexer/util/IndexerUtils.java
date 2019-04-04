@@ -471,8 +471,8 @@ public class IndexerUtils {
 					String expression = getProcessedJsonPath(fieldJsonPath);
 					context.put(expression, expressionArray[expressionArray.length - 1], "XXXXXXXX");
 				} catch (Exception e) {
-					log.info("Exception while masking field: ", e);
-					log.info("Data: " + context.jsonString());
+					log.info("Exception while masking field!");
+					log.info("maskfield: " + fieldJsonPath);
 				}
 			}
 			return context;
@@ -493,13 +493,16 @@ public class IndexerUtils {
 			ObjectMapper mapper = getObjectMapper();
 			String epochValue = mapper
 					.writeValueAsString(JsonPath.read(context.jsonString().toString(), index.getTimeStampField()));
+			if(null == epochValue) {
+				log.info("NULL found in place of timestamp field.");
+				return context;
+			}
 			Date date = new Date(Long.valueOf(epochValue));
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
 			log.info("Exception while adding timestamp!");
-			log.info("Data: " + context.jsonString());
 			log.info("Time stamp field: "+index.getTimeStampField());
 		}
 
@@ -522,7 +525,7 @@ public class IndexerUtils {
 			encodedString = mapper.writeValueAsString(stringToBeEncoded);
 		} catch (Exception e) {
 			log.info("Exception while encoding non ascii characters ", e);
-			log.info("Data: " + stringToBeEncoded);
+			log.debug("Data: " + stringToBeEncoded);
 			encodedString = stringToBeEncoded;
 		}
 		return encodedString;

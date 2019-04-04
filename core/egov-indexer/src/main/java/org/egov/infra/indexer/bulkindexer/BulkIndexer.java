@@ -49,11 +49,7 @@ public class BulkIndexer {
 				if (JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)) {
 					log.info("Indexing FAILED!!!!");
 					log.info("Response from ES: " + response);
-				} else {
-					log.info("Indexing SUCCESSFULL!");
 				}
-			} else {
-				log.info("Indexing SUCCESSFULL!");
 			}
 		} catch (final ResourceAccessException e) {
 			log.error("ES is DOWN, Pausing kafka listener.......");

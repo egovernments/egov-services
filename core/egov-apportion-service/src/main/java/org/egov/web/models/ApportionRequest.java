@@ -35,7 +35,7 @@ public class ApportionRequest   {
         @JsonProperty("tenantId")
         private String tenantId = null;
 
-        @JsonProperty("Bills")
+        @JsonProperty("Bill")
         @Valid
         private List<BillInfo> bills = null;
 

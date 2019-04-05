@@ -61,10 +61,10 @@ public class ReceiptValidator {
 	 * @param receiptRequest
 	 *            Receipt request to be validated
 	 */
-	public void validateReceiptForCreate(ReceiptReq receiptRequest) {
+	public void validateReceiptForCreate(ReceiptReq receiptReq) {
 
 		Map<String, String> errorMap = new HashMap<>();
-		Receipt receipt = receiptRequest.getReceipt().get(0);
+		Receipt receipt = receiptReq.getReceipt().get(0);
 
 		if (receipt.getBill().isEmpty())
 			return;
@@ -79,9 +79,7 @@ public class ReceiptValidator {
 		for (BillDetail billDetails : receipt.getBill().get(0).getBillDetails()) {
 			ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder().tenantId(billDetails.getTenantId())
 					.billIds(singletonList(billDetails.getId())).build();
-			log.info("criteria: " + criteria);
 			List<Receipt> receipts = collectionRepository.fetchReceipts(criteria);
-			log.info("receipts: " + receipts);
 			if (!receipts.isEmpty()) {
 				validateIfReceiptForBillPresent(errorMap, receipts, billDetails);
 			}
@@ -114,6 +112,10 @@ public class ReceiptValidator {
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
+		
+        List<Receipt> receipts = new ArrayList<>();
+        receipts.add(receipt);
+        receiptReq.setReceipt(receipts);
 	}
 
 	public List<Receipt> validateAndEnrichReceiptsForUpdate(List<Receipt> receipts, RequestInfo requestInfo) {

@@ -138,7 +138,9 @@ public class ReceiptEnricher {
                 ().toString()).lastModifiedDate(System.currentTimeMillis()).build();
         receipt.setBill(validatedBills);
         receipt.setAuditDetails(auditDetails);
-
+        List<Receipt> receipts = new ArrayList<>();
+        receipts.add(receipt);
+        receiptReq.setReceipt(receipts);
     }
     
     /**
@@ -254,8 +256,11 @@ public class ReceiptEnricher {
                 billAccountDetail.setId(UUID.randomUUID().toString());
             }
         }
-
         enrichInstrument(receiptReq);
+        
+        List<Receipt> receipts = new ArrayList<>();
+        receipts.add(receipt);
+        receiptReq.setReceipt(receipts);
 
     }
 
@@ -300,6 +305,10 @@ public class ReceiptEnricher {
             instrument.setInstrumentStatus(InstrumentStatusEnum.NEW);
 
         receipt.setTransactionId(instrument.getTransactionNumber());
+        
+        List<Receipt> receipts = new ArrayList<>();
+        receipts.add(receipt);
+        receiptReq.setReceipt(receipts);
     }
 
     /**

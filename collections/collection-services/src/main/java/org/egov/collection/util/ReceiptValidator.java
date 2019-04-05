@@ -61,7 +61,7 @@ public class ReceiptValidator {
 	 * @param receiptRequest
 	 *            Receipt request to be validated
 	 */
-	public void validateReceiptForCreate(final ReceiptReq receiptRequest) {
+	public void validateReceiptForCreate(ReceiptReq receiptRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();
 		Receipt receipt = receiptRequest.getReceipt().get(0);

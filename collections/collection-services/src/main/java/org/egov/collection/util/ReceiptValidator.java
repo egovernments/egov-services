@@ -79,7 +79,6 @@ public class ReceiptValidator {
 		for (BillDetail billDetails : receipt.getBill().get(0).getBillDetails()) {
 			ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder().tenantId(billDetails.getTenantId())
 					.billIds(singletonList(billDetails.getId())).build();
-
 			log.info("criteria: " + criteria);
 			List<Receipt> receipts = collectionRepository.fetchReceipts(criteria);
 			log.info("receipts: " + receipts);

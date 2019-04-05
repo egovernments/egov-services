@@ -49,6 +49,7 @@ import java.util.Set;
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 public class ReceiptSearchCriteria {

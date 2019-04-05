@@ -125,8 +125,6 @@ public class ReceiptEnricher {
             if(Objects.isNull(validatedBill.getBillDetails().get(i).getReceiptDate()))
                 validatedBill.getBillDetails().get(i).setReceiptDate(new Date().getTime());
 
-            // Business service enrichment called in loop as they're always unique for a bill
-            //enrichBusinessService(receiptReq.getRequestInfo(), validatedBill.getBillDetails().get(i));
             validatedBill.getBillDetails().get(i).setReceiptType(ReceiptType.BILLBASED);
 
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());

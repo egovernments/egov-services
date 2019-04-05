@@ -86,11 +86,8 @@ public class CollectionService {
      */
     @Transactional
     public Receipt createReceipt(ReceiptReq receiptReq) {
-    	log.info("bill detail 0: "+receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getId());
         receiptEnricher.enrichReceiptPreValidate(receiptReq);
-    	log.info("bill detail 1: "+receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getId());
         receiptValidator.validateReceiptForCreate(receiptReq);
-    	log.info("bill detail 2: "+receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getId());
         receiptEnricher.enrichReceiptPostValidate(receiptReq);
 
         Receipt receipt = receiptReq.getReceipt().get(0); // Why get(0)?
@@ -104,8 +101,6 @@ public class CollectionService {
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties
                 .getCreateReceiptTopicKey(), receiptReq);
-
-    	log.info("bill detail 3: "+receiptReq.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getId());
 
         return receipt;
     }

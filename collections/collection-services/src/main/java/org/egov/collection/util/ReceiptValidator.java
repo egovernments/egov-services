@@ -78,8 +78,9 @@ public class ReceiptValidator {
 		// validations
 		for (BillDetail billDetails : receipt.getBill().get(0).getBillDetails()) {
 			ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder().tenantId(billDetails.getTenantId())
-					.billIds(singletonList(billDetails.getId())).build();
+					.billIds(singletonList(billDetails.getBillNumber())).build();
 			List<Receipt> receipts = collectionRepository.fetchReceipts(criteria);
+			log.info("receipts: "+receipts);
 			if (!receipts.isEmpty()) {
 				validateIfReceiptForBillPresent(errorMap, receipts, billDetails);
 			}

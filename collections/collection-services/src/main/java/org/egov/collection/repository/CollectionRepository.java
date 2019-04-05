@@ -32,7 +32,6 @@ public class CollectionRepository {
     public void saveReceipt(Receipt receipt){
         Bill bill = receipt.getBill().get(0);
         try {
-
             namedParameterJdbcTemplate.update(INSERT_INSTRUMENT_HEADER_SQL, getParametersForInstrumentHeader(receipt
                     .getInstrument(), receipt.getAuditDetails()));
 

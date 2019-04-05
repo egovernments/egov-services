@@ -128,7 +128,9 @@ public class ReceiptEnricher {
             validatedBill.getBillDetails().get(i).setReceiptType(ReceiptType.BILLBASED);
 
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
-
+            
+            //initially billNumber was being sent, which was used for search, in v1 billNumber got removed, so we are using id as billNumber.
+            validatedBill.getBillDetails().get(i).setBillNumber(validatedBill.getBillDetails().get(i).getId());
             enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
           
         }

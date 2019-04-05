@@ -28,7 +28,7 @@ public class TaxHeadMasterService {
        List<String> taxHeads = JsonPath.read(mdmsData,jsonpath);
 
        if(CollectionUtils.isEmpty(taxHeads))
-           throw new CustomException("NO TAXHEAD FOUND","No taxHead found for businessService: "+businessService);
+           throw new CustomException("NO TAXHEAD FOUND","No Advance taxHead found for businessService: "+businessService);
 
        return taxHeads.get(0);
    }

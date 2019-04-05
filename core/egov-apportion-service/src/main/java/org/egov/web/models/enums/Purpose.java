@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Purpose {
 
-	ARREAR_AMOUNT("ARREAR_AMOUNT"),
+	ARREAR_AMOUNT("ARREAR"),
 
-	CURRENT_AMOUNT("CURRENT_AMOUNT"),
+	CURRENT_AMOUNT("CURRENT"),
 
-	ADVANCE_AMOUNT("ADVANCE_AMOUNT"),
+	ADVANCE_AMOUNT("ADVANCE"),
 
     EXEMPTION("EXEMPTION"),
 

@@ -94,7 +94,9 @@ public class CollectionService {
         Receipt receipt = receiptReq.getReceipt().get(0); // Why get(0)?
         Bill bill = receipt.getBill().get(0); // Why get(0)?
         List<Bill> bills = new ArrayList<>(); bills.add(bill);
+        log.info("bill before apportion: "+bills);
         Map<String, List<Bill>> apportionedBills = apportionerService.apportionBill(receiptReq.getRequestInfo(), bills);
+        log.info("bill after apportion: "+apportionedBills);
         bill = apportionedBills.get(bill.getTenantId()).get(0); //Will be changed if get(0) is removed from the top 2 lines
         receipt.getBill().set(0, bill);
         

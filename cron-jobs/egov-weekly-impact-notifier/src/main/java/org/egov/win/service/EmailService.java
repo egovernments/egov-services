@@ -81,7 +81,6 @@ public class EmailService {
 	private void fillData(List<Map<String, Object>> dataFromQuery, VelocityContext context) {
 		dataFromQuery.forEach(record -> {
 			for(String key: record.keySet()) {
-				log.info("key: "+key +" AND "+record.get(key));
 				context.put(key, record.get(key));
 			}
 		});

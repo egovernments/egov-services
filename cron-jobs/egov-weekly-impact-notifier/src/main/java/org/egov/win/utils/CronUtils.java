@@ -48,7 +48,6 @@ public class CronUtils {
 		HashMap<String, Long> param = new HashMap<>();
 		param.put("intervalinsecs", timeInterval);
 		SearcherRequest searcherRequest = SearcherRequest.builder().requestInfo(new RequestInfo()).searchCriteria(param).build();
-		log.info("searcherRequest: "+searcherRequest);
 		return searcherRequest;
 	}
 	

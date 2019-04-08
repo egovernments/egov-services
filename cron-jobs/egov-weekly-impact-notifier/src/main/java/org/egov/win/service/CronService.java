@@ -232,7 +232,6 @@ public class CronService {
 		SearcherRequest request = utils.preparePlainSearchReq(uri, defName);
 		Object response = repository.fetchResult(uri, request);
 		try {
-			log.info("Response from search: " + response);
 			List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(response, "$.data"), List.class);
 			for (Object record : dataParsedToList) {
 				data.add(mapper.convertValue(record, Map.class));
@@ -248,7 +247,6 @@ public class CronService {
 	private void send(Email email, String content) {
 		email.setTo(toAddress);
 		email.setSubject(subject);
-		log.info("Email: "+email);
 		EmailRequest request = EmailRequest.builder()
 				.email(email.getTo()).subject(email.getSubject()).isHTML(true).body(content).build();
 		producer.push(emailTopic, request);

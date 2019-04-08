@@ -24,8 +24,6 @@ public class WeeklyImpactEmailerApp
 	@Autowired
 	private CronService service;
 	
-	@Autowired
-	private ApplicationContext ctx;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(WeeklyImpactEmailerApp.class, args);
@@ -38,15 +36,6 @@ public class WeeklyImpactEmailerApp
 			service.fetchData();
 		}catch(Exception e) {
 			log.error("Job FAILED!: ", e);
-		}
-		finally {
-			try {
-	            ((ConfigurableApplicationContext) ctx).refresh();
-	            ((ConfigurableApplicationContext) ctx).close();
-	            System.exit(1);
-			}catch(Exception e) {
-				return;
-			}
 		}
 	}
 	

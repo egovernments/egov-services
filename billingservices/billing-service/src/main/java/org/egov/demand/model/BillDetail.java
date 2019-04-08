@@ -75,6 +75,9 @@ public class BillDetail   {
 
         @JsonProperty("partPaymentAllowed")
         private Boolean partPaymentAllowed;
+        
+        @JsonProperty("isAdvanceAllowed")
+        private Boolean isAdvanceAllowed;
 
         @JsonProperty("additionalDetails")
         private Object additionalDetails;

@@ -72,7 +72,6 @@ import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.util.Constants;
-import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -84,6 +83,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -175,7 +175,7 @@ public class BillService {
 			throw new CustomException(Constants.EG_BS_BILL_NO_DEMANDS_FOUND_KEY,
 					Constants.EG_BS_BILL_NO_DEMANDS_FOUND_MSG);
 
-		return sendBillToKafka(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
+		return create(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class BillService {
 	/**
 	 * updates the total amount to be paid for each business service code
 	 * 
-	 * from the new bill detail
+	 * in serviceCodeAndTaxAmountMap from the incoming BillDetail object.
 	 * 
 	 * @param serviceCodeAndTaxAmountMap
 	 * @param billDetail
@@ -286,7 +286,8 @@ public class BillService {
 	}
 
 	/**
-	 * 
+	 * Method to create BillDetail object from demand
+	 *  
 	 * @param demand
 	 * @param taxHeadMap
 	 * @param businessDetailMap
@@ -304,6 +305,10 @@ public class BillService {
 		
 		BusinessServiceDetail business = businessDetailMap.get(demand.getBusinessService());
 
+		/*
+		 * Map to store the bill account detail object with TaxHead code
+		 * To accommodate conversion of multiple DemandDetails with same tax head code to single BillAccountDetail
+		 */
 		Map<String, BillAccountDetail> taxCodeAccountdetailMap = new HashMap<>();
 		
 		for(DemandDetail demandDetail : demand.getDemandDetails()) {
@@ -323,6 +328,7 @@ public class BillService {
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())
 				.partPaymentAllowed(business.getPartPaymentAllowed())
+				.isAdvanceAllowed(business.getIsAdvanceAllowed())
 				.minimumAmount(demand.getMinimumAmountPayable())
 				.collectedAmount(collectedAmountForDemand)
 				.consumerCode(demand.getConsumerCode())
@@ -483,8 +489,9 @@ public class BillService {
 		return getBillResponse(billRequest.getBills());
 	}
 	
-	public void create(BillRequest billRequest){
+	public BillResponse create(BillRequest billRequest) {
 		billRepository.saveBill(billRequest);
+		return getBillResponse(billRequest.getBills());
 	}
 	
 	/*

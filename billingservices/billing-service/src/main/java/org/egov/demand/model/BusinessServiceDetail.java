@@ -65,6 +65,8 @@ public class BusinessServiceDetail {
     private List<String> collectionModesNotAllowed = new ArrayList<>();
 
     private Boolean partPaymentAllowed;
+    
+    private Boolean isAdvanceAllowed;
 
     private Boolean callBackForApportioning;
 

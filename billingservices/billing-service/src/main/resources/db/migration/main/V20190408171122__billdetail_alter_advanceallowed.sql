@@ -1,0 +1,1 @@
+ALTER TABLE egbs_billdetail ADD COLUMN isadvanceallowed boolean;

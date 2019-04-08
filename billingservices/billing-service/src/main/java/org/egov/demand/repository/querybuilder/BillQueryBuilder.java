@@ -21,8 +21,8 @@ public class BillQueryBuilder {
 	public static final String INSERT_BILLDETAILS_QUERY = "INSERT into egbs_billdetail "
 			+"(id, tenantid, billid, demandid, fromperiod, toperiod, businessservice, billno, billdate, consumercode, consumertype, billdescription, displaymessage, "
 			+ "minimumamount, totalamount, callbackforapportioning, partpaymentallowed, collectionmodesnotallowed, "
-			+ "createdby, createddate, lastmodifiedby, lastmodifieddate)"
-			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "createdby, createddate, lastmodifiedby, lastmodifieddate, isadvanceallowed)"
+			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public static final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail "
 			+"(id, tenantid, billdetail, demanddetailid, orderno, amount, adjustedamount, isactualdemand, purpose, "
@@ -38,7 +38,7 @@ public class BillQueryBuilder {
 			+ " bd.billno AS bd_billno, bd.billdate AS bd_billdate, bd.consumercode AS bd_consumercode,bd.consumertype AS bd_consumertype,"
 			+ " bd.billdescription AS bd_billdescription, bd.displaymessage AS bd_displaymessage, bd.minimumamount AS bd_minimumamount,"
 			+ " bd.totalamount AS bd_totalamount, bd.callbackforapportioning AS bd_callbackforapportioning,"
-			+ " bd.partpaymentallowed AS bd_partpaymentallowed, bd.collectionmodesnotallowed AS bd_collectionmodesnotallowed,"
+			+ " bd.partpaymentallowed AS bd_partpaymentallowed, bd.isadvanceallowed as bd_isadvanceallowed,bd.collectionmodesnotallowed AS bd_collectionmodesnotallowed,"
 			+ " ad.id AS ad_id, ad.tenantid AS ad_tenantid, ad.billdetail AS ad_billdetail, ad.glcode AS ad_glcode,"
 			+ " ad.orderno AS ad_orderno, ad.accountdescription AS ad_accountdescription,"
 			+ " ad.amount AS ad_amount, ad.adjustedamount AS ad_adjustedamount, ad.taxheadcode AS ad_taxheadcode, ad.demanddetailid,"
@@ -62,9 +62,8 @@ public class BillQueryBuilder {
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final BillSearchCriteria searchBill) {
 		
-		if( searchBill.getConsumerCode() == null 
-				&& searchBill.getBillType() == null && searchBill.getBillId() == null
-				&& searchBill.getIsActive() == null && searchBill.getIsCancelled() == null)
+		if (searchBill.getConsumerCode() == null && searchBill.getBillId() == null && searchBill.getIsActive() == null
+				&& searchBill.getIsCancelled() == null)
 			return;
 		
 		if(searchBill.getBillId() != null && !searchBill.getBillId().isEmpty())
@@ -83,6 +82,7 @@ public class BillQueryBuilder {
 			selectQuery.append(" AND bd.businessservice = ?");
 			preparedStatementValues.add(searchBill.getService());
 		}
+		
 		if(searchBill.getConsumerCode() != null){
 			selectQuery.append(" AND bd.consumercode = ?");
 			preparedStatementValues.add(searchBill.getConsumerCode());

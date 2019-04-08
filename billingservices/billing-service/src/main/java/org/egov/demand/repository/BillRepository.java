@@ -148,6 +148,7 @@ public class BillRepository {
 				ps.setLong(20, auditDetails.getCreatedTime());
 				ps.setString(21, auditDetails.getLastModifiedBy());
 				ps.setLong(22, auditDetails.getLastModifiedTime());
+				ps.setBoolean(23, billDetail.getIsAdvanceAllowed());
 				
 			}
 				

@@ -78,6 +78,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>>{
 				billDetail.setMinimumAmount(rs.getBigDecimal("bd_minimumamount"));
 				billDetail.setTotalAmount(rs.getBigDecimal("bd_totalamount"));
 				billDetail.setPartPaymentAllowed(rs.getBoolean("bd_partpaymentallowed"));
+				billDetail.setIsAdvanceAllowed(rs.getBoolean("bd_isadvanceallowed"));
 				billDetail.setCollectionModesNotAllowed(Arrays.asList(rs.getString("bd_collectionmodesnotallowed").split(",")));
 
 				billDetailMap.put(billDetail.getId(), billDetail);

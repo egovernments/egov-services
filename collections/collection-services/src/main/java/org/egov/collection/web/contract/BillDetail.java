@@ -171,6 +171,9 @@ public class BillDetail {
 	  @NotNull
 	  @JsonProperty("collectionType")
 	  private CollectionType collectionType = null;
+	  
+	  @JsonProperty("isAdvanceAllowed")
+	  private Boolean isAdvanceAllowed;
 
 
 }

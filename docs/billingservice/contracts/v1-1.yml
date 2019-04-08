@@ -11,7 +11,7 @@ info:
     name: eGovernments Foundation
 schemes:
   - https
-basePath: /billingservice/v11
+basePath: /billingservice/
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
 
@@ -290,11 +290,10 @@ definitions:
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       additionalDetails:  
-        type: string
+        type: object
         description: field for capturing any additional details.
       minimumAmountPayable:
         type: number
-        format: double
         description: Minimum bill amount to be paid.
       status:
         type: string
@@ -319,6 +318,9 @@ definitions:
       id:
         type: string
         description: primary key of a DemandDetails.
+      demandId:
+        type: string
+        description: foriegn key of a DemandDetails from demand.        
       taxHeadMasterCode:
         type: string
         description: Tax Head code.
@@ -330,11 +332,10 @@ definitions:
         description: demand amount.
       collectionAmount:
         type: number
-        format: double
         default: 0
         description: collection against taxAmount.
       additionalDetails:  
-        type: string
+        type: object
         description: field for capturing any additional details.
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
@@ -470,13 +471,13 @@ definitions:
       mobileNumber:
         type: string
         description: MobileNumber of the payer.
-      payeerName:
+      payerName:
         type: string
         description: name of the payer.        
-      payeerAddress:
+      payerAddress:
         type: string
         description: Address details from the payer.
-      payeerEmail:
+      payerEmail:
         type: string
         description: email address of the payer.
       isActive:
@@ -486,8 +487,12 @@ definitions:
         type: boolean
         description: 'true when cancelled bill is cancelled, false when non-cancelled bill is created.'
       additionalDetails:  
-        type: string
+        type: object
         description: field for capturing any additional details.
+      taxAndPayments:
+        type: array
+        items:
+          $ref: '#/definitions/taxAndPayment'
       billDetails:
         type: array
         items:
@@ -523,8 +528,8 @@ definitions:
         type: string
         description: Bill number.
       billDate:
-        type: string
-        format: date
+        type: number
+        format: int64
         description: Bill date.
       consumerCode:
         type: string
@@ -532,25 +537,23 @@ definitions:
       consumerType:
         type: string
         description: Type of the entity for which the bill is being created.
-      receiptDate:
-        type: integer
-        format: int64
-        description: Date of receipt.
-      receiptNumber:
-        type: string
-        description: readable value of the receipt.
       minimumAmount:
         type: number
-        format: double
         description: Minimum bill amount to be paid.
       totalAmount:
         type: number
-        format: double
         description: Total bill amount to be paid.
+      fromPeriod:
+        type: number
+        format: int64
+        description: starting date of the demand period referred by the bill detail.
+      toPeriod:
+        type: number
+        format: int64
+        description: ending date of the demand period referred by the bill detail.
       collectedAmount:
         type: number
-        format: double
-        description: collected amount from the payee for the bill detail
+        description: sum of the amount which has been collected for the demand.
       collectionModesNotAllowed:
         type: array
         items:
@@ -560,7 +563,7 @@ definitions:
         type: boolean
         description: 'true if part payment allowed, false if part payment is not allowed.'
       additionalDetails:  
-        type: string
+        type: object
         description: field for capturing any additional details.
       billAccountDetails:
         type: array
@@ -596,11 +599,9 @@ definitions:
         description: Order number used for apportioning amount in case of part payment.
       amount:
         type: number
-        format: double
         description: Credit account head amount to be paid.
       adjustedAmount:
         type: number
-        format: double
         description: Credit account head amount.
       isActualDemand:
         type: boolean
@@ -608,8 +609,11 @@ definitions:
       glcode:
         type: string
         description: field for capturing the glcode value.
-      additionalDetails:  
+      taxHeadCode:
         type: string
+        description: field for capturing the taxhead-code value.
+      additionalDetails:  
+        type: object
         description: field for capturing any additional details.        
       purpose:
         type: string
@@ -643,46 +647,6 @@ definitions:
         description: 'true if part payment allowed, false if part payment is not allowed.'
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-  CollectedReceipts:
-    type: object
-    description: A object holds a payment information against a demand.
-    properties:
-      businessService:
-        type: string
-        description: BusinessService code.
-      consumerCode:
-        type: string
-        description: Consumer code of the entity for which the bill is being created.
-      receiptNumber:
-        type: string
-        description: receipt number.
-      receiptAmount:
-        type: number
-        format: double
-        description: receipt amount.
-      receiptDate:
-        type: string
-        format: date
-        description: discount against taxAmount.
-      status:
-        type: string
-        description: receipt status
-        enum:
-          - CREATED
-          - CANCELLED
-          - INSTRUMENT_BOUNCED
-      auditDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
-      tenantId:
-        type: string
-        description: Unique Identifier of the tenant
-        maxLength: 128
-        minLength: 4
-    required:
-      - receiptNumber
-      - receiptAmount
-      - receiptDate
-      - tenantId
   DemandRequest:
     properties:
       RequestInfo:
@@ -798,3 +762,14 @@ definitions:
         items:
           $ref: '#/definitions/TaxPeriod'
     type: object
+  taxAndPayment:
+    properties:
+      businessService:
+        type: string
+        description: unique code of the business service
+      taxAmount:
+        type: string
+        description: amount to be paid by the payer
+      amountPaid:
+        type: string
+        description: amount paid by the payer

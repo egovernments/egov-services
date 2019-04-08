@@ -163,6 +163,7 @@ public class ReceiptEnricher {
     	Map<String, BigDecimal> mapOfBusinessSvcAndTaxAmt = validatedBill.getTaxAndPayments().stream()
     			.collect(Collectors.toMap(TaxAndPayment :: getBusinessService, TaxAndPayment :: getTaxAmount));
     	billFromRequest.getTaxAndPayments().forEach(taxAndPayment -> {
+    		log.info("part: "+validatedBill.getBillDetails().get(0).getPartPaymentAllowed());
     		if(null == validatedBill.getBillDetails().get(0).getPartPaymentAllowed() || 
     				!validatedBill.getBillDetails().get(0).getPartPaymentAllowed()) {
     			if(mapOfBusinessSvcAndAmtPaid.keySet().size() != mapOfBusinessSvcAndTaxAmt.keySet().size()) {
@@ -188,6 +189,12 @@ public class ReceiptEnricher {
         		}
         		if(null == mapOfBusinessSvcAndTaxAmt.get(taxAndPayment.getBusinessService())) {
         			errorMap.put("INVALID_BUSINESSERVICE_CODE", "taxAndPayment should have payments against only valid businesservices.");
+        		}
+    		}
+    		if(null == validatedBill.getBillDetails().get(0).getIsAdvanceAllowed() || 
+    				!validatedBill.getBillDetails().get(0).getIsAdvanceAllowed()) {
+        		if(taxAndPayment.getAmountPaid().compareTo(taxAndPayment.getTaxAmount()) > 0) {
+        			errorMap.put("INVALID_AMT_PAID_ADV", "Amount paid in the taxAndPayment array cannot greather than Tax Amount");
         		}
     		}
     	});

@@ -176,10 +176,12 @@ public class BillDetail {
 	@JsonProperty("collectionType")
 	private CollectionType collectionType = null;
 
+	@JsonProperty("isAdvanceAllowed")
+	private Boolean isAdvanceAllowed;
+
 	private String billDescription;
 
 	private Long expiryDate;
-
 	private String displayMessage;
 	private Boolean callBackForApportioning;
 	private String cancellationRemarks;

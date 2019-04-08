@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -163,9 +165,8 @@ public class ReceiptEnricher {
     	Map<String, BigDecimal> mapOfBusinessSvcAndTaxAmt = validatedBill.getTaxAndPayments().stream()
     			.collect(Collectors.toMap(TaxAndPayment :: getBusinessService, TaxAndPayment :: getTaxAmount));
     	billFromRequest.getTaxAndPayments().forEach(taxAndPayment -> {
-    		log.info("part: "+validatedBill.getBillDetails().get(0).getPartPaymentAllowed());
-    		if(null == validatedBill.getBillDetails().get(0).getPartPaymentAllowed() || 
-    				!validatedBill.getBillDetails().get(0).getPartPaymentAllowed()) {
+    		BillDetail billDetail = getBillDetail(validatedBill, taxAndPayment.getBusinessService());
+    		if(null == billDetail.getPartPaymentAllowed() || !billDetail.getPartPaymentAllowed()) {
     			if(mapOfBusinessSvcAndAmtPaid.keySet().size() != mapOfBusinessSvcAndTaxAmt.keySet().size()) {
         			errorMap.put("INVALID_TAXANDPAYMENT_DATA_CODE", "taxAndPayment should have all the businessCodes as part payment is not allowed.");
     			}else {
@@ -191,8 +192,7 @@ public class ReceiptEnricher {
         			errorMap.put("INVALID_BUSINESSERVICE_CODE", "taxAndPayment should have payments against only valid businesservices.");
         		}
     		}
-    		if(null == validatedBill.getBillDetails().get(0).getIsAdvanceAllowed() || 
-    				!validatedBill.getBillDetails().get(0).getIsAdvanceAllowed()) {
+    		if(null == billDetail.getIsAdvanceAllowed() || !billDetail.getIsAdvanceAllowed()) {
         		if(taxAndPayment.getAmountPaid().compareTo(taxAndPayment.getTaxAmount()) > 0) {
         			errorMap.put("INVALID_AMT_PAID_ADV", "Amount paid in the taxAndPayment array cannot greather than Tax Amount");
         		}
@@ -206,6 +206,25 @@ public class ReceiptEnricher {
     		if(null != amount)
     			taxAndPayment.setAmountPaid(amount);
     	});
+    }
+    
+    
+    /**
+     * Fetches bill detail based on businessservice
+     * 
+     * @param validatedBill
+     * @param businessService
+     * @return
+     */
+    public BillDetail getBillDetail(Bill validatedBill, String businessService) {
+    	BillDetail billDetail = new BillDetail();
+    	for(BillDetail detail: validatedBill.getBillDetails()) {
+    		if(detail.getBusinessService().equals(businessService)) {
+    			billDetail = detail;
+    			break;
+    		}
+    	}
+    	return billDetail;
     }
 
 

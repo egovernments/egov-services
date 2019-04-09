@@ -146,7 +146,7 @@ public class TLValidator {
       validateTradeUnits(request);
       valideDates(request,mdmsData);
       validateDuplicateDocuments(request);
-      setFieldsFromSearch(request,searchResult);
+      setFieldsFromSearch(request,searchResult,mdmsData);
       validateOwnerActiveStatus(request);
    }
 
@@ -294,14 +294,21 @@ public class TLValidator {
      * @param request The input TradeLicenseRequest
      * @param searchResult The list of searched licenses
      */
-    private void setFieldsFromSearch(TradeLicenseRequest request,List<TradeLicense> searchResult){
+    private void setFieldsFromSearch(TradeLicenseRequest request,List<TradeLicense> searchResult,Object mdmsData){
         Map<String,TradeLicense> idToTradeLicenseFromSearch = new HashMap<>();
         searchResult.forEach(tradeLicense -> {
             idToTradeLicenseFromSearch.put(tradeLicense.getId(),tradeLicense);
         });
         request.getLicenses().forEach(license -> {
+            license.getAuditDetails().setCreatedBy(idToTradeLicenseFromSearch.get(license.getId()).getAuditDetails().getCreatedBy());
+            license.getAuditDetails().setCreatedTime(idToTradeLicenseFromSearch.get(license.getId()).getAuditDetails().getCreatedTime());
             license.setStatus(idToTradeLicenseFromSearch.get(license.getId()).getStatus());
             license.setLicenseNumber(idToTradeLicenseFromSearch.get(license.getId()).getLicenseNumber());
+            if(!idToTradeLicenseFromSearch.get(license.getId()).getFinancialYear().equalsIgnoreCase(license.getFinancialYear())
+                    && license.getLicenseType().equals(TradeLicense.LicenseTypeEnum.PERMANENT)){
+                Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(license,mdmsData);
+                license.setValidTo(taxPeriods.get(TLConstants.MDMS_ENDDATE));
+            }
         });
     }
 

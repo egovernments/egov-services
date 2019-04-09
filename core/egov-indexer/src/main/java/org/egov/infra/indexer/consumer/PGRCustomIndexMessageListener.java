@@ -41,6 +41,7 @@ public class PGRCustomIndexMessageListener implements MessageListener<String, St
 			PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 			indexerService.esIndexer(data.topic(), mapper.writeValueAsString(indexObject));
 		} catch (Exception e) {
+			indexerUtils.postToErrorQueue(data.value(), e);
 			log.error("Couldn't parse pgrindex request: ", e);
 		}
 	}

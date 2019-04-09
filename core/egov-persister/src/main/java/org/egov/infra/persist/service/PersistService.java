@@ -3,11 +3,13 @@ package org.egov.infra.persist.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.infra.persist.repository.PersistRepository;
 import org.egov.infra.persist.web.contract.JsonMap;
 import org.egov.infra.persist.web.contract.Mapping;
 import org.egov.infra.persist.web.contract.QueryMap;
 import org.egov.infra.persist.web.contract.TopicMap;
+import org.egov.tracer.KafkaConsumerErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,9 @@ public class PersistService {
 
 	@Autowired
 	private PersistRepository persistRepository;
+	
+	@Autowired
+	private KafkaConsumerErrorHandler kafkaConsumerErrorHandler;
 
 	@Transactional
 	public void persist(String topic, String json) {
@@ -52,6 +57,17 @@ public class PersistService {
 		 * } } }
 		 */
 
+	}
+	
+	/**
+	 * Uses a tracer method to post errors to error Queue
+	 * 
+	 * @param body
+	 * @param ex
+	 */
+	public void postToErrorQueue(Object body, Exception ex) {
+		ConsumerRecord<?, ?> record = new ConsumerRecord("egov-persister", 0, 0, null, body);
+		kafkaConsumerErrorHandler.handle(ex, record);
 	}
 
 }

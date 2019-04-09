@@ -47,6 +47,7 @@ public class BulkIndexer {
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
 			if (url.contains("_bulk")) {
 				if (JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)) {
+					indexerUtils.postToErrorQueue(indexJson, new Exception());
 					log.info("Indexing FAILED!!!!");
 					log.info("Response from ES: " + response);
 				}
@@ -55,6 +56,7 @@ public class BulkIndexer {
 			log.error("ES is DOWN, Pausing kafka listener.......");
 			indexerUtils.orchestrateListenerOnESHealth();
 		} catch (Exception e) {
+			indexerUtils.postToErrorQueue(indexJson, e);
 			log.error("Exception while trying to index to ES. Note: ES is not Down.", e);
 		}
 	}
@@ -98,6 +100,7 @@ public class BulkIndexer {
 				try {
 					response = restTemplate.postForObject(url, body, Map.class);
 				} catch (Exception e) {
+					indexerUtils.postToErrorQueue(body, e);
 					log.error("POST: Exception while fetching from es: " + e);
 				}
 			} else if (httpMethod.equals("PUT")) {
@@ -105,6 +108,7 @@ public class BulkIndexer {
 					restTemplate.put(url, body);
 					response = "OK";
 				} catch (Exception e) {
+					indexerUtils.postToErrorQueue(body, e);
 					log.error("PUT: Exception while updating settings on es: " + e);
 				}
 			}

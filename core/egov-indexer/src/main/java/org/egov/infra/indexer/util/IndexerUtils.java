@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.indexer.consumer.config.ReindexConsumerConfig;
 import org.egov.infra.indexer.models.AuditDetails;
@@ -66,6 +67,9 @@ public class IndexerUtils {
 
 	@Value("${egov.service.host}")
 	private String serviceHost;
+	
+	@Autowired
+	private org.egov.tracer.KafkaConsumerErrorHandler kafkaConsumerErrorHandler;
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -319,6 +323,7 @@ public class IndexerUtils {
 				kafkaJsonArray = new JSONArray(jsonArray);
 			}
 		} catch (Exception e) {
+			postToErrorQueue(kafkaJson, e);
 			log.error("Exception while constructing json array for bulk index: ", e);
 			log.error("Object: " + kafkaJson);
 			throw e;
@@ -446,6 +451,7 @@ public class IndexerUtils {
 					continue;
 				}
 			} catch (Exception e) {
+				postToErrorQueue(kafkaJsonArray, e);
 				log.error("Exception while transforiming data: ", e);
 				continue;
 			}
@@ -471,6 +477,7 @@ public class IndexerUtils {
 					String expression = getProcessedJsonPath(fieldJsonPath);
 					context.put(expression, expressionArray[expressionArray.length - 1], "XXXXXXXX");
 				} catch (Exception e) {
+					postToErrorQueue(context.jsonString(), e);
 					log.info("Exception while masking field!");
 					log.info("maskfield: " + fieldJsonPath);
 				}
@@ -502,6 +509,7 @@ public class IndexerUtils {
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
+			postToErrorQueue(context.jsonString(), e);
 			log.info("Exception while adding timestamp!");
 			log.info("Time stamp field: "+index.getTimeStampField());
 		}
@@ -524,6 +532,7 @@ public class IndexerUtils {
 			mapper.getFactory().configure(Feature.ESCAPE_NON_ASCII, true);
 			encodedString = mapper.writeValueAsString(stringToBeEncoded);
 		} catch (Exception e) {
+			postToErrorQueue(stringToBeEncoded, e);
 			log.info("Exception while encoding non ascii characters ", e);
 			log.debug("Data: " + stringToBeEncoded);
 			encodedString = stringToBeEncoded;
@@ -627,6 +636,18 @@ public class IndexerUtils {
 	public String splitCamelCase(String s) {
 		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
 				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+	}
+	
+	/**
+	 * Uses a tracer method to post errors to error Queue
+	 * 
+	 * @param body
+	 * @param ex
+	 */
+	public void postToErrorQueue(Object body, Exception ex) {
+		log.info("Posting to error queue");
+		ConsumerRecord<?, ?> record = new ConsumerRecord("egov-indexer", 0, 0, null, body);
+		kafkaConsumerErrorHandler.handle(ex, record);
 	}
 
 }

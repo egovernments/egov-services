@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
+import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class IndexerService {
 
 	@Autowired
 	private DataTransformationService dataTransformationService;
+	
+	@Autowired
+	private IndexerUtils utils;
 
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
@@ -69,6 +74,7 @@ public class IndexerService {
 					indexProccessor(index, kafkaJson, (index.getIsBulk() == null || !index.getIsBulk()) ? false : true);
 				}
 			} catch (Exception e) {
+				utils.postToErrorQueue(kafkaJson, e);
 				log.error("Exception while indexing, Uncaught at the indexer level: ", e);
 			}
 		} else {

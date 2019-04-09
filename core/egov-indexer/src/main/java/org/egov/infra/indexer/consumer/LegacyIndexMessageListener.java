@@ -45,12 +45,14 @@ public class LegacyIndexMessageListener implements MessageListener<String, Strin
 				LegacyIndexRequest legacyIndexRequest = mapper.readValue(data.value(), LegacyIndexRequest.class);
 				legacyIndexService.beginLegacyIndex(legacyIndexRequest);
 			}catch(Exception e) {
+				indexerUtils.postToErrorQueue(data.value(), e);
 				log.error("Couldn't parse legacyindex request: ", e);
 			}
 		}else {
 			try {
 				indexerService.esIndexer(data.topic(), data.value());
 			} catch (Exception e) {
+				indexerUtils.postToErrorQueue(data.value(), e);
 				log.error("error while indexing: ", e);
 			}
 		}

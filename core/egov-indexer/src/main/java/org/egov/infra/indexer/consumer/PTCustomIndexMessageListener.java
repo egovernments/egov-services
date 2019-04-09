@@ -46,6 +46,7 @@ public class PTCustomIndexMessageListener implements MessageListener<String, Str
 			propertyRequest.setProperties(ptCustomDecorator.transformData(propertyRequest.getProperties()));
 			indexerService.esIndexer(data.topic(), mapper.writeValueAsString(propertyRequest));
 		} catch (Exception e) {
+			indexerUtils.postToErrorQueue(data.value(), e);
 			log.error("Couldn't parse ptindex request: ", e);
 		}
 	}

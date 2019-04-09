@@ -50,6 +50,7 @@ public class ReindexMessageListener implements MessageListener<String, String> {
 			try {
 				indexerService.esIndexer(data.topic(), data.value());
 			} catch (Exception e) {
+				indexerUtils.postToErrorQueue(data.value(), e);
 				log.error("error while indexing: ", e);
 			}
 		}

@@ -2,6 +2,7 @@ package org.egov.infra.indexer.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.infra.indexer.service.IndexerService;
+import org.egov.infra.indexer.util.IndexerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class CoreIndexMessageListener implements MessageListener<String, String>
 
 	@Autowired
 	private IndexerService indexerService;
+	
+	@Autowired
+	private IndexerUtils utils;
 
 	@Override
 	/**
@@ -26,6 +30,7 @@ public class CoreIndexMessageListener implements MessageListener<String, String>
 		try {
 			indexerService.esIndexer(data.topic(), data.value());
 		} catch (Exception e) {
+			utils.postToErrorQueue(data.value(), e);
 			log.error("error while indexing: ", e);
 		}
 	}

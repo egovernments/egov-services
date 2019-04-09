@@ -22,13 +22,13 @@ public class PersisterMessageListener implements MessageListener<String, Object>
 	public void onMessage(ConsumerRecord<String, Object> data) {
         log.info("Topic: "+data.topic());
         log.info("Value: "+data.value());
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = null;
 		String rcvData = null;
 		
 		try {
 			rcvData = objectMapper.writeValueAsString(data.value());
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
+			persistService.postToErrorQueue(data.value(), e);
 			e.printStackTrace();
 		}
 		persistService.persist(data.topic(),rcvData);    

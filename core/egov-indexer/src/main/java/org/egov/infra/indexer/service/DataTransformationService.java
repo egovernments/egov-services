@@ -34,6 +34,7 @@ public class DataTransformationService {
 
 	@Autowired
 	private IndexerUtils indexerUtils;
+	
 
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
@@ -95,6 +96,7 @@ public class DataTransformationService {
 			}
 			result = jsonTobeIndexed.toString();
 		} catch (Exception e) {
+			indexerUtils.postToErrorQueue(kafkaJson, e);
 			log.error("Error while building jsonstring for indexing", e);
 		}
 
@@ -199,6 +201,7 @@ public class DataTransformationService {
 						Object value = JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath());
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					} catch (Exception e) {
+						indexerUtils.postToErrorQueue(documentContext.jsonString(), e);
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
 						log.debug("URI: " + uri);
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
@@ -251,6 +254,7 @@ public class DataTransformationService {
 						}
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					} catch (Exception e) {
+						indexerUtils.postToErrorQueue(documentContext.jsonString(), e);
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
 						log.debug("MDMS Request: " + request);
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);

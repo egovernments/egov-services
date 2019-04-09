@@ -220,7 +220,6 @@ public class EnrichmentService {
         * */
 
         businessServices.forEach(businessService -> {
-            businessService.setUuid(UUID.randomUUID().toString());
             businessService.setAuditDetails(audit);
             businessService.getStates().forEach(state -> {
                 if (state.getUuid() == null) {

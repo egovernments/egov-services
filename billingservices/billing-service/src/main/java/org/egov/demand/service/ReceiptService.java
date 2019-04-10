@@ -100,18 +100,18 @@ public class ReceiptService {
 		for (BillAccountDetail billAccDetail : billDetail.getBillAccountDetails()) {
 
 			List<DemandDetail> currentDetails = taxHeadCodeDemandDetailgroup.get(billAccDetail.getTaxHeadCode());
-			
+			boolean isCurrentDetailsNotEmpty = CollectionUtils.isEmpty(currentDetails);
 			/* 
 			 * if single demand detail corresponds to single billAccountDetail then update directly
 			 */
-			if (!CollectionUtils.isEmpty(currentDetails) && currentDetails.size() == 1) {
+			if (isCurrentDetailsNotEmpty && currentDetails.size() == 1) {
 
 				updateSingleDemandDetail(currentDetails.get(0), billAccDetail, isRecieptCancellation);
 			}
 			/*
 			 * if multiple demandDetails point to one BillAccountDetial
 			 */
-			else if (currentDetails.size() > 1) {
+			else if (isCurrentDetailsNotEmpty && currentDetails.size() > 1) {
 
 				updateMultipleDemandDetails(currentDetails, billAccDetail, isRecieptCancellation);
 			} else {

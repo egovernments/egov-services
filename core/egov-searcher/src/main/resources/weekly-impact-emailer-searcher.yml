@@ -85,4 +85,3 @@
       jsonFormat: {"ResponseInfo": {}}
       outJsonPath: $.data
       responseInfoPath: $.ResponseInfo
-      

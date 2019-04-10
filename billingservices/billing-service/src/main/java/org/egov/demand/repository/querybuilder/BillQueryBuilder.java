@@ -21,8 +21,8 @@ public class BillQueryBuilder {
 	public static final String INSERT_BILLDETAILS_QUERY = "INSERT into egbs_billdetail "
 			+"(id, tenantid, billid, demandid, fromperiod, toperiod, businessservice, billno, billdate, consumercode, consumertype, billdescription, displaymessage, "
 			+ "minimumamount, totalamount, callbackforapportioning, partpaymentallowed, collectionmodesnotallowed, "
-			+ "createdby, createddate, lastmodifiedby, lastmodifieddate, isadvanceallowed)"
-			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ "createdby, createddate, lastmodifiedby, lastmodifieddate, isadvanceallowed, expirydate)"
+			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	public static final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail "
 			+"(id, tenantid, billdetail, demanddetailid, orderno, amount, adjustedamount, isactualdemand, purpose, "
@@ -37,7 +37,7 @@ public class BillQueryBuilder {
 			+ " bd.demandid,bd.fromperiod,bd.toperiod,"
 			+ " bd.billno AS bd_billno, bd.billdate AS bd_billdate, bd.consumercode AS bd_consumercode,bd.consumertype AS bd_consumertype,"
 			+ " bd.billdescription AS bd_billdescription, bd.displaymessage AS bd_displaymessage, bd.minimumamount AS bd_minimumamount,"
-			+ " bd.totalamount AS bd_totalamount, bd.callbackforapportioning AS bd_callbackforapportioning,"
+			+ " bd.totalamount AS bd_totalamount, bd.callbackforapportioning AS bd_callbackforapportioning,bd.expirydate AS bd_expirydate,"
 			+ " bd.partpaymentallowed AS bd_partpaymentallowed, bd.isadvanceallowed as bd_isadvanceallowed,bd.collectionmodesnotallowed AS bd_collectionmodesnotallowed,"
 			+ " ad.id AS ad_id, ad.tenantid AS ad_tenantid, ad.billdetail AS ad_billdetail, ad.glcode AS ad_glcode,"
 			+ " ad.orderno AS ad_orderno, ad.accountdescription AS ad_accountdescription,"
@@ -77,8 +77,18 @@ public class BillQueryBuilder {
 			selectQuery.append(" AND b.iscancelled = ?");
 			preparedStatementValues.add(searchBill.getIsCancelled());
 		}
-		
-		if(searchBill.getService()!= null){
+
+		if (searchBill.getEmail() != null) {
+			selectQuery.append(" AND b.payeremail = ?");
+			preparedStatementValues.add(searchBill.getConsumerCode());
+		}
+
+		if (searchBill.getMobileNumber()!= null) {
+			selectQuery.append(" AND b.mobileNumber = ?");
+			preparedStatementValues.add(searchBill.getConsumerCode());
+		}
+
+		if (searchBill.getService() != null) {
 			selectQuery.append(" AND bd.businessservice = ?");
 			preparedStatementValues.add(searchBill.getService());
 		}
@@ -92,8 +102,9 @@ public class BillQueryBuilder {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final BillSearchCriteria searchBillCriteria) {
-		
-		selectQuery.append(" ORDER BY b.payername");
+
+		if (searchBillCriteria.getIsOrderBy())
+			selectQuery.append(" ORDER BY b.createddate desc");
 
 		selectQuery.append(" LIMIT ?");
 		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());

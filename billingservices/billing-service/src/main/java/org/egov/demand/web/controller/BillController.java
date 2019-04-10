@@ -67,12 +67,12 @@ public class BillController {
 		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
 
-	@PostMapping("_fetchBill")
+	@PostMapping("_fetchbill")
 	@ResponseBody
 	public ResponseEntity<?> fetchBill(@RequestBody RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute @Valid GenerateBillCriteria generateBillCriteria){
 		
-		BillResponse billResponse = billService.generateBill(generateBillCriteria, requestInfoWrapper.getRequestInfo());
+		BillResponse billResponse = billService.fetchBill(generateBillCriteria, requestInfoWrapper);
 		return new ResponseEntity<>(billResponse, HttpStatus.CREATED);
 	}
 	

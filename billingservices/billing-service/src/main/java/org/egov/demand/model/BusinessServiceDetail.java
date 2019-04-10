@@ -67,6 +67,8 @@ public class BusinessServiceDetail {
     private Boolean partPaymentAllowed;
     
     private Boolean isAdvanceAllowed;
+    
+    private Long demandUpdateTime;
 
     private Boolean callBackForApportioning;
 

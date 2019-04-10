@@ -32,7 +32,7 @@ public class BillValidator {
 	
 	public void validateBillSearchCriteria(BillSearchCriteria billCriteria,Errors errors){
 		
-		if(billCriteria.getBillId() == null && billCriteria.getBillType() == null && billCriteria.getIsActive() == null 
+		if(billCriteria.getBillId() == null && billCriteria.getIsActive() == null 
 				&& billCriteria.getIsCancelled() == null && billCriteria.getService() == null
 				&& billCriteria.getConsumerCode() == null){
 			errors.rejectValue("service","BILL_SEARCH_MANDATORY_FIELDS_MISSING",

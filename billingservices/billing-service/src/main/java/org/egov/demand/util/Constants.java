@@ -15,6 +15,10 @@ public class Constants {
 	public static final String MDMS_CODE_FILTER = "$.*.code";
 	public static final String TAXPERIOD_CODE_FILTER = null;
 	
+	public static final String URL_PARAMS_FOR_SERVICE_BASED_DEMAND_APIS = "?tenantId={tenantId}&consumerCodes={consumerCodes}";
+	public static final String TENANTID_REPLACE_TEXT = "{tenantId}";
+	public static final String CONSUMERCODES_REPLACE_TEXT = "{consumerCodes}";
+	
 	public static final String TAXPERIOD_PATH_CODE = "$.MdmsRes.BillingService.TaxPeriod";
 	public static final String TAXHEADMASTER_PATH_CODE = "$.MdmsRes.BillingService.TaxHeadMaster";
 	public static final String BUSINESSSERVICE_PATH_CODE = "$.MdmsRes.BillingService.BusinessService";
@@ -69,11 +73,11 @@ public class Constants {
 	public static final String INVALID_DEMAND_DETAIL_MSG = "Invalid demand details found with following Values : {resplaceValues}";
 	public static final String INVALID_DEMAND_DETAIL_REPLACETEXT = "{resplaceValues}";
 	
-	public static final String INVALID_DEMAND_DETAIL_ERROR_MSG = "collection amount : {collection}, should not be greater than taxAmount : {tax}";
+	public static final String INVALID_DEMAND_DETAIL_ERROR_MSG = "collection amount : {collection}, cannot not be greater than taxAmount or Negative in case of positive tax : {tax}";
 	public static final String INVALID_DEMAND_DETAIL_COLLECTION_TEXT = "{collection}";
 	public static final String INVALID_DEMAND_DETAIL_TAX_TEXT = "{tax}";
 	
-	public static final String INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG = "collection amount : {collection}, should be equal to 'ZERO' or tax amount : {tax} in case of negative Tax demand detail";
+	public static final String INVALID_NEGATIVE_DEMAND_DETAIL_ERROR_MSG = "collection amount : {collection}, should be equal to 'ZERO' or tax amount : {tax} in case of negative Tax";
 	
 	public static final String DEMAND_NOT_FOUND_KEY = "EG_BS_DEMANDS_NOT_FOUND";
 	public static final String DEMAND_NOT_FOUND_MSG = "No Demands not found in db for following ids : {resplaceValues}";
@@ -94,6 +98,9 @@ public class Constants {
 	public static final String DEMAND_WITH_NO_ID_KEY = "EG_BS_DEMANDS_UNDIDENTIFIABLE";
 	public static final String DEMAND_WITH_NO_ID_MSG = "Demands, must contain ids in the update payload";
 
+	public static final String URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE_KEY = "URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE";
+	public static final String URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE_MSG = " No URL found for demand update with business code : {businesscode} ";
+	public static final String URL_NOT_CONFIGURED_REPLACE_TEXT = "{businesscode}";
 	/*
 	 * Mdms master data 
 	 */

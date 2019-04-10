@@ -202,6 +202,7 @@ public class DemandService {
 				newDemands.add(demand);
 			} else {
 
+				demand.setAuditDetails(auditDetail);
 				for (DemandDetail detail : demand.getDemandDetails()) {
 
 					if (StringUtils.isEmpty(detail.getId())) {
@@ -209,10 +210,11 @@ public class DemandService {
 						 * If id is empty for demand detail treat it as new
 						 */
 						detail.setId(UUID.randomUUID().toString());
-						detail.setDemandId(demandId);
 						detail.setCollectionAmount(BigDecimal.ZERO);
 					}
 					detail.setAuditDetails(auditDetail);
+					detail.setDemandId(demandId);
+					detail.setTenantId(demand.getTenantId());
 				}
 			}
 		}

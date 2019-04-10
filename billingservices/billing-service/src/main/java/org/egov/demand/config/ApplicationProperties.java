@@ -40,6 +40,8 @@
 
 package org.egov.demand.config;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -210,4 +212,7 @@ public class ApplicationProperties {
 
 	@Value("${bs.demanddetail.audit.seq.name}")
 	private String demandDetailAuditSeqName;
+	
+	@Value("#{${bs.businesscode.demand.updateurl}}")
+	private Map<String, String> businessCodeAndDemandUpdateUrlMap;
 }

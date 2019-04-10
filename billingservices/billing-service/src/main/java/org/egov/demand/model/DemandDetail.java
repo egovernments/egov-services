@@ -2,6 +2,8 @@ package org.egov.demand.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -26,14 +28,13 @@ public class DemandDetail   {
         @JsonProperty("demandId")
         private String demandId;
 
-        @JsonProperty("taxHeadMasterCode")
+        @NotNull @JsonProperty("taxHeadMasterCode")
         private String taxHeadMasterCode;
 
-        @JsonProperty("taxAmount")
+        @NotNull @JsonProperty("taxAmount")
         private BigDecimal taxAmount;
 
-        @Default
-        @JsonProperty("collectionAmount")
+        @NotNull @JsonProperty("collectionAmount") @Default 
         private BigDecimal collectionAmount = BigDecimal.ZERO;
 
         @JsonProperty("additionalDetails")

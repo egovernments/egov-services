@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -71,11 +72,16 @@ import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
+import org.egov.demand.repository.ServiceRequestRepository;
+
+import static org.egov.demand.util.Constants.*;
+
 import org.egov.demand.util.Constants;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
+import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -84,6 +90,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -117,9 +125,95 @@ public class BillService {
 	
 	@Autowired
 	private Util util;
+	
+	@Autowired
+	private ServiceRequestRepository restRepository;
 
 	/**
-	 * Searches the bills from db for given criteria and enriches them with TaxAndPayments array
+	 * Fetches the bill for given parameters
+	 * 
+	 * Searches the respective bill
+	 * if nothing found then generates bill for the same criteria
+	 * if bill found then checks the validity of the bill
+	 * 	return the bill if valid
+	 * else update the demands belonging to the bill then generate a new bill
+	 * 
+	 * @param moduleCode
+	 * @param consumerCodes
+	 * @return
+	 */
+	public BillResponse fetchBill(GenerateBillCriteria billCriteria, RequestInfoWrapper requestInfoWrapper) {
+		
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		BillResponse res = searchBill(billCriteria.toBillSearchCriteria(), requestInfo);
+		List<Bill> bills = res.getBill();
+		
+		/* 
+		 * If no existing bills found then Generate new bill 
+		 */
+		if (CollectionUtils.isEmpty(bills))
+			return generateBill(billCriteria, requestInfo);
+		
+		Bill bill = bills.get(0);
+		
+		/*
+		 * Collecting the businessService code and the list of consumer codes for those service codes 
+		 * whose demands needs to be updated.
+		 * 
+		 * grouping by service code
+		 * mapping of consumerCode to collect the value of map as list of consumerCodes
+		 */
+		Map<String, List<String>> serviceAndConsumerCodeListMap = bill.getBillDetails().stream()
+				.filter(detail -> detail.getExpiryDate().compareTo(System.currentTimeMillis()) < 0)
+				.collect(Collectors.groupingBy(BillDetail::getBusinessService,
+						Collectors.mapping(BillDetail::getConsumerCode, Collectors.toList())));
+		
+		
+		/*
+		 * If none of the billDetails in the bills needs to be updated then return the search result
+		 */
+		if(CollectionUtils.isEmpty(serviceAndConsumerCodeListMap))
+			return res;
+		else {
+			
+			updateDemandsForexpiredBillDetails(serviceAndConsumerCodeListMap, billCriteria.getTenantId(), requestInfoWrapper);
+			return generateBill(billCriteria, requestInfo);
+		}
+	}
+	
+	/**
+	 * To make calls to respective service which updates the demands belonging to
+	 * the arguments passed
+	 * 
+	 * @param serviceAndConsumerCodeListMap
+	 * @param tenantId
+	 */
+	private void updateDemandsForexpiredBillDetails(Map<String, List<String>> serviceAndConsumerCodeListMap,
+			String tenantId, RequestInfoWrapper requestInfoWrapper) {
+
+		Map<String, String> serviceUrlMap = appProps.getBusinessCodeAndDemandUpdateUrlMap();
+
+		for (Entry<String, List<String>> entry : serviceAndConsumerCodeListMap.entrySet()) {
+
+			String url = serviceUrlMap.get(entry.getKey());
+
+			if (StringUtils.isEmpty(url))
+				throw new CustomException(URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE_KEY,
+						URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE_MSG.replace(URL_NOT_CONFIGURED_REPLACE_TEXT,
+								entry.getKey()));
+
+			StringBuilder completeUrl = new StringBuilder(url)
+					.append(URL_PARAMS_FOR_SERVICE_BASED_DEMAND_APIS.replace(TENANTID_REPLACE_TEXT, tenantId).replace(
+							CONSUMERCODES_REPLACE_TEXT, entry.getValue().toString().replace("[", "").replace("]", "")));
+
+			log.info("the url : " + completeUrl);
+			restRepository.fetchResult(completeUrl.toString(), requestInfoWrapper);
+		}
+	}
+
+
+	/**
+	 * Searches the bills from DB for given criteria and enriches them with TaxAndPayments array
 	 * 
 	 * @param billCriteria
 	 * @param requestInfo
@@ -160,9 +254,15 @@ public class BillService {
 		if (billCriteria.getConsumerCode() != null)
 			consumerCodes.add(billCriteria.getConsumerCode());
 
-		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService())
-				.consumerCode(consumerCodes).demandId(demandIds).email(billCriteria.getEmail()).receiptRequired(false)
-				.mobileNumber(billCriteria.getMobileNumber()).tenantId(billCriteria.getTenantId()).build();
+		DemandCriteria demandCriteria = DemandCriteria.builder()
+				.businessService(billCriteria.getBusinessService())
+				.mobileNumber(billCriteria.getMobileNumber())
+				.tenantId(billCriteria.getTenantId())
+				.email(billCriteria.getEmail())
+				.consumerCode(consumerCodes)
+				.receiptRequired(false)
+				.demandId(demandIds)
+				.build();
 
 		/* Fetching demands for the given bill search criteria */
 		List<Demand> demands = demandService.getDemands(demandCriteria, requestInfo);
@@ -172,8 +272,7 @@ public class BillService {
 		if (!demands.isEmpty())
 			bills = prepareBill(demands, requestInfo);
 		else
-			throw new CustomException(Constants.EG_BS_BILL_NO_DEMANDS_FOUND_KEY,
-					Constants.EG_BS_BILL_NO_DEMANDS_FOUND_MSG);
+			throw new CustomException(EG_BS_BILL_NO_DEMANDS_FOUND_KEY, EG_BS_BILL_NO_DEMANDS_FOUND_MSG);
 
 		return create(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
 	}
@@ -326,6 +425,7 @@ public class BillService {
 		
 		return BillDetail.builder()
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
+				.expiryDate(System.currentTimeMillis()+business.getDemandUpdateTime())
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())
 				.partPaymentAllowed(business.getPartPaymentAllowed())
 				.isAdvanceAllowed(business.getIsAdvanceAllowed())

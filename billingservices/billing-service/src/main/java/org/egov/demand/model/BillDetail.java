@@ -27,6 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class BillDetail   {
+	
         @JsonProperty("id")
         private String id;
 
@@ -53,6 +54,9 @@ public class BillDetail   {
 
         @JsonProperty("consumerType")
         private String consumerType;
+        
+        @JsonProperty("expiryDate")
+        private Long expiryDate;
 
         @JsonProperty("minimumAmount")
         private BigDecimal minimumAmount;

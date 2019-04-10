@@ -1,12 +1,14 @@
 package org.egov.demand.model;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Email;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,13 +27,19 @@ public class BillSearchCriteria {
 	
 	private Boolean isCancelled;
 	
-	private String service;
-
-	private String billType;
-	
 	private String consumerCode;
+	
+	private String service;
+	
+	@Default
+	private Boolean isOrderBy = false;
 	
 	private Long size;
 	
 	private Long offset;
+	
+	@Email
+	private String email;
+	
+	private String mobileNumber;
 }

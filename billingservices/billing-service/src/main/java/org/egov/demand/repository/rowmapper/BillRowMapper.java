@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillAccountDetail.PurposeEnum;
 import org.egov.demand.model.BillDetail;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 public class BillRowMapper implements ResultSetExtractor<List<Bill>>{
 
 	@Override
-	public List<Bill> extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<Bill> extractData(ResultSet rs) throws SQLException {
 		
-		Map<String, Bill> billMap = new HashMap<>();
+		Map<String, Bill> billMap = new LinkedHashMap<>();
 		Map<String, BillDetail> billDetailMap = new HashMap<>();
 
 		while (rs.next()) {
@@ -79,6 +79,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>>{
 				billDetail.setTotalAmount(rs.getBigDecimal("bd_totalamount"));
 				billDetail.setPartPaymentAllowed(rs.getBoolean("bd_partpaymentallowed"));
 				billDetail.setIsAdvanceAllowed(rs.getBoolean("bd_isadvanceallowed"));
+				billDetail.setExpiryDate(rs.getLong("bd_expirydate"));
 				billDetail.setCollectionModesNotAllowed(Arrays.asList(rs.getString("bd_collectionmodesnotallowed").split(",")));
 
 				billDetailMap.put(billDetail.getId(), billDetail);

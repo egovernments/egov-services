@@ -1,1 +1,1 @@
-ALTER TABLE egbs_billdetail ADD COLUMN expirydate boolean;
+ALTER TABLE egbs_billdetail ADD COLUMN expirydate bigint;

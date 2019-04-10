@@ -360,6 +360,11 @@ public class ReceiptEnricher {
         }
     }
 
+    /**
+     * Apportion adds another billAccDetail for Advance tax head when advance amt is paid, this method enriches that object
+     * 
+     * @param bills
+     */
     public void enrichAdvanceTaxHead(Map<String, List<Bill>> bills) {
         for (String tenantId : bills.keySet()) {
             bills.get(tenantId).forEach(bill -> {

@@ -63,6 +63,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/BuildingDetails'
+      addess:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/Address'
     required:
       - noOfBuildings
       - propertyId

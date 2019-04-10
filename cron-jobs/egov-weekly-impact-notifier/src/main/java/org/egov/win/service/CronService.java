@@ -1,6 +1,7 @@
 package org.egov.win.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,11 +246,14 @@ public class CronService {
 	}
 
 	private void send(Email email, String content) {
-		email.setTo(toAddress);
-		email.setSubject(subject);
-		EmailRequest request = EmailRequest.builder()
-				.email(email.getTo()).subject(email.getSubject()).isHTML(true).body(content).build();
-		producer.push(emailTopic, request);
+		String[] addresses = toAddress.split(",");
+		for(String address: Arrays.asList(addresses)) {
+			email.setTo(address);
+			email.setSubject(subject);
+			EmailRequest request = EmailRequest.builder()
+					.email(email.getTo()).subject(email.getSubject()).isHTML(true).body(content).build();
+			producer.push(emailTopic, request);
+		}
 	}
 
 	public Template getVelocityTemplate() {

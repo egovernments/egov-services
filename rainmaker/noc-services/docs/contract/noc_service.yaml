@@ -136,7 +136,7 @@ definitions:
     description: 'This is the dynamic data, depends on type of noc those related data will be filled by user, based on this calculation of noc fees will calculate. eg :-  firenoc building and propert details will be filled here for calculation'
     properties:
       propertyDetails:
-        $ref: '#/definitions/PropertyDetails'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/noc/rainmaker/noc-services/docs/contract/firenoc_models.yaml#/definitions/PropertyDetails'
   OwnerInfo:
     allOf:
       - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'

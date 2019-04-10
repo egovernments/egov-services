@@ -5,19 +5,165 @@ ServiceMaps:
   - topic: save-tl-tradelicense
     configKey: INDEX
     indexes:
-    - name: tradelicense-v1
+    - name: tlindex-v1
       type: licenses
       id: $.id, $.tenantId
       isBulk: true
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Licenses
+      customJsonMapping:
+        indexMapping: {"Data":{"id":"","tenantId":"","licenseType":"","licenseNumber":"","applicationNumber":"","oldLicenseNumber":"","propertyId":"","oldPropertyId":"","accountId":"","tradeName":"","applicationDate":"","commencementDate":"","issuedDate":"","financialYear":"","validFrom":"","validTo":"","action":"","assignee":"","wfDocuments":[],"status":"","comment":"","tradeLicenseDetail":{},"calculation":{},"auditDetails":{},"ward":{},"tenantData":{},"@timestamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.id
+          outJsonPath: $.Data.id
+        - inJsonPath: $.tenantId
+          outJsonPath: $.Data.tenantId
+        - inJsonPath: $.licenseType
+          outJsonPath: $.Data.licenseType
+        - inJsonPath: $.licenseNumber
+          outJsonPath: $.Data.licenseNumber
+        - inJsonPath: $.applicationNumber
+          outJsonPath: $.Data.applicationNumber
+        - inJsonPath: $.oldLicenseNumber
+          outJsonPath: $.Data.oldLicenseNumber
+        - inJsonPath: $.propertyId
+          outJsonPath: $.Data.propertyId
+        - inJsonPath: $.oldPropertyId
+          outJsonPath: $.Data.oldPropertyId
+        - inJsonPath: $.accountId
+          outJsonPath: $.Data.accountId
+        - inJsonPath: $.tradeName
+          outJsonPath: $.Data.tradeName
+        - inJsonPath: $.applicationDate
+          outJsonPath: $.Data.applicationDate
+        - inJsonPath: $.commencementDate
+          outJsonPath: $.Data.commencementDate
+        - inJsonPath: $.issuedDate
+          outJsonPath: $.Data.issuedDate
+        - inJsonPath: $.financialYear
+          outJsonPath: $.Data.financialYear
+        - inJsonPath: $.validFrom
+          outJsonPath: $.Data.validFrom
+        - inJsonPath: $.validTo
+          outJsonPath: $.Data.validTo
+        - inJsonPath: $.action
+          outJsonPath: $.Data.action
+        - inJsonPath: $.assignee
+          outJsonPath: $.Data.assignee
+        - inJsonPath: $.wfDocuments
+          outJsonPath: $.Data.wfDocuments
+        - inJsonPath: $.status
+          outJsonPath: $.Data.status
+        - inJsonPath: $.comment
+          outJsonPath: $.Data.comment
+        - inJsonPath: $.tradeLicenseDetail
+          outJsonPath: $.Data.tradeLicenseDetail
+        - inJsonPath: $.calculation
+          outJsonPath: $.Data.calculation
+        - inJsonPath: $.auditDetails
+          outJsonPath: $.Data.auditDetails
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.Data.@timestamp
+        externalUriMapping:
+        - path: http://egov-location.egov:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.Data.ward
+        mdmsMapping:
+        - path: http://egov-mdms-service.egov:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.Data.tenantData
       
   - topic: update-tl-tradelicense
     configKey: INDEX
     indexes:
-    - name: tradelicense-v1
+    - name: tlindex-v1
       type: licenses
       id: $.id, $.tenantId
       isBulk: true
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Licenses
+      customJsonMapping:
+        indexMapping: {"Data":{"id":"","tenantId":"","licenseType":"","licenseNumber":"","applicationNumber":"","oldLicenseNumber":"","propertyId":"","oldPropertyId":"","accountId":"","tradeName":"","applicationDate":"","commencementDate":"","issuedDate":"","financialYear":"","validFrom":"","validTo":"","action":"","assignee":"","wfDocuments":[],"status":"","comment":"","tradeLicenseDetail":{},"calculation":{},"auditDetails":{},"ward":{},"tenantData":{},"@timestamp":"timestamp"}}
+        fieldMapping:
+        - inJsonPath: $.id
+          outJsonPath: $.Data.id
+        - inJsonPath: $.tenantId
+          outJsonPath: $.Data.tenantId
+        - inJsonPath: $.licenseType
+          outJsonPath: $.Data.licenseType
+        - inJsonPath: $.licenseNumber
+          outJsonPath: $.Data.licenseNumber
+        - inJsonPath: $.applicationNumber
+          outJsonPath: $.Data.applicationNumber
+        - inJsonPath: $.oldLicenseNumber
+          outJsonPath: $.Data.oldLicenseNumber
+        - inJsonPath: $.propertyId
+          outJsonPath: $.Data.propertyId
+        - inJsonPath: $.oldPropertyId
+          outJsonPath: $.Data.oldPropertyId
+        - inJsonPath: $.accountId
+          outJsonPath: $.Data.accountId
+        - inJsonPath: $.tradeName
+          outJsonPath: $.Data.tradeName
+        - inJsonPath: $.applicationDate
+          outJsonPath: $.Data.applicationDate
+        - inJsonPath: $.commencementDate
+          outJsonPath: $.Data.commencementDate
+        - inJsonPath: $.issuedDate
+          outJsonPath: $.Data.issuedDate
+        - inJsonPath: $.financialYear
+          outJsonPath: $.Data.financialYear
+        - inJsonPath: $.validFrom
+          outJsonPath: $.Data.validFrom
+        - inJsonPath: $.validTo
+          outJsonPath: $.Data.validTo
+        - inJsonPath: $.action
+          outJsonPath: $.Data.action
+        - inJsonPath: $.assignee
+          outJsonPath: $.Data.assignee
+        - inJsonPath: $.wfDocuments
+          outJsonPath: $.Data.wfDocuments
+        - inJsonPath: $.status
+          outJsonPath: $.Data.status
+        - inJsonPath: $.comment
+          outJsonPath: $.Data.comment
+        - inJsonPath: $.tradeLicenseDetail
+          outJsonPath: $.Data.tradeLicenseDetail
+        - inJsonPath: $.calculation
+          outJsonPath: $.Data.calculation
+        - inJsonPath: $.auditDetails
+          outJsonPath: $.Data.auditDetails
+        - inJsonPath: $.@timestamp
+          outJsonPath: $.Data.@timestamp
+        externalUriMapping:
+        - path: http://egov-location.egov:8080/egov-location/location/v11/boundarys/_search
+          queryParam: hierarchyTypeCode=REVENUE,boundaryType=Block,codes=$.address.locality.code,tenantId=$.tenantId
+          apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
+          "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d","userInfo":{"id":73}}}
+          uriResponseMapping:
+          - inJsonPath: $.TenantBoundary[0].boundary[0]
+            outJsonPath: $.Data.ward
+        mdmsMapping:
+        - path: http://egov-mdms-service.egov:8080/egov-mdms-service/v1/_search
+          moduleName: tenant
+          masterName: tenants
+          tenantId: pb
+          filter: "[?(@.code == $tenant)]"
+          filterMapping:
+          - variable: $tenant
+            valueJsonpath: $.tenantId
+          uriResponseMapping:
+          - inJsonPath: $.MdmsRes.tenant.tenants
+            outJsonPath: $.Data.tenantData

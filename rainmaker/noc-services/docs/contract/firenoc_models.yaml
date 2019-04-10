@@ -105,3 +105,15 @@ definitions:
       - tenantId
       - documentType
       - fileStoreId
+  BuildingType:
+    type: object
+    description: This is mdms defination for BuildingType object
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      extraAccesories:
+        description: List of extra accessories based building type
+        type: array
+        items:
+          type: string

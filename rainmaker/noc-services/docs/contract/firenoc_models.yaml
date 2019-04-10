@@ -112,8 +112,8 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      extraAccesories:
-        description: List of extra accessories based building type
+      UoMs:
+        description: List of UoMs based building type
         type: array
         items:
           type: string

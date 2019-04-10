@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class CollectionService {
-	
+
     private CollectionRepository collectionRepository;
     private InstrumentRepository instrumentRepository;
     private BillingServiceRepository billingServiceRepository;
@@ -35,15 +35,15 @@ public class CollectionService {
     private ReceiptValidator receiptValidator;
     private CollectionProducer collectionProducer;
     private ApplicationProperties applicationProperties;
-    
-	@Autowired
-	private ApportionerService apportionerService;
+
+    @Autowired
+    private ApportionerService apportionerService;
 
     @Autowired
     public CollectionService(CollectionRepository collectionRepository, InstrumentRepository instrumentRepository,
-            BillingServiceRepository billingServiceRepository, ReceiptEnricher receiptEnricher,
-            ReceiptValidator receiptValidator, CollectionProducer collectionProducer,
-            ApplicationProperties applicationProperties) {
+                             BillingServiceRepository billingServiceRepository, ReceiptEnricher receiptEnricher,
+                             ReceiptValidator receiptValidator, CollectionProducer collectionProducer,
+                             ApplicationProperties applicationProperties) {
         this.collectionRepository = collectionRepository;
         this.instrumentRepository = instrumentRepository;
         this.billingServiceRepository = billingServiceRepository;
@@ -56,16 +56,16 @@ public class CollectionService {
     /**
      * Fetch all receipts matching the given criteria, enrich receipts with instruments
      *
-     * @param requestInfo Request info of the search
+     * @param requestInfo           Request info of the search
      * @param receiptSearchCriteria Criteria against which search has to be performed
      * @return List of matching receipts
      */
     public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria) {
-        if(applicationProperties.isReceiptsSearchPaginationEnabled()){
+        if (applicationProperties.isReceiptsSearchPaginationEnabled()) {
             receiptSearchCriteria.setOffset(isNull(receiptSearchCriteria.getOffset()) ? 0 : receiptSearchCriteria.getOffset());
             receiptSearchCriteria.setLimit(isNull(receiptSearchCriteria.getLimit()) ? applicationProperties.getReceiptsSearchDefaultLimit() :
                     receiptSearchCriteria.getLimit());
-        } else{
+        } else {
             receiptSearchCriteria.setOffset(0);
             receiptSearchCriteria.setLimit(applicationProperties.getReceiptsSearchDefaultLimit());
         }
@@ -92,11 +92,14 @@ public class CollectionService {
 
         Receipt receipt = receiptReq.getReceipt().get(0); // Why get(0)?
         Bill bill = receipt.getBill().get(0); // Why get(0)?
-        List<Bill> bills = new ArrayList<>(); bills.add(bill);
+        List<Bill> bills = new ArrayList<>();
+        bills.add(bill);
         Map<String, List<Bill>> apportionedBills = apportionerService.apportionBill(receiptReq.getRequestInfo(), bills);
+
+        receiptEnricher.enrichAdvanceTaxHead(apportionedBills);
+
         bill = apportionedBills.get(bill.getTenantId()).get(0); //Will be changed if get(0) is removed from the top 2 lines
         receipt.getBill().set(0, bill);
-        
         collectionRepository.saveReceipt(receipt);
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties
@@ -108,9 +111,9 @@ public class CollectionService {
     /**
      * Performs update of eligible receipts
      * Allows update of payee details, manual receipt number & date, additionalDetails
-     *
-     *  - If validated, update receipts as per the request
-     *      else, throws exception and exit
+     * <p>
+     * - If validated, update receipts as per the request
+     * else, throws exception and exit
      *
      * @param receiptReq receipts to be updated
      * @return updated receipts

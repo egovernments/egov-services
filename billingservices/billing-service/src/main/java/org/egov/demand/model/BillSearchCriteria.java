@@ -30,9 +30,8 @@ public class BillSearchCriteria {
 	private String consumerCode;
 	
 	private String service;
-	
-	@Default
-	private Boolean isOrderBy = false;
+
+	private boolean isOrderBy = false;
 	
 	private Long size;
 	

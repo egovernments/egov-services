@@ -103,7 +103,7 @@ public class BillQueryBuilder {
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final BillSearchCriteria searchBillCriteria) {
 
-		if (searchBillCriteria.getIsOrderBy())
+		if (searchBillCriteria.isOrderBy())
 			selectQuery.append(" ORDER BY b.createddate desc");
 
 		selectQuery.append(" LIMIT ?");

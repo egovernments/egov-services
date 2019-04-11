@@ -44,7 +44,8 @@ public class CronUtils {
 		uri.append(endPoint);
 		HashMap<String, Long> param = new HashMap<>();
 		param.put("intervalinsecs", timeInterval);
-		SearcherRequest searcherRequest = SearcherRequest.builder().requestInfo(new RequestInfo()).searchCriteria(param).build();
+		SearcherRequest searcherRequest = SearcherRequest.builder().requestInfo(new RequestInfo()).searchCriteria(param)
+				.build();
 		return searcherRequest;
 	}
 

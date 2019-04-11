@@ -85,6 +85,9 @@ public class PGRNotificationConsumer {
 	
 	@Value("${egov.pgr.app.playstore.link}")
 	private String appDownloadLink;
+	
+	@Value("${notification.fallback.locale}")
+	private String fallbackLocale;
 
 	@Autowired
 	private PGRUtils pGRUtils;
@@ -163,11 +166,11 @@ public class PGRNotificationConsumer {
 		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
 		String locale = null;
 		try {
-			locale = requestInfo.getMsgId().split(",")[1]; // Conventionally locale is sent in the first index of msgid.
+			locale = requestInfo.getMsgId().split("|")[1]; // Conventionally locale is sent in the first index of msgid split by |
 			if (StringUtils.isEmpty(locale)) 
-				locale = "en_IN";
+				locale = fallbackLocale;
 		} catch (Exception e) {
-			locale = "en_IN";
+			locale = fallbackLocale;
 		}
 		if (null == NotificationService.localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
 			notificationService.getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);

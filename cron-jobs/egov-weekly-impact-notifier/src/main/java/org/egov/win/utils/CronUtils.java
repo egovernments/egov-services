@@ -2,7 +2,6 @@ package org.egov.win.utils;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
-import java.util.Formatter;
 import java.util.HashMap;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -15,16 +14,13 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Component
-@Slf4j
 public class CronUtils {
 	
-	@Value("${egov.infra.searcher.host}")
+	@Value("${egov.searcher.host}")
 	private String searcherHost;
 
-	@Value("${egov.infra.searcher.endpoint}")
+	@Value("${egov.searcher.endpoint}")
 	private String searcherEndpoint;
 	
 	@Value("${egov.impact.emailer.interval.in.secs}")

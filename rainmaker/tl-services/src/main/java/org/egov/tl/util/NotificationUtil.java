@@ -2,6 +2,7 @@ package org.egov.tl.util;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
@@ -126,15 +127,19 @@ public class NotificationUtil {
      * @param tenantId TenantId of the propertyRequest
      * @return The uri for localization search call
      */
-    public StringBuilder getUri(String tenantId){
+    public StringBuilder getUri(String tenantId,RequestInfo requestInfo){
 
         if(config.getIsLocalizationStateLevel())
             tenantId = tenantId.split("\\.")[0];
 
+        String locale = NOTIFICATION_LOCALE;
+        if(!StringUtils.isEmpty(requestInfo.getMsgId()) && requestInfo.getMsgId().split("|").length>=2)
+            locale = requestInfo.getMsgId().split("|")[1];
+
         StringBuilder uri = new StringBuilder();
         uri.append(config.getLocalizationHost()).append(config.getLocalizationContextPath())
                 .append(config.getLocalizationSearchEndpoint()).append("?")
-                .append("locale=").append(TLConstants.NOTIFICATION_LOCALE)
+                .append("locale=").append(locale)
                 .append("&tenantId=").append(tenantId)
                 .append("&module=").append(TLConstants.MODULE);
 
@@ -149,7 +154,7 @@ public class NotificationUtil {
      * @return Localization messages for the module
      */
     public String getLocalizationMessages(String tenantId, RequestInfo requestInfo){
-        LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(getUri(tenantId),requestInfo);
+        LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(getUri(tenantId,requestInfo),requestInfo);
         String jsonString = new JSONObject(responseMap).toString();
         return jsonString;
     }

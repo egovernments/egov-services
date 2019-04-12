@@ -106,7 +106,6 @@ public class BillDetail {
 	private BigDecimal totalAmount = null;
 
 	@JsonProperty("amountPaid")
-	@NotNull
 	private BigDecimal amountPaid = null;
 
 	@JsonProperty("fromPeriod")
@@ -182,8 +181,11 @@ public class BillDetail {
 	private String billDescription;
 
 	private Long expiryDate;
+
 	private String displayMessage;
+
 	private Boolean callBackForApportioning;
+
 	private String cancellationRemarks;
 
 }

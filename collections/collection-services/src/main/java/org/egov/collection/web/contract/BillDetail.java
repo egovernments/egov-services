@@ -102,7 +102,6 @@ public class BillDetail {
 	  private BigDecimal totalAmount = null;
 	  
 	  @JsonProperty("amountPaid")
-	  @NotNull
 	  private BigDecimal amountPaid = null;
 
 	  @JsonProperty("fromPeriod")

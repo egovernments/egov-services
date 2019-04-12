@@ -100,18 +100,22 @@ public class ReceiptService {
 		for (BillAccountDetail billAccDetail : billDetail.getBillAccountDetails()) {
 
 			List<DemandDetail> currentDetails = taxHeadCodeDemandDetailgroup.get(billAccDetail.getTaxHeadCode());
-			boolean isCurrentDetailsNotEmpty = CollectionUtils.isEmpty(currentDetails);
+			int length = 0;
+			
+			if (!CollectionUtils.isEmpty(currentDetails))
+				length = currentDetails.size();
+			
 			/* 
 			 * if single demand detail corresponds to single billAccountDetail then update directly
 			 */
-			if (isCurrentDetailsNotEmpty && currentDetails.size() == 1) {
+			if (length == 1) {
 
 				updateSingleDemandDetail(currentDetails.get(0), billAccDetail, isRecieptCancellation);
 			}
 			/*
 			 * if multiple demandDetails point to one BillAccountDetial
 			 */
-			else if (isCurrentDetailsNotEmpty && currentDetails.size() > 1) {
+			else if (length > 1) {
 
 				updateMultipleDemandDetails(currentDetails, billAccDetail, isRecieptCancellation);
 			} else {
@@ -121,7 +125,7 @@ public class ReceiptService {
 				 * then add the new DemandDetail in the demand
 				 */
 				DemandDetail newAdvanceDetail = DemandDetail.builder()
-						.taxHeadMasterCode(billDetail.getConsumerCode())
+						.taxHeadMasterCode(billAccDetail.getTaxHeadCode())
 						.taxAmount(billAccDetail.getAmount())
 						.collectionAmount(BigDecimal.ZERO)
 						.tenantId(demand.getTenantId())

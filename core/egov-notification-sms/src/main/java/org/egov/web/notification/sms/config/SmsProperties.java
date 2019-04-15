@@ -73,12 +73,13 @@ public class SmsProperties {
         map.add(userParameterName, userName);
         map.add(passwordParameterName, password);
         map.add(senderIdParameterName, smsSender);
+        map.add(mtypeParameterName, smsMtype);
+        map.add(drParameterName, smsDR);
         map.add(mobileNumberParameterName, getMobileNumberWithPrefix(sms.getMobileNumber()));
         try {
             map.add(messageParameterName, sms.getMessage());
             byte ptext[] = sms.getMessage().getBytes();
             String value = new String(ptext, "UTF-8");
-            value = value.replaceAll(" ", "+");
             if(!StringUtils.isEmpty(value))
                 map.add(messageParameterName, value);
         }catch(Exception e) {
@@ -117,6 +118,12 @@ public class SmsProperties {
 
     @Value("${sms.sender}")
     private String smsSender;
+    
+    @Value("${sms.mtype}")
+    private String smsMtype;
+    
+    @Value("${sms.dr}")
+    private String smsDR;
 
     @Value("${sms.sender.username.req.param.name}")
     private String userParameterName;
@@ -138,6 +145,12 @@ public class SmsProperties {
 
     @Value("${mobile.number.prefix:}")
     private String mobileNumberPrefix;
+    
+    @Value("${sms.message.mtype.param.name}")
+    private String mtypeParameterName;
+    
+    @Value("${sms.message.dr.param.name}")
+    private String drParameterName;
 
     @Value("#{'${sms.error.codes}'.split(',')}")
     @Getter

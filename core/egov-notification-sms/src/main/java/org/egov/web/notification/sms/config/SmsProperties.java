@@ -78,6 +78,7 @@ public class SmsProperties {
             map.add(messageParameterName, sms.getMessage());
             byte ptext[] = sms.getMessage().getBytes();
             String value = new String(ptext, "UTF-8");
+            value.replace(" ", "+");
             if(!StringUtils.isEmpty(value))
                 map.add(messageParameterName, value);
         }catch(Exception e) {

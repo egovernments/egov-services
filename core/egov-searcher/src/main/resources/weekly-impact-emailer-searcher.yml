@@ -60,6 +60,7 @@
      searchParams:
       condition: AND
       params:
+      params:
       - name: intervalinsecs
         isMandatory: true
         jsonPath: $.searchCriteria.intervalinsecs
@@ -77,6 +78,7 @@
      searchParams:
       condition: AND
       params:
+      params:
       - name: intervalinsecs
         isMandatory: true
         jsonPath: $.searchCriteria.intervalinsecs
@@ -85,4 +87,3 @@
       jsonFormat: {"ResponseInfo": {}}
       outJsonPath: $.data
       responseInfoPath: $.ResponseInfo
-      

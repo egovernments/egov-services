@@ -175,7 +175,7 @@ public class ExternalSMSService implements SMSService {
                }
                
                log.info("GET");
-               log.info("URL: "+ url);
+               log.info("URL: "+ final_url);
                
                String responseString = restTemplate.getForObject(final_url, String.class);
                

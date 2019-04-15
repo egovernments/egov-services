@@ -41,6 +41,8 @@
 package org.egov.web.notification.sms.config;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.web.notification.sms.models.Priority;
 import org.egov.web.notification.sms.models.Sms;
@@ -55,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
+@Slf4j
 public class SmsProperties {
 
     private static final String SMS_PRIORITY_PARAM_VALUE = "sms.%s.priority.param.value";
@@ -71,7 +74,15 @@ public class SmsProperties {
         map.add(passwordParameterName, password);
         map.add(senderIdParameterName, smsSender);
         map.add(mobileNumberParameterName, getMobileNumberWithPrefix(sms.getMobileNumber()));
-        map.add(messageParameterName, sms.getMessage());
+        try {
+            map.add(messageParameterName, sms.getMessage());
+            byte ptext[] = sms.getMessage().getBytes();
+            String value = new String(ptext, "UTF-8");
+            if(!StringUtils.isEmpty(value))
+                map.add(messageParameterName, value);
+        }catch(Exception e) {
+        	log.error("Exception whle encoding the sms text: ", e);
+        }
         populateSmsPriority(sms.getPriority(), map);
         populateAdditionalSmsParameters(map);
 

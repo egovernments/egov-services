@@ -66,7 +66,11 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.net.ssl.SSLContext;
+
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -74,6 +78,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Service
 @ConditionalOnProperty(value = "sms.enabled", havingValue = "true")
+@Slf4j
 public class ExternalSMSService implements SMSService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExternalSMSService.class);
 
@@ -158,7 +163,11 @@ public class ExternalSMSService implements SMSService {
 
 
                String final_url = UriComponentsBuilder.fromHttpUrl(url).queryParams(requestBody).toUriString();
-
+               try {
+                   URLEncoder.encode(final_url, "UTF8");
+               }catch(Exception e) {
+            	   log.error("Exception while encoding url: ",e);
+               }
                if (dontEncodeURL) {
                    final_url = final_url.replace("%20", " ").replace("%2B", "+");
                }

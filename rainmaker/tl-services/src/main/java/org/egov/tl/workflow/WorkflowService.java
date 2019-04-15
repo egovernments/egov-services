@@ -1,15 +1,19 @@
 package org.egov.tl.workflow;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.RequestInfoWrapper;
 import org.egov.tl.web.models.workflow.BusinessService;
+import org.egov.tl.web.models.workflow.BusinessServiceResponse;
 import org.egov.tl.web.models.workflow.State;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class WorkflowService {
@@ -38,13 +42,13 @@ public class WorkflowService {
         StringBuilder url = getSearchURLWithParams(tenantId);
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         Object result = serviceRequestRepository.fetchResult(url, requestInfoWrapper);
-        BusinessService response = null;
+        BusinessServiceResponse response = null;
         try {
-            response = mapper.convertValue(result, BusinessService.class);
+            response = mapper.convertValue(result,BusinessServiceResponse.class);
         } catch (IllegalArgumentException e) {
             throw new CustomException("PARSING ERROR", "Failed to parse response of calculate");
         }
-        return response;
+        return response.getBusinessServices().get(0);
     }
 
 
@@ -73,7 +77,7 @@ public class WorkflowService {
      */
     public State getState(String stateCode, BusinessService businessService){
        for(State state : businessService.getStates()){
-           if(state.getApplicationStatus().equalsIgnoreCase(stateCode))
+           if(state.getApplicationStatus()!=null && state.getApplicationStatus().equalsIgnoreCase(stateCode))
                return state;
        }
        return null;

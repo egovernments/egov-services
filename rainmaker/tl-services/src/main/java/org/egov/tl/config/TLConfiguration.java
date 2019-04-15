@@ -201,7 +201,7 @@ public class TLConfiguration {
     @Value("${create.tl.workflow.name}")
     private String businessServiceValue;
 
-    @Value("${workflow.host}")
+    @Value("${workflow.context.path}")
     private String wfHost;
 
     @Value("${workflow.transition.path}")

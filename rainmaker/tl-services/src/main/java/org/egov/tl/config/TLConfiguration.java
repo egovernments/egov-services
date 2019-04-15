@@ -197,6 +197,24 @@ public class TLConfiguration {
     private Long minPeriod;
 
 
+    // Workflow
+    @Value("${create.tl.workflow.name}")
+    private String businessServiceValue;
+
+    @Value("${workflow.host}")
+    private String wfHost;
+
+    @Value("${workflow.transition.path}")
+    private String wfTransitionPath;
+
+    @Value("${workflow.businessservice.search.path}")
+    private String wfBusinessServiceSearchPath;
+
+
+
+
+
+
 
 
 }

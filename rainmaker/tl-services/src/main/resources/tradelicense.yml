@@ -259,7 +259,7 @@ serviceMaps:
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline1
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline1
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline2
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.landmark
 
@@ -625,7 +625,7 @@ serviceMaps:
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline1
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline1
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline2
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.address.landmark
 

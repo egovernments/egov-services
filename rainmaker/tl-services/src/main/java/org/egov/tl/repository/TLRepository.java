@@ -9,6 +9,10 @@ import org.egov.tl.repository.rowmapper.TLRowMapper;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.tl.web.models.workflow.BusinessService;
+import org.egov.tl.web.models.workflow.State;
+import org.egov.tl.workflow.TLWorkflowService;
+import org.egov.tl.workflow.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,15 +38,21 @@ public class TLRepository {
 
     private TLConfiguration config;
 
+    private WorkflowService workflowService;
+
+
     @Autowired
-    public TLRepository(JdbcTemplate jdbcTemplate, TLQueryBuilder queryBuilder,
-                        TLRowMapper rowMapper, Producer producer, TLConfiguration config) {
+    public TLRepository(JdbcTemplate jdbcTemplate, TLQueryBuilder queryBuilder, TLRowMapper rowMapper,
+                        Producer producer, TLConfiguration config, WorkflowService workflowService) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryBuilder = queryBuilder;
         this.rowMapper = rowMapper;
         this.producer = producer;
         this.config = config;
+        this.workflowService = workflowService;
     }
+
+
 
 
     /**
@@ -76,15 +86,20 @@ public class TLRepository {
         List<TradeLicense> licesnsesForStatusUpdate = new LinkedList<>();
         List<TradeLicense> licensesForUpdate = new LinkedList<>();
 
-        licenses.forEach(license -> {
-            if(license.getAction().equalsIgnoreCase(ACTION_APPLY)
-                    || license.getAction().equalsIgnoreCase(ACTION_INITIATE)){
+        String tenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
+
+        BusinessService businessService = workflowService.getBusinessService(tenantId,tradeLicenseRequest.getRequestInfo());
+        State currentState;
+
+        for(TradeLicense license : licenses){
+            currentState = workflowService.getState(license.getStatus(),businessService);
+            if(currentState.getIsStateUpdatable()){
                 licensesForUpdate.add(license);
             }
             else{
                 licesnsesForStatusUpdate.add(license);
             }
-        });
+        }
 
         if(!licensesForUpdate.isEmpty())
             producer.push(config.getUpdateTopic(),new TradeLicenseRequest(requestInfo,licensesForUpdate));

@@ -66,6 +66,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BillDetail {
+	
 
 	  @JsonProperty("id")
 	  private String id = null;

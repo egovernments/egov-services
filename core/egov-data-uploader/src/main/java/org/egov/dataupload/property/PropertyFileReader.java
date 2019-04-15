@@ -1,6 +1,7 @@
 package org.egov.dataupload.property;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -19,6 +20,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.egov.dataupload.property.models.Document;
 import org.egov.dataupload.property.models.OwnerInfo;
 import org.egov.dataupload.property.models.OwnerInfo.RelationshipEnum;
@@ -47,8 +49,9 @@ public class PropertyFileReader {
 		Map<String, Sheet> sheetMap = new HashMap<>();
 
 		// Creating a Workbook from an Excel file (.xls or .xlsx)
-		Workbook workbook = WorkbookFactory.create(new File(location));
-
+//		Workbook workbook = WorkbookFactory.create(new File(location));
+		FileInputStream excelFile = new FileInputStream(new File(location));
+		Workbook workbook = new XSSFWorkbook(excelFile);
 		// Retrieving the number of sheets in the Workbook
 		log.info("Workbook has " + workbook.getNumberOfSheets() + " Sheets : ");
 

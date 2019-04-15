@@ -162,14 +162,12 @@ public class ExternalSMSService implements SMSService {
                 }
             } else {
                final MultiValueMap<String, String> requestBody = smsProperties.getSmsRequestBody(sms);
-
-
                String final_url = UriComponentsBuilder.fromHttpUrl(url).queryParams(requestBody).toUriString();
-               try {
+/*               try {
                    URLEncoder.encode(final_url, "UTF8");
                }catch(Exception e) {
             	   log.error("Exception while encoding url: ",e);
-               }
+               }*/
                if (dontEncodeURL) {
                    final_url = final_url.replace("%20", " ").replace("%2B", "+");
                }

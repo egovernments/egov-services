@@ -76,15 +76,15 @@ public class SmsProperties {
         map.add(mtypeParameterName, smsMtype);
         map.add(drParameterName, smsDR);
         map.add(mobileNumberParameterName, getMobileNumberWithPrefix(sms.getMobileNumber()));
-        try {
-            map.add(messageParameterName, sms.getMessage());
+        map.add(messageParameterName, sms.getMessage());
+/*        try {
             byte ptext[] = sms.getMessage().getBytes();
             String value = new String(ptext, "UTF-8");
             if(!StringUtils.isEmpty(value))
                 map.add(messageParameterName, value);
         }catch(Exception e) {
         	log.error("Exception whle encoding the sms text: ", e);
-        }
+        }*/
         populateSmsPriority(sms.getPriority(), map);
         populateAdditionalSmsParameters(map);
 

@@ -15,7 +15,7 @@
   
      output:
       jsonFormat: {"ResponseInfo": {}}
-      outJsonPath: $.stateWideData
+      outJsonPath: $.data
       responseInfoPath: $.ResponseInfo
       
       
@@ -28,11 +28,7 @@
       params:
       - name: intervalinsecs
         isMandatory: true
-        jsonPath: $.searchCriteria.intervalinsecs
-  
-     output:
-      jsonFormat: {"ResponseInfo": {}}
-      outJsonPath: $.stateWideData
+        jsonPath: $.searchCriteria.intervalinse$.data$.stateWideData
       responseInfoPath: $.ResponseInfo
       
       
@@ -49,7 +45,7 @@
   
      output:
       jsonFormat: {"ResponseInfo": {}}
-      outJsonPath: $.stateWideData
+      outJsonPath: $.data
       responseInfoPath: $.ResponseInfo
       
       
@@ -66,7 +62,7 @@
   
      output:
       jsonFormat: {"ResponseInfo": {}}
-      outJsonPath: $.stateWideData
+      outJsonPath: $.data
       responseInfoPath: $.ResponseInfo
       
       
@@ -83,7 +79,7 @@
   
      output:
       jsonFormat: {"ResponseInfo": {}}
-      outJsonPath: $.stateWideData
+      outJsonPath: $.data
       responseInfoPath: $.ResponseInfo
       
    

@@ -56,9 +56,10 @@ public class WorkflowService {
      */
     private StringBuilder getSearchURLWithParams(String tenantId) {
         StringBuilder url = new StringBuilder(config.getWfHost());
+        url.append(config.getWfBusinessServiceSearchPath());
         url.append("?tenantId=");
         url.append(tenantId);
-        url.append("&businessService");
+        url.append("&businessService=");
         url.append(config.getBusinessServiceValue());
         return url;
     }

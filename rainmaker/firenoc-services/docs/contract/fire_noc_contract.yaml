@@ -130,6 +130,12 @@ definitions:
     type: object
     description: It will contains building details
     properties:
+      id:
+        type: string
+        minLength: 2
+        maxLength: 64
+        description: Unique Identifier of the Fire NOC building details (UUID)
+        readOnly: true
       tenantId:
         type: string
         description: Unique Identifier of ULB
@@ -168,6 +174,12 @@ definitions:
     type: object
     description: It will have fire noc related entities
     properties:
+      id:
+        type: string
+        minLength: 2
+        maxLength: 64
+        description: Unique Identifier of the property details (UUID)
+        readOnly: true
       noOfBuildings:
         type: string
         description: it might be single or multiple
@@ -298,6 +310,12 @@ definitions:
     type: object
     description: A Object holds the basic data for a Fire NOC
     properties:
+      id:
+        type: string
+        minLength: 2
+        maxLength: 64
+        description: Unique Identifier of the Fire NOC Details (UUID)
+        readOnly: true
       applicationNumber:
         type: string
         description: Unique Application NOC Number of the Fire NOC. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval.
@@ -306,11 +324,7 @@ definitions:
         readOnly: true
       nocSubType:
         type: string
-        description: SubType of fire NOC
-        enum:
-          - PROVISION
-          - NEW
-          - RENEW
+        description: SubType of fire NOC from mdms
       propertyDetails:
         $ref: '#/definitions/PropertyDetails'
       applicationDate:

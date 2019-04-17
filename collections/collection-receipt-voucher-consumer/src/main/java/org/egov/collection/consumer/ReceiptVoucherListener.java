@@ -49,11 +49,11 @@ public class ReceiptVoucherListener {
             if (request.getTenantId() == null) {
                 request.setTenantId(request.getReceipt().get(0).getTenantId());
             }
-            if (checkVoucherCreation(request)) {
+             //  if (checkVoucherCreation(request)) { TODO if block commented out for testing
 
                 voucherResponse = voucherService.createVoucher(request);
                 receiptService.updateReceipt(request, voucherResponse);
-            }
+           // }
         } catch (IOException e) {
             e.printStackTrace();
         }

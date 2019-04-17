@@ -211,6 +211,9 @@ public class TLConfiguration {
     private String wfBusinessServiceSearchPath;
 
 
+    @Value("${is.external.workflow.enabled}")
+    private Boolean isExternalWorkFlowEnabled;
+
 
 
 

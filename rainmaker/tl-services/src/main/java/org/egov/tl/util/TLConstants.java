@@ -2,6 +2,10 @@ package org.egov.tl.util;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class TLConstants {
 
@@ -29,6 +33,12 @@ public class TLConstants {
     public static final String NOTIFICATION_REJECTED = "tl.en.counter.rejected";
 
     public static final String NOTIFICATION_CANCELLED = "tl.en.counter.cancelled";
+
+    public static final String NOTIFICATION_FIELD_CHANGED = "tl.en.edit.field.change";
+
+    public static final String NOTIFICATION_OBJECT_ADDED = "tl.en.edit.object.added";
+
+    public static final String NOTIFICATION_OBJECT_REMOVED = "tl.en.edit.object.removed";
 
 
 
@@ -136,6 +146,13 @@ public class TLConstants {
     public static final String ACTION_CANCEL_CANCELLED  = "CANCEL_CANCELLED";
 
     public static final String ACTION_STATUS_PAID  = "PAID";
+
+
+    public static final String VARIABLE_ACTION = "action";
+
+    public static final String VARIABLE_WFDOCUMENTS = "wfDocuments";
+
+    public static final List<String> FIELDS_TO_IGNORE = Collections.unmodifiableList(Arrays.asList(VARIABLE_ACTION,VARIABLE_WFDOCUMENTS));
 
 
     public TLConstants() {}

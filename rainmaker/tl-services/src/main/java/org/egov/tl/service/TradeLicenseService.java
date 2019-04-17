@@ -3,11 +3,14 @@ package org.egov.tl.service;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
 import org.egov.tl.util.TradeUtil;
 import org.egov.tl.validator.TLValidator;
+import org.egov.tl.web.models.Difference;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
@@ -21,9 +24,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TradeLicenseService {
-	
-	@Value("${is.external.workflow.enabled}")
-	private Boolean isExternalWorkFlowEnabled;
 	
 	private WorkflowIntegrator wfIntegrator;
 
@@ -43,22 +43,32 @@ public class TradeLicenseService {
 
     private TradeUtil util;
 
+    private DiffService diffService;
 
-	@Autowired
-	public TradeLicenseService(WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService,
-			UserService userService, TLRepository repository, ActionValidator actionValidator, TLValidator tlValidator,
-			TLWorkflowService workflowService, CalculationService calculationService, TradeUtil util) {
-		
-		this.wfIntegrator = wfIntegrator;
-		this.enrichmentService = enrichmentService;
-		this.userService = userService;
-		this.repository = repository;
-		this.actionValidator = actionValidator;
-		this.tlValidator = tlValidator;
-		this.workflowService = workflowService;
-		this.calculationService = calculationService;
-		this.util = util;
-	}
+    private TLConfiguration config;
+
+
+    @Autowired
+    public TradeLicenseService(WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService,
+                               UserService userService, TLRepository repository, ActionValidator actionValidator,
+                               TLValidator tlValidator, TLWorkflowService workflowService,
+                               CalculationService calculationService, TradeUtil util, DiffService diffService,
+                               TLConfiguration config) {
+        this.wfIntegrator = wfIntegrator;
+        this.enrichmentService = enrichmentService;
+        this.userService = userService;
+        this.repository = repository;
+        this.actionValidator = actionValidator;
+        this.tlValidator = tlValidator;
+        this.workflowService = workflowService;
+        this.calculationService = calculationService;
+        this.util = util;
+        this.diffService = diffService;
+        this.config = config;
+    }
+
+
+
 
 
     /**
@@ -77,7 +87,7 @@ public class TradeLicenseService {
         /*
 		 * call workflow service if it's enable else uses internal workflow process
 		 */
-		if (isExternalWorkFlowEnabled)
+		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(tradeLicenseRequest);
 		repository.save(tradeLicenseRequest);
 		return tradeLicenseRequest.getLicenses();
@@ -145,13 +155,16 @@ public class TradeLicenseService {
      */
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
         Object mdmsData = util.mDMSCall(tradeLicenseRequest);
+        List<TradeLicense> searchResult = repository.searchTradeLicenseFromDB(tradeLicenseRequest);
+        Map<String,Difference> diffs = diffService.getDifference(tradeLicenseRequest,searchResult);
+
         actionValidator.validateUpdateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
-        tlValidator.validateUpdate(tradeLicenseRequest,mdmsData);
+        tlValidator.validateUpdate(tradeLicenseRequest,searchResult,mdmsData);
         /*
 	 * call workflow service if it's enable else uses internal workflow process
 	 */
-		if (isExternalWorkFlowEnabled)
+		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(tradeLicenseRequest);
 		else
 			workflowService.updateStatus(tradeLicenseRequest);

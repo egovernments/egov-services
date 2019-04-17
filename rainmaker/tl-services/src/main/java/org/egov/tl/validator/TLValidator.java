@@ -117,26 +117,8 @@ public class TLValidator {
      *  Validates the update request
      * @param request The input TradeLicenseRequest Object
      */
-    public void validateUpdate(TradeLicenseRequest request,Object mdmsData){
+    public void validateUpdate(TradeLicenseRequest request,List<TradeLicense> searchResult,Object mdmsData){
       List<TradeLicense> licenses = request.getLicenses();
-
-      Map<String,List<String>> tenantIdToIds= new HashMap<>();
-
-      // Map of tenantId to tradeLicenses created
-      request.getLicenses().forEach(license -> {
-          if(tenantIdToIds.containsKey(license.getTenantId()))
-              tenantIdToIds.get(license.getTenantId()).add(license.getId());
-          else {
-              List<String> perTenantIds = new LinkedList<>();
-              perTenantIds.add(license.getId());
-              tenantIdToIds.put(license.getTenantId(),perTenantIds);
-          }
-      });
-
-      List<TradeLicense> searchResult = new LinkedList<>();
-        tenantIdToIds.keySet().forEach(key -> {
-                addTradeLicenseFromSearch(key,tenantIdToIds.get(key),searchResult);
-      });
 
       if(searchResult.size()!=licenses.size())
           throw new CustomException("INVALID UPDATE","The license to be updated is not in database");
@@ -178,19 +160,7 @@ public class TLValidator {
    }
 
 
-    /**
-     *  Adds tradeLicense for the particular tenantId in the list
-     * @param tenantId tenantId of the license
-     * @param ids ids of licenses with the given tenantId
-     * @param searchResult The list containing multitenant licenses
-     */
-   private void addTradeLicenseFromSearch(String tenantId,List<String> ids,
-                                          List<TradeLicense> searchResult){
-         TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
-         criteria.setTenantId(tenantId);
-         criteria.setIds(ids);
-         searchResult.addAll(tlRepository.getLicenses(criteria));
-   }
+
 
 
     /**

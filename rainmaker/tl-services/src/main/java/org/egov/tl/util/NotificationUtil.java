@@ -2,10 +2,12 @@ package org.egov.tl.util;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.ServiceRequestRepository;
+import org.egov.tl.web.models.Difference;
 import org.egov.tl.web.models.RequestInfoWrapper;
 import org.egov.tl.web.models.SMSRequest;
 import org.egov.tl.web.models.TradeLicense;
@@ -341,6 +343,59 @@ public class NotificationUtil {
         builder.append(TRADE_LICENSE_MODULE_CODE);
         return builder;
     }
+
+
+    /**
+     * Creates sms request for the each owners
+     * @param message The message for the specific tradeLicense
+     * @param mobileNumberToOwnerName Map of mobileNumber to OwnerName
+     * @return List of SMSRequest
+     */
+    public List<SMSRequest> createSMSRequest(String message,Map<String,String> mobileNumberToOwnerName){
+        List<SMSRequest> smsRequest = new LinkedList<>();
+        for(Map.Entry<String,String> entryset : mobileNumberToOwnerName.entrySet()) {
+            String customizedMsg = message.replace("<1>",entryset.getValue());
+            smsRequest.add(new SMSRequest(entryset.getKey(),customizedMsg));
+        }
+        return smsRequest;
+    }
+
+
+    public String getCustomizedMsg(Difference diff, TradeLicense license, String localizationMessage){
+        String message = null,messageTemplate;
+
+
+        if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_FIELD_CHANGED,localizationMessage);
+            message = getEditMsg(license,diff.getFieldsChanged(),messageTemplate);
+        }
+
+        if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_ADDED,localizationMessage);
+            message = getEditMsg(license,diff.getClassesAdded(),messageTemplate);
+        }
+
+        if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_REMOVED,localizationMessage);
+            message = getEditMsg(license,diff.getClassesRemoved(),messageTemplate);
+        }
+
+        return message;
+    }
+
+
+    /**
+       Creates customized message for field chnaged
+     * @param message Message from localization for field change
+     * @return customized message for field change
+     */
+    private String getEditMsg(TradeLicense license,List<String> list,String message){
+        message = message.replace("<APPLICATION_NUMBER>",license.getApplicationNumber());
+        message = message.replace("<FIELDS>",StringUtils.join(list,","));
+        return message;
+    }
+
+
 
 
 

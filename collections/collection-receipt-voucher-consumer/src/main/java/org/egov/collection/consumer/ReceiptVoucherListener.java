@@ -39,7 +39,7 @@ public class ReceiptVoucherListener {
     @Autowired
     private ReceiptService receiptService;
 
-    @KafkaListener(id = "${egov.collection.receipt.voucher.save.id}", topics = "${egov.collection.receipt.voucher.save.topic}", group = "${egov.collection.receipt.voucher.save.group}")
+    @KafkaListener(topics = "${egov.collection.receipt.voucher.save.topic}")
     public void process(ConsumerRecord<String, String> record) {
         ReceiptRequest request = null;
         LOGGER.info("key : " + record.key() + "\t\t" + "value : " + record.value());

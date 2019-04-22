@@ -27,11 +27,11 @@ public class PersisterMessageListener implements MessageListener<String, Object>
 		
 		try {
 			rcvData = objectMapper.writeValueAsString(data.value());
+			persistService.persist(data.topic(),rcvData);    
 		} catch (JsonProcessingException e) {
 			persistService.postToErrorQueue(data.value(), e);
 			e.printStackTrace();
 		}
-		persistService.persist(data.topic(),rcvData);    
 	}
 
 }

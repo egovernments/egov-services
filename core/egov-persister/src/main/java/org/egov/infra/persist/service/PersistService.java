@@ -42,7 +42,6 @@ public class PersistService {
 			List<JsonMap> jsonMaps = queryMap.getJsonMaps();
 			String basePath = queryMap.getBasePath();
 			persistRepository.persist(query, jsonMaps, json, basePath);
-
 		}
 
 		/*

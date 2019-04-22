@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.infra.persist.service.PersistService;
 import org.egov.infra.persist.web.contract.JsonMap;
 import org.egov.infra.persist.web.contract.TypeEnum;
 import org.postgresql.util.PGobject;
@@ -32,10 +33,12 @@ public class PersistRepository {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private PersistService persistService;
 
 	public void persist(String query, List<JsonMap> jsonMaps, String jsonData, String basePath) {
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonData);
-
 		if (basePath != null && basePath.contains("*"))
 			persistList(query, jsonMaps, basePath, document);
 		else
@@ -184,6 +187,7 @@ public class PersistRepository {
 						log.debug("JSON = " + json);
 						obj[j] = json;
 					} catch (JsonProcessingException e) {
+						persistService.postToErrorQueue(value, e);
 						e.printStackTrace();
 					}
 				} else if (type.toString().equals(TypeEnum.JSON.toString())
@@ -197,9 +201,11 @@ public class PersistRepository {
 						factorsObject.setValue(json);
 						obj[j] = factorsObject;
 					} catch (JsonProcessingException e) {
+						persistService.postToErrorQueue(value, e);
 						e.printStackTrace();
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
+						persistService.postToErrorQueue(value, e);
 						e.printStackTrace();
 					}
 				} else if (type.toString().equals(TypeEnum.LONG.toString())) {
@@ -217,6 +223,7 @@ public class PersistRepository {
 						String newDateString = df.format(startDate);
 						log.debug("newDateString:" + newDateString);
 					} catch (ParseException e) {
+						persistService.postToErrorQueue(date, e);
 						e.printStackTrace();
 					}
 					obj[j] = startDate;
@@ -232,6 +239,7 @@ public class PersistRepository {
 			log.debug("query:" + query + ",object:" + dbObjArray.toString());
 			jdbcTemplate.batchUpdate(query, dbObjArray);
 		} catch (Exception ex) {
+			persistService.postToErrorQueue(query, ex);
 			ex.printStackTrace();
 			throw ex;
 		}
@@ -288,6 +296,7 @@ public class PersistRepository {
 					log.debug("JSON = " + json);
 					obj[j] = json;
 				} catch (JsonProcessingException e) {
+					persistService.postToErrorQueue(value, e);
 					e.printStackTrace();
 				}
 			} else if (type.toString().equals(TypeEnum.JSON.toString())
@@ -301,9 +310,11 @@ public class PersistRepository {
 					factorsObject.setValue(json);
 					obj[j] = factorsObject;
 				} catch (JsonProcessingException e) {
+					persistService.postToErrorQueue(value, e);
 					e.printStackTrace();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
+					persistService.postToErrorQueue(value, e);
 					e.printStackTrace();
 				}
 			} else if (jsonPath.startsWith("default"))
@@ -323,6 +334,7 @@ public class PersistRepository {
 					String newDateString = df.format(startDate);
 					log.debug("newDateString:" + newDateString);
 				} catch (ParseException e) {
+					persistService.postToErrorQueue(date, e);
 					e.printStackTrace();
 				}
 				obj[j] = startDate;
@@ -339,6 +351,7 @@ public class PersistRepository {
 			log.debug("query:" + query + ",object:" + dbObjArray.toString());
 			jdbcTemplate.batchUpdate(query, dbObjArray);
 		} catch (Exception ex) {
+			persistService.postToErrorQueue(query, ex);
 			ex.printStackTrace();
 			throw ex;
 		}

@@ -152,6 +152,10 @@ public class TLConstants {
 
     public static final String VARIABLE_WFDOCUMENTS = "wfDocuments";
 
+    public static final String VARIABLE_ACTIVE = "active";
+
+    public static final String VARIABLE_USERACTIVE = "userActive";
+
     public static final List<String> FIELDS_TO_IGNORE = Collections.unmodifiableList(Arrays.asList(VARIABLE_ACTION,VARIABLE_WFDOCUMENTS));
 
 

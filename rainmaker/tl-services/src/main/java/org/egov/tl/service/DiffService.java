@@ -3,6 +3,7 @@ package org.egov.tl.service;
 import org.egov.tl.web.models.Difference;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
+import org.egov.tracer.model.CustomException;
 import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
@@ -14,7 +15,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
-import static org.egov.tl.util.TLConstants.FIELDS_TO_IGNORE;
+import static org.egov.tl.util.TLConstants.*;
 
 @Service
 public class DiffService {
@@ -44,8 +45,8 @@ public class DiffService {
             Difference diff = new Difference();
             diff.setId(license.getId());
             diff.setFieldsChanged(getUpdatedFields(license, licenseFromSearch));
-            diff.setClassesAdded(getObjectsAddedOrRemoved(license, licenseFromSearch, true));
-            diff.setClassesRemoved(getObjectsAddedOrRemoved(license, licenseFromSearch, false));
+            diff.setClassesAdded(getObjectsAdded(license, licenseFromSearch));
+            diff.setClassesRemoved(getObjectsRemoved(license, licenseFromSearch));
             diffMap.put(license.getId(), diff);
         }
 
@@ -87,26 +88,68 @@ public class DiffService {
      * @param licenseFromSearch License from db on which update is called
      * @return Names of Classes added or removed during update
      */
-    private List<String> getObjectsAddedOrRemoved(TradeLicense licenseFromUpdate, TradeLicense licenseFromSearch, Boolean added) {
+    private List<String> getObjectsAdded(TradeLicense licenseFromUpdate, TradeLicense licenseFromSearch) {
 
         Javers javers = JaversBuilder.javers().build();
         Diff diff = javers.compare(licenseFromUpdate, licenseFromSearch);
-        List objectsAddedOrRemoved;
-        if (added)
-            objectsAddedOrRemoved = diff.getObjectsByChangeType(NewObject.class);
-        else objectsAddedOrRemoved = diff.getObjectsByChangeType(ObjectRemoved.class);
+        List objectsAdded = diff.getObjectsByChangeType(NewObject.class);
+        ;
 
         List<String> classModified = new LinkedList<>();
 
-        if (CollectionUtils.isEmpty(objectsAddedOrRemoved))
+        if (CollectionUtils.isEmpty(objectsAdded))
             return classModified;
 
-        objectsAddedOrRemoved.forEach(object -> {
+        objectsAdded.forEach(object -> {
             if (!classModified.contains(object.getClass().toString()))
                 classModified.add(object.getClass().toString());
         });
 
         return classModified;
+    }
+
+
+    /**
+     * Gives the names of the classes whose object are added or removed between the given licenses
+     *
+     * @param licenseFromUpdate License from update request
+     * @param licenseFromSearch License from db on which update is called
+     * @return Names of Classes added or removed during update
+     */
+    private List<String> getObjectsRemoved(TradeLicense licenseFromUpdate, TradeLicense licenseFromSearch) {
+
+        Javers javers = JaversBuilder.javers().build();
+        Diff diff = javers.compare(licenseFromUpdate, licenseFromSearch);
+        List<ValueChange> changes = diff.getChangesByType(ValueChange.class);
+
+        List<String> classRemoved = new LinkedList<>();
+
+        if (CollectionUtils.isEmpty(changes))
+            return classRemoved;
+
+        changes.forEach(change -> {
+            if (change.getPropertyName().equalsIgnoreCase(VARIABLE_ACTIVE)
+                    || change.getPropertyName().equalsIgnoreCase(VARIABLE_USERACTIVE)) {
+                classRemoved.add(getObjectClassName(change.getAffectedObject().toString()));
+            }
+        });
+        return classRemoved;
+    }
+
+    /**
+     * Extracts the class name from the affectedObject string representation
+     * @param affectedObject The object which is removed
+     * @return Name of the class of object removed
+     */
+    private String getObjectClassName(String affectedObject) {
+        String className = null;
+        try {
+            String firstSplit = affectedObject.substring(affectedObject.lastIndexOf('.') + 1);
+            className = firstSplit.split("@")[0];
+        } catch (Exception e) {
+            throw new CustomException("NOTIFICATION ERROR", "Failed to fetch notification");
+        }
+        return className;
     }
 
 

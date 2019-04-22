@@ -25,7 +25,7 @@ public class EditNotificationService {
         this.util = util;
     }
 
-    public void process(TradeLicenseRequest request, Map<String, Difference> diffMap) {
+    public void sendEditNotification(TradeLicenseRequest request, Map<String, Difference> diffMap) {
         List<SMSRequest> smsRequests = enrichSMSRequest(request, diffMap);
         util.sendSMS(smsRequests);
     }

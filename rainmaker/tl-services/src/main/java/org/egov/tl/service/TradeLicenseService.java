@@ -8,6 +8,7 @@ import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
+import org.egov.tl.service.notification.EditNotificationService;
 import org.egov.tl.util.TradeUtil;
 import org.egov.tl.validator.TLValidator;
 import org.egov.tl.web.models.Difference;
@@ -47,13 +48,14 @@ public class TradeLicenseService {
 
     private TLConfiguration config;
 
+    private EditNotificationService  editNotificationService;
 
     @Autowired
     public TradeLicenseService(WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService,
                                UserService userService, TLRepository repository, ActionValidator actionValidator,
                                TLValidator tlValidator, TLWorkflowService workflowService,
                                CalculationService calculationService, TradeUtil util, DiffService diffService,
-                               TLConfiguration config) {
+                               TLConfiguration config,EditNotificationService editNotificationService) {
         this.wfIntegrator = wfIntegrator;
         this.enrichmentService = enrichmentService;
         this.userService = userService;
@@ -65,6 +67,7 @@ public class TradeLicenseService {
         this.util = util;
         this.diffService = diffService;
         this.config = config;
+        this.editNotificationService = editNotificationService;
     }
 
 
@@ -156,7 +159,7 @@ public class TradeLicenseService {
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
         Object mdmsData = util.mDMSCall(tradeLicenseRequest);
         List<TradeLicense> searchResult = repository.searchTradeLicenseFromDB(tradeLicenseRequest);
-        Map<String,Difference> diffs = diffService.getDifference(tradeLicenseRequest,searchResult);
+        Map<String,Difference> diffMap = diffService.getDifference(tradeLicenseRequest,searchResult);
 
         actionValidator.validateUpdateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
@@ -173,6 +176,7 @@ public class TradeLicenseService {
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
         repository.update(tradeLicenseRequest);
+        editNotificationService.sendEditNotification(tradeLicenseRequest,diffMap);
         return tradeLicenseRequest.getLicenses();
     }
 

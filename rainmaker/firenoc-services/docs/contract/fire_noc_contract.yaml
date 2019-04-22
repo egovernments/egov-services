@@ -185,8 +185,6 @@ definitions:
         description: it might be single or multiple
       propertyId:
         type: string
-      firestationId:
-        type: string
       buildingDetails:
         type: array
         items:
@@ -195,8 +193,6 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/Address'
     required:
       - noOfBuildings
-      - propertyId
-      - firestationId
       - buildingDetails
   OwnerInfo:
     allOf:
@@ -239,11 +235,6 @@ definitions:
         minLength: 2
         maxLength: 64
         description: '1.Unique document type code from common master. 2. This is defined under mdms common master. 3. Object defination is defined under ''https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/DocumentType'''
-      documentSubType:
-        type: string
-        minLength: 2
-        maxLength: 64
-        description: 'It will be aadhar card, pancard and voter id'
       fileStoreId:
         type: string
         minLength: 2
@@ -296,8 +287,6 @@ definitions:
         format: int64
         description: Commencement Date of the fire NOC as epoch
       nocDetail:
-        type: array
-        items:
           $ref: '#/definitions/NOCDetail'
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
@@ -325,6 +314,9 @@ definitions:
       nocSubType:
         type: string
         description: SubType of fire NOC from mdms
+      firestationId:
+        type: string
+        description: Fire station id where we are applying fire noc.
       propertyDetails:
         $ref: '#/definitions/PropertyDetails'
       applicationDate:
@@ -359,15 +351,6 @@ definitions:
           - APPROVE
           - REJECT
           - CANCEL
-      status:
-        type: string
-        description: Unique identifier (code) of the Fire NOC Status
-        enum:
-          - INITIATED
-          - APPLIED
-          - APPROVED
-          - REJECTED
-          - CANCELED
       applicantDetails:
         type: object
         description: This will have details about applicant details
@@ -392,16 +375,6 @@ definitions:
           - COUNTER
           - CITIZEN
           - DATAENTRY
-      applicationDocuments:
-        description: 1. List of all the required documents. 2. Application can be submitted without required document 3. Once all the document submitted then only application submition process will be completed. 4. Mandatry application documents for a fire NOC type and fire NOC subtype are defined under ApplicationDocument master which is defined under MDMS.
-        type: array
-        items:
-          $ref: '#/definitions/Document'
-      verificationDocuments:
-        description: 1. Verification Documents will uploaded at the time of approval. 2. Mandatry verification documents for a fire NOC are defined under VerificationDocument master which is defined under MDMS.
-        type: array
-        items:
-          $ref: '#/definitions/Document'
       additionalDetail:
         type: object
         description: Json object to store additional details about license
@@ -416,6 +389,7 @@ definitions:
       - action
       - owners
       - channel
+      - firestationId
   NOCRequest:
     description: Contract class to receive request. Array of Noc items are used
     properties:
@@ -451,6 +425,111 @@ definitions:
         type: array
         items:
           type: string
+      active: 
+        type: boolean
+  NOCType:
+    type: object
+    description: Type of NOC Provisional and New
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
+  OwnershipType:
+    type: object
+    description: Owner ship type Individual/multiple/Insti
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
+  OwnerSpecialCategory:
+    type: object
+    description: Owner special category Widow/freedom fighter
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
+  FireStations:
+    type: object
+    description: Fire staion where we apply for fire NOC
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
+  FireStationsToULBMapping:
+    type: object
+    description: Fire staion to ulb mapping
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      fireStationCode:
+        type: string
+        description: Unique value reffered to FireStations master
+      boundaryCode:
+        type: string
+        description: Unique value reffered to boundary master, it will be dot seperated eg- pb.amritsar.SC4
+      active: 
+        type: boolean
+  FireNOCMetaInfo:
+    type: object
+    description: This master used to maintain metadata of fire noc
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      firestationMapping: 
+        type: string
+        description: Here we will mention whether its a fire to ulb mapping or fire to mohalla mapping, depends on this configuration we will filter firestation to ulb mapping.
+      certificateValidity:
+        type: string
+        description: Here we will mention validity of mode eg- days/months/years.
+      certificateEndOfValidity:
+        type: string
+        description: Here we will mention end of validity eg- calendar/financial year.
+      overallSLA:
+        type: number
+        description: It will contain overall SLA for process
+  UOM:
+    type: object
+    description: This master will have list of UOM's
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
+  Status:
+    type: object
+    description: This master will have list of Status
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
+  SLA:
+    type: object
+    description: This master will have mapping between Status to SLA
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      statusCode: 
+        type: string
+        description: This is will be referene to status master
+      noOfDays:
+        type: string
+        description: It will have status completion days.
+      active: 
+        type: boolean
 parameters:
   pageSize:
     name: pageSize

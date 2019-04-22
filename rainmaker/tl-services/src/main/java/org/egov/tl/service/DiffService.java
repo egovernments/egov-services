@@ -73,8 +73,9 @@ public class DiffService {
             return updatedFields;
 
         changes.forEach(change -> {
-            if (!FIELDS_TO_IGNORE.contains(change.getPropertyName()))
+            if (!FIELDS_TO_IGNORE.contains(change.getPropertyName())){
                 updatedFields.add(change.getPropertyName());
+            }
         });
 
         return updatedFields;
@@ -91,7 +92,7 @@ public class DiffService {
     private List<String> getObjectsAdded(TradeLicense licenseFromUpdate, TradeLicense licenseFromSearch) {
 
         Javers javers = JaversBuilder.javers().build();
-        Diff diff = javers.compare(licenseFromUpdate, licenseFromSearch);
+        Diff diff = javers.compare(licenseFromSearch,licenseFromUpdate);
         List objectsAdded = diff.getObjectsByChangeType(NewObject.class);
         ;
 

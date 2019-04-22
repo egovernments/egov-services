@@ -6,9 +6,7 @@ import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.builder.TLQueryBuilder;
 import org.egov.tl.repository.rowmapper.TLRowMapper;
-import org.egov.tl.web.models.TradeLicense;
-import org.egov.tl.web.models.TradeLicenseRequest;
-import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.tl.web.models.*;
 import org.egov.tl.web.models.workflow.BusinessService;
 import org.egov.tl.web.models.workflow.State;
 import org.egov.tl.workflow.TLWorkflowService;
@@ -17,6 +15,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -62,7 +61,9 @@ public class TLRepository {
         List<Object> preparedStmtList = new ArrayList<>();
         String query = queryBuilder.getTLSearchQuery(criteria, preparedStmtList);
         log.info("Query: " + query);
-        return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+        List<TradeLicense> licenses =  jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+        sortChildObjectsById(licenses);
+        return licenses;
     }
 
     /**
@@ -156,6 +157,26 @@ public class TLRepository {
         criteria.setTenantId(tenantId);
         criteria.setIds(ids);
         searchResult.addAll(getLicenses(criteria));
+    }
+
+
+    /**
+     * Sorts the child objects by  there ids
+     * @param tradeLicenses The list of tradeLicense
+     */
+    private void sortChildObjectsById(List<TradeLicense> tradeLicenses){
+        if(CollectionUtils.isEmpty(tradeLicenses))
+            return;
+        tradeLicenses.forEach(license -> {
+            license.getTradeLicenseDetail().getOwners().sort(Comparator.comparing(User::getUuid));
+            license.getTradeLicenseDetail().getTradeUnits().sort(Comparator.comparing(TradeUnit::getId));
+            if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getAccessories()))
+                license.getTradeLicenseDetail().getAccessories().sort(Comparator.comparing(Accessory::getId));
+            if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getApplicationDocuments()))
+                license.getTradeLicenseDetail().getApplicationDocuments().sort(Comparator.comparing(Document::getId));
+            if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getVerificationDocuments()))
+                license.getTradeLicenseDetail().getVerificationDocuments().sort(Comparator.comparing(Document::getId));
+        });
     }
 
 

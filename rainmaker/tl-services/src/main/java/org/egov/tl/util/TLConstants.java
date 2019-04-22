@@ -156,7 +156,16 @@ public class TLConstants {
 
     public static final String VARIABLE_USERACTIVE = "userActive";
 
-    public static final List<String> FIELDS_TO_IGNORE = Collections.unmodifiableList(Arrays.asList(VARIABLE_ACTION,VARIABLE_WFDOCUMENTS));
+    public static final String VARIABLE_CREATEDBY = "createdBy";
+
+    public static final String VARIABLE_LASTMODIFIEDBY = "lastModifiedBy";
+
+    public static final String VARIABLE_CREATEDTIME = "createdTime";
+
+    public static final String VARIABLE_LASTMODIFIEDTIME = "lastModifiedTime";
+
+    public static final List<String> FIELDS_TO_IGNORE = Collections.unmodifiableList(Arrays.asList(VARIABLE_ACTION,VARIABLE_WFDOCUMENTS,
+            VARIABLE_CREATEDBY,VARIABLE_LASTMODIFIEDBY,VARIABLE_CREATEDTIME,VARIABLE_LASTMODIFIEDTIME));
 
 
     public TLConstants() {}

@@ -370,12 +370,12 @@ public class NotificationUtil {
             message = getEditMsg(license,diff.getFieldsChanged(),messageTemplate);
         }
 
-        if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+        if(!CollectionUtils.isEmpty(diff.getClassesAdded())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_ADDED,localizationMessage);
             message = getEditMsg(license,diff.getClassesAdded(),messageTemplate);
         }
 
-        if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+        if(!CollectionUtils.isEmpty(diff.getClassesRemoved())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_REMOVED,localizationMessage);
             message = getEditMsg(license,diff.getClassesRemoved(),messageTemplate);
         }

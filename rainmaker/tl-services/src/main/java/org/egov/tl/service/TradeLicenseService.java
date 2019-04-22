@@ -152,18 +152,40 @@ public class TradeLicenseService {
 
 
     /**
+     * Returns tradeLicense from db for the update request
+     * @param request The update request
+     * @return List of tradeLicenses
+     */
+    public List<TradeLicense> getLicensesWithOwnerInfo(TradeLicenseRequest request){
+        TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
+        List<String> ids = new LinkedList<>();
+        request.getLicenses().forEach(license -> {ids.add(license.getId());});
+
+        criteria.setTenantId(request.getLicenses().get(0).getTenantId());
+        criteria.setIds(ids);
+
+        List<TradeLicense> licenses = repository.getLicenses(criteria);
+
+        if(licenses.isEmpty())
+            return Collections.emptyList();
+        licenses = enrichmentService.enrichTradeLicenseSearch(licenses,criteria,request.getRequestInfo());
+        return licenses;
+    }
+
+
+    /**
      * Updates the tradeLicenses
      * @param tradeLicenseRequest The update Request
      * @return Updated TradeLcienses
      */
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
         Object mdmsData = util.mDMSCall(tradeLicenseRequest);
-        List<TradeLicense> searchResult = repository.searchTradeLicenseFromDB(tradeLicenseRequest);
-        Map<String,Difference> diffMap = diffService.getDifference(tradeLicenseRequest,searchResult);
-
+        List<TradeLicense> searchResult = getLicensesWithOwnerInfo(tradeLicenseRequest);
         actionValidator.validateUpdateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
         tlValidator.validateUpdate(tradeLicenseRequest,searchResult,mdmsData);
+        Map<String,Difference> diffMap = diffService.getDifference(tradeLicenseRequest,searchResult);
+
         /*
 	 * call workflow service if it's enable else uses internal workflow process
 	 */
@@ -175,8 +197,8 @@ public class TradeLicenseService {
 		enrichmentService.postStatusEnrichment(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
-        repository.update(tradeLicenseRequest);
         editNotificationService.sendEditNotification(tradeLicenseRequest,diffMap);
+        repository.update(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
 

@@ -67,6 +67,7 @@ public class PersistService {
 	public void postToErrorQueue(Object body, Exception ex) {
 		ConsumerRecord<?, ?> record = new ConsumerRecord("egov-persister", 0, 0, null, body);
 		kafkaConsumerErrorHandler.handle(ex, record);
+		log.info("Pushed to error queue");
 	}
 
 }

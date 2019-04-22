@@ -31,6 +31,9 @@ public class PersisterMessageListener implements MessageListener<String, Object>
 		} catch (JsonProcessingException e) {
 			persistService.postToErrorQueue(data.value(), e);
 			e.printStackTrace();
+		} catch (Exception e) {
+			persistService.postToErrorQueue(data.value(), e);
+			log.error("Exception: ", e);
 		}
 	}
 

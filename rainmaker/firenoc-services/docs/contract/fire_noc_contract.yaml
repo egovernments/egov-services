@@ -515,6 +515,15 @@ definitions:
         description: Unique value for each entry in mdms data
       active: 
         type: boolean
+  PropertyType:
+    type: object
+    description: This master will have list of property type Single/Multiple building
+    properties:
+      code:
+        type: string
+        description: Unique value for each entry in mdms data
+      active: 
+        type: boolean
   SLA:
     type: object
     description: This master will have mapping between Status to SLA

@@ -8,7 +8,6 @@ import org.javers.core.Javers;
 import org.javers.core.JaversBuilder;
 import org.javers.core.diff.Diff;
 import org.javers.core.diff.changetype.NewObject;
-import org.javers.core.diff.changetype.ObjectRemoved;
 import org.javers.core.diff.changetype.ValueChange;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -64,6 +63,7 @@ public class DiffService {
     private List<String> getUpdatedFields(TradeLicense licenseFromUpdate, TradeLicense licenseFromSearch) {
 
         Javers javers = JaversBuilder.javers().build();
+
         Diff diff = javers.compare(licenseFromUpdate, licenseFromSearch);
         List<ValueChange> changes = diff.getChangesByType(ValueChange.class);
 
@@ -73,11 +73,10 @@ public class DiffService {
             return updatedFields;
 
         changes.forEach(change -> {
-            if (!FIELDS_TO_IGNORE.contains(change.getPropertyName())){
+            if (!FIELDS_TO_IGNORE.contains(change.getPropertyName())) {
                 updatedFields.add(change.getPropertyName());
             }
         });
-
         return updatedFields;
     }
 
@@ -92,7 +91,7 @@ public class DiffService {
     private List<String> getObjectsAdded(TradeLicense licenseFromUpdate, TradeLicense licenseFromSearch) {
 
         Javers javers = JaversBuilder.javers().build();
-        Diff diff = javers.compare(licenseFromSearch,licenseFromUpdate);
+        Diff diff = javers.compare(licenseFromSearch, licenseFromUpdate);
         List objectsAdded = diff.getObjectsByChangeType(NewObject.class);
         ;
 
@@ -139,6 +138,7 @@ public class DiffService {
 
     /**
      * Extracts the class name from the affectedObject string representation
+     *
      * @param affectedObject The object which is removed
      * @return Name of the class of object removed
      */

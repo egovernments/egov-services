@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class TradeLicenseDetail   {
         private List<Document> verificationDocuments = null;
 
         @JsonProperty("additionalDetail")
-        private Object additionalDetail = null;
+        private JsonNode additionalDetail = null;
 
         @JsonProperty("institution")
         private Institution institution = null;

@@ -45,7 +45,7 @@ public class SMSCountrySMSServiceImpl implements SMSService {
     @Autowired
     private SMSBodyBuilder bodyBuilder;
 
-    @Value("${sms.sender.requestType:POST}")
+    @Value("${sms.smscountry.sender.requestType:POST}")
     private String requestType;
 
     @Value("${sms.verify.response:false}")

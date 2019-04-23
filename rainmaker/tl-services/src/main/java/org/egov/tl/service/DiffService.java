@@ -101,10 +101,10 @@ public class DiffService {
             return classModified;
 
         objectsAdded.forEach(object -> {
-            if (!classModified.contains(object.getClass().toString()))
-                classModified.add(object.getClass().toString());
+            String className = object.getClass().toString().substring(object.getClass().toString().lastIndexOf('.') + 1);
+            if (!classModified.contains(className))
+                classModified.add(className);
         });
-
         return classModified;
     }
 

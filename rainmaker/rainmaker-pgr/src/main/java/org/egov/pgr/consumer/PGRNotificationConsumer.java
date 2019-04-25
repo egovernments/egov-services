@@ -146,8 +146,12 @@ public class PGRNotificationConsumer {
 
 	public List<SMSRequest> prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
 		List<SMSRequest> smsRequestsTobeSent = new ArrayList<>();
-		if(StringUtils.isEmpty(actionInfo.getAssignee())) {
-			actionInfo.setAssignee(notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo));
+		if(StringUtils.isEmpty(actionInfo.getAssignee()) && !actionInfo.getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
+			try {
+				actionInfo.setAssignee(notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo));
+			}catch(Exception e) {
+				log.error("Exception while explicitly setting assignee!");
+			}
 		}
 		for(String role: pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
 			String phoneNumberRetrived = notificationService.getPhoneNumberForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);

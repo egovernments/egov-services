@@ -107,9 +107,6 @@ public class SpiceDigitalSMSServiceImpl implements SMSService {
 			ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
 			if (requestType.equals("POST")) {
 				HttpEntity<MultiValueMap<String, String>> request = getRequest(sms);
-				log.info("POST");
-				log.info("URL: " + url);
-				log.info("Body: " + request);
 				response = restTemplate.postForEntity(url, request, String.class);
 				if (isResponseCodeInKnownErrorCodeList(response)) {
 					throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
@@ -120,10 +117,6 @@ public class SpiceDigitalSMSServiceImpl implements SMSService {
 				if (dontEncodeURL) {
 					final_url = final_url.replace("%20", " ").replace("%2B", "+");
 				}
-
-				log.info("GET");
-				log.info("URL: " + final_url);
-
 				String responseString = restTemplate.getForObject(final_url, String.class);
 
 				if (verifyResponse && !responseString.contains(verifyResponseContains)) {

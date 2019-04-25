@@ -108,7 +108,7 @@ paths:
           1. Before payment Employee or Citizen can update any details of Fire NOC
           2. After payment Citizen or Employee can't change any details of Fire NOC.
       parameters:
-        - name: Fire NOCRequest
+        - name: FireNOCRequest
           in: body
           description: Details for the new Fire NOC(s) + RequestInfo meta data.
           required: true

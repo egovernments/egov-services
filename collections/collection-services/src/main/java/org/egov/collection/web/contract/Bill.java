@@ -46,6 +46,9 @@ public class Bill {
 
 	  @JsonProperty("payerEmail")
 	  private String payerEmail = null;
+	  
+	  @JsonProperty("payerId")
+	  private String payerId = null;
 
 	  @JsonProperty("isActive")
 	  private Boolean isActive = null;

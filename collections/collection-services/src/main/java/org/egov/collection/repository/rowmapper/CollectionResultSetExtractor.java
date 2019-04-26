@@ -46,6 +46,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                 BillDetail billDetail = BillDetail.builder()
                         .id(receiptHeader)
                         .billNumber(resultSet.getString("rh_referenceNumber"))
+                        .billDate(resultSet.getLong("rh_referencedate"))
                         .consumerCode(resultSet.getString("rh_consumerCode"))
                         .consumerType(resultSet.getString("rh_consumerType"))
                         .collectionModesNotAllowed(resultSet.getString("rh_collModesNotAllwd") != null
@@ -142,13 +143,17 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
 
             } else {
                 receipt = receipts.get(receiptHeader);
-            }
+			}
 
-            BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
-            billDetail.getBillAccountDetails().add(populateAccountDetail
-                    (resultSet, billDetail));
-
-        }
+			BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
+			BillAccountDetail billAccountDetail = populateAccountDetail(resultSet, billDetail);
+			
+			/*
+			 * adding paid amount only when data is not duplicate
+			 */
+			if (billDetail.addBillAccountDetail(billAccountDetail))
+				billDetail.setAmountPaid(billDetail.getAmountPaid().add(billAccountDetail.getAdjustedAmount()));
+		}
 
         return new ArrayList<>(receipts.values());
     }
@@ -156,8 +161,6 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
     private BillAccountDetail populateAccountDetail(ResultSet resultSet, BillDetail billDetail) throws SQLException,
             DataAccessException{
 
-        BigDecimal adjustedAmount = getBigDecimalValue(getBigDecimalValue(resultSet.getBigDecimal("rd_adjustedamount")));
-        billDetail.setAmountPaid(billDetail.getAmountPaid().add(adjustedAmount));
 
         return BillAccountDetail.builder()
         		    .id(resultSet.getString("rd_id"))

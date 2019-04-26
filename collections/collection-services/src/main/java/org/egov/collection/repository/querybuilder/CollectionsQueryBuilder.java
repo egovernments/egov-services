@@ -1,6 +1,14 @@
 package org.egov.collection.repository.querybuilder;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
+
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
@@ -13,18 +21,11 @@ import org.egov.tracer.model.CustomException;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-
-import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toSet;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class CollectionsQueryBuilder {
 
-    public static final String INSERT_RECEIPT_HEADER_SQL = "INSERT INTO egcl_receiptheader(id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, "
+    public static final String INSERT_RECEIPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_v1 (id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, "
             + " receipttype, receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
             + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
             + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, "
@@ -37,12 +38,12 @@ public class CollectionsQueryBuilder {
             + " :manualreceiptdate, :manualreceiptnumber, :reference_ch_id, :stateid, :location, :isreconciled, "
             + ":status, :transactionid, :fund, :function, :department, :additionalDetails, :demandid, :demandFromDate, :demandToDate)";
 
-    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails(id, amount, adjustedamount, ordernumber, receiptheader, "
+    public static final String INSERT_RECEIPT_DETAILS_SQL = "INSERT INTO egcl_receiptdetails_v1 (id, amount, adjustedamount, ordernumber, receiptheader, "
             + "financialyear, isactualdemand, purpose, tenantid, additionalDetails, demanddetailid, taxheadcode) "
             + "VALUES (:id, :amount, :adjustedamount, :ordernumber, :receiptheader, "
             + ":financialyear, :isactualdemand, :purpose, :tenantid, :additionalDetails, :demanddetailid, :taxheadcode)";
 
-    public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader(id, transactionnumber, transactiondate, amount, instrumenttype, "
+    public static final String INSERT_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader_v1(id, transactionnumber, transactiondate, amount, instrumenttype, "
             +
             "instrumentstatus, bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby,"
             +
@@ -53,14 +54,14 @@ public class CollectionsQueryBuilder {
             ":surrenderreason, :serialno, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, " +
             ":additionalDetails, :instrumentDate, :instrumentNumber) ";
 
-    public static final String INSERT_INSTRUMENT_SQL = "insert into egcl_receiptinstrument(instrumentheader, " +
+    public static final String INSERT_INSTRUMENT_SQL = "insert into egcl_receiptinstrument_v1 (instrumentheader, " +
             "receiptheader) values (:instrumentheader, :receiptheader)";
 
-    public static final String UPDATE_INSTRUMENT_STATUS_SQL = "UPDATE egcl_instrumentheader SET instrumentstatus = :instrumentstatus" +
+    public static final String UPDATE_INSTRUMENT_STATUS_SQL = "UPDATE egcl_instrumentheader_v1 SET instrumentstatus = :instrumentstatus" +
             " , additionalDetails = :additionalDetails ,lastmodifiedby = :lastmodifiedby , lastmodifieddate =  " +
             ":lastmodifieddate WHERE id = :id " ;
 
-    public static final String UPDATE_RECEIPT_STATUS_SQL = "UPDATE egcl_receiptheader SET status = :status , " +
+    public static final String UPDATE_RECEIPT_STATUS_SQL = "UPDATE egcl_receiptheader_v1 SET status = :status , " +
             "reasonforcancellation = :reasonforcancellation , voucherheader = :voucherheader, additionalDetails = " +
             ":additionalDetails ," +
             "lastmodifiedby = :lastmodifiedby , lastmodifieddate =  :lastmodifieddate WHERE id = :id " ;
@@ -102,9 +103,9 @@ public class CollectionsQueryBuilder {
             +
             "ins_lastmodifiedby ,  ins.lastmodifieddate as ins_lastmodifieddate , ins.tenantid as ins_tenantid , " +
             " ins.instrumentDate as ins_instrumentDate, ins.instrumentNumber as ins_instrumentNumber " +
-            "from egcl_receiptheader rh LEFT OUTER JOIN egcl_receiptdetails rd ON rh.id=rd.receiptheader " +
-            "LEFT OUTER JOIN egcl_receiptinstrument recins ON rh.id=recins.receiptheader " +
-            "LEFT JOIN egcl_instrumentheader ins ON recins.instrumentheader=ins.id ";
+            "from egcl_receiptheader_v1 rh LEFT OUTER JOIN egcl_receiptdetails_v1 rd ON rh.id=rd.receiptheader " +
+            "LEFT OUTER JOIN egcl_receiptinstrument_v1 recins ON rh.id=recins.receiptheader " +
+            "LEFT JOIN egcl_instrumentheader_v1 ins ON recins.instrumentheader=ins.id ";
 
     private static final String PAGINATION_WRAPPER = "SELECT * FROM " +
             "(SELECT *, DENSE_RANK() OVER (ORDER BY rh_id) offset_ FROM " +
@@ -112,17 +113,17 @@ public class CollectionsQueryBuilder {
             " result) result_offset " +
             "WHERE offset_ > :offset AND offset_ <= :limit";
 
-    public static final String UPDATE_RECEIPT_HEADER_SQL = "UPDATE egcl_receiptheader SET paidby = :paidby, " +
+    public static final String UPDATE_RECEIPT_HEADER_SQL = "UPDATE egcl_receiptheader_v1 SET paidby = :paidby, " +
             "payeraddress = :payeraddress, payeremail = :payeremail, payername = :payername, manualreceiptnumber = :manualreceiptnumber," +
             " manualreceiptdate = :manualreceiptdate, status = :status, voucherheader = :voucherheader, additionalDetails = :additionalDetails," +
             " lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate" +
             " where id=:id";
     
-    public static final String UPDATE_INSTRUMENT_HEADER_SQL = "UPDATE egcl_instrumentheader SET instrumentstatus = :instrumentstatus, " +
+    public static final String UPDATE_INSTRUMENT_HEADER_SQL = "UPDATE egcl_instrumentheader_v1 SET instrumentstatus = :instrumentstatus, " +
             " payee = :payee, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate, additionalDetails = :additionalDetails"+
             " where id=:id";
 
-    public static final String COPY_RCPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_history "
+    public static final String COPY_RCPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_v1_history "
     		+ "(uuid, id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, receipttype, receiptnumber, receiptdate, businessdetails, "
     		+ "collectiontype, reasonforcancellation, minimumamount, totalamount, collectedamount, collmodesnotallwd, consumercode, channel, "
     		+ "boundary, voucherheader, depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
@@ -135,12 +136,12 @@ public class CollectionsQueryBuilder {
     		+ "function, department, additionalDetails, demandid, demandFromDate, demandToDate FROM egcl_receiptheader WHERE id=:id";
     
     
-    public static final String COPY_RCPT_DETALS_SQL = "INSERT INTO egcl_receiptdetails_history (uuid, id, amount, adjustedamount, ordernumber, receiptheader, "
+    public static final String COPY_RCPT_DETALS_SQL = "INSERT INTO egcl_receiptdetails_v1_history (uuid, id, amount, adjustedamount, ordernumber, receiptheader, "
     		+ "description, financialyear, isactualdemand, purpose, tenantid, additionalDetails, demanddetailid, taxheadcode) " 
     		+ "SELECT uuid_generate_v4() as uuid, id, amount, adjustedamount, ordernumber, receiptheader, description, financialyear, isactualdemand, "
     		+ "purpose, tenantid, additionalDetails, demanddetailid, taxheadcode FROM egcl_receiptdetails WHERE id=:id";
     
-    public static final String COPY_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader_history (uuid, id, transactionnumber, transactiondate, amount, instrumenttype, instrumentstatus, "
+    public static final String COPY_INSTRUMENT_HEADER_SQL = "INSERT INTO egcl_instrumentheader_v1_history (uuid, id, transactionnumber, transactiondate, amount, instrumenttype, instrumentstatus, "
     		+ "bankid, branchname, bankaccountid, ifsccode, financialstatus, transactiontype, payee, drawer, surrenderreason, serialno, createdby, "
     		+ "createddate, lastmodifiedby, lastmodifieddate, tenantid, additionalDetails, instrumentDate, instrumentNumber) " 
     		+ "SELECT uuid_generate_v4() as uuid, id, transactionnumber, transactiondate, amount, instrumenttype, instrumentstatus, bankid, branchname, "
@@ -281,7 +282,12 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("transactiontype", instrument.getTransactionType().toString());
         sqlParameterSource.addValue("payee", instrument.getPayee());
         sqlParameterSource.addValue("drawer", instrument.getDrawer());
-        sqlParameterSource.addValue("surrenderreason", instrument.getSurrenderReason());
+        
+		String surrenderReason = null;
+		if (null != instrument.getSurrenderReason())
+			surrenderReason = instrument.getSurrenderReason().getName();
+		sqlParameterSource.addValue("surrenderreason", surrenderReason);
+        
         sqlParameterSource.addValue("serialno", instrument.getSerialNo());
         sqlParameterSource.addValue("createdby", auditDetails.getCreatedBy());
         sqlParameterSource.addValue("createddate", auditDetails.getCreatedDate());

@@ -40,12 +40,14 @@
 package org.egov.collection.web.contract;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptType;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -174,6 +176,20 @@ public class BillDetail {
 	  
 	  @JsonProperty("isAdvanceAllowed")
 	  private Boolean isAdvanceAllowed;
+	  
+	public Boolean addBillAccountDetail(BillAccountDetail billAccountDetail) {
 
+		if (CollectionUtils.isEmpty(billAccountDetails)) {
+
+			billAccountDetails = new ArrayList<>();
+			return billAccountDetails.add(billAccountDetail);
+		} else {
+
+			if (!billAccountDetails.contains(billAccountDetail))
+				return billAccountDetails.add(billAccountDetail);
+			else
+				return false;
+		}
+	}
 
 }

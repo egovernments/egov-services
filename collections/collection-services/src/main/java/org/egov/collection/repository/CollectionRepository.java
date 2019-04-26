@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class CollectionRepository {
     private CollectionResultSetExtractor collectionResultSetExtractor;
 
 
+    @Transactional
     public void saveReceipt(Receipt receipt){
         Bill bill = receipt.getBill().get(0);
         try {
@@ -57,7 +59,7 @@ public class CollectionRepository {
 
         }catch (Exception e){
             log.error("Failed to persist receipt to database", e);
-            throw new CustomException("RECEIPT_CREATION_FAILED", "Unable to create receipt");
+            throw new CustomException("RECEIPT_CREATION_FAILED", e.getMessage());
         }
     }
     

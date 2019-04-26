@@ -40,10 +40,16 @@
 
 package org.egov.collection.web.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.CollectionService;
 import org.egov.collection.service.WorkflowService;
+import org.egov.collection.util.migration.ReceiptMigration;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
@@ -55,11 +61,15 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/receipts")
@@ -68,6 +78,9 @@ public class ReceiptController {
 
     @Autowired
     private CollectionService collectionService;
+    
+    @Autowired
+    private ReceiptMigration migrationService;
 
     @Autowired
     private WorkflowService workflowService;
@@ -116,6 +129,14 @@ public class ReceiptController {
         return getSuccessResponse(receipt, receiptReq.getRequestInfo());
 
     }
+    
+    @PostMapping(value = "/_migratetov1")
+    @ResponseBody
+	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper) {
+
+		Map<String, String> resultMap = migrationService.migrateToV1();
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
 
     private ResponseEntity<ReceiptRes> getSuccessResponse(List<Receipt> receipts,
             RequestInfo requestInfo) {

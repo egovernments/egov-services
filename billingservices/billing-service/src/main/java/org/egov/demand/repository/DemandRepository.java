@@ -219,6 +219,7 @@ public class DemandRepository {
 				ps.setString(13, demand.getTenantId());
 				ps.setString(14, status);
 				ps.setObject(15, getPGObject(demand.getAdditionalDetails()));
+				ps.setObject(16, demand.getBillExpiryTime());
 			}
 
 			@Override
@@ -274,8 +275,9 @@ public class DemandRepository {
 				ps.setString(7, demand.getTenantId());
 				ps.setString(8, status);
 				ps.setObject(9, getPGObject(demand.getAdditionalDetails()));
-				ps.setString(10, demand.getId());
-				ps.setString(11, demand.getTenantId());
+				ps.setObject(10, demand.getBillExpiryTime());
+				ps.setString(11, demand.getId());
+				ps.setString(12, demand.getTenantId());
 			}
 
 			@Override
@@ -339,6 +341,7 @@ public class DemandRepository {
 				ps.setString(12, status);
 				ps.setObject(13, getPGObject(demand.getAdditionalDetails()));
 				ps.setString(14, UUID.randomUUID().toString());
+				ps.setObject(15, demand.getBillExpiryTime());
 			}
 
 			@Override

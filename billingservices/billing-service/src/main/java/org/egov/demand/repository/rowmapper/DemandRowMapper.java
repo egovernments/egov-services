@@ -83,6 +83,7 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 				demand.setTaxPeriodFrom(rs.getLong("dtaxPeriodFrom"));
 				demand.setTaxPeriodTo(rs.getLong("dtaxPeriodTo"));
 				demand.setTenantId(rs.getString("dtenantid"));
+				demand.setBillExpiryTime(rs.getLong("dbillexpirytime"));
 				demand.setStatus(StatusEnum.fromValue(rs.getString("status")));
 
 				demand.setMinimumAmountPayable(rs.getBigDecimal("dminimumAmountPayable"));

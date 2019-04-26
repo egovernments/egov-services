@@ -423,10 +423,11 @@ public class BillService {
 			collectedAmountForDemand = collectedAmountForDemand.add(demandDetail.getCollectionAmount());
 		}
 		
+		long billexpiryTime = null == demand.getBillExpiryTime() ? 0l : demand.getBillExpiryTime();
 		return BillDetail.builder()
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
-				.expiryDate(System.currentTimeMillis()+business.getDemandUpdateTime())
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())
+				.expiryDate(System.currentTimeMillis() + billexpiryTime)
 				.partPaymentAllowed(business.getPartPaymentAllowed())
 				.isAdvanceAllowed(business.getIsAdvanceAllowed())
 				.minimumAmount(demand.getMinimumAmountPayable())

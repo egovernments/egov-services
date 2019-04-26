@@ -64,6 +64,9 @@ public class Demand   {
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails;
+        
+        @JsonProperty("billExpiryTime")
+        private Long billExpiryTime;
 
         @JsonProperty("additionalDetails")
         private Object additionalDetails;

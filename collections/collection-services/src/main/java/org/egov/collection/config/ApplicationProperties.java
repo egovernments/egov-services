@@ -31,7 +31,7 @@
  *         is required that all modified versions of this material be marked in
  *         reasonable ways as different from the original version.
  *
- *      3) This license does not grant any rights to any user of the program
+ *      3) This license does not grant any rights to any  of the program
  *         with regards to rights under trademark law for use of the trade names
  *         or trademarks of eGovernments Foundation.
  *
@@ -143,5 +143,17 @@ public class ApplicationProperties {
     
     @Value("${egov.apportion.apportion.endpoint}")
     private String apportionURI;
+    
+    @Value("${collection.is.user.create.enabled}")
+    private Boolean isUserCreateEnabled;
+    
+    @Value("${user.service.host}")
+    private String userHost;
+    
+    @Value("${egov.services.user_by_id}")
+    private String userSearchEnpoint;
+    
+    @Value("${egov.user.create.user}")
+    private String userCreateEnpoint;
 
 }

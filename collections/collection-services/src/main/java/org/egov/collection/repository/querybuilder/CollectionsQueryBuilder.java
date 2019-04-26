@@ -25,13 +25,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class CollectionsQueryBuilder {
 
-    public static final String INSERT_RECEIPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_v1 (id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, "
+    public static final String INSERT_RECEIPT_HEADER_SQL = "INSERT INTO egcl_receiptheader(id, payername, payeraddress, payeremail, payermobile, payerid, paidby, referencenumber, "
             + " receipttype, receiptnumber, receiptdate, businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, "
             + " collectedamount, collmodesnotallwd, consumercode, channel,boundary, voucherheader, "
             + "depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, "
             + " manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, "
             + "status, transactionid, fund, function, department, additionalDetails, demandid, demandFromDate, demandToDate) "
-            + "VALUES (:id, :payername, :payeraddress, :payeremail, :payermobile , :paidby, :referencenumber, :receipttype, "
+            + "VALUES (:id, :payername, :payeraddress, :payeremail, :payermobile, :payerid, :paidby, :referencenumber, :receipttype, "
             + ":receiptnumber, :receiptdate, :businessdetails, :collectiontype, :reasonforcancellation, :minimumamount, :totalamount, "
             + " :collectedamount, :collmodesnotallwd, :consumercode, :channel, :boundary, :voucherheader, "
             + ":depositedbranch, :createdby, :createddate, :lastmodifiedby, :lastmodifieddate, :tenantid, :referencedate, "
@@ -123,13 +123,13 @@ public class CollectionsQueryBuilder {
             " payee = :payee, lastmodifiedby = :lastmodifiedby, lastmodifieddate = :lastmodifieddate, additionalDetails = :additionalDetails"+
             " where id=:id";
 
-    public static final String COPY_RCPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_v1_history "
-    		+ "(uuid, id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, receipttype, receiptnumber, receiptdate, businessdetails, "
+    public static final String COPY_RCPT_HEADER_SQL = "INSERT INTO egcl_receiptheader_history "
+    		+ "(uuid, id, payername, payeraddress, payeremail, payermobile, payerid, paidby, referencenumber, receipttype, receiptnumber, receiptdate, businessdetails, "
     		+ "collectiontype, reasonforcancellation, minimumamount, totalamount, collectedamount, collmodesnotallwd, consumercode, channel, "
     		+ "boundary, voucherheader, depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, referencedesc, "
     		+ "manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, status, transactionid, fund, function, "
     		+ "department, additionalDetails, demandid, demandFromDate, demandToDate) " 
-    		+ "SELECT uuid_generate_v4() as uuid, id, payername, payeraddress, payeremail, payermobile, paidby, referencenumber, receipttype, receiptnumber, receiptdate, "
+    		+ "SELECT uuid_generate_v4() as uuid, id, payername, payeraddress, payeremail, payermobile, payerid, paidby, referencenumber, receipttype, receiptnumber, receiptdate, "
     		+ "businessdetails, collectiontype, reasonforcancellation, minimumamount, totalamount, collectedamount, collmodesnotallwd, consumercode, "
     		+ "channel,boundary, voucherheader, depositedbranch, createdby, createddate, lastmodifiedby, lastmodifieddate, tenantid, referencedate, "
     		+ "referencedesc, manualreceiptdate, manualreceiptnumber, reference_ch_id, stateid, location, isreconciled, status, transactionid, fund, "
@@ -161,6 +161,7 @@ public class CollectionsQueryBuilder {
         sqlParameterSource.addValue("payeraddress", bill.getPayerAddress());
         sqlParameterSource.addValue("payeremail", bill.getPayerEmail());
         sqlParameterSource.addValue("payermobile", bill.getMobileNumber());
+        sqlParameterSource.addValue("payerid", bill.getPayerId());
         sqlParameterSource.addValue("paidby", bill.getPaidBy());
         sqlParameterSource.addValue("referencenumber", billDetail.getBillNumber());
         sqlParameterSource.addValue("receipttype", billDetail.getReceiptType().toString());
@@ -466,6 +467,12 @@ public class CollectionsQueryBuilder {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.referencenumber IN (:billIds) ");
             preparedStatementValues.put("billIds", searchCriteria.getBillIds());
+        }
+        
+        if (searchCriteria.getPayerIds() != null && !searchCriteria.getPayerIds().isEmpty()) {
+            addClauseIfRequired(preparedStatementValues, selectQuery);
+            selectQuery.append(" rh.payerid IN (:payerid)  ");
+            preparedStatementValues.put("payerid", searchCriteria.getPayerIds());
         }
     }
 

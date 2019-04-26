@@ -25,7 +25,7 @@ public class DemandMigration {
 	public static final String SELECT_QUERY = "SELECT * FROM (SELECT *, DENSE_RANK() OVER (ORDER BY did) offset_ FROM " 
 			+ " (select d.id as did,dl.id as dlid,dl.demandid as dldemandid,"
 			+ "d.consumercode as dconsumercode,d.consumertype as dconsumertype,d.taxperiodfrom as dtaxperiodfrom,"
-			+ "d.taxperiodto as dtaxperiodto,U.uuid as payer,"
+			+ "d.taxperiodto as dtaxperiodto,U.uuid as payer,null as dbillexpirytime,"
 			+ " d.businessservice as dbusinessservice,d.status as status,d.minimumamountpayable as dminimumamountpayable, "
 			+ " (CASE WHEN taxheadcode='PT_DECIMAL_CEILING_CREDIT' OR taxheadcode='PT_DECIMAL_CEILING_DEBIT' THEN 'PT_ROUNDOFF' else taxheadcode END)"
 			+ " as dltaxheadcode, (CASE WHEN taxheadcode IN ('PT_TIME_REBATE', 'PT_ADVANCE_CARRYFORWARD', 'PT_OWNER_EXEMPTION','PT_UNIT_USAGE_EXEMPTION'"

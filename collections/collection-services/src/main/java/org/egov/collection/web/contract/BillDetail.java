@@ -44,12 +44,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.*;
 import org.egov.collection.model.enums.CollectionType;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptType;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -70,7 +72,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BillDetail {
-	
 
 	@JsonProperty("id")
 	private String id = null;
@@ -188,5 +189,20 @@ public class BillDetail {
 	private Boolean callBackForApportioning;
 
 	private String cancellationRemarks;
+
+	public Boolean addBillAccountDetail(BillAccountDetail billAccountDetail) {
+
+		if (CollectionUtils.isEmpty(billAccountDetails)) {
+
+			billAccountDetails = new ArrayList<>();
+			return billAccountDetails.add(billAccountDetail);
+		} else {
+
+			if (!billAccountDetails.contains(billAccountDetail))
+				return billAccountDetails.add(billAccountDetail);
+			else
+				return false;
+		}
+	}
 
 }

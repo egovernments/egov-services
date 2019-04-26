@@ -14,17 +14,17 @@ public class BillQueryBuilder {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	public static final String INSERT_BILL_QUERY = "INSERT into egbs_bill "
+	public static final String INSERT_BILL_QUERY = "INSERT into egbs_bill_v1 "
 			+"(id, tenantid, payername, payeraddress, payeremail, isactive, iscancelled, createdby, createddate, lastmodifiedby, lastmodifieddate, mobilenumber)"
 			+"values(?,?,?,?,?,?,?,?,?,?,?,?)";
 	
-	public static final String INSERT_BILLDETAILS_QUERY = "INSERT into egbs_billdetail "
+	public static final String INSERT_BILLDETAILS_QUERY = "INSERT into egbs_billdetail_v1 "
 			+"(id, tenantid, billid, demandid, fromperiod, toperiod, businessservice, billno, billdate, consumercode, consumertype, billdescription, displaymessage, "
 			+ "minimumamount, totalamount, callbackforapportioning, partpaymentallowed, collectionmodesnotallowed, "
 			+ "createdby, createddate, lastmodifiedby, lastmodifieddate, isadvanceallowed, expirydate)"
 			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
-	public static final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail "
+	public static final String INSERT_BILLACCOUNTDETAILS_QUERY = "INSERT into egbs_billaccountdetail_v1 "
 			+"(id, tenantid, billdetail, demanddetailid, orderno, amount, adjustedamount, isactualdemand, purpose, "
 			+ "createdby, createddate, lastmodifiedby, lastmodifieddate, taxheadcode)"
 			+"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -43,9 +43,9 @@ public class BillQueryBuilder {
 			+ " ad.orderno AS ad_orderno, ad.accountdescription AS ad_accountdescription,"
 			+ " ad.amount AS ad_amount, ad.adjustedamount AS ad_adjustedamount, ad.taxheadcode AS ad_taxheadcode, ad.demanddetailid,"
 			+ " ad.isactualdemand AS ad_isactualdemand, ad.purpose AS ad_purpose"
-			+ " FROM egbs_bill b"
-			+ " LEFT OUTER JOIN egbs_billdetail bd ON b.id = bd.billid AND b.tenantid = bd.tenantid"
-			+ " LEFT OUTER JOIN egbs_billaccountdetail ad ON bd.id = ad.billdetail AND bd.tenantid = ad.tenantid"
+			+ " FROM egbs_bill_v1 b"
+			+ " LEFT OUTER JOIN egbs_billdetail_v1 bd ON b.id = bd.billid AND b.tenantid = bd.tenantid"
+			+ " LEFT OUTER JOIN egbs_billaccountdetail_v1 ad ON bd.id = ad.billdetail AND bd.tenantid = ad.tenantid"
 			+ " WHERE b.tenantid = ?"; 
 	
 	public String getBillQuery(BillSearchCriteria billSearchCriteria, List<Object> preparedStatementValues){

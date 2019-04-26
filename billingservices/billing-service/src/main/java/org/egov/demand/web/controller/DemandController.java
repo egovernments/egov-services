@@ -40,6 +40,7 @@
 package org.egov.demand.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -50,6 +51,7 @@ import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.service.DemandService;
+import org.egov.demand.util.migration.DemandMigration;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
@@ -86,6 +88,9 @@ public class DemandController {
 	
 	@Autowired
 	private DemandValidatorV1 demandValidatorV1;
+	
+	@Autowired
+	private DemandMigration migrationService;
 
 	/**
 	 * API to create demands
@@ -133,7 +138,18 @@ public class DemandController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	/*
+	 * migration api
+	 */
 	
+    @PostMapping(value = "/_migratetov1")
+    @ResponseBody
+	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper) {
+
+		Map<String, String> resultMap = migrationService.migrateToV1();
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+    
 	/*
 	 * @Deprecated methods
 	 */

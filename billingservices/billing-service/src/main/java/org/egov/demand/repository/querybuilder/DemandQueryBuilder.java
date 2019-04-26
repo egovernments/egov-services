@@ -67,15 +67,15 @@ public class DemandQueryBuilder {
 			+ "dmdl.taxamount AS dltaxamount,dmdl.collectionamount AS dlcollectionamount,"
 			+ "dmdl.createdby AS dlcreatedby,dmdl.lastModifiedby AS dllastModifiedby,"
 			+ "dmdl.createdtime AS dlcreatedtime,dmdl.lastModifiedtime AS dllastModifiedtime,"
-			+ "dmdl.tenantid AS dltenantid,dmdl.additionaldetails as detailadditionaldetails " + "FROM egbs_demand dmd "
-			+ "INNER JOIN egbs_demanddetail dmdl ON dmd.id=dmdl.demandid " + "AND dmd.tenantid=dmdl.tenantid WHERE ";
+			+ "dmdl.tenantid AS dltenantid,dmdl.additionaldetails as detailadditionaldetails " + "FROM egbs_demand_v1 dmd "
+			+ "INNER JOIN egbs_demanddetail_v1 dmdl ON dmd.id=dmdl.demandid " + "AND dmd.tenantid=dmdl.tenantid WHERE ";
 
 	public static final String BASE_DEMAND_DETAIL_QUERY = "SELECT "
 			+ "demanddetail.id AS dlid,demanddetail.demandid AS dldemandid,demanddetail.taxheadcode AS dltaxheadcode,"
 			+ "demanddetail.taxamount AS dltaxamount,demanddetail.collectionamount AS dlcollectionamount,"
 			+ "demanddetail.createdby AS dlcreatedby,demanddetail.lastModifiedby AS dllastModifiedby,"
 			+ "demanddetail.createdtime AS dlcreatedtime,demanddetail.lastModifiedtime AS dllastModifiedtime,"
-			+ "demanddetail.tenantid AS dltenantid " + " FROM egbs_demanddetail demanddetail "
+			+ "demanddetail.tenantid AS dltenantid " + " FROM egbs_demanddetail_v1 demanddetail "
 					+ "INNER JOIN egbs_demand demand ON demanddetail.demandid=demand.id AND "
 					+ "demanddetail.tenantid=demand.tenantid WHERE ";
 
@@ -83,34 +83,34 @@ public class DemandQueryBuilder {
 
 	public static final String BASE_DEMAND_DETAIL_QUERY_ORDER_BY_CLAUSE = "dmdl.id";
 
-	public static final String DEMAND_INSERT_QUERY = "INSERT INTO egbs_demand "
+	public static final String DEMAND_INSERT_QUERY = "INSERT INTO egbs_demand_v1 "
 			+ "(id,consumerCode,consumerType,businessService,payer,taxPeriodFrom,taxPeriodTo,"
 			+ "minimumAmountPayable,createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid, status, additionaldetails) "
 			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
-	public static final String DEMAND_DETAIL_INSERT_QUERY = "INSERT INTO egbs_demanddetail "
+	public static final String DEMAND_DETAIL_INSERT_QUERY = "INSERT INTO egbs_demanddetail_v1 "
 			+ "(id,demandid,taxHeadCode,taxamount,collectionamount,"
 			+ "createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid,additionaldetails)" 
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 
-	public static final String DEMAND_UPDATE_QUERY = "UPDATE egbs_demand SET " + "payer=?,taxPeriodFrom=?,"
+	public static final String DEMAND_UPDATE_QUERY = "UPDATE egbs_demand_v1 SET " + "payer=?,taxPeriodFrom=?,"
 			+ "taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?," + "lastModifiedtime=?,tenantid=?,"
 			+ " status=?,additionaldetails=? WHERE id=? AND tenantid=?;";
 
-	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail SET taxamount=?,collectionamount=?,"
+	public static final String DEMAND_DETAIL_UPDATE_QUERY = "UPDATE egbs_demanddetail_v1 SET taxamount=?,collectionamount=?,"
 			+ "lastModifiedby=?,lastModifiedtime=?, additionaldetails=? WHERE id=? AND demandid=? AND tenantid=?;";
 
-	public static final String DEMAND_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demand_audit "
+	public static final String DEMAND_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demand_v1_audit "
 			+ "(demandid,consumerCode,consumerType,businessService,payer,taxPeriodFrom,taxPeriodTo,"
 			+ "minimumAmountPayable,createdby,createdtime,tenantid, status, additionaldetails,id) "
 			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
-	public static final String DEMAND_DETAIL_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demanddetail_audit "
+	public static final String DEMAND_DETAIL_AUDIT_INSERT_QUERY = "INSERT INTO egbs_demanddetail_v1_audit "
 			+ "(demanddetailid,demandid,taxHeadCode,taxamount,collectionamount,"
 			+ "createdby,createdtime,tenantid,additionaldetails,id)" 
 			+ " VALUES (?,?,?,?,?,?,?,?,?,?);";
 	
-	public static final String DEMAND_UPDATE_CONSUMERCODE_QUERY="UPDATE egbs_demand SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=? "
+	public static final String DEMAND_UPDATE_CONSUMERCODE_QUERY="UPDATE egbs_demand_v1 SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=? "
 			+ " WHERE tenantid=? AND id IN (";
 	
 	public static final String COLLECTED_RECEIPT_INSERT_QUERY="INSERT INTO egbs_collectedreceipts(id, businessservice, consumercode, receiptnumber,"

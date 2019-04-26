@@ -99,6 +99,12 @@ public class ReceiptService {
 
 		for (BillAccountDetail billAccDetail : billDetail.getBillAccountDetails()) {
 
+			/* Ignoring billaccount details with no taxhead codes
+			 * to avoid saving collection only information
+			 */ 
+			if(null == billAccDetail.getTaxHeadCode()) return;
+			
+			
 			List<DemandDetail> currentDetails = taxHeadCodeDemandDetailgroup.get(billAccDetail.getTaxHeadCode());
 			int length = 0;
 			
@@ -150,7 +156,7 @@ public class ReceiptService {
 	 */
 	private void updateSingleDemandDetail(DemandDetail currentDetail, BillAccountDetail billAccDetail,
 			Boolean isRecieptCancellation) {
-
+		
 		BigDecimal oldCollectedAmount = currentDetail.getCollectionAmount();
 		BigDecimal newAmount = billAccDetail.getAdjustedAmount();
 

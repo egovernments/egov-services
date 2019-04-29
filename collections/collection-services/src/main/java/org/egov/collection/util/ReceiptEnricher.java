@@ -178,7 +178,7 @@ public class ReceiptEnricher {
                 if (!CollectionUtils.isEmpty(errorMap.keySet())) {
                     throw new CustomException(errorMap);
                 }
-                if (taxAndPayment.getAmountPaid().compareTo(BigDecimal.ZERO) <= 0) {
+                if (taxAndPayment.getAmountPaid().compareTo(BigDecimal.ZERO) <= 0 && taxAndPayment.getTaxAmount().compareTo(BigDecimal.ZERO) != 0) {
                     errorMap.put("INVALID_AMT_PAID_ZERO_NEG_CODE", "Amount paid in the taxAndPayment array cannot be less than or equal to zero");
                 }
                 if (mapOfBusinessSvcAndAmtPaid.get(taxAndPayment.getBusinessService())

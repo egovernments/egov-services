@@ -127,7 +127,7 @@ public class CollectionService {
     	if(applicationProperties.getIsUserCreateEnabled()) {
     		Receipt receipt = receiptReq.getReceipt().get(0);
     		Bill bill = receipt.getBill().get(0);
-    		Map<String, String> res = (Map<String, String>) userService.getUser(receiptReq.getRequestInfo(), bill.getMobileNumber()).keySet();
+    		Map<String, String> res = userService.getUser(receiptReq.getRequestInfo(), bill.getMobileNumber(), bill.getTenantId());
     		if(CollectionUtils.isEmpty(res.keySet())) {
     			id = userService.createUser(receiptReq.getRequestInfo(), bill);
     		}else {

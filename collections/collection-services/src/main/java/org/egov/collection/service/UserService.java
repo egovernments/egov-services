@@ -11,7 +11,10 @@ import org.egov.collection.web.contract.UserResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,18 +36,20 @@ public class UserService {
      * @param phoneNo
      * @return
      */
-	public Map<String, String> getUser(RequestInfo requestInfo, String phoneNo){
+	public Map<String, String> getUser(RequestInfo requestInfo, String phoneNo, String tenantId){
 		Map<String, Object> request = new HashMap<>();
 		UserResponse userResponse = null;
 		Map<String, String> response = new HashMap<>();
 		request.put("RequestInfo", requestInfo);
 		request.put("mobileNumber", phoneNo);
+		request.put("tenantid", tenantId);
 		StringBuilder url = new StringBuilder();
 		url.append(properties.getUserHost()).append(properties.getUserSearchEnpoint());
 		try {
 			userResponse = restTemplate.postForObject(url.toString(), request, UserResponse.class);
 			if(null != userResponse) {
-				response.put("id", userResponse.getReceiptCreators().get(0).getUuid());
+				if(!CollectionUtils.isEmpty(userResponse.getReceiptCreators()))
+					response.put("id", userResponse.getReceiptCreators().get(0).getUuid());
 			}
 		}catch(Exception e) {
 			log.error("Exception while fetching user: ", e);
@@ -74,6 +79,7 @@ public class UserService {
 		
 		user.put("name", bill.getPayerName());
 		user.put("mobileNumber", bill.getMobileNumber());
+		user.put("userName", bill.getMobileNumber());
 		user.put("active", true);
 		user.put("type", "CITIZEN");
 		user.put("tenantId", bill.getTenantId().split("\\.")[0]);
@@ -86,11 +92,15 @@ public class UserService {
 
 		UserResponse response = null;
 		StringBuilder url = new StringBuilder();
-		url.append(properties.getUserHost()).append(properties.getUserSearchEnpoint());
+		url.append(properties.getUserHost()).append(properties.getUserCreateEnpoint());
 		try {
+			ObjectMapper mapper = new ObjectMapper();
+			log.info("URL: "+url);
+			log.info("Request: "+mapper.writeValueAsString(request));
 			response = restTemplate.postForObject(url.toString(), request, UserResponse.class);
 		}catch(Exception e) {
-			log.error("Exception while fetching user: ", e);
+			log.error("Exception while creating user: ", e);
+			return null;
 		}
 		
 		return response.getReceiptCreators().get(0).getUuid();

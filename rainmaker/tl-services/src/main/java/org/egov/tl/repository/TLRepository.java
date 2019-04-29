@@ -9,7 +9,6 @@ import org.egov.tl.repository.rowmapper.TLRowMapper;
 import org.egov.tl.web.models.*;
 import org.egov.tl.web.models.workflow.BusinessService;
 import org.egov.tl.web.models.workflow.State;
-import org.egov.tl.workflow.TLWorkflowService;
 import org.egov.tl.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-
-import static org.egov.tl.util.TLConstants.*;
 
 
 @Slf4j
@@ -80,7 +77,7 @@ public class TLRepository {
      *
      * @param tradeLicenseRequest The update requuest
      */
-    public void update(TradeLicenseRequest tradeLicenseRequest) {
+    public void update(TradeLicenseRequest tradeLicenseRequest,BusinessService businessService) {
         RequestInfo requestInfo = new RequestInfo();
         List<TradeLicense> licenses = tradeLicenseRequest.getLicenses();
 
@@ -89,12 +86,10 @@ public class TLRepository {
 
         String tenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
 
-        BusinessService businessService = workflowService.getBusinessService(tenantId, tradeLicenseRequest.getRequestInfo());
         State currentState;
 
         for (TradeLicense license : licenses) {
-            currentState = workflowService.getState(license.getStatus(), businessService);
-            if (currentState.getIsStateUpdatable()) {
+            if (workflowService.isStateUpdatable(license.getStatus(), businessService)) {
                 licensesForUpdate.add(license);
             } else {
                 licesnsesForStatusUpdate.add(license);

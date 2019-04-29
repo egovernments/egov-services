@@ -16,11 +16,12 @@ import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.tl.web.models.user.UserDetailResponse;
+import org.egov.tl.web.models.workflow.BusinessService;
 import org.egov.tl.workflow.ActionValidator;
 import org.egov.tl.workflow.TLWorkflowService;
 import org.egov.tl.workflow.WorkflowIntegrator;
+import org.egov.tl.workflow.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,7 +39,7 @@ public class TradeLicenseService {
 
     private TLValidator tlValidator;
 
-    private TLWorkflowService workflowService;
+    private TLWorkflowService TLWorkflowService;
 
     private CalculationService calculationService;
 
@@ -48,26 +49,29 @@ public class TradeLicenseService {
 
     private TLConfiguration config;
 
+    private WorkflowService workflowService;
+
     private EditNotificationService  editNotificationService;
 
     @Autowired
     public TradeLicenseService(WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService,
                                UserService userService, TLRepository repository, ActionValidator actionValidator,
-                               TLValidator tlValidator, TLWorkflowService workflowService,
+                               TLValidator tlValidator, TLWorkflowService TLWorkflowService,
                                CalculationService calculationService, TradeUtil util, DiffService diffService,
-                               TLConfiguration config,EditNotificationService editNotificationService) {
+                               TLConfiguration config,EditNotificationService editNotificationService,WorkflowService workflowService) {
         this.wfIntegrator = wfIntegrator;
         this.enrichmentService = enrichmentService;
         this.userService = userService;
         this.repository = repository;
         this.actionValidator = actionValidator;
         this.tlValidator = tlValidator;
-        this.workflowService = workflowService;
+        this.TLWorkflowService = TLWorkflowService;
         this.calculationService = calculationService;
         this.util = util;
         this.diffService = diffService;
         this.config = config;
         this.editNotificationService = editNotificationService;
+        this.workflowService = workflowService;
     }
 
 
@@ -180,9 +184,10 @@ public class TradeLicenseService {
      */
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
         Object mdmsData = util.mDMSCall(tradeLicenseRequest);
+        BusinessService businessService = workflowService.getBusinessService(tradeLicenseRequest.getLicenses().get(0).getTenantId(), tradeLicenseRequest.getRequestInfo());
         List<TradeLicense> searchResult = getLicensesWithOwnerInfo(tradeLicenseRequest);
-        actionValidator.validateUpdateRequest(tradeLicenseRequest);
-        enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
+        actionValidator.validateUpdateRequest(tradeLicenseRequest,businessService);
+        enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest,businessService);
         tlValidator.validateUpdate(tradeLicenseRequest,searchResult,mdmsData);
         Map<String,Difference> diffMap = diffService.getDifference(tradeLicenseRequest,searchResult);
 
@@ -192,13 +197,13 @@ public class TradeLicenseService {
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(tradeLicenseRequest);
 		else
-			workflowService.updateStatus(tradeLicenseRequest);
+			TLWorkflowService.updateStatus(tradeLicenseRequest);
 
 		enrichmentService.postStatusEnrichment(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
         calculationService.addCalculation(tradeLicenseRequest);
         editNotificationService.sendEditNotification(tradeLicenseRequest,diffMap);
-        repository.update(tradeLicenseRequest);
+        repository.update(tradeLicenseRequest,businessService);
         return tradeLicenseRequest.getLicenses();
     }
 

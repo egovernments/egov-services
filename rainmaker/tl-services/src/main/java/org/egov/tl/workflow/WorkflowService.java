@@ -70,18 +70,20 @@ public class WorkflowService {
 
 
     /**
-     * Fetches the state object whith given code from businessService
-     * @param stateCode The stateCode for which State object has to be fetched
-     * @param businessService The BusinessService from which to fetch state object
+     * Returns boolean value to specifying if the state is updatable
+     * @param stateCode The stateCode of the license
+     * @param businessService The BusinessService of the application flow
      * @return State object to be fetched
      */
-    public State getState(String stateCode, BusinessService businessService){
+    public Boolean isStateUpdatable(String stateCode, BusinessService businessService){
        for(State state : businessService.getStates()){
            if(state.getApplicationStatus()!=null && state.getApplicationStatus().equalsIgnoreCase(stateCode))
-               return state;
+               return state.getIsStateUpdatable();
        }
        return null;
     }
+
+
 
 
 }

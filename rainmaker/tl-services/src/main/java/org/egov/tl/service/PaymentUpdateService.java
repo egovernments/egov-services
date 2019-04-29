@@ -13,7 +13,9 @@ import org.egov.tl.repository.TLRepository;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.tl.web.models.workflow.BusinessService;
 import org.egov.tl.workflow.WorkflowIntegrator;
+import org.egov.tl.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +45,19 @@ public class PaymentUpdateService {
 
 	private ObjectMapper mapper;
 
+	private WorkflowService workflowService;
+
 	@Autowired
 	public PaymentUpdateService(TradeLicenseService tradeLicenseService, TLConfiguration config, TLRepository repository,
-								WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService, ObjectMapper mapper) {
+								WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService, ObjectMapper mapper,
+								WorkflowService workflowService) {
 		this.tradeLicenseService = tradeLicenseService;
 		this.config = config;
 		this.repository = repository;
 		this.wfIntegrator = wfIntegrator;
 		this.enrichmentService = enrichmentService;
 		this.mapper = mapper;
+		this.workflowService = workflowService;
 	}
 
 
@@ -84,6 +90,9 @@ public class PaymentUpdateService {
 				searchCriteria.setApplicationNumber(valMap.get(consumerCode));
 				List<TradeLicense> licenses = tradeLicenseService.getLicensesWithOwnerInfo(searchCriteria, requestInfo);
 
+				BusinessService businessService = workflowService.getBusinessService(licenses.get(0).getTenantId(), requestInfo);
+
+
 				if (CollectionUtils.isEmpty(licenses))
 					throw new CustomException("INVALID RECEIPT",
 							"No tradeLicense found for the comsumerCode " + searchCriteria.getApplicationNumber());
@@ -112,7 +121,7 @@ public class PaymentUpdateService {
 				/*
 				 * calling repository to update the object in TL tables
 				 */
-				repository.update(updateRequest);
+				repository.update(updateRequest,businessService);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

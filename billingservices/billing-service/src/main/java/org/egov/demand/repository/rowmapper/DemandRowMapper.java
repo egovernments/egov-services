@@ -70,7 +70,6 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 		while (rs.next()) {
 
 			String demandId = rs.getString(demandIdRsName);
-			log.debug("demandid in row mapper" + demandId);
 			Demand demand = demandMap.get(demandId);
 
 			if (demand == null) {
@@ -125,8 +124,6 @@ public class DemandRowMapper implements ResultSetExtractor<List<Demand>> {
 			if (demand.getId().equals(demandDetail.getDemandId()))
 				demand.getDemandDetails().add(demandDetail);
 		}
-		
-		log.debug("converting map to list object ::: " + demandMap.values());
 		return new ArrayList<>(demandMap.values());
 	}
 }

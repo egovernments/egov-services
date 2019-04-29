@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class DemandMigration {
 	
@@ -34,11 +37,11 @@ public class DemandMigration {
 			+ " dl.lastmodifiedtime as dllastmodifiedtime,dl.tenantid as dltenantid, d.createdby as dcreatedby,d.createdtime as dcreatedtime,"
 			+ " d.lastmodifiedby as dlastmodifiedby,d.lastmodifiedtime as dlastmodifiedtime,d.tenantid as dtenantid "
 			+ " from egbs_demand d inner join egbs_demanddetail dl ON d.id=dl.demandid AND d.tenantid=dl.tenantid "
-			+ " INNER JOIN eg_user U ON U.id::CHARACTER VARYING=d.owner"
+			+ " LEFT OUTER JOIN eg_user U ON U.id::CHARACTER VARYING=d.owner"
 			+ " WHERE d.businessservice IN ('TL','PT') AND d.tenantid ilike 'pb%' ) " 
 			+ " result) result_offset WHERE offset_ > ? AND offset_ <= ?;";
 	
-	public static final String COUNT_QUERY = "select count(*) from egbs_demand where status!='CANCELLED' AND businessservice IN ('TL','PT') AND tenantid ilike 'pb%';";
+	public static final String COUNT_QUERY = "select count(*) from egbs_demand where businessservice IN ('TL','PT') AND tenantid ilike 'pb%';";
 	
 	private Comparator<DemandDetail> demandDetailOrdercomparator;
 
@@ -60,7 +63,7 @@ public class DemandMigration {
 		Map<String, Integer> taxHeadOrderMap = new HashMap<>();
 		taxHeadOrderMap.put("TL_TAX", 5);
 		taxHeadOrderMap.put("TL_ROUNDOFF", 1);
-		taxHeadOrderMap.put("TL_ADHOCE_REBATE", 0);
+		taxHeadOrderMap.put("TL_ADHOC_REBATE", 0);
 		taxHeadOrderMap.put("TL_ADHOC_PENALTY", 3);
 		
 		taxHeadOrderMap.put("PT_TIME_REBATE", 0);
@@ -95,25 +98,32 @@ public class DemandMigration {
 		};
 	}
 	
-	public Map<String, String> migrateToV1() {
+	public Map<String, String> migrateToV1(Integer startBatch) {
 		
 		Map<String, String> responseMap = new HashMap<>();
 		
 		int count = jdbcTemplate.queryForObject(COUNT_QUERY, Integer.class);
+		int i = 0;
+		if (null != startBatch && startBatch > 0)
+			i = startBatch;
 
-		for(int i=0; i<count;i = i+batchSize) {
+		for( ; i<count;i = i+batchSize) {
 
 			List<Demand> demands = jdbcTemplate.query(SELECT_QUERY, new Object[] { i, i + batchSize }, demandRowMapper);
-			apportionDemands(demands);
 			try {
-			postDemands(demands);
-			}catch (Exception e) {
-				addResponseToMap(demands,responseMap,e.getMessage());
+
+				apportionDemands(demands);
+				postDemands(demands);
+			} catch (Exception e) {
+
+				log.error("Migration failed at batch count of : " + i);
+				responseMap.put( "Migration failed at batch count : " + i, e.getMessage());
+				return responseMap;
 			}
 			addResponseToMap(demands,responseMap,"SUCCESS");
 		}
 		
-		return null;
+		return responseMap;
 	}
 	
 	private void addResponseToMap(List<Demand> demands, Map<String, String> responseMap, String message) {

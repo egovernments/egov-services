@@ -66,6 +66,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -144,9 +145,10 @@ public class DemandController {
 	
     @PostMapping(value = "/_migratetov1")
     @ResponseBody
-	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper) {
+	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper,
+			@RequestParam(required=false) Integer batchStart) {
 
-		Map<String, String> resultMap = migrationService.migrateToV1();
+		Map<String, String> resultMap = migrationService.migrateToV1(batchStart);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
     

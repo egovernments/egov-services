@@ -42,7 +42,7 @@ public class UserService {
 		Map<String, String> response = new HashMap<>();
 		request.put("RequestInfo", requestInfo);
 		request.put("mobileNumber", phoneNo);
-		request.put("tenantid", tenantId);
+		request.put("tenantid", tenantId.split("\\.")[0]);
 		StringBuilder url = new StringBuilder();
 		url.append(properties.getUserHost()).append(properties.getUserSearchEnpoint());
 		try {
@@ -94,9 +94,6 @@ public class UserService {
 		StringBuilder url = new StringBuilder();
 		url.append(properties.getUserHost()).append(properties.getUserCreateEnpoint());
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			log.info("URL: "+url);
-			log.info("Request: "+mapper.writeValueAsString(request));
 			response = restTemplate.postForObject(url.toString(), request, UserResponse.class);
 		}catch(Exception e) {
 			log.error("Exception while creating user: ", e);

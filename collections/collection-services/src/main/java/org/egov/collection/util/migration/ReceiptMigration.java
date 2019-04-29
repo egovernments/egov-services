@@ -11,12 +11,14 @@ import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
 import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.Receipt;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class ReceiptMigration {
 
@@ -76,21 +78,34 @@ public class ReceiptMigration {
 
 	@Autowired
 	private CollectionRepository repository;
-	
+
 	@Value("${migration.batch.value}")
 	private Integer batchSize;
-	
-	public Map<String, String> migrateToV1() {
+
+	public Map<String, String> migrateToV1(Integer startBatch) {
 
 		Map<String, String> resultMap = new HashMap<>();
-		
+
 		Integer count = jdbcTemplate.queryForObject(COUNT_QUERY, Integer.class);
-		for (int i = 0; i < count; i = i + batchSize) {
+		log.info(" the total data count : " + count);
+		int i = 0;
+		if (null != startBatch && startBatch > 0)
+			i = startBatch;
+
+		for (; i < count; i = i + batchSize) {
 
 			List<Receipt> receipts = jdbcTemplate.query(RECEIPT_SEARCH_QUERY, new Object[] { i, i + batchSize },
 					collectionRowMapper);
-			apportionAndSaveReceipts(receipts, resultMap);
+			try {
+				apportionAndSaveReceipts(receipts, resultMap);
+			} catch (Exception e) {
+
+				log.error("Migration failed at batch count :  " + i, e.getMessage());
+				resultMap.put("Migration failed at batch count :  " + i, e.getMessage());
+				return resultMap;
+			}
 		}
+		log.info(" the total data count : " + count);
 		return resultMap;
 	}
 
@@ -107,13 +122,10 @@ public class ReceiptMigration {
 				if (null != accDetail.getTaxHeadCode())
 					amountPaid = apportionBillAccDetail(accDetail, amountPaid);
 			}
-			
-			try {
-				repository.saveReceipt(receipt);
-			} catch (CustomException e) {
-				resultMap.put(receipt.getReceiptNumber(), e.getMessage());
-			}
-			resultMap.put(receipt.getReceiptNumber(),"SUCCESS");
+
+			repository.saveReceipt(receipt);
+			log.error( receipt.getReceiptNumber() + "SUCCESS");
+			resultMap.put(receipt.getReceiptNumber(), "SUCCESS");
 		}
 	}
 

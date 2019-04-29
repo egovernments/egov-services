@@ -1,1 +1,1 @@
-ALTER TABLE egcl_receiptheader ADD COLUMN payerid varchar(256);
+ALTER TABLE egcl_receiptheader_v1 ADD COLUMN payerid varchar(256);

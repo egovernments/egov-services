@@ -66,6 +66,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -131,10 +132,11 @@ public class ReceiptController {
     }
     
     @PostMapping(value = "/_migratetov1")
-    @ResponseBody
-	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper) {
+	@ResponseBody
+	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper,
+			@RequestParam(required = false) Integer startBatch) {
 
-		Map<String, String> resultMap = migrationService.migrateToV1();
+		Map<String, String> resultMap = migrationService.migrateToV1(startBatch);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 

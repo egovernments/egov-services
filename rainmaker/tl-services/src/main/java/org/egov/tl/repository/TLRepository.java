@@ -101,10 +101,10 @@ public class TLRepository {
             }
         }
 
-        if (!licensesForUpdate.isEmpty())
+        if (!CollectionUtils.isEmpty(licensesForUpdate))
             producer.push(config.getUpdateTopic(), new TradeLicenseRequest(requestInfo, licensesForUpdate));
 
-        if (!licesnsesForStatusUpdate.isEmpty())
+        if (!CollectionUtils.isEmpty(licesnsesForStatusUpdate))
             producer.push(config.getUpdateWorkflowTopic(), new TradeLicenseRequest(requestInfo, licesnsesForStatusUpdate));
 
     }

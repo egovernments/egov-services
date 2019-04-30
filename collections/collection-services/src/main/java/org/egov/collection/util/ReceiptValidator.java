@@ -1,5 +1,6 @@
 package org.egov.collection.util;
 
+<<<<<<< HEAD
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -42,6 +43,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+=======
+import lombok.extern.slf4j.Slf4j;
+>>>>>>> default accountid in search
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.Instrument;

@@ -3,6 +3,7 @@ package org.egov.collection.service;
 import static java.util.Objects.isNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +68,12 @@ public class CollectionService {
      * @return List of matching receipts
      */
     public List<Receipt> getReceipts(RequestInfo requestInfo, ReceiptSearchCriteria receiptSearchCriteria) {
+    	ReceiptReq receiptReq = ReceiptReq.builder().requestInfo(requestInfo).build();
+    	Map<String, String> errorMap = new HashMap<>();
+    	receiptValidator.validateUserInfo(receiptReq, errorMap);
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+		
         if (applicationProperties.isReceiptsSearchPaginationEnabled()) {
             receiptSearchCriteria.setOffset(isNull(receiptSearchCriteria.getOffset()) ? 0 : receiptSearchCriteria.getOffset());
             receiptSearchCriteria.setLimit(isNull(receiptSearchCriteria.getLimit()) ? applicationProperties.getReceiptsSearchDefaultLimit() :
@@ -74,8 +82,11 @@ public class CollectionService {
             receiptSearchCriteria.setOffset(0);
             receiptSearchCriteria.setLimit(applicationProperties.getReceiptsSearchDefaultLimit());
         }
-
-
+        if(requestInfo.getUserInfo().getType().equals("CITIZEN")) {
+        	List<String> payerIds = new ArrayList<>();
+        	payerIds.add(requestInfo.getUserInfo().getUuid());
+        	receiptSearchCriteria.setPayerIds(payerIds);
+        }
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
 
         return receipts;
@@ -124,15 +135,19 @@ public class CollectionService {
      */
     public String createUser(ReceiptReq receiptReq) {
     	String id = null;
-    	if(applicationProperties.getIsUserCreateEnabled()) {
-    		Receipt receipt = receiptReq.getReceipt().get(0);
-    		Bill bill = receipt.getBill().get(0);
-    		Map<String, String> res = userService.getUser(receiptReq.getRequestInfo(), bill.getMobileNumber(), bill.getTenantId());
-    		if(CollectionUtils.isEmpty(res.keySet())) {
-    			id = userService.createUser(receiptReq.getRequestInfo(), bill);
-    		}else {
-    			id = res.get("id");
-    		}
+    	if(receiptReq.getRequestInfo().getUserInfo().getType().equals("CITIZEN")) {
+    		id = receiptReq.getRequestInfo().getUserInfo().getUuid();
+    	}else {
+        	if(applicationProperties.getIsUserCreateEnabled()) {
+        		Receipt receipt = receiptReq.getReceipt().get(0);
+        		Bill bill = receipt.getBill().get(0);
+        		Map<String, String> res = userService.getUser(receiptReq.getRequestInfo(), bill.getMobileNumber(), bill.getTenantId());
+        		if(CollectionUtils.isEmpty(res.keySet())) {
+        			id = userService.createUser(receiptReq.getRequestInfo(), bill);
+        		}else {
+        			id = res.get("id");
+        		}
+        	}
     	}
     	return id;
     }

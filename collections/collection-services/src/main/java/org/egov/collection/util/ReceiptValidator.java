@@ -1,6 +1,8 @@
 package org.egov.collection.util;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.LegacyReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
@@ -65,6 +67,8 @@ public class ReceiptValidator {
 
 		Map<String, String> errorMap = new HashMap<>();
 		Receipt receipt = receiptReq.getReceipt().get(0);
+		
+		validateUserInfo(receiptReq, errorMap);
 
 		if (receipt.getBill().isEmpty())
 			return;
@@ -117,6 +121,20 @@ public class ReceiptValidator {
         List<Receipt> receipts = new ArrayList<>();
         receipts.add(receipt);
         receiptReq.setReceipt(receipts);
+	}
+	
+	public void validateUserInfo(ReceiptReq receiptReq, Map<String, String> errorMap) {
+		if(null == receiptReq.getRequestInfo()) {
+			errorMap.put("INVALID_REQUEST_INFO", "RequestInfo cannot be null");
+		}else {
+			if(null == receiptReq.getRequestInfo().getUserInfo()) {
+				errorMap.put("INVALID_USER_INFO", "UserInfo within RequestInfo cannot be null");
+			}else {
+				if(StringUtils.isEmpty(receiptReq.getRequestInfo().getUserInfo().getUuid())) {
+					errorMap.put("INVALID_USER_ID", "UUID of the user within RequestInfo cannot be null");
+				}
+			}
+		}
 	}
 
 	public List<Receipt> validateAndEnrichReceiptsForUpdate(List<Receipt> receipts, RequestInfo requestInfo) {

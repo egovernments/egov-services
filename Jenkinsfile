@@ -32,14 +32,10 @@ try {
           image_builder.clean(service_name, commit_id)
         }
         // cleanup all files and directories in target directories, but only if the CLEANUP build parameter is set to 'true'
-        job(type: Maven) {
-            wrappers {
-                preBuildCleanup {
-                    includePattern('${path}/target/**')
-                    deleteDirectories()
-                    cleanupParameter('CLEANUP')
-                }
-        	}
+        post {
+            cleanup {
+                deleteDir()
+            }
         }
     }
 } catch (e) {

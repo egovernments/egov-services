@@ -1,4 +1,4 @@
-DROP TABLE egbs_taxheadmaster;
+DROP TABLE public.egbs_taxheadmaster;
 
 CREATE TABLE egbs_taxheadmaster
 (
@@ -21,7 +21,7 @@ CREATE TABLE egbs_taxheadmaster
 );
 
 
-DROP TABLE egbs_glcodemaster;
+DROP TABLE public.egbs_glcodemaster;
 
 CREATE TABLE egbs_glcodemaster
 (
@@ -38,4 +38,3 @@ CREATE TABLE egbs_glcodemaster
   glcode character varying(64),
   CONSTRAINT pk_egbs_glcodemaster PRIMARY KEY (id, tenantid)
 );
-

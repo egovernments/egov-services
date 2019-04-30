@@ -55,7 +55,7 @@ public class CollectionResultSetExtractor implements ResultSetExtractor<List<Rec
                         .tenantId(resultSet.getString("rh_tenantId"))
                         .businessService(resultSet.getString("rh_businessDetails"))
                         .receiptNumber(resultSet.getString("rh_receiptNumber"))
-                        .receiptType(ReceiptType.valueOf(resultSet.getString("rh_receiptType")))
+                        .receiptType(resultSet.getString("rh_receiptType"))
                         .channel(resultSet.getString("rh_channel"))
                         .voucherHeader(resultSet.getString("rh_voucherheader"))
                         .collectionType(!StringUtils.isEmpty(resultSet.getString("rh_collectionType"))

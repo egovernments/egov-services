@@ -129,7 +129,7 @@ public class ReceiptEnricher {
             if (Objects.isNull(validatedBill.getBillDetails().get(i).getReceiptDate()))
                 validatedBill.getBillDetails().get(i).setReceiptDate(new Date().getTime());
 
-            validatedBill.getBillDetails().get(i).setReceiptType(ReceiptType.BILLBASED);
+            validatedBill.getBillDetails().get(i).setReceiptType(ReceiptType.BILLBASED.toString());
 
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
 

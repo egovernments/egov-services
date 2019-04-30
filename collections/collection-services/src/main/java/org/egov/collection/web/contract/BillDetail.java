@@ -135,7 +135,7 @@ public class BillDetail {
 	private Long receiptDate = null;
 
 	@JsonProperty("receiptType")
-	private ReceiptType receiptType = null;
+	private String receiptType = null;
 
 	@JsonProperty("channel")
 	private String channel = null;

@@ -93,7 +93,7 @@ public class ReceiptCommonModel {
 					.collectionModesNotAllowed(Collections.singletonList(receiptHeader.getCollModesNotAllwd()))
 					.tenantId(receiptHeader.getTenantId())
 					.billAccountDetails(billAccountDetails).businessService(receiptHeader.getBusinessDetails())
-					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(ReceiptType.valueOf(receiptHeader.getReceiptType()))
+					.receiptNumber(receiptHeader.getReceiptNumber()).receiptType(receiptHeader.getReceiptType())
 					.channel(receiptHeader.getChannel()).voucherHeader(receiptHeader.getVoucherheader())
 					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation())

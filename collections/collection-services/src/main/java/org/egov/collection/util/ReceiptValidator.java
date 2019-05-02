@@ -87,6 +87,10 @@ public class ReceiptValidator {
             BigDecimal amountPaid = billDetails.getAmountPaid();
             BigDecimal totalAmount = billDetails.getTotalAmount();
 
+            if(isNull(billDetails.getExpiryDate()) || System.currentTimeMillis() >= billDetails.getExpiryDate()){
+                errorMap.put("BILL_EXPIRED", "Bill expired or invalid, regenerate bill!");
+            }
+
             if (isNull(amountPaid) || !isPositiveInteger(amountPaid)) {
                 errorMap.put("INVALID_AMOUNT_PAID", "Invalid amount entered in amountPaid field. Amount should be greater than 0 and without fractions");
             }

@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: 2.0
+  version: 2.0.0
   title: Fire NOC Calculation APIs
   description: |
     APIs available for Fire NOC
@@ -228,7 +228,7 @@ definitions:
         description: buildingUsageType, this is mdms data which specifies builiding usage and one of the factor to decide rate.
         maxLength: 64
         minLength: 2
-      type:
+      calculationType:
         type: string
         description: Type will define the rate value is flat amount or rate.
         enum:
@@ -236,25 +236,22 @@ definitions:
           - MULTISLAB
           - FLAT
       rate:
-        type: string
+        type: number
+        format: double
         description: Rate of the Fire NOC, this can be the rate of flat amount based on type or can be slab rate per unit based on type.
-        maxLength: 64
-        minLength: 2
       uom:
         type: string
         description: unit of measurement of bill slab.
         maxLength: 32
         minLength: 2
-      from:
-        type: string
+      fromUom:
+        type: number
+        format: double
         description: uom value lower bound.
-        maxLength: 64
-        minLength: 2
-      to:
-        type: string
+      toUom:
+        type: number
+        format: double
         description: uom value upper bound.
-        maxLength: 64
-        minLength: 2
       fromDate:
         type: integer
         format: int64

@@ -1,18 +1,20 @@
 import { version } from '../../package.json';
 import { Router } from 'express';
-import v1 from "./share/v1";
+import create from "./create";
+import search from "./search";
+import update from "./update";
+
 
 export default ({ config, db }) => {
 	let api = Router();
 
-	api.use('/share/v1',v1({config,db}));
-
+	api.use('/firenoc-service/v1',create({config,db}));
+	api.use('/firenoc-service/v1',search({config,db}));
+	api.use('/firenoc-service/v1',update({config,db}));
 	// perhaps expose some API metadata at the root
 	api.get('/', (req, res) => {
 		res.json({ version});
 	});
-
-
 
 	return api;
 }

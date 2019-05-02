@@ -1,18 +1,14 @@
 import { Router } from "express";
-import producer from "../../kafka/producer";
-import templateInterface from "./templates";
+import producer from "../kafka/producer";
 
 export default ({ config, db }) => {
   let api = Router();
   api.post("/_create", function({ body }, res) {
     let payloads=[];
-    try {
-      const { ShareMetaData } = body;
-      const { shareTemplate, shareContent } = ShareMetaData;
-      payloads = templateInterface({shareTemplate, shareContent});
-    } catch (e) {
-      console.log(e);
-    }
+    payloads.push({
+      topic:"test",
+      messages:JSON.stringify(body)
+    })
     console.log("before",payloads);
     producer.send(payloads, function(err, data) {
       console.log(err);
@@ -20,6 +16,5 @@ export default ({ config, db }) => {
       res.json(data);
     });
   });
-
   return api;
 };

@@ -62,11 +62,27 @@ public class CronUtils {
 		return mapper;
 	}
 	
+	/**
+	 * Fetches day and month of the data being fetched.
+	 * 
+	 * @param epochTime
+	 * @return
+	 */
 	public String getDayAndMonth(Long epochTime) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(epochTime);
-		return calendar.get(Calendar.DAY_OF_MONTH) + "th " 
-					+ new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)];
+		StringBuilder date = new StringBuilder();
+		String suffix = "th ";
+		if((calendar.get(Calendar.DAY_OF_MONTH) % 10) == 1) {
+			suffix = "st ";
+		}else if ((calendar.get(Calendar.DAY_OF_MONTH) % 10) == 2) {
+			suffix = "nd ";
+		}else if((calendar.get(Calendar.DAY_OF_MONTH) % 10) == 3) {
+			suffix = "rd ";
+		}
+		date.append(calendar.get(Calendar.DAY_OF_MONTH)).append(suffix)
+				.append(new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)]);
+		return date.toString();
 	}
 
 }

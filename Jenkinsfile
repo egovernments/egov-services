@@ -26,6 +26,7 @@ try {
           archiver = load("jenkins/archiver.groovy")
           image_builder = load("jenkins/image_builder.groovy")
           code_builder.build(path, ci_image)
+          slackNotifier = load("jenkins/slackNotify.groovy")
           archiver.archiveArtifacts(["${path}/target/*.jar", "${path}/target/*.html"])
           image_builder.build(module_name, service_name, commit_id)
           image_builder.publish(service_name, commit_id)
@@ -33,6 +34,10 @@ try {
         }
         // cleanup all files and directories in target directories, but only if the CLEANUP build parameter is set to 'true'
         post {
+
+            always {
+              /* Use slackNotifier.groovy from shared library and provide current build result as parameter */
+              slackNotifier.slackNotify(currentBuild.currentResult)
             cleanup {
                 deleteDir()
             }

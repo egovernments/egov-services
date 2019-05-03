@@ -1,6 +1,7 @@
 package org.egov.collection.util.migration;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +117,8 @@ public class ReceiptMigration {
 			Bill bill = receipt.getBill().get(0);
 			BillDetail detail = bill.getBillDetails().get(0);
 			BigDecimal amountPaid = detail.getAmountPaid();
-
+			detail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
+			
 			for (BillAccountDetail accDetail : detail.getBillAccountDetails()) {
 
 				if (null != accDetail.getTaxHeadCode())

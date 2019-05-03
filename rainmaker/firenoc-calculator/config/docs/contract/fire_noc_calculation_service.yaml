@@ -164,7 +164,7 @@ definitions:
     type: object
     properties:
       fireNOC:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/noc/rainmaker/firenoc-services/docs/contract/fire_noc_contract.yaml#/definitions/NOC"
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/noc/rainmaker/firenoc-services/docs/contract/fire_noc_contract.yaml#/definitions/FireNOC"
       applicationNumber:
         type: string
         minLength: 2
@@ -305,7 +305,7 @@ definitions:
           $ref: "#/definitions/BillingSlab"
     required:
       - RequestInfo
-      - BillingSlab
+      - BillingSlabs
   BillingSlabRes:
     type: object
     properties:

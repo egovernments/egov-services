@@ -9,18 +9,14 @@
       "email": "contacts@egovernments.org"
     }
   },
-  "schemes": [
-    "https"
-  ],
+  "schemes": ["https"],
   "basePath": "/firenoc-calculator/",
   "paths": {
     "/v1/_calculate": {
       "post": {
         "summary": "Calculates Fire  NOC fee and generates the respective demands in the system.",
         "description": "Calculate Fire NOC Fee based on criteria.",
-        "tags": [
-          "Fire NOC Calculation"
-        ],
+        "tags": ["Fire NOC Calculation"],
         "parameters": [
           {
             "name": "calculationReq",
@@ -52,9 +48,7 @@
       "post": {
         "summary": "Updates demand with time based penalty if applicable and Generates bill for the given criteria.",
         "description": "Generates bill for payment.",
-        "tags": [
-          "Fire NOC Bill"
-        ],
+        "tags": ["Fire NOC Bill"],
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
@@ -90,9 +84,7 @@
       "post": {
         "summary": "Get the list of bill slabs defined in the system for Fire NOC calculation.",
         "description": "Get the properties list based on the input parameters.\n",
-        "tags": [
-          "BillingSlab"
-        ],
+        "tags": ["BillingSlab"],
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
@@ -116,10 +108,7 @@
             "required": false,
             "type": "string",
             "format": "varchar",
-            "enum": [
-              "NEW",
-              "PROVISIONAL"
-            ]
+            "enum": ["NEW", "PROVISIONAL"]
           },
           {
             "name": "buildingUsageType",
@@ -142,11 +131,7 @@
             "maxLength": 128,
             "exclusiveMinimum": true,
             "exclusiveMaximum": false,
-            "enum": [
-              "SINGLESLAB",
-              "MULTISLAB",
-              "FLAT"
-            ]
+            "enum": ["SINGLESLAB", "MULTISLAB", "FLAT"]
           }
         ],
         "responses": {
@@ -169,9 +154,7 @@
       "post": {
         "summary": "Create new billing slabs for Fire NOC calculation.",
         "description": "API to billing slabs for Fire NOC calculation.",
-        "tags": [
-          "BillingSlab"
-        ],
+        "tags": ["BillingSlab"],
         "parameters": [
           {
             "name": "billingSlab",
@@ -214,9 +197,7 @@
             }
           }
         ],
-        "tags": [
-          "BillingSlab"
-        ],
+        "tags": ["BillingSlab"],
         "responses": {
           "200": {
             "description": "Update Billing Slab(s) successful",
@@ -240,7 +221,7 @@
       "type": "object",
       "properties": {
         "fireNOC": {
-          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/noc/rainmaker/firenoc-services/docs/contract/fire_noc_contract.yaml#/definitions/NOC"
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/noc/rainmaker/firenoc-services/docs/contract/fire_noc_contract.yaml#/definitions/FireNOC"
         },
         "applicationNumber": {
           "type": "string",
@@ -253,9 +234,7 @@
           "maxLength": 256
         }
       },
-      "required": [
-        "tenantId"
-      ]
+      "required": ["tenantId"]
     },
     "Calculation": {
       "type": "object",
@@ -313,10 +292,7 @@
         "fireNOCType": {
           "type": "string",
           "description": "FireNOCType, is unique enum value for a noc",
-          "enum": [
-            "NEW",
-            "PROVISIONAL"
-          ]
+          "enum": ["NEW", "PROVISIONAL"]
         },
         "buildingUsageType": {
           "type": "string",
@@ -327,11 +303,7 @@
         "calculationType": {
           "type": "string",
           "description": "Type will define the rate value is flat amount or rate.",
-          "enum": [
-            "SINGLESLAB",
-            "MULTISLAB",
-            "FLAT"
-          ]
+          "enum": ["SINGLESLAB", "MULTISLAB", "FLAT"]
         },
         "rate": {
           "type": "number",
@@ -392,10 +364,7 @@
           }
         }
       },
-      "required": [
-        "RequestInfo",
-        "CalulationCriteria"
-      ]
+      "required": ["RequestInfo", "CalulationCriteria"]
     },
     "CalculationRes": {
       "type": "object",
@@ -425,10 +394,7 @@
           }
         }
       },
-      "required": [
-        "RequestInfo",
-        "BillingSlab"
-      ]
+      "required": ["RequestInfo", "BillingSlabs"]
     },
     "BillingSlabRes": {
       "type": "object",

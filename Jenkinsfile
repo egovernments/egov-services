@@ -17,6 +17,7 @@ try {
 
         code_builder = load("jenkins/code_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
+        slackNotifier = load("jenkins/slackNotify.groovy")
         currentBuild.displayName = "${BUILD_ID}-${commit_id}"
 
         if (!docker_file_exists) {
@@ -26,7 +27,6 @@ try {
           archiver = load("jenkins/archiver.groovy")
           image_builder = load("jenkins/image_builder.groovy")
           code_builder.build(path, ci_image)
-          slackNotifier = load("jenkins/slackNotify.groovy")
           archiver.archiveArtifacts(["${path}/target/*.jar", "${path}/target/*.html"])
           image_builder.build(module_name, service_name, commit_id)
           image_builder.publish(service_name, commit_id)

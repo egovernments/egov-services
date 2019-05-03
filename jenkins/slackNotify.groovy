@@ -8,11 +8,11 @@ import net.sf.json.JSONObject;
 import hudson.tasks.test.AbstractTestResultAction;
 import hudson.model.Actionable;
 
-def notify(String buildStatus = 'STARTED') {
+def notifyBuild(String buildStatus = 'STARTED', String channel = '#jenkins') {
 
   // buildStatus of null means successfull
   buildStatus = buildStatus ?: 'SUCCESSFUL'
-  channel = '#jenkins'
+  channel = channel ?: '#jenkins'
 
 
   // Default values

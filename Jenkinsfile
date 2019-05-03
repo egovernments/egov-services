@@ -37,7 +37,7 @@ try {
 
             always {
               /* Use slackNotifier.groovy from shared library and provide current build result as parameter */
-              slackNotifier.notify(currentBuild.currentResult)
+              slackNotifier.notifyBuild(currentBuild.currentResult)
             }
             cleanup {
                 deleteDir()

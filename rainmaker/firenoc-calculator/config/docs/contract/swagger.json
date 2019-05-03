@@ -9,14 +9,18 @@
       "email": "contacts@egovernments.org"
     }
   },
-  "schemes": ["https"],
+  "schemes": [
+    "https"
+  ],
   "basePath": "/firenoc-calculator/",
   "paths": {
     "/v1/_calculate": {
       "post": {
         "summary": "Calculates Fire  NOC fee and generates the respective demands in the system.",
         "description": "Calculate Fire NOC Fee based on criteria.",
-        "tags": ["Fire NOC Calculation"],
+        "tags": [
+          "Fire NOC Calculation"
+        ],
         "parameters": [
           {
             "name": "calculationReq",
@@ -48,7 +52,9 @@
       "post": {
         "summary": "Updates demand with time based penalty if applicable and Generates bill for the given criteria.",
         "description": "Generates bill for payment.",
-        "tags": ["Fire NOC Bill"],
+        "tags": [
+          "Fire NOC Bill"
+        ],
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
@@ -84,7 +90,9 @@
       "post": {
         "summary": "Get the list of bill slabs defined in the system for Fire NOC calculation.",
         "description": "Get the properties list based on the input parameters.\n",
-        "tags": ["BillingSlab"],
+        "tags": [
+          "BillingSlab"
+        ],
         "parameters": [
           {
             "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
@@ -93,7 +101,7 @@
             "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           },
           {
-            "name": "active",
+            "name": "isActive",
             "in": "query",
             "description": "True will be set in cases where only active billslab entries are needed and False will be set when inactive billslab entries are needed .",
             "required": false,
@@ -108,7 +116,10 @@
             "required": false,
             "type": "string",
             "format": "varchar",
-            "enum": ["NEW", "PROVISIONAL"]
+            "enum": [
+              "NEW",
+              "PROVISIONAL"
+            ]
           },
           {
             "name": "buildingUsageType",
@@ -122,7 +133,7 @@
             "exclusiveMaximum": false
           },
           {
-            "name": "type",
+            "name": "calculationType",
             "in": "query",
             "required": false,
             "description": "Enum for billing slab type.",
@@ -131,7 +142,11 @@
             "maxLength": 128,
             "exclusiveMinimum": true,
             "exclusiveMaximum": false,
-            "enum": ["SINGLESLAB", "MULTISLAB", "FLAT"]
+            "enum": [
+              "SINGLESLAB",
+              "MULTISLAB",
+              "FLAT"
+            ]
           }
         ],
         "responses": {
@@ -154,7 +169,9 @@
       "post": {
         "summary": "Create new billing slabs for Fire NOC calculation.",
         "description": "API to billing slabs for Fire NOC calculation.",
-        "tags": ["BillingSlab"],
+        "tags": [
+          "BillingSlab"
+        ],
         "parameters": [
           {
             "name": "billingSlab",
@@ -193,16 +210,18 @@
             "description": "Request header for the update of billing slab.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/BillingSlab"
+              "$ref": "#/definitions/BillingSlabReq"
             }
           }
         ],
-        "tags": ["BillingSlab"],
+        "tags": [
+          "BillingSlab"
+        ],
         "responses": {
           "200": {
             "description": "Update Billing Slab(s) successful",
             "schema": {
-              "$ref": "#/definitions/BillingSlab"
+              "$ref": "#/definitions/BillingSlabRes"
             }
           },
           "400": {
@@ -234,7 +253,9 @@
           "maxLength": 256
         }
       },
-      "required": ["tenantId"]
+      "required": [
+        "tenantId"
+      ]
     },
     "Calculation": {
       "type": "object",
@@ -285,14 +306,17 @@
           "maxLength": 64,
           "minLength": 2
         },
-        "active": {
+        "isActive": {
           "type": "boolean",
           "description": "boolean value to specify if billslab entry is active or not"
         },
         "fireNOCType": {
           "type": "string",
           "description": "FireNOCType, is unique enum value for a noc",
-          "enum": ["NEW", "PROVISIONAL"]
+          "enum": [
+            "NEW",
+            "PROVISIONAL"
+          ]
         },
         "buildingUsageType": {
           "type": "string",
@@ -300,16 +324,19 @@
           "maxLength": 64,
           "minLength": 2
         },
-        "type": {
+        "calculationType": {
           "type": "string",
           "description": "Type will define the rate value is flat amount or rate.",
-          "enum": ["SINGLESLAB", "MULTISLAB", "FLAT"]
+          "enum": [
+            "SINGLESLAB",
+            "MULTISLAB",
+            "FLAT"
+          ]
         },
         "rate": {
-          "type": "string",
-          "description": "Rate of the Fire NOC, this can be the rate of flat amount based on type or can be slab rate per unit based on type.",
-          "maxLength": 64,
-          "minLength": 2
+          "type": "number",
+          "format": "double",
+          "description": "Rate of the Fire NOC, this can be the rate of flat amount based on type or can be slab rate per unit based on type."
         },
         "uom": {
           "type": "string",
@@ -317,17 +344,15 @@
           "maxLength": 32,
           "minLength": 2
         },
-        "from": {
-          "type": "string",
-          "description": "uom value lower bound.",
-          "maxLength": 64,
-          "minLength": 2
+        "fromUom": {
+          "type": "number",
+          "format": "double",
+          "description": "uom value lower bound."
         },
-        "to": {
-          "type": "string",
-          "description": "uom value upper bound.",
-          "maxLength": 64,
-          "minLength": 2
+        "toUom": {
+          "type": "number",
+          "format": "double",
+          "description": "uom value upper bound."
         },
         "fromDate": {
           "type": "integer",
@@ -345,7 +370,7 @@
       },
       "required": [
         "tenantId",
-        "type",
+        "calculationType",
         "rate",
         "uom",
         "buildingUsageType",
@@ -367,7 +392,10 @@
           }
         }
       },
-      "required": ["RequestInfo", "CalulationCriteria"]
+      "required": [
+        "RequestInfo",
+        "CalulationCriteria"
+      ]
     },
     "CalculationRes": {
       "type": "object",
@@ -389,7 +417,7 @@
         "RequestInfo": {
           "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
         },
-        "BillingSlab": {
+        "BillingSlabs": {
           "type": "array",
           "maximum": 100,
           "items": {
@@ -397,7 +425,10 @@
           }
         }
       },
-      "required": ["RequestInfo", "BillingSlab"]
+      "required": [
+        "RequestInfo",
+        "BillingSlab"
+      ]
     },
     "BillingSlabRes": {
       "type": "object",
@@ -405,7 +436,7 @@
         "ResponseInfo": {
           "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ResponseInfo"
         },
-        "BillingSlab": {
+        "BillingSlabs": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/BillingSlab"

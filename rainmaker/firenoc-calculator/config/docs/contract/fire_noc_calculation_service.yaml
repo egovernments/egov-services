@@ -67,7 +67,7 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - name: active
+        - name: isActive
           in: query
           description: True will be set in cases where only active billslab entries are needed and False will be set when inactive billslab entries are needed .
           required: false
@@ -92,7 +92,7 @@ paths:
           maxLength: 128
           exclusiveMinimum: true
           exclusiveMaximum: false
-        - name: type
+        - name: calculationType
           in: query
           required: false
           description: Enum for billing slab type.
@@ -146,14 +146,14 @@ paths:
           description: Request header for the update of billing slab.
           required: true
           schema:
-            $ref: "#/definitions/BillingSlab"
+            $ref: "#/definitions/BillingSlabReq"
       tags:
         - BillingSlab
       responses:
         "200":
           description: Update Billing Slab(s) successful
           schema:
-            $ref: "#/definitions/BillingSlab"
+            $ref: "#/definitions/BillingSlabRes"
         "400":
           description: Update Billing Slab(s) failed
           schema:
@@ -214,7 +214,7 @@ definitions:
         description: unique identifier of the billing slab uuid
         maxLength: 64
         minLength: 2
-      active:
+      isActive:
         type: boolean
         description: boolean value to specify if billslab entry is active or not
       fireNOCType:
@@ -265,7 +265,7 @@ definitions:
 
     required:
       - tenantId
-      - type
+      - calculationType
       - rate
       - uom
       - buildingUsageType
@@ -298,7 +298,7 @@ definitions:
     properties:
       RequestInfo:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
-      BillingSlab:
+      BillingSlabs:
         type: array
         maximum: 100
         items:
@@ -311,7 +311,7 @@ definitions:
     properties:
       ResponseInfo:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ResponseInfo"
-      BillingSlab:
+      BillingSlabs:
         type: array
         items:
           $ref: "#/definitions/BillingSlab"

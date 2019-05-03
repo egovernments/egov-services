@@ -126,7 +126,7 @@ paths:
       tags:
         - Fire NOC
 definitions:
-  BuildingDetails:
+  Buildings:
     type: object
     description: It will contains building details
     properties:
@@ -185,12 +185,28 @@ definitions:
         description: it might be single or multiple
       propertyId:
         type: string
-      buildingDetails:
-        type: array
-        items:
-          $ref: '#/definitions/BuildingDetails'
       address:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/Address'
+    required:
+      - noOfBuildings
+      - buildingDetails
+  BuildingDetails:
+    type: object
+    description: It will have fire noc related entities
+    properties:
+      id:
+        type: string
+        minLength: 2
+        maxLength: 64
+        description: Unique Identifier of the property details (UUID)
+        readOnly: true
+      noOfBuildings:
+        type: string
+        description: it might be single or multiple
+      buildings:
+        type: array
+        items:
+          $ref: '#/definitions/Buildings'
     required:
       - noOfBuildings
       - buildingDetails
@@ -287,7 +303,7 @@ definitions:
         format: int64
         description: Commencement Date of the fire NOC as epoch
       nocDetail:
-          $ref: '#/definitions/NOCDetail'
+        $ref: '#/definitions/NOCDetail'
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -319,6 +335,8 @@ definitions:
         description: Fire station id where we are applying fire noc.
       propertyDetails:
         $ref: '#/definitions/PropertyDetails'
+      buildingDetails:
+        $ref: '#/definitions/BuildingDetails'
       applicationDate:
         type: integer
         format: int64
@@ -425,7 +443,7 @@ definitions:
         type: array
         items:
           type: string
-      active: 
+      active:
         type: boolean
   NOCType:
     type: object
@@ -434,7 +452,7 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      active:
         type: boolean
   OwnershipType:
     type: object
@@ -443,7 +461,7 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      active:
         type: boolean
   OwnerSpecialCategory:
     type: object
@@ -452,7 +470,7 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      active:
         type: boolean
   FireStations:
     type: object
@@ -461,7 +479,10 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      baseTenantId:
+        type: string
+        description: When multiple city sharing single firestation that time we can mention base tenant id for the firestation.
+      active:
         type: boolean
   FireStationsToULBMapping:
     type: object
@@ -475,8 +496,8 @@ definitions:
         description: Unique value reffered to FireStations master
       boundaryCode:
         type: string
-        description: Unique value reffered to boundary master, it will be dot seperated eg- pb.amritsar.SC4
-      active: 
+        description: 'Unique value reffered to boundary master, it will be dot seperated eg- pb.amritsar.SC4'
+      active:
         type: boolean
   FireNOCMetaInfo:
     type: object
@@ -485,9 +506,9 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      firestationMapping: 
+      firestationMapping:
         type: string
-        description: Here we will mention whether its a fire to ulb mapping or fire to mohalla mapping, depends on this configuration we will filter firestation to ulb mapping.
+        description: 'Here we will mention whether its a fire to ulb mapping or fire to mohalla mapping, depends on this configuration we will filter firestation to ulb mapping.'
       certificateValidity:
         type: string
         description: Here we will mention validity of mode eg- days/months/years.
@@ -504,7 +525,7 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      active:
         type: boolean
   Status:
     type: object
@@ -513,7 +534,7 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      active:
         type: boolean
   PropertyType:
     type: object
@@ -522,7 +543,7 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      active: 
+      active:
         type: boolean
   SLA:
     type: object
@@ -531,13 +552,13 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
-      statusCode: 
+      statusCode:
         type: string
         description: This is will be referene to status master
       noOfDays:
         type: string
         description: It will have status completion days.
-      active: 
+      active:
         type: boolean
 parameters:
   pageSize:

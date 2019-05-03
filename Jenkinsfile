@@ -17,7 +17,6 @@ try {
 
         code_builder = load("jenkins/code_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
-        slackNotifier = load("jenkins/slackNotify.groovy")
         currentBuild.displayName = "${BUILD_ID}-${commit_id}"
 
         if (!docker_file_exists) {
@@ -34,11 +33,6 @@ try {
         }
         // cleanup all files and directories in target directories, but only if the CLEANUP build parameter is set to 'true'
         post {
-
-            always {
-              /* Use slackNotifier.groovy from shared library and provide current build result as parameter */
-              slackNotifier.notify(currentBuild.currentResult)
-            }
             cleanup {
                 deleteDir()
             }

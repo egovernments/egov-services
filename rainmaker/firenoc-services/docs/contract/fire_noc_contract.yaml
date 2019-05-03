@@ -13,7 +13,7 @@ info:
 schemes:
   - https
 basePath: /firenoc-service
-x-api-id: org.egov.noc.services
+x-api-id: org.egov.firenoc.services
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml'
 paths:
   /v1/_search:
@@ -43,7 +43,7 @@ paths:
           type: string
           minLength: 2
           maxLength: 64
-        - name: nocNumber
+        - name: fireNOCNumber
           in: query
           description: The unique  license number  for a Fire NOC.
           type: string
@@ -54,7 +54,7 @@ paths:
           description: The mobile number of a Fire NOC owner.
           type: string
           pattern: '[0-9]'
-        - name: nocSubType
+        - name: fireNOCType
           in: query
           description: Fire NOC type.
           type: string
@@ -62,7 +62,7 @@ paths:
         '200':
           description: Fire NOC(s) Retrived Successfully
           schema:
-            $ref: '#/definitions/NOCResponse'
+            $ref: '#/definitions/FireNOCResponse'
         '400':
           description: Invalid input.
           schema:
@@ -86,12 +86,12 @@ paths:
           description: Details for the new Fire NOC(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/NOCRequest'
+            $ref: '#/definitions/FireNOCRequest'
       responses:
         '201':
           description: ReponseInfo with Fire NOC(s) created successfully
           schema:
-            $ref: '#/definitions/NOCResponse'
+            $ref: '#/definitions/FireNOCResponse'
         '400':
           description: Fire NOC(s) creation failed
           schema:
@@ -113,12 +113,12 @@ paths:
           description: Details for the new Fire NOC(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/NOCRequest'
+            $ref: '#/definitions/FireNOCRequest'
       responses:
         '201':
           description: ReponseInfo with Fire NOC(s) updated sudcessfully
           schema:
-            $ref: '#/definitions/NOCResponse'
+            $ref: '#/definitions/FireNOCResponse'
         '400':
           description: Fire NOC(s) updation failed
           schema:
@@ -160,7 +160,7 @@ definitions:
       additonalUnitTypes:
         type: object
       applicationDocuments:
-        description: 1. List of all the required documents. 2. Application can be submitted without required document 3. Once all the document submitted then only application submition process will be completed. 4. Mandatry application documents for a noc type and noc subtype are defined under ApplicationDocument master which is defined under MDMS.
+        description: 1. List of all the required documents. 2. Application can be submitted without required document 3. Once all the document submitted then only application submition process will be completed. 4. Mandatry application documents for a fireNOC type and fireNOC subtype are defined under ApplicationDocument master which is defined under MDMS.
         type: array
         items:
           $ref: '#/definitions/Document'
@@ -180,9 +180,6 @@ definitions:
         maxLength: 64
         description: Unique Identifier of the property details (UUID)
         readOnly: true
-      noOfBuildings:
-        type: string
-        description: it might be single or multiple
       propertyId:
         type: string
       address:
@@ -267,7 +264,7 @@ definitions:
       - tenantId
       - documentType
       - fileStoreId
-  NOC:
+  FireNOC:
     type: object
     description: A Object holds the basic data for a Fire NOC
     properties:
@@ -282,18 +279,18 @@ definitions:
         description: Unique Identifier of ULB
         maxLength: 128
         minLength: 2
-      nocNumber:
+      fireNOCNumber:
         type: string
         description: Unique Fire NOC Number of the Fire NOC. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval.
         maxLength: 64
         minLength: 2
         readOnly: true
-      provisionNOCNumber:
+      provisionFireNOCNumber:
         type: string
         description: Unique Fire NOC Number of the Provision Fire NOC number that will be used for linking provision fire NOC number with new fire NOC number. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval.
         maxLength: 64
         minLength: 2
-      oldNOCNumber:
+      oldFireNOCNumber:
         type: string
         description: Unique Old License Number of the Fire NOC. This is  unique in system for a tenant. This is mandatory  for legacy license(DataEntry).
         maxLength: 64
@@ -301,17 +298,17 @@ definitions:
       dateOfApplied:
         type: integer
         format: int64
-        description: Commencement Date of the fire NOC as epoch
-      nocDetail:
-        $ref: '#/definitions/NOCDetail'
+        description: Applied Date of the fire NOC as epoch
+      fireNOCDetails:
+        $ref: '#/definitions/FireNOCDetails'
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
       - tenantId
-      - nocType
-      - commencementDate
-      - nocDetail
-  NOCDetail:
+      - fireNOCType
+      - dateOfApplied
+      - fireNOCDetails
+  FireNOCDetails:
     type: object
     description: A Object holds the basic data for a Fire NOC
     properties:
@@ -319,24 +316,20 @@ definitions:
         type: string
         minLength: 2
         maxLength: 64
-        description: Unique Identifier of the Fire NOC Details (UUID)
+        description: Unique Identifier of the Fire FireNOC Details (UUID)
         readOnly: true
       applicationNumber:
         type: string
-        description: Unique Application NOC Number of the Fire NOC. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval.
+        description: Unique Application FireNOC Number of the Fire FireNOC. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval.
         maxLength: 64
         minLength: 2
         readOnly: true
-      nocSubType:
+      fireNOCType:
         type: string
-        description: SubType of fire NOC from mdms
+        description: type of fire NOC from mdms
       firestationId:
         type: string
-        description: Fire station id where we are applying fire noc.
-      propertyDetails:
-        $ref: '#/definitions/PropertyDetails'
-      buildingDetails:
-        $ref: '#/definitions/BuildingDetails'
+        description: Fire station id where we are applying fire fireNOC.
       applicationDate:
         type: integer
         format: int64
@@ -369,6 +362,19 @@ definitions:
           - APPROVE
           - REJECT
           - CANCEL
+      channel:
+        type: string
+        description: License can be created from different channels
+        maxLength: 64
+        minLength: 2
+        enum:
+          - COUNTER
+          - CITIZEN
+          - DATAENTRY
+      buildingDetails:
+        $ref: '#/definitions/BuildingDetails'
+      propertyDetails:
+        $ref: '#/definitions/PropertyDetails'
       applicantDetails:
         type: object
         description: This will have details about applicant details
@@ -384,15 +390,6 @@ definitions:
           additionalDetail:
             type: object
             description: 'Json object to store additional details about license, this will be used when ownership is intitution or others'
-      channel:
-        type: string
-        description: License can be created from different channels
-        maxLength: 64
-        minLength: 2
-        enum:
-          - COUNTER
-          - CITIZEN
-          - DATAENTRY
       additionalDetail:
         type: object
         description: Json object to store additional details about license
@@ -400,7 +397,7 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
       - tenantId
-      - nocSubType
+      - fireNOCType
       - financialYear
       - propertyDetails
       - applicantDetails
@@ -408,29 +405,29 @@ definitions:
       - owners
       - channel
       - firestationId
-  NOCRequest:
+  FireNOCRequest:
     description: Contract class to receive request. Array of Noc items are used
     properties:
       RequestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo'
-      NOCs:
+      FireNOCs:
         description: Used for search result and create only
         type: array
         minimum: 1
         maximum: 100
         items:
-          $ref: '#/definitions/NOC'
-  NOCResponse:
+          $ref: '#/definitions/FireNOC'
+  FireNOCResponse:
     description: 'Contract class to send response. Array of Fire NOC items are used in case of search results or response for create, whereas single Fire NOC item is used for update'
     properties:
       ResponseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      NOCs:
+      FireNOCs:
         description: Used for search result and create only
         type: array
         maximum: 500
         items:
-          $ref: '#/definitions/NOC'
+          $ref: '#/definitions/FireNOC'
   BuildingType:
     type: object
     description: This is mdms defination for BuildingType object
@@ -445,9 +442,9 @@ definitions:
           type: string
       active:
         type: boolean
-  NOCType:
+  FireNOCType:
     type: object
-    description: Type of NOC Provisional and New
+    description: Type of FireNOC Provisional and New
     properties:
       code:
         type: string
@@ -501,7 +498,7 @@ definitions:
         type: boolean
   FireNOCMetaInfo:
     type: object
-    description: This master used to maintain metadata of fire noc
+    description: This master used to maintain metadata of fire fireNOC
     properties:
       code:
         type: string
@@ -581,7 +578,7 @@ parameters:
   sortProperty:
     name: sort
     in: query
-    description: Fire NOC results will be sorted by nocNumber ascending by default if this parameter is not provided.
+    description: Fire NOC results will be sorted by fireNOCNumber ascending by default if this parameter is not provided.
     type: array
     uniqueItems: true
     minItems: 1
@@ -589,9 +586,9 @@ parameters:
     collectionFormat: pipes
     items:
       type: string
-      pattern: '[-+](nocNumber|nocType|nocSubType|ownerName)'
+      pattern: '[-+](fireNOCNumber|fireNOCType|ownerName)'
     default:
-      - +nocNumber
+      - +fireNOCNumber
 tags:
   - name: Fire NOC
     description: APIs required for Fire NOC.

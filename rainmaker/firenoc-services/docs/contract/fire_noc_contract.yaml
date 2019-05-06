@@ -197,9 +197,6 @@ definitions:
         maxLength: 64
         description: Unique Identifier of the property details (UUID)
         readOnly: true
-      noOfBuildings:
-        type: string
-        description: it might be single or multiple
       buildings:
         type: array
         items:
@@ -371,8 +368,11 @@ definitions:
           - COUNTER
           - CITIZEN
           - DATAENTRY
-      buildingDetails:
-        $ref: '#/definitions/BuildingDetails'
+      noOfBuildings:
+        type: string
+        description: it might be single or multiple
+      buildings:
+        $ref: '#/definitions/Buildings'
       propertyDetails:
         $ref: '#/definitions/PropertyDetails'
       applicantDetails:

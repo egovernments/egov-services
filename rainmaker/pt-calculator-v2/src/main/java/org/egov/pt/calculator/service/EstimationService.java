@@ -54,14 +54,14 @@ public class EstimationService {
 	@Autowired
 	CalculationValidator calcValidator;
 
-	@Value("custom.pb.zero.assessment")
+	@Value("${custom.pb.zero.assessment}")
 	boolean pbZeroAssessment;
 
-	@Value("custom.pb.zero.assessmentyear")
+	@Value("${custom.pb.zero.assessmentyear}")
 	String pbZeroAssessmentYear;
 
 
-	@Value("custom.pb.zero.assessment.tenantid")
+	@Value("${custom.pb.zero.assessment.tenantid}")
 	String pbZeroAssessmentTenantId;
 
 	/**

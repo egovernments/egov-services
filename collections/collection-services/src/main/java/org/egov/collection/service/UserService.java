@@ -77,7 +77,7 @@ public class UserService {
 		role.put("tenantId", bill.getTenantId().split("\\.")[0]);
 		roles.add(role);
 		
-		user.put("name", bill.getPayerName());
+		user.put("name", bill.getPaidBy());
 		user.put("mobileNumber", bill.getMobileNumber());
 		user.put("userName", bill.getMobileNumber());
 		user.put("active", true);

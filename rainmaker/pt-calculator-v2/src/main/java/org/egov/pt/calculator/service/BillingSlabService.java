@@ -48,6 +48,9 @@ public class BillingSlabService {
 	@Value("${billingslab.max.toPLotSize}")
 	private Double maxToPlotSize;
 
+	@Value("${custom.pb.zero.assessment}")
+	boolean pbZeroAssessment;
+
 	public BillingSlabRes createBillingSlab(BillingSlabReq billingSlabReq) {
 		enrichBillingSlabForCreate(billingSlabReq);
 		producer.push(configurations.getBillingSlabSavePersisterTopic(), billingSlabReq);
@@ -92,6 +95,12 @@ public class BillingSlabService {
 	}
 	
 	public BillingSlabRes searchBillingSlabs(RequestInfo requestInfo, BillingSlabSearchCriteria billingSlabSearcCriteria) {
+
+		if (pbZeroAssessment) {
+			// Disable the tenant id as we are overriding the tenantid for slabs in case of 2013-2014
+			billingSlabSearcCriteria.tenantId = null;
+		}
+
 		List<BillingSlab> billingSlabs = null;
 		try {
 			billingSlabs = dbRepository.searchBillingSlab(billingSlabSearcCriteria);

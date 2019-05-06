@@ -22,7 +22,10 @@ public class BillingSlabQueryBuilder {
 	public void addWhereClause(StringBuilder queryBuilder, BillingSlabSearchCriteria billingSlabSearcCriteria,
 			List<Object> preparedStmtList) {
 
-		queryBuilder.append(" WHERE tenantId = ?");
+		if (billingSlabSearcCriteria.tenantId.isEmpty() && billingSlabSearcCriteria.getId().size() > 0)
+			queryBuilder.append(" WHERE tenantid = tenantid");
+		else
+			queryBuilder.append(" WHERE tenantId = ?");
 
 		preparedStmtList.add(billingSlabSearcCriteria.getTenantId());
 

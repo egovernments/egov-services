@@ -8,5 +8,6 @@ export default callback => {
   });
 
   pg.connect();
-  callback({ pg });
+
+  callback(pg);
 };

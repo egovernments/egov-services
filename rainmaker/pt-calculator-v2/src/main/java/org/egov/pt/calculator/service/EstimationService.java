@@ -24,6 +24,7 @@ import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.Unit;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,16 @@ public class EstimationService {
 
 	@Autowired
 	CalculationValidator calcValidator;
+
+	@Value("custom.pb.zero.assessment")
+	boolean pbZeroAssessment;
+
+	@Value("custom.pb.zero.assessmentyear")
+	String pbZeroAssessmentYear;
+
+
+	@Value("custom.pb.zero.assessment.tenantid")
+	String pbZeroAssessmentTenantId;
 
 	/**
 	 * Generates a map with assessment-number of property as key and estimation
@@ -444,7 +455,19 @@ public class EstimationService {
 
 		PropertyDetail detail = property.getPropertyDetails().get(0);
 		String tenantId = property.getTenantId();
-		BillingSlabSearchCriteria slabSearchCriteria = BillingSlabSearchCriteria.builder().tenantId(tenantId).build();
+		BillingSlabSearchCriteria slabSearchCriteria;
+		/* Added by Tarun for the 2013-14 assessment year to have zero assessment*/
+		if (
+				pbZeroAssessment &&
+				detail.getFinancialYear().contentEquals(pbZeroAssessmentYear) &&
+				!pbZeroAssessmentTenantId.isEmpty()
+			)
+		{
+			slabSearchCriteria = BillingSlabSearchCriteria.builder().tenantId(pbZeroAssessmentTenantId).build();
+		} else {
+			slabSearchCriteria = BillingSlabSearchCriteria.builder().tenantId(tenantId).build();
+		}
+
 		List<BillingSlab> billingSlabs = billingSlabService.searchBillingSlabs(requestInfo, slabSearchCriteria)
 				.getBillingSlab();
 

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -86,7 +84,6 @@ public class UserService {
 		user.put("permanentAddress", bill.getPayerAddress());
 		user.put("roles", roles);
 
-		
 		request.put("RequestInfo", requestInfo);
 		request.put("user", user);
 

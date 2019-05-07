@@ -1,5 +1,6 @@
 package org.egov.tl.service.notification;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.tl.util.NotificationUtil;
 import org.egov.tl.web.models.Difference;
 import org.egov.tl.web.models.SMSRequest;
@@ -43,7 +44,7 @@ public class EditNotificationService {
         for (TradeLicense license : request.getLicenses()) {
             Difference diff = diffMap.get(license.getId());
             String message = util.getCustomizedMsg(diff, license, localizationMessages);
-            if (message == null) continue;
+            if (StringUtils.isEmpty(message)) continue;
 
             Map<String, String> mobileNumberToOwner = new HashMap<>();
 

@@ -363,24 +363,27 @@ public class NotificationUtil {
 
     public String getCustomizedMsg(Difference diff, TradeLicense license, String localizationMessage){
         String message = null,messageTemplate;
-
+        StringBuilder finalMessage = new StringBuilder();
 
         if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_FIELD_CHANGED,localizationMessage);
             message = getEditMsg(license,diff.getFieldsChanged(),messageTemplate);
+            finalMessage.append(message);
         }
 
         if(!CollectionUtils.isEmpty(diff.getClassesAdded())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_ADDED,localizationMessage);
             message = getEditMsg(license,diff.getClassesAdded(),messageTemplate);
+            finalMessage.append(message);
         }
 
         if(!CollectionUtils.isEmpty(diff.getClassesRemoved())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_REMOVED,localizationMessage);
             message = getEditMsg(license,diff.getClassesRemoved(),messageTemplate);
+            finalMessage.append(message);
         }
 
-        return message;
+        return finalMessage.toString();
     }
 
 

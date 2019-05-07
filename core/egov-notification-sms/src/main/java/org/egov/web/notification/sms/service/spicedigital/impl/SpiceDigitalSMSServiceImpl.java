@@ -33,7 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SpiceDigital")
+@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SPICE_DIGITAL")
 @Slf4j
 public class SpiceDigitalSMSServiceImpl implements SMSService {
 
@@ -104,36 +104,22 @@ public class SpiceDigitalSMSServiceImpl implements SMSService {
 	private void submitToExternalSmsService(Sms sms) {
 		try {
 			String url = smsProperties.getSmsProviderURL();
-			ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-			if (requestType.equals("POST")) {
-				HttpEntity<MultiValueMap<String, String>> request = getRequest(sms);
-				response = restTemplate.postForEntity(url, request, String.class);
-				if (isResponseCodeInKnownErrorCodeList(response)) {
-					throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
-				}
-			} else {
-				final MultiValueMap<String, String> requestBody = bodyBuilder.getSmsRequestBody(sms);
-				String final_url = UriComponentsBuilder.fromHttpUrl(url).queryParams(requestBody).toUriString();
-				if (dontEncodeURL) {
-					final_url = final_url.replace("%20", " ").replace("%2B", "+");
-				}
-				String responseString = restTemplate.getForObject(final_url, String.class);
-
-				if (verifyResponse && !responseString.contains(verifyResponseContains)) {
-					log.error("Response from API - " + responseString);
-					throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
-				}
+			final MultiValueMap<String, String> requestBody = bodyBuilder.getSmsRequestBody(sms);
+			String final_url = UriComponentsBuilder.fromHttpUrl(url).queryParams(requestBody).toUriString();
+			if (dontEncodeURL) {
+				final_url = final_url.replace("%20", " ").replace("%2B", "+");
 			}
+			String responseString = restTemplate.getForObject(final_url, String.class);
+			if (verifyResponse && !responseString.contains(verifyResponseContains)) {
+				log.error("Response from API - " + responseString);
+				throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
+			}
+		
 
 		} catch (RestClientException e) {
 			log.error("Error occurred while sending SMS to " + sms.getMobileNumber(), e);
 			throw e;
 		}
-	}
-
-	private boolean isResponseCodeInKnownErrorCodeList(ResponseEntity<?> response) {
-		final String responseCode = Integer.toString(response.getStatusCodeValue());
-		return smsProperties.getSmsErrorCodes().stream().anyMatch(errorCode -> errorCode.equals(responseCode));
 	}
 
 	private HttpEntity<MultiValueMap<String, String>> getRequest(Sms sms) {

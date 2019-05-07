@@ -33,7 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SMSCountry")
+@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SMS_COUNTRY")
 @Slf4j
 public class SMSCountrySMSServiceImpl implements SMSService {
 
@@ -107,26 +107,10 @@ public class SMSCountrySMSServiceImpl implements SMSService {
 		try {
 			String url = smsProperties.getSmsProviderURL();
 			ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.OK);
-			if (requestType.equals("POST")) {
-				HttpEntity<MultiValueMap<String, String>> request = getRequest(sms);
-				response = restTemplate.postForEntity(url, request, String.class);
-				if (isResponseCodeInKnownErrorCodeList(response)) {
-					throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
-				}
-			} else {
-				final MultiValueMap<String, String> requestBody = bodyBuilder.getSmsRequestBody(sms);
-				String final_url = UriComponentsBuilder.fromHttpUrl(url).queryParams(requestBody).toUriString();
-				if (dontEncodeURL) {
-					final_url = final_url.replace("%20", " ").replace("%2B", "+");
-				}
-				String responseString = restTemplate.getForObject(final_url, String.class);
-
-				if (verifyResponse && !responseString.contains(verifyResponseContains)) {
-					log.error("Response from API - " + responseString);
-					throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
-				}
-			}
-
+			HttpEntity<MultiValueMap<String, String>> request = getRequest(sms);
+			response = restTemplate.postForEntity(url, request, String.class);
+			if (isResponseCodeInKnownErrorCodeList(response))
+				throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
 		} catch (RestClientException e) {
 			log.error("Error occurred while sending SMS to " + sms.getMobileNumber(), e);
 			throw e;

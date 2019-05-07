@@ -17,7 +17,7 @@ import org.springframework.util.MultiValueMap;
 
 
 @Service
-@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SpiceDigital")
+@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SPICE_DIGITAL")
 public class SpiceDigitalSMSBodyBuilderImpl implements SMSBodyBuilder{
 	
 	@Autowired

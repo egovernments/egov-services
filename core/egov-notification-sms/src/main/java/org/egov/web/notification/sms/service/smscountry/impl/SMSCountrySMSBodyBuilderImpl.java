@@ -16,7 +16,7 @@ import org.springframework.util.MultiValueMap;
 
 
 @Service
-@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SMSCountry")
+@ConditionalOnProperty(value = "sms.gateway.to.use", havingValue = "SMS_COUNTRY")
 public class SMSCountrySMSBodyBuilderImpl implements SMSBodyBuilder{
 	
 	

@@ -5,15 +5,11 @@
   "description": "Starter project for an ES6 RESTful Express API",
   "main": "dist",
   "scripts": {
-    "dev": "npm run dev:migrate-up && cross-env NODE_ENV=development nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
+    "dev": "cross-env NODE_ENV=development nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "cross-env NODE_ENV=production node dist",
     "prestart": "npm run -s build",
-    "test": "eslint src",
-    "dev:migrate-up": "db-migrate up --config config/database.json -e dev",
-    "dev:migrate-down": "db-migrate down --config config/database.json -e dev",
-    "prod:migrate-up": "db-migrate up --config config/database.json -e prod",
-    "prod:migrate-down": "db-migrate down --config config/database.json -e prod"
+    "test": "eslint src"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -40,8 +36,6 @@
     "compression": "^1.5.2",
     "cors": "^2.7.1",
     "cross-env": "^5.2.0",
-    "db-migrate": "^0.11.4",
-    "db-migrate-pg": "^0.4.0",
     "dotenv": "^6.1.0",
     "express": "^4.13.3",
     "kafka-node": "^3.0.1",

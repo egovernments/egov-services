@@ -57,8 +57,6 @@ public class SMSCountrySMSServiceImpl implements SMSService {
 	@Value("${sms.verify.ssl:true}")
 	private boolean verifySSL;
 
-	@Value("${sms.url.dont_encode_url:true}")
-	private boolean dontEncodeURL;
 
 	@Autowired
 	public SMSCountrySMSServiceImpl(SMSCountryPorperties smsProperties, RestTemplate restTemplate) {

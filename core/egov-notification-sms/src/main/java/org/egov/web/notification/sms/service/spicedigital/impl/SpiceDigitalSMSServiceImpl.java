@@ -114,7 +114,6 @@ public class SpiceDigitalSMSServiceImpl implements SMSService {
 				log.error("Response from API - " + responseString);
 				throw new RuntimeException(SMS_RESPONSE_NOT_SUCCESSFUL);
 			}
-		
 
 		} catch (RestClientException e) {
 			log.error("Error occurred while sending SMS to " + sms.getMobileNumber(), e);

@@ -191,12 +191,12 @@ public class MessageService {
 				.collect(Collectors.toList());
 
 		messages.forEach(message -> {
-			final Message matchingMessage = codeToMessageMap.get(message.getCode());
+			final Message matchingMessage = codeToMessageMap.get(message.getCode() + " | " + message.getModule());
 			if (matchingMessage == null) {
-				codeToMessageMap.put(message.getCode(), message);
+				codeToMessageMap.put(message.getCode() + " | " + message.getModule(), message);
 			} else {
 				if (message.isMoreSpecificComparedTo(matchingMessage)) {
-					codeToMessageMap.put(message.getCode(), message);
+					codeToMessageMap.put(message.getCode() + " | " + message.getModule(), message);
 				}
 			}
 		});

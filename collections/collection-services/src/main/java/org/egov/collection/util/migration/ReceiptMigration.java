@@ -2,7 +2,7 @@ package org.egov.collection.util.migration;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class ReceiptMigration {
 
-	public static final String COUNT_QUERY = "select count(*) from egcl_receiptheader";
+	public static final String COUNT_QUERY = "select count(*) from egcl_receiptheader rh WHERE rh.businessdetails IN ('PT','TL')";
 
 	public static final String RECEIPT_SEARCH_QUERY = " SELECT * FROM (SELECT *, DENSE_RANK() OVER (ORDER BY rh_id) offset_ FROM "
 			+ " "
@@ -85,7 +85,7 @@ public class ReceiptMigration {
 
 	public Map<String, String> migrateToV1(Integer startBatch) {
 
-		Map<String, String> resultMap = new HashMap<>();
+		Map<String, String> resultMap = new LinkedHashMap<>();
 
 		Integer count = jdbcTemplate.queryForObject(COUNT_QUERY, Integer.class);
 		log.info(" the total data count : " + count);
@@ -117,17 +117,24 @@ public class ReceiptMigration {
 			Bill bill = receipt.getBill().get(0);
 			BillDetail detail = bill.getBillDetails().get(0);
 			BigDecimal amountPaid = detail.getAmountPaid();
-			detail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getOrder));
+			detail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getAmount).thenComparing(Comparator.comparing(BillAccountDetail::getOrder)));
 			
 			for (BillAccountDetail accDetail : detail.getBillAccountDetails()) {
 
 				if (null != accDetail.getTaxHeadCode())
 					amountPaid = apportionBillAccDetail(accDetail, amountPaid);
 			}
-
-			repository.saveReceipt(receipt);
-			log.error( receipt.getReceiptNumber() + "SUCCESS");
-			resultMap.put(receipt.getReceiptNumber(), "SUCCESS");
+			
+			try {
+				repository.saveReceipt(receipt);
+			}catch (Exception e) {
+				log.error( receipt.getReceiptNumber() + " : FAILED");
+				resultMap.put(receipt.getReceiptNumber(), " : FAILED");
+				throw e;
+			}
+			
+			log.error( receipt.getReceiptNumber() + " : SUCCESS");
+			resultMap.put(receipt.getReceiptNumber(), " : SUCCESS");
 		}
 	}
 

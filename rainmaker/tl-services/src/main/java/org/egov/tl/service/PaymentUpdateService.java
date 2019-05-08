@@ -10,6 +10,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
+import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
@@ -47,10 +48,12 @@ public class PaymentUpdateService {
 
 	private WorkflowService workflowService;
 
+	private TradeUtil util;
+
 	@Autowired
 	public PaymentUpdateService(TradeLicenseService tradeLicenseService, TLConfiguration config, TLRepository repository,
 								WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService, ObjectMapper mapper,
-								WorkflowService workflowService) {
+								WorkflowService workflowService,TradeUtil util) {
 		this.tradeLicenseService = tradeLicenseService;
 		this.config = config;
 		this.repository = repository;
@@ -58,6 +61,7 @@ public class PaymentUpdateService {
 		this.enrichmentService = enrichmentService;
 		this.mapper = mapper;
 		this.workflowService = workflowService;
+		this.util = util;
 	}
 
 
@@ -121,7 +125,8 @@ public class PaymentUpdateService {
 				/*
 				 * calling repository to update the object in TL tables
 				 */
-				repository.update(updateRequest,businessService);
+				Map<String,Boolean> idToIsStateUpdatableMap = util.getIdToIsStateUpdatableMap(businessService,licenses);
+				repository.update(updateRequest,idToIsStateUpdatableMap);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

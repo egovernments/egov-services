@@ -77,19 +77,16 @@ public class TLRepository {
      *
      * @param tradeLicenseRequest The update requuest
      */
-    public void update(TradeLicenseRequest tradeLicenseRequest,BusinessService businessService) {
+    public void update(TradeLicenseRequest tradeLicenseRequest,Map<String,Boolean> idToIsStateUpdatableMap) {
         RequestInfo requestInfo = new RequestInfo();
         List<TradeLicense> licenses = tradeLicenseRequest.getLicenses();
 
         List<TradeLicense> licesnsesForStatusUpdate = new LinkedList<>();
         List<TradeLicense> licensesForUpdate = new LinkedList<>();
 
-        String tenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
-
-        State currentState;
 
         for (TradeLicense license : licenses) {
-            if (workflowService.isStateUpdatable(license.getStatus(), businessService)) {
+            if (idToIsStateUpdatableMap.get(license.getId())) {
                 licensesForUpdate.add(license);
             } else {
                 licesnsesForStatusUpdate.add(license);

@@ -187,23 +187,6 @@ definitions:
     required:
       - noOfBuildings
       - buildingDetails
-  BuildingDetails:
-    type: object
-    description: It will have fire noc related entities
-    properties:
-      id:
-        type: string
-        minLength: 2
-        maxLength: 64
-        description: Unique Identifier of the property details (UUID)
-        readOnly: true
-      buildings:
-        type: array
-        items:
-          $ref: '#/definitions/Buildings'
-    required:
-      - noOfBuildings
-      - buildingDetails
   OwnerInfo:
     allOf:
       - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
@@ -372,7 +355,9 @@ definitions:
         type: string
         description: it might be single or multiple
       buildings:
-        $ref: '#/definitions/Buildings'
+        type: array
+        items:
+          $ref: '#/definitions/Buildings'
       propertyDetails:
         $ref: '#/definitions/PropertyDetails'
       applicantDetails:

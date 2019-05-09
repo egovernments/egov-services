@@ -1,15 +1,15 @@
 def build(module_name, service_name, commit_id){
     stage("Build docker image") {
-	    
+
 	build_image("${module_name}", "egovio/${service_name}", commit_id)
 	String[] migration_locs = [ "${module_name}/src/main/resources/db", "${module_name}/migration"]    
-	println("migration locs : " + migration_locs);
-	for(int i in migration_locs){
+	
+    for(int i in migration_locs){
 
-		if(fileExists( migration_locs[i] + "/Dockerfile"))
-			build_image( migration_locs[i], "egovio/${service_name}-db", commit_id)
-	}
-	println("after for loop : " + migration_locs);   
+        if(fileExists "migration_locs[i]" + "/Dockerfile")
+            build_image( migration_locs[i], "egovio/${service_name}-db", commit_id)
+	println("after for loop : " + migration_locs);      
+    }
     }
 }
 
@@ -32,4 +32,4 @@ def clean(service_name, commit_id){
     }
 }
 
-return this;
+return this; 

@@ -6,7 +6,7 @@ def build(module_name, service_name, commit_id){    stage("Build docker image") 
     for(int i in migration_locs){
 
         println(" in loop : " + i)
-        def loc = migration_locs[i] + "/Dockerfile"
+        def loc = migration_locs[i] + "//Dockerfile"
         println(" the loc : " + loc)
         def file_exists = fileExists loc
         println(" in for loop : "+ i +" : "+ migration_locs[i] + "/Dockerfile")

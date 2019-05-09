@@ -18,3 +18,17 @@ export const requestInfoToResponseInfo = (requestinfo, success) => {
 
   return ResponseInfo;
 };
+
+export const upadteForAuditDetails = (
+  auditDetails,
+  requestInfo,
+  isupdate = false
+) => {
+  if (!isupdate) {
+    auditDetails.createdBy = requestInfo.userInfo.uuid;
+    auditDetails.createdDate = new Date().getTime();
+  } else {
+    auditDetails.lastModifiedBy = requestInfo.userInfo.uuid;
+    auditDetails.lastModifiedDate = new Date().getTime();
+  }
+};

@@ -1,22 +1,22 @@
-def build(module_name, service_name, commit_id){
-    stage("Build docker image") {
 
-	build_image("${module_name}", "egovio/${service_name}", commit_id)
-	String[] migration_locs = [ "${module_name}/src/main/resources/db", "${module_name}/migration"]    
-	
+def build(module_name, service_name, commit_id){    stage("Build docker image") {
+
+    build_image("${module_name}", "egovio/${service_name}", commit_id)
+    String[] migration_locs = [ "${module_name}/src/main/resources/db", "${module_name}/migration"]    
+    
     for(int i in migration_locs){
 
-        if(fileExists "migration_locs[i]" + "/Dockerfile")
+        def file_exists = fileExists migration_locs[i] + "/Dockerfile"
+        if(file_exists)
             build_image( migration_locs[i], "egovio/${service_name}-db", commit_id)
-	println("after for loop : " + migration_locs);      
     }
     }
 }
 
 def build_image(dockerfile_path, image_name, commit_id){
         sh "cd ${dockerfile_path} && docker build --no-cache -t ${image_name} ."
-	sh "docker tag ${image_name} ${image_name}:${BUILD_ID}-${commit_id}"
-	sh "docker tag ${image_name} ${image_name}:latest"
+    sh "docker tag ${image_name} ${image_name}:${BUILD_ID}-${commit_id}"
+    sh "docker tag ${image_name} ${image_name}:latest"
 }
 
 def publish(service_name, commit_id){
@@ -32,4 +32,4 @@ def clean(service_name, commit_id){
     }
 }
 
-return this; 
+return this;

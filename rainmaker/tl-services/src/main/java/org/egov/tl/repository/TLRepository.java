@@ -18,6 +18,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
+import static org.egov.tl.util.TLConstants.ACTION_ADHOC;
+
 
 @Slf4j
 @Repository
@@ -83,12 +85,16 @@ public class TLRepository {
 
         List<TradeLicense> licesnsesForStatusUpdate = new LinkedList<>();
         List<TradeLicense> licensesForUpdate = new LinkedList<>();
+        List<TradeLicense> licensesForAdhocChargeUpdate = new LinkedList<>();
 
 
         for (TradeLicense license : licenses) {
             if (idToIsStateUpdatableMap.get(license.getId())) {
                 licensesForUpdate.add(license);
-            } else {
+            }
+            else if(license.getAction().equalsIgnoreCase(ACTION_ADHOC))
+                licensesForAdhocChargeUpdate.add(license);
+            else {
                 licesnsesForStatusUpdate.add(license);
             }
         }
@@ -98,6 +104,9 @@ public class TLRepository {
 
         if (!CollectionUtils.isEmpty(licesnsesForStatusUpdate))
             producer.push(config.getUpdateWorkflowTopic(), new TradeLicenseRequest(requestInfo, licesnsesForStatusUpdate));
+
+        if(!licensesForAdhocChargeUpdate.isEmpty())
+            producer.push(config.getUpdateAdhocTopic(),new TradeLicenseRequest(requestInfo,licensesForAdhocChargeUpdate));
 
     }
 

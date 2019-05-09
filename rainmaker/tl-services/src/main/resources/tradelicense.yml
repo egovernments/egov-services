@@ -777,3 +777,30 @@ serviceMaps:
           - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.id
+
+
+
+ - version: 1.0
+   description: Update adhocDetails
+   fromTopic: update-tl-adhoc-tradelicense
+   isTransaction: true
+   queryMaps:
+
+
+       - query: UPDATE eg_tl_tradelicensedetail SET adhocExemption = ?,adhocPenalty = ?,adhocExemptionReason = ?,adhocPenaltyReason = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+         basePath: Licenses.*.tradeLicenseDetail
+         jsonMaps:
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.adhocExemption
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.adhocPenalty
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.adhocExemptionReason
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.adhocPenaltyReason
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.id

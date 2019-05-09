@@ -40,7 +40,6 @@
     "express": "^4.13.3",
     "kafka-node": "^3.0.1",
     "morgan": "^1.8.0",
-    "node-pg-migrate": "^3.14.0",
     "pg": "^7.6.1",
     "resource-router-middleware": "^0.6.0",
     "swagger-express-validator": "^1.0.0",

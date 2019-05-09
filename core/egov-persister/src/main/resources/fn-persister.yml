@@ -1,0 +1,31 @@
+serviceMaps:
+ serviceName: fn-services
+ mappings:
+ - version: 1.0
+   description: Persists fireNOC details in EG_FN_FireNOC  table
+   fromTopic: save-fn-firenoc
+   isTransaction: true
+   queryMaps:
+
+       - query: INSERT INTO eg_fn_firenoc(uuid, tenantid, firenocnumber, provisionfirenocnumber, oldfirenocnumber, dateofapplied, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+         basePath: FireNOCs.*
+         jsonMaps:
+          - jsonPath: $.FireNOCs.*.id
+
+          - jsonPath: $.FireNOCs.*.tenantId
+
+          - jsonPath: $.FireNOCs.*.firenocnumber
+
+          - jsonPath: $.FireNOCs.*.provisionfirenocnumber
+
+          - jsonPath: $.FireNOCs.*.oldfirenocnumber
+
+          - jsonPath: $.FireNOCs.*.dateofapplied
+
+          - jsonPath: $.FireNOCs.*.auditDetails.createdBy
+
+          - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.FireNOCs.*.auditDetails.createdTime
+
+          - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime

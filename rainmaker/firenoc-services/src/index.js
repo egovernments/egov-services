@@ -49,6 +49,10 @@ app.use(
   })
 );
 
+// console.log("envtest1",process.env.DB_USER);
+
+
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // connect to db

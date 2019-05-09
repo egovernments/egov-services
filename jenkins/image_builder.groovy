@@ -6,8 +6,9 @@ def build(module_name, service_name, commit_id){    stage("Build docker image") 
     for(i=0; i<migration_locs.length; i++){
 
         def loc = migration_locs[i] + "/Dockerfile"
-        println(" the loc : " + loc)
-        if(fileExists loc)
+        println(loc)
+        def file_exists = fileExists(loc)
+        if(file_exists)
             build_image( migration_locs[i], "egovio/${service_name}-db", commit_id)
     }
     }

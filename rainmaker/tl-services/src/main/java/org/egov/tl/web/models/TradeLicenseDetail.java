@@ -145,6 +145,7 @@ public class TradeLicenseDetail   {
         @JsonProperty("additionalDetail")
         private JsonNode additionalDetail = null;
 
+        @Valid
         @JsonProperty("institution")
         private Institution institution = null;
 

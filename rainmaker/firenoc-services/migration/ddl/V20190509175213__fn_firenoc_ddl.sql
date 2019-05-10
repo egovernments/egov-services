@@ -63,8 +63,8 @@ CREATE TABLE eg_fn_buildingdocuments (
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
   buildingId character varying(64),
-  CONSTRAINT uk_eg_tl_document_owner PRIMARY KEY (uuid),
-  CONSTRAINT pk_eg_tl_document_owner UNIQUE (uuid, firenocdetailsuuid)
+  CONSTRAINT uk_eg_fn_building_documents PRIMARY KEY (uuid),
+  CONSTRAINT pk_eg_fn_building_documents UNIQUE (uuid, firenocdetailsuuid)
 );
 
 CREATE TABLE eg_fn_firenoc

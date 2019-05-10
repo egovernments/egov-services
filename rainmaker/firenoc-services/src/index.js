@@ -1,3 +1,5 @@
+//loading env property
+require("dotenv").config();
 import http from "http";
 import express from "express";
 import cors from "cors";
@@ -27,9 +29,6 @@ var swaggerUi = require("swagger-ui-express"),
 //   // },
 // };
 
-//loading env property
-require("dotenv").config();
-
 let app = express();
 app.server = http.createServer(app);
 
@@ -49,7 +48,6 @@ app.use(
   })
 );
 
-// console.log("envtest1",process.env.DB_USER);
 
 
 

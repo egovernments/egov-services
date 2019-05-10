@@ -80,7 +80,6 @@ CREATE TABLE eg_fn_firenoc
     createdtime bigint,
     lastmodifiedtime bigint,
     CONSTRAINT uk_eg_fn_firenoc UNIQUE (uuid)
-
 );
 
 CREATE TABLE eg_fn_firenocdetail

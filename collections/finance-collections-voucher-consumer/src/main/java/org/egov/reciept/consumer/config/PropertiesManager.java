@@ -134,9 +134,9 @@ public class PropertiesManager {
     	try {
     		tenantId = tenantId.split(Pattern.quote("."))[1];
     		if(finCoeErpEnvName != null && !finCoeErpEnvName.isEmpty()){
-    			finCoeErpEnvName = "-"+finCoeErpEnvName;
     			return httpProtocol+"://"+tenantId+"-"+finCoeErpEnvName+"."+finCoeErpDomainName+"/";
     		}else{
+    			//considered as the production url
     			return httpProtocol+"://"+tenantId+"."+finCoeErpDomainName+"/";
     		}
 		} catch (Exception e) {

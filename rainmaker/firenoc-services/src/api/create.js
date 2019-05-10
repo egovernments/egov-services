@@ -6,7 +6,7 @@ export default ({ config, db }) => {
   api.post("/_create", function({ body }, res) {
     let payloads=[];
     payloads.push({
-      topic:"save-fn-firenoc",
+      topic: process.env.KAFKA_TOPICS_FIRENOC_CREATE,
       messages:JSON.stringify(body)
     })
     console.log("before",payloads);

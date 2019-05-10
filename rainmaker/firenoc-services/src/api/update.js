@@ -6,7 +6,7 @@ export default ({ config, db }) => {
   api.post("/_update", function({ body }, res) {
     let payloads=[];
     payloads.push({
-      topic:"test",
+      topic: process.env.KAFKA_TOPICS_FIRENOC_UPDATE,
       messages:JSON.stringify(body)
     })
     console.log("before",payloads);

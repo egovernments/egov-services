@@ -127,12 +127,12 @@ public class EmployeeValidator {
 		HashSet < String> codes = new HashSet<>();
 		employees.forEach(employee -> {
 			if(mobileNos.contains(employee.getUser().getMobileNumber()))
-				errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE, ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG + employee.getUser().getMobileNumber());
+				errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_CODE, ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_MOBILE_MSG );
 			else
 				mobileNos.add(employee.getUser().getMobileNumber());
 			if(null != employee.getCode()){
 				if (codes.contains(employee.getCode()))
-					errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE,ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG+ employee.getCode());
+					errorMap.put(ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_CODE,ErrorConstants.HRMS_BULK_CREATE_DUPLICATE_EMPCODE_MSG);
 				else
 					codes.add(employee.getCode());
 			}
@@ -154,7 +154,7 @@ public class EmployeeValidator {
 			UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
             if(!CollectionUtils.isEmpty(userResponse.getUser())){
                 errorMap.put(ErrorConstants.HRMS_USER_EXIST_MOB_CODE,
-                		ErrorConstants.HRMS_USER_EXIST_MOB_MSG+userResponse.getUser().get(0).getMobileNumber());
+                		ErrorConstants.HRMS_USER_EXIST_MOB_MSG);
             }
         });
     }
@@ -175,7 +175,7 @@ public class EmployeeValidator {
 				UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
 				if(!CollectionUtils.isEmpty(userResponse.getUser())){
                     errorMap.put(ErrorConstants.HRMS_USER_EXIST_USERNAME_CODE,
-                    		ErrorConstants.HRMS_USER_EXIST_USERNAME_MSG+userResponse.getUser().get(0).getUserName());
+                    		ErrorConstants.HRMS_USER_EXIST_USERNAME_MSG);
                 }
             }
         });
@@ -200,14 +200,14 @@ public class EmployeeValidator {
 
 	/**
 	 * Performs checks for maintaining data consistency
-	 * 
-	 * @param employee
+	 *  @param employee
 	 * @param errorMap
 	 * @param mdmsData
 	 * @param existingEmp
+	 * @param requestInfo
 	 */
-	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp) {
-		validateUserNameChange(existingEmp,employee,errorMap);
+	public void validateDataConsistency(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData, Employee existingEmp, RequestInfo requestInfo) {
+		validateUserData(existingEmp,employee,errorMap, requestInfo);
 		validateConsistencyAssignment(existingEmp,employee,errorMap);
 		validateConsistencyJurisdiction(existingEmp,employee,errorMap);
 		validateConsistencyDepartmentalTest(existingEmp,employee,errorMap);
@@ -223,10 +223,25 @@ public class EmployeeValidator {
 	 * @param existingEmp
 	 * @param employee
 	 * @param errorMap
+	 * @param requestInfo
 	 */
-	private void validateUserNameChange(Employee existingEmp, Employee employee, Map<String, String> errorMap) {
+	private void validateUserData(Employee existingEmp, Employee employee, Map<String, String> errorMap, RequestInfo requestInfo) {
 		if(!employee.getCode().equals(existingEmp.getCode()))
 			errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_CODE,ErrorConstants.HRMS_UPDATE_EMPLOYEE_CODE_CHANGE_MSG);
+		if(!employee.getUser().getMobileNumber().equals(existingEmp.getUser().getMobileNumber())){
+			Map<String, Object> userSearchCriteria = new HashMap<>();
+			userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_TENANTID,employee.getTenantId());
+			userSearchCriteria.put(HRMSConstants.HRMS_USER_SEARCH_CRITERA_MOBILENO,employee.getUser().getMobileNumber());
+			UserResponse userResponse = userService.getUser(requestInfo, userSearchCriteria);
+			if(!CollectionUtils.isEmpty(userResponse.getUser())){
+				if(!employee.getUser().getUuid().equals(userResponse.getUser().get(0).getUuid())){
+					errorMap.put(ErrorConstants.HRMS_UPDATE_EXISTING_MOBNO_CODE,ErrorConstants.HRMS_UPDATE_EXISTING_MOBNO_MSG);
+				}
+			}
+
+
+		}
+
 	}
 
 	/**
@@ -251,7 +266,7 @@ public class EmployeeValidator {
 		else {
 			for(org.egov.hrms.model.Role role: employee.getUser().getRoles()) {
 				if(!mdmsData.get(HRMSConstants.HRMS_MDMS_ROLES_CODE).contains(role.getCode()))
-					errorMap.put(ErrorConstants.HRMS_INVALID_ROLE_CODE, ErrorConstants.HRMS_INVALID_ROLE_MSG + role.getCode());
+					errorMap.put(ErrorConstants.HRMS_INVALID_ROLE_CODE, ErrorConstants.HRMS_INVALID_ROLE_MSG );
 			}
 		}
 		if(!mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(employee.getEmployeeStatus()))
@@ -301,7 +316,7 @@ public class EmployeeValidator {
 			errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CODE, ErrorConstants.HRMS_OVERLAPPING_ASSGN_MSG);
 
 		for(Assignment assignment: employee.getAssignments()) {
-			if(!assignment.getIsCurrentAssignment() && !CollectionUtils.isEmpty(currentAssignments) && currentAssignments.get(0).getFromDate() < assignment.getToDate() )
+			if(!assignment.getIsCurrentAssignment() && !CollectionUtils.isEmpty(currentAssignments) && null != assignment.getToDate()&& currentAssignments.get(0).getFromDate() < assignment.getToDate() )
 				errorMap.put(ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_CODE,ErrorConstants.HRMS_OVERLAPPING_ASSGN_CURRENT_MSG);
 		    if(!mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_CODE).contains(assignment.getDepartment()))
 				errorMap.put(ErrorConstants.HRMS_INVALID_DEPT_CODE, ErrorConstants.HRMS_INVALID_DEPT_MSG);
@@ -342,12 +357,14 @@ public class EmployeeValidator {
 				errorMap.put(ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_CODE, ErrorConstants.HRMS_INVALID_CURRENT_SERVICE_MSG);
 			}
 			for(ServiceHistory history: employee.getServiceHistory()) {
+				if( (null== history.getIsCurrentPosition() || !history.getIsCurrentPosition()) && !CollectionUtils.isEmpty(currentService) && null != currentService.get(0).getServiceFrom() && null != history.getServiceTo() && currentService.get(0).getServiceFrom()<history.getServiceTo() )
+					errorMap.put(ErrorConstants.HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_CODE, ErrorConstants.HRMS_OVERLAPPING_SERVICEHISTORY_CURRENT_MSG);
 				if( null!= history.getIsCurrentPosition() && history.getIsCurrentPosition() && null != history.getServiceTo())
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_CURRENT_TO_DATE_MSG);
 				if((null == history.getIsCurrentPosition() || !history.getIsCurrentPosition()) && null == history.getServiceTo())
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_CODE,ErrorConstants.HRMS_INVALID_SERVICE_NON_CURRENT_TO_DATE_MSG);
 				if(!StringUtils.isEmpty(history.getServiceStatus()) && !mdmsData.get(HRMSConstants.HRMS_MDMS_EMP_STATUS_CODE).contains(history.getServiceStatus()))
-					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_STATUS_CODE, ErrorConstants.HRMS_INVALID_SERVICE_STATUS_MSG+history.getServiceStatus());
+					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_STATUS_CODE, ErrorConstants.HRMS_INVALID_SERVICE_STATUS_MSG);
 				if( (null != history.getServiceFrom() &&  history.getServiceFrom() > new Date().getTime()) || (null != history.getServiceTo() && history.getServiceTo() > new Date().getTime())
 						|| (null != history.getServiceFrom() && null != history.getServiceTo() && history.getServiceFrom() > history.getServiceTo()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_CODE, ErrorConstants.HRMS_INVALID_SERVICE_PERIOD_MSG);
@@ -372,9 +389,9 @@ public class EmployeeValidator {
 		if(!CollectionUtils.isEmpty(employee.getEducation())){
 			for(EducationalQualification education : employee.getEducation()) {
 				if(null!= education.getQualification() && !mdmsData.get(HRMSConstants.HRMS_MDMS_QUALIFICATION_CODE).contains(education.getQualification()))
-					errorMap.put(ErrorConstants.HRMS_INVALID_QUALIFICATION_CODE, ErrorConstants.HRMS_INVALID_QUALIFICATION_MSG+education.getQualification());
+					errorMap.put(ErrorConstants.HRMS_INVALID_QUALIFICATION_CODE, ErrorConstants.HRMS_INVALID_QUALIFICATION_MSG);
 				if(null != education.getStream() && !mdmsData.get(HRMSConstants.HRMS_MDMS_STREAMS_CODE).contains(education.getStream()))
-					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_MSG+education.getStream());
+					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_STREAM_MSG);
 				if(null != education.getYearOfPassing() && education.getYearOfPassing() > new Date().getTime()){
 					errorMap.put(ErrorConstants.HRMS_INVALID_EDUCATIONAL_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_EDUCATIONAL_PASSING_YEAR_MSG);
 				}
@@ -382,9 +399,21 @@ public class EmployeeValidator {
 		}
 	}
 
+	/**
+	 * 1. Checks if there is atleast 1 active jurisdiction
+	 * 2. If hierarchy is valid
+	 * 3. If boundaryType is valid
+	 * 4. If boundary is valid
+	 *
+	 * @param employee
+	 * @param errorMap
+	 * @param mdmsData
+	 */
 	private void validateJurisdicton(Employee employee, Map<String, String> errorMap, Map<String, List<String>> mdmsData) {
-		if(!CollectionUtils.isEmpty(employee.getJurisdictions())){
-			for(Jurisdiction jurisdiction: employee.getJurisdictions()) {
+		if(CollectionUtils.isEmpty(employee.getJurisdictions().stream().filter(jurisdiction -> null == jurisdiction.getIsActive() || jurisdiction.getIsActive() &&  jurisdiction.getIsActive() ).collect(Collectors.toList()))){
+			errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_CODE,ErrorConstants.HRMS_INVALID_JURISDICTION_ACTIIEV_NULL_MSG);
+		}
+		for(Jurisdiction jurisdiction: employee.getJurisdictions()) {
 				List<String>  hierarchyTypes = JsonPath.read(mdmsData,HRMSConstants.HRMS_TENANTBOUNDARY_HIERARCHY_JSONPATH);
 				String boundary_type_path = String.format(HRMSConstants.HRMS_TENANTBOUNDARY_BOUNDARY_TYPE_JSONPATH,jurisdiction.getHierarchy());
 				String boundary_value_path = String.format(HRMSConstants.HRMS_TENANTBOUNDARY_BOUNDARY_VALUE_JSONPATH,jurisdiction.getHierarchy());
@@ -397,7 +426,7 @@ public class EmployeeValidator {
 				if(!boundaryValues.contains(jurisdiction.getBoundary()))
 					errorMap.put(ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_CODE, ErrorConstants.HRMS_INVALID_JURISDICTION_BOUNDARY_MSG);
 			}
-		}
+
 
 	}
 
@@ -415,7 +444,7 @@ public class EmployeeValidator {
 		if(!CollectionUtils.isEmpty(employee.getTests())) {
 			for (DepartmentalTest test : employee.getTests()) {
 				if (null!=test.getTest() && !mdmsData.get(HRMSConstants.HRMS_MDMS_DEPT_TEST_CODE).contains(test.getTest()))
-					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_MSG + test.getTest());
+					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_MSG );
 				if (null!= test.getYearOfPassing() && test.getYearOfPassing() > new Date().getTime()) {
 					errorMap.put(ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_CODE, ErrorConstants.HRMS_INVALID_DEPARTMENTAL_TEST_PASSING_YEAR_MSG);
 				}
@@ -464,7 +493,7 @@ public class EmployeeValidator {
 			if(validateEmployeeForUpdate(employee, errorMap)){
 				if(!existingEmployees.isEmpty()){
 				Employee existingEmp = existingEmployees.stream().filter(existingEmployee -> existingEmployee.getUuid().equals(employee.getUuid())).findFirst().get();
-				validateDataConsistency(employee, errorMap, mdmsData, existingEmp);
+				validateDataConsistency(employee, errorMap, mdmsData, existingEmp, request.getRequestInfo());
 				}
 				else
 					errorMap.put(ErrorConstants.HRMS_UPDATE_EMPLOYEE_NOT_EXIST_CODE, ErrorConstants.HRMS_UPDATE_EMPLOYEE_NOT_EXIST_MSG);

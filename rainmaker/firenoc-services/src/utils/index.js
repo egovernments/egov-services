@@ -21,7 +21,7 @@ export const requestInfoToResponseInfo = (requestinfo, success) => {
   return ResponseInfo;
 };
 
-export const mergeSearchResults = response => {
+export const mergeSearchResults = (response, queryParams) => {
   const responseArray = [];
   response.forEach(element => {
     const buildings = [];
@@ -73,6 +73,7 @@ export const mergeSearchResults = response => {
             fireNOCDetails: {
               id: element.firenocdetailsid,
               applicationNumberresponseArray: element.applicationNumber,
+              applicationStatus: queryParams.action,
               fireNOCType: element.firenoctype,
               firestationId: "",
               applicationDate: element.applicationdate,

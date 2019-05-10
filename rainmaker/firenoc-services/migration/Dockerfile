@@ -2,7 +2,7 @@ FROM egovio/flyway:4.1.2
 
 COPY ./ddl /flyway/sql
 
-COPY ./seed /flyway/seed
+# COPY ./seed /flyway/seed
 
 COPY migrate.sh /usr/bin/migrate.sh
 

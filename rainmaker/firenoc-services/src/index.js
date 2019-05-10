@@ -10,6 +10,7 @@ import initializeDb from "./db";
 import middleware from "./middleware";
 import api from "./api";
 import config from "./config.json";
+import tracer from "./middleware/tracer"
 var swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger.json");
 // const validator = require('swagger-express-validator');
@@ -48,7 +49,7 @@ app.use(
   })
 );
 
-
+app.use(tracer())
 
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

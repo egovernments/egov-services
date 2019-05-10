@@ -47,6 +47,7 @@ import org.egov.hrms.config.PropertiesManager;
 import org.egov.hrms.model.Employee;
 import org.egov.hrms.model.enums.UserType;
 import org.egov.hrms.repository.RestCallRepository;
+import org.egov.hrms.utils.HRMSConstants;
 import org.egov.hrms.web.contract.UserRequest;
 import org.egov.hrms.web.contract.UserResponse;
 import org.egov.tracer.model.CustomException;
@@ -110,6 +111,7 @@ public class UserService {
 		StringBuilder uri = new StringBuilder();
 		Map<String, Object> userSearchReq = new HashMap<>();
 		userSearchReq.put("RequestInfo", requestInfo);
+		userSearchReq.put(HRMSConstants.HRMS_USER_SERACH_CRITERIA_USERTYPE_CODE,HRMSConstants.HRMS_USER_SERACH_CRITERIA_USERTYPE);
 		for( String key: UserSearchCriteria.keySet())
 			userSearchReq.put(key, UserSearchCriteria.get(key));
 		uri.append(propertiesManager.getUserHost()).append(propertiesManager.getUserSearchEndpoint());

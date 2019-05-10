@@ -11,13 +11,12 @@ import org.egov.user.domain.model.Role;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"code", "tenantId"})
 public class RoleRequest {
-	private Long id;
+
 	private String code;
 	private String name;
 	private String tenantId;
 
 	public RoleRequest(Role domainRole) {
-		this.id = domainRole.getId();
 		this.code = domainRole.getCode();
 		this.name = domainRole.getName();
 		this.tenantId = domainRole.getTenantId();
@@ -27,7 +26,6 @@ public class RoleRequest {
 		return Role.builder()
 				.code(code)
 				.name(name)
-				.id(id)
 				.tenantId(tenantId)
 				.build();
 	}

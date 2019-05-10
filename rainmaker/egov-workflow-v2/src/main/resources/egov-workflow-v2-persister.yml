@@ -109,7 +109,7 @@ serviceMaps:
 
 
 
-       - query: INSERT INTO eg_wf_state_v2(uuid, tenantid, businessserviceid, state,applicationStatus,sla,docuploadrequired, isstartstate, isterminatestate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_wf_state_v2(seq, uuid, tenantid, businessserviceid, state,applicationStatus,sla,docuploadrequired, isstartstate, isterminatestate,isStateUpdatable, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (nextval('seq_eg_wf_state_v2'),? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: BusinessServices.*.states.*
          jsonMaps:
           - jsonPath: $.BusinessServices.*.states.*.uuid
@@ -129,6 +129,8 @@ serviceMaps:
           - jsonPath: $.BusinessServices.*.states.*.isStartState
 
           - jsonPath: $.BusinessServices.*.states.*.isTerminateState
+
+          - jsonPath: $.BusinessServices.*.states.*.isStateUpdatable
 
           - jsonPath: $.BusinessServices.*.states.*.auditDetails.createdBy
 
@@ -173,9 +175,11 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: UPDATE eg_wf_businessservice_v2 SET businessservice=?, business=?, geturi=?, posturi=?, lastmodifiedby=?, lastmodifiedtime=? WHERE uuid=?;
+       - query: UPDATE eg_wf_businessservice_v2 SET businessservicesla=?,businessservice=?, business=?, geturi=?, posturi=?, lastmodifiedby=?, lastmodifiedtime=? WHERE uuid=?;
          basePath: BusinessServices.*
          jsonMaps:
+          - jsonPath: $.BusinessServices.*.businessServiceSla
+
           - jsonPath: $.BusinessServices.*.businessService
 
           - jsonPath: $.BusinessServices.*.business
@@ -187,13 +191,13 @@ serviceMaps:
           - jsonPath: $.BusinessServices.*.auditDetails.lastModifiedBy
 
           - jsonPath: $.BusinessServices.*.auditDetails.lastModifiedTime
-          
+
           - jsonPath: $.BusinessServices.*.uuid
 
 
 
 
-       - query: INSERT INTO eg_wf_state_v2(uuid, tenantid, businessserviceid, state,applicationStatus,sla,docuploadrequired, isstartstate, isterminatestate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (uuid) DO UPDATE SET state=EXCLUDED.state, docuploadrequired=EXCLUDED.docuploadrequired, isstartstate=EXCLUDED.isstartstate, isterminatestate=EXCLUDED.isterminatestate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+       - query: INSERT INTO eg_wf_state_v2(seq, uuid, tenantid, businessserviceid, state,applicationStatus,sla,docuploadrequired, isstartstate, isterminatestate,isStateUpdatable, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (nextval('seq_eg_wf_state_v2'), ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (uuid) DO UPDATE SET state=EXCLUDED.state, docuploadrequired=EXCLUDED.docuploadrequired, isstartstate=EXCLUDED.isstartstate, isterminatestate=EXCLUDED.isterminatestate,isStateUpdatable=EXCLUDED.isStateUpdatable, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
          basePath: BusinessServices.*.states.*
          jsonMaps:
 
@@ -214,6 +218,8 @@ serviceMaps:
           - jsonPath: $.BusinessServices.*.states.*.isStartState
 
           - jsonPath: $.BusinessServices.*.states.*.isTerminateState
+
+          - jsonPath: $.BusinessServices.*.states.*.isStateUpdatable
 
           - jsonPath: $.BusinessServices.*.states.*.auditDetails.createdBy
 

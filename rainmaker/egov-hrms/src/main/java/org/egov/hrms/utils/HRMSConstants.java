@@ -43,4 +43,7 @@ public class HRMSConstants {
 	public static final String HRMS_USER_SEARCH_CRITERA_MOBILENO = "mobileNumber";
 	public static final String HRMS_USER_SEARCH_CRITERA_NAME = "name";
 	public static final String HRMS_USER_SEARCH_CRITERA_USERNAME = "UserName";
+	public static final String HRMS_USER_SERACH_CRITERIA_USERTYPE = "EMPLOYEE";
+	public static final String HRMS_USER_SERACH_CRITERIA_USERTYPE_CODE = "userType";
+
 }

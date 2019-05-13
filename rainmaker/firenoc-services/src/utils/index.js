@@ -1,4 +1,6 @@
 import uniqBy from "lodash/uniqBy";
+import { httpRequest } from "./api";
+import uniq from "lodash/uniq";
 
 export const requestInfoToResponseInfo = (requestinfo, success) => {
   let ResponseInfo = {
@@ -21,14 +23,32 @@ export const requestInfoToResponseInfo = (requestinfo, success) => {
   return ResponseInfo;
 };
 
+const getUserResponse = async uuids => {
+  let requestBody = {
+    uuid: uuids
+  };
+  const response = await httpRequest(
+    "post",
+    "/user/_search",
+    [],
+    requestBody,
+    []
+  );
+
+  return response;
+};
+
 export const mergeSearchResults = (response, queryParams) => {
   const responseArray = [];
   response.forEach(element => {
     const buildings = [];
     const owners = [];
-    if (responseArray.findIndex(item => item.id === element.FID) === -1) {
-      const fireNocByIDArray = response.filter(obj => obj.id === element.FID);
-      fireNocByIDArray.forEach((eachItem, index) => {
+    const userIdArray = [];
+    const isItemPresent =
+      responseArray.findIndex(item => item.fid === element.fid) === -1;
+    if (isItemPresent) {
+      const fireNocByIDArray = response.filter(obj => obj.fid === element.fid);
+      fireNocByIDArray.forEach(async (eachItem, index) => {
         buildings.push({
           id: eachItem.buildingid,
           tenantId: eachItem.buildingtenantid,
@@ -44,23 +64,9 @@ export const mergeSearchResults = (response, queryParams) => {
         owners.push({
           id: eachItem.ownerid,
           userName: eachItem.username,
-          password: "",
-          salutation: "",
-          name: "",
-          gender: "",
-          mobileNumber: "",
-          emailId: "",
-          altContactNumber: "",
-          pan: "",
-          aadhaarNumber: "",
-          permanentAddress: "",
-          permanentCity: "",
-          permanentPincode: "",
-          correspondenceCity: "",
-          correspondencePincode: "",
-          correspondenceAddress: "",
+          useruuid: eachItem.useruuid,
+          name: "Shreya",
           active: eachItem.active,
-          dob: eachItem.dob,
           ownerType: eachItem.ownertype,
           relationship: eachItem.relationship,
           tenantId: eachItem.tenantId,

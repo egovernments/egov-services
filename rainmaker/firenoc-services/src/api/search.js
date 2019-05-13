@@ -36,7 +36,7 @@ export default ({ config, db }) => {
     ) {
       sqlQuery = `${sqlQuery} FN.createdtime >= ${
         queryObj.fromDate
-      } AND FN.lastmodifiedtime <= ${queryObj.toDate} ORDER BY FN.uuid`;
+      } AND FN.createdtime <= ${queryObj.toDate} ORDER BY FN.uuid`;
     } else if (
       queryObj.hasOwnProperty("fromDate") &&
       !queryObj.hasOwnProperty("toDate")

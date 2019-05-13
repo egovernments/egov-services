@@ -31,7 +31,6 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
 
 
-
        - query: INSERT INTO eg_fn_firenocdetail(uuid, firenocuuid, applicationnumber, firenoctype, firestationid, applicationdate, financialyear, issueddate, validfrom, validto, action, channel, noofbuildings, tenantid, additionaldetail, createdby, lastmodifiedby, createdtime, lastmodifiedtime, propertyid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
@@ -101,10 +100,10 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.heightOfBuilding
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.additonalUnitTypes
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.additonalUnitTypes
             type: JSON
             dbType: JSONB
-
+   
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings[*].id)].auditDetails.createdBy
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings[*].id)].auditDetails.lastModifiedBy
@@ -113,6 +112,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings[*].id)].auditDetails.lastModifiedTime
 
+      
        - query: INSERT INTO public.eg_fn_buildingdocuments(uuid, tenantid, firenocdetailsuuid, documenttype, filestoreid, active, documentuid, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*
          jsonMaps:
@@ -243,3 +243,5 @@ serviceMaps:
            - jsonPath: $.FireNOCs.*.auditDetails.createdTime
 
            - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
+      
+       

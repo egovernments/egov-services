@@ -12,7 +12,7 @@ info:
     email: contacts@egovernments.org
 schemes:
   - https
-basePath: /firenoc-service
+basePath: /firenoc-services
 x-api-id: org.egov.firenoc.services
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml'
 paths:

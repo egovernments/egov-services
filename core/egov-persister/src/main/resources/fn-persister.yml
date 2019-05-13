@@ -29,3 +29,53 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.auditDetails.createdTime
 
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
+
+
+
+       - query: INSERT INTO eg_fn_firenocdetail(uuid, firenocuuid, applicationnumber, firenoctype, firestationid, applicationdate, financialyear, issueddate, validfrom, validto, action, channel, noofbuildings, tenantid, additionaldetail, createdby, lastmodifiedby, createdtime, lastmodifiedtime, propertyid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+         basePath: FireNOCs.*.fireNOCDetails
+         jsonMaps:
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.id
+
+          - jsonPath: $.FireNOCs.*.id
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicationNumber
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.fireNOCType
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.firestationId
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicationDate
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.financialYear
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.issuedDate
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.validFrom
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.validTo
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.action
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.channel
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.noOfBuildings
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.tenantId
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.additionalDetail
+            type: JSON
+            dbType: JSONB
+
+          - jsonPath: $.FireNOCs.*.auditDetails.createdBy
+
+          - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.FireNOCs.*.auditDetails.createdTime
+
+          - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.propertyDetails.propertyid
+
+
+       

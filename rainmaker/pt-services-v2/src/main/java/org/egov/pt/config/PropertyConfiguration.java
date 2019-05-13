@@ -58,47 +58,6 @@ public class PropertyConfiguration {
 
 
 
-    @Configuration
-    public class KafkaConfig {
-
-        @Autowired
-        private KafkaProperties kafkaProperties;
-
-        @Bean
-        public Map<String, Object> consumerConfigs() {
-            Map<String, Object> props = new HashMap<>(
-                    kafkaProperties.buildConsumerProperties()
-            );
-            props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                    StringDeserializer.class);
-            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                    HashMapDeserializer.class);
-            props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
-            props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 50);
-            props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 10000);
-
-            return props;
-        }
-
-        @Bean
-        public ConsumerFactory<String, Object> consumerFactory() {
-            return new DefaultKafkaConsumerFactory<>(consumerConfigs());
-        }
-
-        @Bean
-        public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-            ConcurrentKafkaListenerContainerFactory<String, Object> factory =
-                    new ConcurrentKafkaListenerContainerFactory<>();
-            factory.setConsumerFactory(consumerFactory());
-            factory.setBatchListener(true);
-            factory.getContainerProperties().setAckMode(AckMode.BATCH);
-
-            return factory;
-        }
-
-    }
-
-
 
 
     //PERSISTER

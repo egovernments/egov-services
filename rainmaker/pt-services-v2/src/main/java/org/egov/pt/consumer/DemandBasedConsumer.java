@@ -39,7 +39,7 @@ public class DemandBasedConsumer {
      * Listens on the bulk update topic and pushes failed batches on dead letter topic
      * @param record The input bulk update requests
      */
-    @KafkaListener( topics =  {"${persister.demand.based.topic}"}, containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener( topics =  {"${persister.demand.based.topic}"}, containerFactory = "kafkaListenerContainerFactoryBatch")
     public void listen(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
@@ -63,7 +63,7 @@ public class DemandBasedConsumer {
      * every record individually and pushes failed records on error topic
      * @param record Single update request
      */
-    @KafkaListener( topics =  {"${persister.demand.based.dead.letter.topic.batch}"})
+    @KafkaListener( topics =  {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
     public void listenDeadLetterTopic(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;

@@ -381,6 +381,9 @@ public class PropertyValidator {
         responseProperties.forEach(property -> {
             responseids.add(property.getPropertyId());
         });
+
+        log.info("Ids not present: "+responseids.removeAll(requestids));
+
         return listEqualsIgnoreOrder(responseids,requestids);
     }
 

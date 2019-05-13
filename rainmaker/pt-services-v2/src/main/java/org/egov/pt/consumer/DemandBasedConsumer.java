@@ -73,6 +73,7 @@ public class DemandBasedConsumer {
             log.error("Error while listening to value: " + record);
         }
         log.info("Number of records: "+demandBasedAssessmentRequest.getDemandBasedAssessments().size());
+        log.info("Assessment to updated: "+demandBasedAssessmentRequest.getDemandBasedAssessments().get(0).getAssessmentNumber());
         RequestInfo requestInfo = demandBasedAssessmentRequest.getRequestInfo();
 
         Map<String,List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
@@ -102,7 +103,8 @@ public class DemandBasedConsumer {
            DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
                    .demandBasedAssessments(demandBasedAssessments).requestInfo(requestInfo).build();
            log.error("UPDATE ERROR: ",e);
-           log.info("error topic: {}",request);
+           log.info("error topic: {}",errorTopic);
+           log.info("error request: {}",request);
            producer.push(errorTopic,request);
         }
 

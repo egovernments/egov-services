@@ -97,12 +97,12 @@ public class DemandBasedConsumer {
             List<Property> properties = propertyService.getPropertiesWithOwnerInfo(criteria,requestInfo);
             setFields(properties,financialYear);
             propertyService.updateProperty(new PropertyRequest(requestInfo,properties));
-        //    log.info("properties: "+mapper.writeValueAsString(properties));
-          //  log.info(properties.toString());
         }
         catch (Exception e){
            DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
                    .demandBasedAssessments(demandBasedAssessments).requestInfo(requestInfo).build();
+           log.error("UPDATE ERROR: ",e);
+           log.info("error topic: {}",request);
            producer.push(errorTopic,request);
         }
 

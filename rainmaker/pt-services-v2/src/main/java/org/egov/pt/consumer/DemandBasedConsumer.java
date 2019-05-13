@@ -34,6 +34,11 @@ public class DemandBasedConsumer {
     @Autowired
     private PropertyConfiguration config;
 
+
+    /**
+     * Listens on the bulk update topic and pushes failed batches on dead letter topic
+     * @param record The input bulk update requests
+     */
     @KafkaListener( topics =  {"${persister.demand.based.topic}"}, containerFactory = "kafkaListenerContainerFactory")
     public void listen(final HashMap<String, Object> record) {
 
@@ -53,8 +58,12 @@ public class DemandBasedConsumer {
         }
     }
 
-
-    @KafkaListener( topics =  {"${persister.demand.based.dead.letter.topic}"})
+    /**
+     * Listens on the dead letter topic of the bulk request and processes
+     * every record individually and pushes failed records on error topic
+     * @param record Single update request
+     */
+    @KafkaListener( topics =  {"${persister.demand.based.dead.letter.topic.batch}"})
     public void listenDeadLetterTopic(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
@@ -74,6 +83,13 @@ public class DemandBasedConsumer {
     }
 
 
+    /**
+     * Searches the property, sets the financialYear and calls update on it
+     * @param requestInfo The RequestInfo object of the request
+     * @param demandBasedAssessments The list of DemandBasedAssessment objects containing the assessmentNumber
+     *                               to be updated
+     * @param errorTopic The topic on whcih failed request are pushed
+     */
     private void createAssessment(RequestInfo requestInfo,List<DemandBasedAssessment> demandBasedAssessments,String errorTopic){
         try{
             String financialYear = demandBasedAssessments.get(0).getFinancialYear();
@@ -93,6 +109,11 @@ public class DemandBasedConsumer {
     }
 
 
+    /**
+     * Creates property search criteria based on DemandBasedAssessment
+     * @param demandBasedAssessments The list of demandBasedAssessment
+     * @return PropertySearchCriteria
+     */
     private PropertyCriteria getSearchCriteria(List<DemandBasedAssessment> demandBasedAssessments){
 
         Set<String> assessmentNumbers = demandBasedAssessments.stream()
@@ -106,15 +127,26 @@ public class DemandBasedConsumer {
     }
 
 
-
+    /**
+     * Sets financialYear and source
+     * @param properties
+     * @param financialYear
+     */
     private void setFields(List<Property> properties, String financialYear){
         properties.forEach(property -> {
             property.getPropertyDetails().get(0).setFinancialYear(financialYear);
             property.getPropertyDetails().get(0).setSource(PropertyDetail.SourceEnum.SYSTEM);
+            property.getPropertyDetails().get(0).setAdhocExemption(null);
+            property.getPropertyDetails().get(0).setAdhocPenalty(null);
         });
     }
 
 
+    /**
+     * Creates a map of tenantId to DemandBasedAssessment
+     * @param request The update request
+     * @return Map of tenantId to DemandBasedAssessment
+     */
     private Map<String,List<DemandBasedAssessment>> groupByTenantId(DemandBasedAssessmentRequest request){
         Map<String,List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = new HashMap<>();
 

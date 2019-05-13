@@ -103,7 +103,7 @@ serviceMaps:
 
           - jsonPath: $.Properties[*][?({uuid} in @.propertyDetails.*.owners[*].uuid)].tenantId
 
-          - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].assessmentNumber
+          - jsonPath: $.Properties.*.propertyDetails[*][?({referenceUuid} in @.owners[*].referenceUuid)].assessmentNumber
 
           - jsonPath: $.Properties.*.propertyDetails.*.owners.*.uuid
 
@@ -466,7 +466,7 @@ serviceMaps:
 
            - jsonPath: $.Properties[*][?({uuid} in @.propertyDetails.*.owners[*].uuid)].tenantId
 
-           - jsonPath: $.Properties.*.propertyDetails[*][?({uuid} in @.owners[*].uuid)].assessmentNumber
+           - jsonPath: $.Properties.*.propertyDetails[*][?({referenceUuid} in @.owners[*].referenceUuid)].assessmentNumber
 
            - jsonPath: $.Properties.*.propertyDetails.*.owners.*.uuid
 

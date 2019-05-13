@@ -36,5 +36,5 @@ SearchDefinitions:
 
    output:
     jsonFormat: {"ResponseInfo": {}}
-    outJsonPath: $.DemandBasedAssessment
+    outJsonPath: $.DemandBasedAssessments
     responseInfoPath: $.ResponseInfo

@@ -54,31 +54,33 @@ public class PropertyDetail   {
 
 
         public enum SourceEnum {
-    MUNICIPAL_RECORDS("MUNICIPAL_RECORDS"),
-    
-    FIELD_SURVEY("FIELD_SURVEY");
+        MUNICIPAL_RECORDS("MUNICIPAL_RECORDS"),
 
-    private String value;
+        FIELD_SURVEY("FIELD_SURVEY"),
 
-    SourceEnum(String value) {
-      this.value = value;
-    }
+        SYSTEM("SYSTEM");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+        private String value;
 
-    @JsonCreator
-    public static SourceEnum fromValue(String text) {
-      for (SourceEnum b : SourceEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
+        SourceEnum(String value) {
+          this.value = value;
         }
-      }
-      return null;
-    }
+
+        @Override
+        @JsonValue
+        public String toString() {
+          return String.valueOf(value);
+        }
+
+        @JsonCreator
+        public static SourceEnum fromValue(String text) {
+          for (SourceEnum b : SourceEnum.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+              return b;
+            }
+          }
+          return null;
+        }
   }
 
         @JsonProperty("source")

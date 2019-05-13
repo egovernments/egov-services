@@ -36,6 +36,10 @@ public class OwnerInfo extends User  {
         private String ownerType;
 
         @Size(max=64)
+        @JsonProperty("referenceUuid")
+        private String referenceUuid;
+
+        @Size(max=64)
         @JsonProperty("institutionId")
         private String institutionId;
 

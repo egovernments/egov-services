@@ -19,6 +19,7 @@ public class KakfaConfiguration {
         @Autowired
         private KafkaProperties kafkaProperties;
 
+        @Bean
         public Map<String, Object> consumerConfigs() {
             Map<String, Object> props = new HashMap<>(
                     kafkaProperties.buildConsumerProperties()
@@ -26,10 +27,12 @@ public class KakfaConfiguration {
             return props;
         }
 
+        @Bean
         public ConsumerFactory<String, Object> consumerFactory() {
             return new DefaultKafkaConsumerFactory<>(consumerConfigs());
         }
 
+        @Bean
         public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
             ConcurrentKafkaListenerContainerFactory<String, Object> factory =
                     new ConcurrentKafkaListenerContainerFactory<>();

@@ -1,5 +1,5 @@
 import uniqBy from "lodash/uniqBy";
-import { httpRequest } from "./api";
+// import { httpRequest } from "./api";
 import uniq from "lodash/uniq";
 
 export const requestInfoToResponseInfo = (requestinfo, success) => {
@@ -23,20 +23,20 @@ export const requestInfoToResponseInfo = (requestinfo, success) => {
   return ResponseInfo;
 };
 
-const getUserResponse = async uuids => {
-  let requestBody = {
-    uuid: uuids
-  };
-  const response = await httpRequest(
-    "post",
-    "/user/_search",
-    [],
-    requestBody,
-    []
-  );
+// const getUserResponse = async uuids => {
+//   let requestBody = {
+//     uuid: uuids
+//   };
+//   const response = await httpRequest(
+//     "post",
+//     "/user/_search",
+//     [],
+//     requestBody,
+//     []
+//   );
 
-  return response;
-};
+//   return response;
+// };
 
 export const mergeSearchResults = (response, queryParams) => {
   const responseArray = [];

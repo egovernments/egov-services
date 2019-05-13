@@ -76,10 +76,11 @@ export const mergeSearchResults = (response, queryParams) => {
         if (index === fireNocByIDArray.length - 1) {
           responseArray.push({
             ...element,
+            applicationdate: JSON.parse(BigInt(element.applicationdate)),
             fireNOCDetails: {
               id: element.firenocdetailsid,
               applicationNumberresponseArray: element.applicationNumber,
-              applicationStatus: queryParams.action,
+              applicationStatus: element.action,
               fireNOCType: element.firenoctype,
               firestationId: "",
               applicationDate: element.applicationdate,

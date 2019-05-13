@@ -16,7 +16,7 @@ export default ({ config, db }) => {
     const queryObj = JSON.parse(JSON.stringify(request.query));
     queryObj.action = actions[queryObj.action];
 
-    const text = `SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.dateOfApplied,FD.uuid as firenocdetailsid,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FB.uuid as buildingid ,FB.name,FB.noOfFloors,FB.noOfBasements,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) where FN.tenantid = '${
+    const text = `SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.dateOfApplied,FD.uuid as firenocdetailsid,FD.action,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FB.uuid as buildingid ,FB.name,FB.noOfFloors,FB.noOfBasements,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) where FN.tenantid = '${
       queryObj.tenantId
     }' AND`;
 
@@ -25,8 +25,10 @@ export default ({ config, db }) => {
 
     if (queryKeys) {
       queryKeys.forEach(item => {
-        if (item != "fromDate" && item != "toDate" && item != "tenantId") {
-          sqlQuery = `${sqlQuery} ${item}='${queryObj[item]}' AND`;
+        if (queryObj[item]) {
+          if (item != "fromDate" && item != "toDate" && item != "tenantId") {
+            sqlQuery = `${sqlQuery} ${item}='${queryObj[item]}' AND`;
+          }
         }
       });
     }

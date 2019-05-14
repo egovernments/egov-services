@@ -49,15 +49,17 @@ public class EgfKafkaListener {
             		   LOGGER.info("voucherResponse : "+voucherResponse);
             	   if(voucherResponse != null){
             		   String status = voucherResponse.getResponseInfo().getStatus();
+            		   String voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
             		   if(status.equals("201")){
+            			   voucherIntegrationLogTO.setVoucherNumber(voucherNumber);
             			   voucherIntegrationLogTO.setStatus("SUCCESS");
-            			   voucherIntegrationLogTO.setDescription("Voucher created successfully with voucher number : "+voucherResponse.getVouchers().get(0).getVoucherNumber());
-            			   this.getBackupToDB(request);
+            			   voucherIntegrationLogTO.setDescription("Voucher created successfully with voucher number : "+voucherNumber);
             			   if(LOGGER.isInfoEnabled())
-            				   LOGGER.info("Voucher created successfully with voucher number : "+voucherResponse.getVouchers().get(0).getVoucherNumber());
+            				   LOGGER.info("Voucher created successfully with voucher number : "+voucherNumber);
             		   }
             		   receiptService.updateReceipt(request, voucherResponse);
             		   instrumentService.createInstrument(request, voucherResponse);
+            		   this.getBackupToDB(request);
             	   }
                }else{
             	   voucherIntegrationLogTO.setStatus("FAILED");

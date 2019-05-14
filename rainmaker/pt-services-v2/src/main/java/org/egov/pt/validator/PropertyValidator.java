@@ -382,11 +382,6 @@ public class PropertyValidator {
             responseids.add(property.getPropertyId());
         });
 
-        responseids.removeAll(requestids);
-
-        if(!responseids.isEmpty())
-            log.info("Ids not present: "+responseids);
-
 
         return listEqualsIgnoreOrder(responseids,requestids);
     }

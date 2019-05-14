@@ -448,6 +448,21 @@ public class EnrichmentService {
     }
 
 
+    /**
+     * Creates search criteria from list of trade license
+     * @param licenses The licenses whose ids are to be added to search
+     * @return tradeLicenseSearch criteria on basis of tradelicense id
+     */
+    public TradeLicenseSearchCriteria getTradeLicenseCriteriaFromIds(List<TradeLicense> licenses){
+        TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
+        Set<String> licenseIds = new HashSet<>();
+        licenses.forEach(license -> licenseIds.add(license.getId()));
+        criteria.setIds(new LinkedList<>(licenseIds));
+        criteria.setTenantId(licenses.get(0).getTenantId());
+        return criteria;
+    }
+
+
 
 
 

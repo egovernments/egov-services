@@ -131,11 +131,15 @@ public class TradeLicenseService {
         }
         enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
         licenses = repository.getLicenses(criteria);
-        // If property not found with given propertyId or oldPropertyId or address fields return empty list
+
         if(licenses.size()==0){
             return Collections.emptyList();
         }
-        licenses = enrichmentService.enrichTradeLicenseSearch(licenses,criteria,requestInfo);
+
+        // Add tradeLicenseId of all licenses owned by the user
+        criteria=enrichmentService.getTradeLicenseCriteriaFromIds(licenses);
+        //Get all tradeLicenses with ownerInfo enriched from user service
+        licenses = getLicensesWithOwnerInfo(criteria,requestInfo);
         return licenses;
     }
 

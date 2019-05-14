@@ -86,8 +86,10 @@ public class TLQueryBuilder {
 
             List<String> ownerIds = criteria.getOwnerIds();
             if(!CollectionUtils.isEmpty(ownerIds)) {
-                builder.append(" OR tlowner.id IN (").append(createQuery(ownerIds)).append(")");
+                builder.append(" OR (tlowner.id IN (").append(createQuery(ownerIds)).append(")");
                 addToPreparedStatement(preparedStmtList,ownerIds);
+                builder.append(" AND tlowner.active = ? )");
+                preparedStmtList.add(true);
             }
 
             return builder.toString();
@@ -104,8 +106,10 @@ public class TLQueryBuilder {
 
         List<String> ownerIds = criteria.getOwnerIds();
         if(!CollectionUtils.isEmpty(ownerIds)) {
-            builder.append("and tlowner.id IN (").append(createQuery(ownerIds)).append(")");
+            builder.append("and (tlowner.id IN (").append(createQuery(ownerIds)).append(")");
             addToPreparedStatement(preparedStmtList,ownerIds);
+            builder.append(" AND tlowner.active = ? ) ");
+            preparedStmtList.add(true);
         }
 
         if(criteria.getApplicationNumber()!=null){

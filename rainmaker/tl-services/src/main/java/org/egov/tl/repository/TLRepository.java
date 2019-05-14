@@ -111,54 +111,6 @@ public class TLRepository {
     }
 
 
-    /**
-     * Searches and returns the tradelicense from db corresponding to tradelicenses in the request
-     *
-     * @param request The update request
-     * @return The list of TradeLicense from db
-     */
-
-    public List<TradeLicense> searchTradeLicenseFromDB(TradeLicenseRequest request) {
-
-        Map<String, List<String>> tenantIdToIds = new HashMap<>();
-
-        // Map of tenantId to tradeLicenses created
-        request.getLicenses().forEach(license -> {
-            if (tenantIdToIds.containsKey(license.getTenantId()))
-                tenantIdToIds.get(license.getTenantId()).add(license.getId());
-            else {
-                List<String> perTenantIds = new LinkedList<>();
-                perTenantIds.add(license.getId());
-                tenantIdToIds.put(license.getTenantId(), perTenantIds);
-            }
-        });
-
-        List<TradeLicense> searchResult = new LinkedList<>();
-        tenantIdToIds.keySet().forEach(key -> {
-            addTradeLicenseFromSearch(key, tenantIdToIds.get(key), searchResult);
-        });
-
-        if(searchResult.size()!=request.getLicenses().size())
-            throw new CustomException("INVALID UPDATE","License to be updated not present in DB");
-
-        return searchResult;
-    }
-
-
-    /**
-     * Adds tradeLicense for the particular tenantId in the list
-     *
-     * @param tenantId     tenantId of the license
-     * @param ids          ids of licenses with the given tenantId
-     * @param searchResult The list containing multitenant licenses
-     */
-    private void addTradeLicenseFromSearch(String tenantId, List<String> ids,
-                                           List<TradeLicense> searchResult) {
-        TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
-        criteria.setTenantId(tenantId);
-        criteria.setIds(ids);
-        searchResult.addAll(getLicenses(criteria));
-    }
 
 
     /**

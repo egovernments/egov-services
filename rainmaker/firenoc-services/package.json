@@ -41,6 +41,7 @@
     "kafka-node": "^3.0.1",
     "morgan": "^1.8.0",
     "pg": "^7.6.1",
+    "random-number": "0.0.9",
     "resource-router-middleware": "^0.6.0",
     "swagger-express-validator": "^1.0.0",
     "swagger-ui-express": "^4.0.2",

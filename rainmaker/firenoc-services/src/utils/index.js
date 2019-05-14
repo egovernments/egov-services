@@ -1,6 +1,15 @@
 import uniqBy from "lodash/uniqBy";
-// import { httpRequest } from "./api";
-import uniq from "lodash/uniq";
+const uuidv1 =()=>{
+  return require('uuid/v4')()
+}
+
+
+var rn = require('random-number');
+var options = {
+  min:100,
+  integer: true
+}
+
 
 export const requestInfoToResponseInfo = (requestinfo, success) => {
   let ResponseInfo = {
@@ -108,3 +117,32 @@ export const mergeSearchResults = (response, queryParams) => {
   });
   return responseArray;
 };
+
+export const addUUIDAndAuditDetails=(request)=>{
+  request.FireNOCs=request.FireNOCs.map((fireNOC)=>{
+    fireNOC.id=uuidv1();
+    fireNOC.fireNOCDetails.id=uuidv1();
+    fireNOC.fireNOCDetails.applicationNumber=`PB-NOC-${rn(options)}`;
+    fireNOC.fireNOCDetails.buildings=fireNOC.fireNOCDetails.buildings.map((building)=>{
+      building.id=uuidv1();
+      building.applicationDocuments=building.applicationDocuments.map((applicationDocument)=>{
+        applicationDocument.id=uuidv1();
+      })
+      return building;
+    });
+    fireNOC.fireNOCDetails.propertyDetails.address.id=uuidv1();
+    fireNOC.fireNOCDetails.applicantDetails.additionalDetail.id=uuidv1();
+    fireNOC.fireNOCDetails.applicantDetails.owners=fireNOC.fireNOCDetails.applicantDetails.owners.map((owner)=>{
+      owner.id=owner.id?owner.id:uuidv1();
+      return owner;
+    });
+    fireNOC.auditDetails={
+        	createdBy:"Murali M",
+        	lastModifiedBy:"",
+        	createdTime:new Date().getTime(),
+        	lastModifiedTime:0
+    };
+    return fireNOC;
+  })
+  return request;
+}

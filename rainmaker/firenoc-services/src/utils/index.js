@@ -122,6 +122,7 @@ export const addUUIDAndAuditDetails=(request)=>{
   request.FireNOCs=request.FireNOCs.map((fireNOC)=>{
     fireNOC.id=uuidv1();
     fireNOC.fireNOCDetails.id=uuidv1();
+    //id gen service should be integrated here
     fireNOC.fireNOCDetails.applicationNumber=`PB-NOC-${rn(options)}`;
     fireNOC.fireNOCDetails.buildings=fireNOC.fireNOCDetails.buildings.map((building)=>{
       building.id=uuidv1();
@@ -146,3 +147,18 @@ export const addUUIDAndAuditDetails=(request)=>{
   })
   return request;
 }
+
+
+export const addQueryArg = (url, queries = []) => {
+  const urlParts = url.split("?");
+  const path = urlParts[0];
+  let queryParts = urlParts.length > 1 ? urlParts[1].split("&") : [];
+  queries.forEach((query) => {
+    const key = query.key;
+    const value = query.value;
+    const newQuery = `${key}=${value}`;
+    queryParts.push(newQuery);
+  });
+  const newUrl = path + "?" + queryParts.join("&");
+  return newUrl;
+};

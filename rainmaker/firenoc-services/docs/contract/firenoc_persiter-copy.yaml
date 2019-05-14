@@ -31,6 +31,7 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
 
 
+
        - query: INSERT INTO eg_fn_firenocdetail(uuid, firenocuuid, applicationnumber, firenoctype, firestationid, applicationdate, financialyear, issueddate, validfrom, validto, action, channel, noofbuildings, tenantid, additionaldetail, createdby, lastmodifiedby, createdtime, lastmodifiedtime, propertyid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
@@ -100,7 +101,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.heightOfBuilding
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.additonalUnitTypes
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.additonalUnitTypes
             type: JSON
             dbType: JSONB
 
@@ -111,6 +112,32 @@ serviceMaps:
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings[*].id)].auditDetails.createdTime
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings[*].id)].auditDetails.lastModifiedTime
+
+
+      - query: INSERT INTO public.eg_fn_buildingdocuments(uuid, tenantid, firenocdetailsuuid, documenttype, filestoreid, active, documentuid, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        basePath: FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*
+        jsonMaps:
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.id
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].tenantId
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings[*][?({id} in @.applicationDocuments[*].id)].fireNOCDetails.id
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.documentType
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.fileStoreId
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.active
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.documentUid
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.createdBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.createdTime
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.lastModifiedTime
 
 
 
@@ -135,13 +162,13 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.active
 
-          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.additionalDetail.id
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.additionalDetail.institutionId
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.createdBy
 
-          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.createdTime
-
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.createdTime
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedTime
 
@@ -212,10 +239,8 @@ serviceMaps:
 
            - jsonPath: $.FireNOCs.*.auditDetails.createdBy
 
-           - jsonPath: $.FireNOCs.*.auditDetails.createdTime
-
            - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedBy
 
-           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
+           - jsonPath: $.FireNOCs.*.auditDetails.createdTime
 
-       
+           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime

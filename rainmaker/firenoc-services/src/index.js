@@ -7,6 +7,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 // import util from "util";
 import initializeDb from "./db";
+import initializeMDMS from "./utils/mdmsData";
 import middleware from "./middleware";
 import api from "./api";
 import config from "./config.json";
@@ -62,11 +63,15 @@ initializeDb(db => {
   // app.use(validator(opts));
 
   // api router
-  app.use("/", api({ config, db }));
+  //this should taken later for 
+  initializeMDMS((mdmsData)=>{
+    console.log(mdmsData);
+    app.use("/", api({ config, db,mdmsData }));
 
-  app.server.listen(process.env.PORT || config.port, () => {
-    console.log(`Started on port ${app.server.address().port}`);
-  });
+    app.server.listen(process.env.PORT || config.port, () => {
+      console.log(`Started on port ${app.server.address().port}`);
+    });
+  })
 });
 
 export default app;

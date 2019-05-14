@@ -113,6 +113,7 @@ public class EgfKafkaListener {
 			voucherIntegrationLog.setVoucherNumber(voucherIntegrationLogTO.getVoucherNumber());
 			voucherIntegrationLog.setDescription(voucherIntegrationLogTO.getDescription());
 			voucherIntegrationLog.setType(RECEIPT_TYPE);
+			voucherIntegrationLog.setTenantId(request.getReceipt().get(0).getTenantId());
 			voucherIntegartionLogRepository.save(voucherIntegrationLog);			
 		} catch (Exception e) {
 			LOGGER.error("ERROR occurred while doing a backup to databases. "+e.getCause());

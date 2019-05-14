@@ -7,6 +7,7 @@ import swaggerTools from "swagger-tools";
 import bodyParser from "body-parser";
 import api from "./controller";
 const { Pool } = require("pg");
+import tracer from "./middleware/tracer";
 
 //loading env property
 require("dotenv").config();
@@ -37,6 +38,8 @@ app.use(
     exposedHeaders: config.corsHeaders
   })
 );
+
+app.use(tracer());
 
 let swaggerDoc = require("../config/docs/contract/swagger.json");
 

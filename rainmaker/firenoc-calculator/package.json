@@ -42,7 +42,8 @@
     "pg": "^7.6.1",
     "resource-router-middleware": "^0.6.0",
     "swagger-tools": "^0.10.4",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

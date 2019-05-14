@@ -118,20 +118,15 @@ public class VoucherServiceImpl implements VoucherService {
 	 * Function which is used to get the AccountCodeContract based on the Account code from running Instrument Service. By which we can get the mapped glcode for Account code.
 	 */
 	private InstrumentAccountCodeContract getInstrumentAccountCode(Receipt receipt) throws VoucherCustomException {
-		InstrumentAccountCodeSearchContract iAccCodeSearchContract = new InstrumentAccountCodeSearchContract();
-		InstrumentTypeContract instrumentType = new InstrumentTypeContract();
 		String name = receipt.getInstrument().getInstrumentType().getName();
-		instrumentType.setName(name);
-		iAccCodeSearchContract.setInstrumentType(instrumentType);
 		InstrumentAccountCodeReq instAccCodeReq = new InstrumentAccountCodeReq();
 		String tenantId = receipt.getTenantId();
 		final String instrument_account_code_url = propertiesManager.getHostUrl()
-				+ propertiesManager.getInstrumentAccountCodeUrl() + "?tenantId=" + tenantId;
+				+ propertiesManager.getInstrumentAccountCodeUrl() + "?tenantId=" + tenantId + "&instrumentType.name="+name;
 		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
+		requestInfo.setAuthToken("3fe19291-d1d0-48e8-bd46-8a6518d9acb2");
 		instAccCodeReq.setTenantId(tenantId);
 		instAccCodeReq.setRequestInfo(requestInfo);
-		instAccCodeReq.setInstrumentAccountCodeSearchContract(iAccCodeSearchContract);
 		if (LOGGER.isInfoEnabled())
 			LOGGER.info("invoking rest call for getting instrument account code : URL :" + instrument_account_code_url);
 		InstrumentAccountCodeResponse postForObject = restTemplate.postForObject(instrument_account_code_url,

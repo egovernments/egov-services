@@ -37,4 +37,6 @@ String type;
 String requestJson;
 @Column(name="description")
 String description;
+@Column(name="tenantId")
+String tenantId;
 }

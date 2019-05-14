@@ -82,7 +82,7 @@ public class ReportService {
 	}
 
 	public void enrichAOWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
-		List<Long> GROids = dbResponse.parallelStream().map(obj -> {
+		List<Long> GROids = dbResponse.stream().map(obj -> {
 			return Long.valueOf(obj.get("ao_name").toString().split("[:]")[0]);
 		}).collect(Collectors.toList());
 

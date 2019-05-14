@@ -224,7 +224,7 @@ public class GrievanceService {
 	 */
 	private void validateAndCreateUser(ServiceRequest serviceRequest) {
 		RequestInfo requestInfo = serviceRequest.getRequestInfo();
-		List<String> roles = requestInfo.getUserInfo().getRoles().parallelStream().map(Role::getCode)
+		List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 				.collect(Collectors.toList());
 		if(roles.contains(PGRConstants.ROLE_NAME_CSR) || roles.contains(PGRConstants.ROLE_CSR)) {
 			serviceRequest.getServices().stream().forEach(request -> {
@@ -739,7 +739,7 @@ public class GrievanceService {
 	 * @return
 	 */
 	public ServiceResponse enrichResult(RequestInfo requestInfo, ServiceResponse response) {
-		List<Long> userIds = response.getServices().parallelStream().map(a -> {
+		List<Long> userIds = response.getServices().stream().map(a -> {
 					try {return Long.parseLong(a.getAccountId());}catch(Exception e) {return null;} }).collect(Collectors.toList());
 		List<Address> addresses = new ArrayList<>();
 		response.getServices().forEach(service -> {

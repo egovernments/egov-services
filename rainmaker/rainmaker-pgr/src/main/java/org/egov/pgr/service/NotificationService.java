@@ -272,7 +272,7 @@ public class NotificationService {
 				.serviceRequestId(Arrays.asList(serviceReq.getServiceRequestId())).build();
 		ServiceResponse response = (ServiceResponse) requestService.getServiceRequestDetails(requestInfo, serviceReqSearchCriteria);
 		try {
-			List<ActionInfo> actions = response.getActionHistory().get(0).getActions().parallelStream()
+			List<ActionInfo> actions = response.getActionHistory().get(0).getActions().stream()
 					.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
 			if(CollectionUtils.isEmpty(actions))
 				return null;

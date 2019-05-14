@@ -1,4 +1,4 @@
-CREATE TABLE public.eg_fn_owner
+CREATE TABLE eg_fn_owner
 (
     uuid character varying(64),
     tenantid character varying(256),

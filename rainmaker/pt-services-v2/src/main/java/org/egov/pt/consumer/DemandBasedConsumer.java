@@ -37,9 +37,10 @@ public class DemandBasedConsumer {
 
     /**
      * Listens on the bulk update topic and pushes failed batches on dead letter topic
+     *
      * @param record The input bulk update requests
      */
-    @KafkaListener( topics =  {"${persister.demand.based.topic}"}, containerFactory = "kafkaListenerContainerFactoryBatch")
+    @KafkaListener(topics = {"${persister.demand.based.topic}"}, containerFactory = "kafkaListenerContainerFactoryBatch")
     public void listen(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
@@ -48,22 +49,23 @@ public class DemandBasedConsumer {
         } catch (final Exception e) {
             log.error("Error while listening to value: " + record);
         }
-        log.info("Number of records: "+demandBasedAssessmentRequest.getDemandBasedAssessments().size());
+        log.info("Number of records: " + demandBasedAssessmentRequest.getDemandBasedAssessments().size());
         RequestInfo requestInfo = demandBasedAssessmentRequest.getRequestInfo();
 
-        Map<String,List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
+        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
 
-        for(Map.Entry<String,List<DemandBasedAssessment>> entry : tenantIdToDemandBasedAssessmentMap.entrySet()){
-            createAssessment(requestInfo,entry.getValue(),config.getDeadLetterTopicBatch());
+        for (Map.Entry<String, List<DemandBasedAssessment>> entry : tenantIdToDemandBasedAssessmentMap.entrySet()) {
+            createAssessment(requestInfo, entry.getValue(), config.getDeadLetterTopicBatch());
         }
     }
 
     /**
      * Listens on the dead letter topic of the bulk request and processes
      * every record individually and pushes failed records on error topic
+     *
      * @param record Single update request
      */
-    @KafkaListener( topics =  {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
     public void listenDeadLetterTopic(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
@@ -72,40 +74,44 @@ public class DemandBasedConsumer {
         } catch (final Exception e) {
             log.error("Error while listening to value: " + record);
         }
-        log.info("Number of records: "+demandBasedAssessmentRequest.getDemandBasedAssessments().size());
-        log.info("Assessment to updated: "+demandBasedAssessmentRequest.getDemandBasedAssessments().get(0).getAssessmentNumber());
+        log.info("Number of records: " + demandBasedAssessmentRequest.getDemandBasedAssessments().size());
+        log.info("Assessment to updated: " + demandBasedAssessmentRequest.getDemandBasedAssessments().get(0).getAssessmentNumber());
         RequestInfo requestInfo = demandBasedAssessmentRequest.getRequestInfo();
 
-        Map<String,List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
+        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
 
-        for(Map.Entry<String,List<DemandBasedAssessment>> entry : tenantIdToDemandBasedAssessmentMap.entrySet()){
-            createAssessment(requestInfo,entry.getValue(),config.getDeadLetterTopicSingle());
+        for (Map.Entry<String, List<DemandBasedAssessment>> entry : tenantIdToDemandBasedAssessmentMap.entrySet()) {
+            createAssessment(requestInfo, entry.getValue(), config.getDeadLetterTopicSingle());
         }
     }
 
 
     /**
      * Searches the property, sets the financialYear and calls update on it
-     * @param requestInfo The RequestInfo object of the request
+     *
+     * @param requestInfo            The RequestInfo object of the request
      * @param demandBasedAssessments The list of DemandBasedAssessment objects containing the assessmentNumber
      *                               to be updated
-     * @param errorTopic The topic on whcih failed request are pushed
+     * @param errorTopic             The topic on whcih failed request are pushed
      */
-    private void createAssessment(RequestInfo requestInfo,List<DemandBasedAssessment> demandBasedAssessments,String errorTopic){
-        try{
+    private void createAssessment(RequestInfo requestInfo, List<DemandBasedAssessment> demandBasedAssessments, String errorTopic) {
+        try {
             String financialYear = demandBasedAssessments.get(0).getFinancialYear();
             PropertyCriteria criteria = getSearchCriteria(demandBasedAssessments);
-            List<Property> properties = propertyService.getPropertiesWithOwnerInfo(criteria,requestInfo);
-            setFields(properties,financialYear);
-            propertyService.updateProperty(new PropertyRequest(requestInfo,properties));
-        }
-        catch (Exception e){
-           DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
-                   .demandBasedAssessments(demandBasedAssessments).requestInfo(requestInfo).build();
-           log.error("UPDATE ERROR: ",e);
-           log.info("error topic: {}",errorTopic);
-           log.info("error request: {}",request);
-           producer.push(errorTopic,request);
+            List<Property> properties = propertyService.getPropertiesWithOwnerInfo(criteria, requestInfo);
+            setFields(properties, financialYear);
+            propertyService.updateProperty(new PropertyRequest(requestInfo, properties));
+        } catch (Exception e) {
+            DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
+                    .requestInfo(requestInfo).build();
+
+            for (DemandBasedAssessment demandBasedAssessment : demandBasedAssessments) {
+                request.setDemandBasedAssessments(Collections.singletonList(demandBasedAssessment));
+                log.error("UPDATE ERROR: ", e);
+                log.info("error topic: {}", errorTopic);
+                log.info("error request: {}", request);
+                producer.push(errorTopic, request);
+            }
         }
 
     }
@@ -113,10 +119,11 @@ public class DemandBasedConsumer {
 
     /**
      * Creates property search criteria based on DemandBasedAssessment
+     *
      * @param demandBasedAssessments The list of demandBasedAssessment
      * @return PropertySearchCriteria
      */
-    private PropertyCriteria getSearchCriteria(List<DemandBasedAssessment> demandBasedAssessments){
+    private PropertyCriteria getSearchCriteria(List<DemandBasedAssessment> demandBasedAssessments) {
 
         Set<String> assessmentNumbers = demandBasedAssessments.stream()
                 .map(DemandBasedAssessment::getAssessmentNumber).collect(Collectors.toSet());
@@ -131,10 +138,11 @@ public class DemandBasedConsumer {
 
     /**
      * Sets financialYear and source
+     *
      * @param properties
      * @param financialYear
      */
-    private void setFields(List<Property> properties, String financialYear){
+    private void setFields(List<Property> properties, String financialYear) {
         properties.forEach(property -> {
             property.getPropertyDetails().get(0).setFinancialYear(financialYear);
             property.getPropertyDetails().get(0).setSource(PropertyDetail.SourceEnum.SYSTEM);
@@ -146,26 +154,25 @@ public class DemandBasedConsumer {
 
     /**
      * Creates a map of tenantId to DemandBasedAssessment
+     *
      * @param request The update request
      * @return Map of tenantId to DemandBasedAssessment
      */
-    private Map<String,List<DemandBasedAssessment>> groupByTenantId(DemandBasedAssessmentRequest request){
-        Map<String,List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = new HashMap<>();
+    private Map<String, List<DemandBasedAssessment>> groupByTenantId(DemandBasedAssessmentRequest request) {
+        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = new HashMap<>();
 
         request.getDemandBasedAssessments().forEach(demandBasedAssessment -> {
-            if(tenantIdToDemandBasedAssessmentMap.containsKey(demandBasedAssessment.getTenantId()))
+            if (tenantIdToDemandBasedAssessmentMap.containsKey(demandBasedAssessment.getTenantId()))
                 tenantIdToDemandBasedAssessmentMap.get(demandBasedAssessment.getTenantId()).add(demandBasedAssessment);
             else {
                 LinkedList<DemandBasedAssessment> demandBasedAssessments = new LinkedList<>();
                 demandBasedAssessments.add(demandBasedAssessment);
-                tenantIdToDemandBasedAssessmentMap.put(demandBasedAssessment.getTenantId(),demandBasedAssessments);
+                tenantIdToDemandBasedAssessmentMap.put(demandBasedAssessment.getTenantId(), demandBasedAssessments);
             }
         });
 
         return tenantIdToDemandBasedAssessmentMap;
     }
-
-
 
 
 }

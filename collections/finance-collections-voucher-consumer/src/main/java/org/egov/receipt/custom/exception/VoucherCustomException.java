@@ -1,20 +1,25 @@
 package org.egov.receipt.custom.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class VoucherCustomException extends Exception{
 	String status;
 	String message;
-	String descriptions;
 public VoucherCustomException(String message) {
 	super(message);
 }
-public VoucherCustomException(String status,String message,String descriptions) {
-	this.status=status;
-	this.message=message;
-	this.descriptions=descriptions;
-}
 @Override
 public String getMessage() {
-	return "[status : "+status+", message : "+message+", description : "+descriptions+"]";
+	return "[status : "+status+", message : "+message+"]";
 }
 
 }

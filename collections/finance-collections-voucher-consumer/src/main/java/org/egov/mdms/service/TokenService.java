@@ -70,7 +70,7 @@ public class TokenService {
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.add("Authorization", "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0");
+        header.add("Authorization", propertiesManager.getTokenAuhorizationtKey());
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("username", propertiesManager.getSiUser());
@@ -83,16 +83,16 @@ public class TokenService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, header);
 
         try {
-            LOGGER.info("call:" + propertiesManager.getTokenGenUrl());
+            LOGGER.debug("call:" + propertiesManager.getTokenGenUrl());
             Object response = restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getTokenGenUrl(),
                     request, Object.class);
             if (response != null) {
 				String authToken = String.valueOf(((HashMap) response).get("access_token"));
-				LOGGER.info("Generated AUth token : "+ authToken);
+				LOGGER.debug("Generated AUth token : "+ authToken);
 				return authToken;
 			}
         } catch (RestClientException e) {
-            LOGGER.info("Eror while getting admin authtoken"+ e);
+            LOGGER.debug("Eror while getting admin authtoken"+ e);
             return null;
         }
         return null;

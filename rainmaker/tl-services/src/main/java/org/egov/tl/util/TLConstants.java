@@ -40,6 +40,8 @@ public class TLConstants {
 
     public static final String NOTIFICATION_OBJECT_REMOVED = "tl.en.edit.object.removed";
 
+    public static final String NOTIFICATION_OBJECT_MODIFIED = "tl.en.edit.object.modified";
+
 
 
     // MDMS

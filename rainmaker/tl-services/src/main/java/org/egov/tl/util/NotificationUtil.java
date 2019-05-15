@@ -367,9 +367,9 @@ public class NotificationUtil {
 
     public String getCustomizedMsg(Difference diff, TradeLicense license, String localizationMessage){
         String message = null,messageTemplate;
-        StringBuilder finalMessage = new StringBuilder();
+      //  StringBuilder finalMessage = new StringBuilder();
 
-        if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+        /*if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_FIELD_CHANGED,localizationMessage);
             message = getEditMsg(license,diff.getFieldsChanged(),messageTemplate);
             finalMessage.append(message);
@@ -385,9 +385,16 @@ public class NotificationUtil {
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_REMOVED,localizationMessage);
             message = getEditMsg(license,diff.getClassesRemoved(),messageTemplate);
             finalMessage.append(message);
+        }*/
+
+        if(!CollectionUtils.isEmpty(diff.getFieldsChanged()) ||
+                !CollectionUtils.isEmpty(diff.getClassesAdded())
+                || !CollectionUtils.isEmpty(diff.getClassesRemoved())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_MODIFIED,localizationMessage);
+            message = getEditMsg(license,messageTemplate);
         }
 
-        return finalMessage.toString();
+        return message;
     }
 
 
@@ -399,6 +406,12 @@ public class NotificationUtil {
     private String getEditMsg(TradeLicense license,List<String> list,String message){
         message = message.replace("<APPLICATION_NUMBER>",license.getApplicationNumber());
         message = message.replace("<FIELDS>",StringUtils.join(list,","));
+        return message;
+    }
+
+
+    private String getEditMsg(TradeLicense license ,String message){
+        message = message.replace("<APPLICATION_NUMBER>",license.getApplicationNumber());
         return message;
     }
 

@@ -131,7 +131,9 @@ public class TLConstants {
 
     public static final String ACTION_STATUS_REJECTED  = "REJECT_REJECTED";
 
-    public static final String ACTION_STATUS_FIELDINSPECTION  = "FORWARD_PENDINGPAYMENT";
+    public static final String ACTION_STATUS_FIELDINSPECTION  = "FORWARD_FIELDINSPECTION";
+
+    public static final String ACTION_CANCEL_CANCELLED  = "CANCEL_CANCELLED";
 
     public static final String ACTION_STATUS_PAID  = "PAID";
 

@@ -5,11 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.egov.tracer.model.CustomException;
 import org.egov.win.model.Body;
 import org.egov.win.model.Email;
 import org.egov.win.model.EmailRequest;
@@ -44,7 +46,7 @@ public class CronService {
 
 	@Autowired
 	private CronUtils utils;
-	
+
 	@Autowired
 	private Producer producer;
 
@@ -53,17 +55,22 @@ public class CronService {
 
 	@Value("${egov.impact.emailer.interval.in.secs}")
 	private Long timeInterval;
-	
+
 	@Value("${egov.impact.emailer.email.to.address}")
 	private String toAddress;
-	
+
 	@Value("${egov.impact.emailer.email.subject}")
 	private String subject;
 
 	public void fetchData() {
-		Email email = getDataFromDb();
-		String content = emailService.formatEmail(email);
-		send(email, content);
+		try {
+			Email email = getDataFromDb();
+			String content = emailService.formatEmail(email);
+			send(email, content);
+		} catch (Exception e) {
+			log.info("Email will not be sent, ERROR: ", e);
+		}
+
 	}
 
 	private Email getDataFromDb() {
@@ -231,27 +238,27 @@ public class CronService {
 		ObjectMapper mapper = utils.getObjectMapper();
 		List<Map<String, Object>> data = new ArrayList<>();
 		SearcherRequest request = utils.preparePlainSearchReq(uri, defName);
-		Object response = repository.fetchResult(uri, request);
+		Optional<Object> response = repository.fetchResult(uri, request);
 		try {
-			List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(response, "$.data"), List.class);
+			List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(response.get(), "$.data"), List.class);
 			for (Object record : dataParsedToList) {
 				data.add(mapper.convertValue(record, Map.class));
 			}
 		} catch (Exception e) {
-			log.error("Exception while parsing to map: ", e);
-			data = null;
+			throw new CustomException("EMAILER_DATA_RETREIVAL_FAILED", "Failed to retrieve data from the db");
 		}
+
 		return data;
 
 	}
 
 	private void send(Email email, String content) {
 		String[] addresses = toAddress.split(",");
-		for(String address: Arrays.asList(addresses)) {
+		for (String address : Arrays.asList(addresses)) {
 			email.setTo(address);
 			email.setSubject(subject);
-			EmailRequest request = EmailRequest.builder()
-					.email(email.getTo()).subject(email.getSubject()).isHTML(true).body(content).build();
+			EmailRequest request = EmailRequest.builder().email(email.getTo()).subject(email.getSubject()).isHTML(true)
+					.body(content).build();
 			producer.push(emailTopic, request);
 		}
 	}

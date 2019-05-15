@@ -1,6 +1,7 @@
 package org.egov.win.repository;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class CronRepository {
 	 * @return Object
 	 * @author vishal
 	 */
-	public Object fetchResult(StringBuilder uri, Object request) {
+	public Optional<Object> fetchResult(StringBuilder uri, Object request) {
 		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Object response = null;
@@ -40,8 +41,7 @@ public class CronRepository {
 		}catch(Exception e) {
 			log.error("Exception while fetching from searcher: ",e);
 		}
-		
-		return response;
+		return Optional.ofNullable(response);
 		
 	}
 	

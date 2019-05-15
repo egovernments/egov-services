@@ -54,14 +54,12 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 	@Override
 	public List<BusinessService> getBusinessService(String tenantId, String code) throws VoucherCustomException{
 		financeServiceMdmsData  = financeServiceMdmsData != null ? financeServiceMdmsData : this.getFinanceServiceMdmsData(tenantId, code);
-		if(LOGGER.isInfoEnabled())
-			LOGGER.info("financeServiceMdmsData  :::  "+financeServiceMdmsData);
+		LOGGER.debug("financeServiceMdmsData  :::  "+financeServiceMdmsData);
 		List<BusinessService> list = new ArrayList<>();;
 		try {
 			if(financeServiceMdmsData != null){
 				list = mapper.convertValue(JsonPath.read(financeServiceMdmsData, "$.MdmsRes.FinanceModule.BusinessServiceMapping"),new TypeReference<List<BusinessService>>(){});
-				if(LOGGER.isInfoEnabled())
-					LOGGER.info("List of business services ::: "+list);
+				LOGGER.debug("List of business services ::: "+list);
 			}			
 		} catch (Exception e) {
 			throw new VoucherCustomException("FAILED","Error while parsing mdms data. Check the business/account head mapping json file.");
@@ -76,8 +74,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		try {
 			if(financeServiceMdmsData != null){
 				list = mapper.convertValue(JsonPath.read(financeServiceMdmsData, "$.MdmsRes.FinanceModule.TaxHeadMasterGlCodeMapping"),new TypeReference<List<TaxHeadMaster>>(){});
-				if(LOGGER.isInfoEnabled())
-					LOGGER.info("List of TaxHeadMaster data : "+list);
+				LOGGER.debug("List of TaxHeadMaster data : "+list);
 			}			
 		} catch (Exception e) {
 			throw new VoucherCustomException("FAILED","Error while parsing mdms data. Check the business/account head mapping json file.");
@@ -105,8 +102,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
         mdmsrequest.setRequestInfo(requestInfo);
         mdmsrequest.setMdmsCriteria(mdmscriteria);
         try {
-        	if(LOGGER.isInfoEnabled())
-        		LOGGER.info("call : "+mdmsUrl);
+       		LOGGER.debug("call : "+mdmsUrl);
             Map postForObject = restTemplate.postForObject(mdmsUrl, mdmsrequest, Map.class);
             return postForObject;
         } catch (Exception e) {

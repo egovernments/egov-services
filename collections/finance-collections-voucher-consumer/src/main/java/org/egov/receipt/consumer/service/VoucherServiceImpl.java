@@ -312,6 +312,14 @@ public class VoucherServiceImpl implements VoucherService {
 		amountMapwithGlcode.put(glcode, new BigDecimal(-amountPaid.doubleValue()));
 	}
 
+	/**
+	 * 
+	 * @param tenantId
+	 * @param bsCode
+	 * @return
+	 * @throws Exception
+	 * Function is used to get the Business Services based on business service code which is mapped in json file
+	 */
 	private List<BusinessService> getBusinessServiceByCode(String tenantId, String bsCode) throws Exception {
 		List<BusinessService> propertyTaxBusinessService = microServiceUtil.getBusinessService(tenantId, bsCode);
 		if (propertyTaxBusinessService.isEmpty()){
@@ -321,12 +329,27 @@ public class VoucherServiceImpl implements VoucherService {
 				.collect(Collectors.toList());
 		return collect;
 	}
-
+	
+	/**
+	 * 
+	 * @param tenantId
+	 * @param bsCode
+	 * @return
+	 * @throws Exception
+	 * Function is used to get the TaxHeadMaster data which is mapped to business service code
+	 */
 	private List<TaxHeadMaster> getTaxHeadMasterByBusinessServiceCode(String tenantId, String bsCode) throws Exception {
 		List<TaxHeadMaster> taxHeadMasters = microServiceUtil.getTaxHeadMasters(tenantId, bsCode);
 		return taxHeadMasters;
 	}
 
+	/**
+	 * 
+	 * @param moduleName
+	 * @param tenantId
+	 * @return
+	 * Function is used to return the module id which is configure in erp setup based on module name
+	 */
 	private Integer getModuleIdByModuleName(String moduleName, String tenantId) {
 		RequestInfo requestInfo = new RequestInfo();
 		try {

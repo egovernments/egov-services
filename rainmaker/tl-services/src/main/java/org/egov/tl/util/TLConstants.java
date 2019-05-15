@@ -43,6 +43,8 @@ public class TLConstants {
     public static final String NOTIFICATION_OBJECT_MODIFIED = "tl.en.edit.object.modified";
 
 
+    public static final String DEFAULT_OBJECT_MODIFIED_MSG = "Dear <1>,Your Trade License with application number <APPLICATION_NUMBER> was modified.";
+
 
     // MDMS
 

@@ -117,7 +117,7 @@ public class NotificationUtil {
             message = ((ArrayList<String>)messageObj).get(0);
         }
         catch (Exception e){
-            throw new CustomException("PARSING ERROR","Failed to parse the response using jsonPath: "+path);
+            log.warn("Fetching from localization failed",e);
         }
         return message;
     }
@@ -391,6 +391,8 @@ public class NotificationUtil {
                 !CollectionUtils.isEmpty(diff.getClassesAdded())
                 || !CollectionUtils.isEmpty(diff.getClassesRemoved())){
             messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_MODIFIED,localizationMessage);
+            if(messageTemplate==null)
+                messageTemplate = DEFAULT_OBJECT_MODIFIED_MSG;
             message = getEditMsg(license,messageTemplate);
         }
 

@@ -21,6 +21,7 @@ import java.util.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+
 @Slf4j
 @Component
 public class PropertyValidator {
@@ -381,6 +382,14 @@ public class PropertyValidator {
         responseProperties.forEach(property -> {
             responseids.add(property.getPropertyId());
         });
+
+
+
+        if(!listEqualsIgnoreOrder(responseids,requestids)){
+            List diffIds = new LinkedList(requestids);
+            diffIds.removeAll(responseids);
+            log.info("diff PropertyIds: "+diffIds.toString());
+        }
 
 
         return listEqualsIgnoreOrder(responseids,requestids);

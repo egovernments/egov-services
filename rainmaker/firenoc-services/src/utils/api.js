@@ -2,9 +2,8 @@
 require("dotenv").config();
 import axios from "axios";
 import { addQueryArg } from "./index";
-import some from "lodash/some";
 
-console.log("host name",process.env.HOST_URL);
+console.log("host name", process.env.HOST_URL);
 const instance = axios.create({
   baseURL: process.env.HOST_URL,
   headers: {
@@ -25,7 +24,6 @@ export const httpRequest = async ({
     instance.defaults = Object.assign(instance.defaults, {
       headers
     });
-
   endPoint = addQueryArg(endPoint, queryObject);
   try {
     const response = await instance.post(endPoint, requestBody);

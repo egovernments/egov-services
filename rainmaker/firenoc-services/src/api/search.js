@@ -14,7 +14,7 @@ export default ({ config, db }) => {
     };
 
     const queryObj = JSON.parse(JSON.stringify(request.query));
-    queryObj.action = actions[queryObj.action];
+    queryObj.action = actions[queryObj.status];
 
     const text = `SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.dateOfApplied,FD.uuid as firenocdetailsid,FD.action,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FB.uuid as buildingid ,FB.name,FB.noOfFloors,FB.noOfBasements,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) where FN.tenantid = '${
       queryObj.tenantId
@@ -26,7 +26,12 @@ export default ({ config, db }) => {
     if (queryKeys) {
       queryKeys.forEach(item => {
         if (queryObj[item]) {
-          if (item != "fromDate" && item != "toDate" && item != "tenantId") {
+          if (
+            item != "fromDate" &&
+            item != "toDate" &&
+            item != "tenantId" &&
+            item != "status"
+          ) {
             sqlQuery = `${sqlQuery} ${item}='${queryObj[item]}' AND`;
           }
         }
@@ -53,11 +58,11 @@ export default ({ config, db }) => {
         sqlQuery.length - 3
       )} ORDER BY FN.uuid`;
     }
-    db.query(sqlQuery, (err, res) => {
+    db.query(sqlQuery, async (err, res) => {
       if (err) {
         console.log(err.stack);
       } else {
-        response.FireNOCs = mergeSearchResults(res.rows, request.query);
+        response.FireNOCs = await mergeSearchResults(res.rows, request.query);
         apiRes.json(response);
       }
     });

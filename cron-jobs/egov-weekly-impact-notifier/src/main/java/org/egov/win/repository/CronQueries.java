@@ -2,7 +2,6 @@ package org.egov.win.repository;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class CronQueries {
 	
 	public static final String GET_STATEWIDE_DATA = "";

@@ -11,6 +11,7 @@ SearchDefinitions:
       WITH summary AS (
       SELECT ptdl.property,
        ptdl.assessmentnumber,
+       ptdl.financialYear,
        pt.tenantId,
        address.locality,
        ROW_NUMBER() OVER(PARTITION BY ptdl.property
@@ -32,6 +33,10 @@ SearchDefinitions:
       isMandatory: true
       jsonPath: $.searchCriteria.tenantId
       operator: =
+    - name: data.financialYear
+      isMandatory: true
+      jsonPath: $.searchCriteria.financialYear
+      operator: !=
 
 
    output:

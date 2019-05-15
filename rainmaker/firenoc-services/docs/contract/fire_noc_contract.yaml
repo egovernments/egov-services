@@ -147,18 +147,10 @@ definitions:
       usageType:
         type: string
         description: building usage type
-      noOfFloors:
-        type: number
-      noOfBasements:
-        type: number
-      plotsize:
-        type: number
-      builtupArea:
-        type: number
-      heightOfBuilding:
-        type: number
-      additonalUnitTypes:
-        type: object
+      uoms:
+        type: array
+        items:
+          $ref: '#/definitions/BuildingUOM'
       applicationDocuments:
         description: 1. List of all the required documents. 2. Application can be submitted without required document 3. Once all the document submitted then only application submition process will be completed. 4. Mandatry application documents for a fireNOC type and fireNOC subtype are defined under ApplicationDocument master which is defined under MDMS.
         type: array
@@ -166,10 +158,9 @@ definitions:
           $ref: '#/definitions/Document'
     required:
       - tenantId
-      - name
       - usageType
-      - noOfloors
-      - noOfBasements
+      - name
+      - uoms
   PropertyDetails:
     type: object
     description: It will have fire noc related entities
@@ -507,6 +498,21 @@ definitions:
       code:
         type: string
         description: Unique value for each entry in mdms data
+      active:
+        type: boolean
+  BuildingUOM:
+    type: object
+    description: This master will have list of UOM's
+    properties:
+      code:
+        type: string
+        description: Code of the unit code
+      value:
+        type: string
+        description: Value entered for the uom
+      isActiveUom:
+        type: boolean
+        description: Active uom for current usage type
       active:
         type: boolean
   Status:

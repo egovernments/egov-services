@@ -83,8 +83,7 @@ public class ReceiptService {
                 .setVoucherHeader(voucherResponse.getVouchers().get(0).getVoucherNumber());
 
         receiptRequest.setRequestInfo(requestInfo);
-        if(LOGGER.isInfoEnabled())
-        	LOGGER.info("call:" + propertiesManager.getHostUrl() + propertiesManager.getReceiptsUpdate());
+       	LOGGER.debug("call:" + propertiesManager.getHostUrl() + propertiesManager.getReceiptsUpdate());
         return restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getReceiptsUpdate(), receiptRequest,
                 ReceiptResponse.class);
     }

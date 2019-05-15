@@ -22,15 +22,12 @@ import org.egov.receipt.consumer.model.Fund;
 import org.egov.receipt.consumer.model.InstrumentAccountCodeContract;
 import org.egov.receipt.consumer.model.InstrumentAccountCodeReq;
 import org.egov.receipt.consumer.model.InstrumentAccountCodeResponse;
-import org.egov.receipt.consumer.model.InstrumentAccountCodeSearchContract;
-import org.egov.receipt.consumer.model.InstrumentTypeContract;
 import org.egov.receipt.consumer.model.Receipt;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.Scheme;
 import org.egov.receipt.consumer.model.TaxHeadMaster;
 import org.egov.receipt.consumer.model.Voucher;
-import org.egov.receipt.consumer.model.VoucherIntegrationLogTO;
 import org.egov.receipt.consumer.model.VoucherRequest;
 import org.egov.receipt.consumer.model.VoucherResponse;
 import org.egov.receipt.consumer.model.VoucherSearchRequest;
@@ -54,24 +51,16 @@ public class VoucherServiceImpl implements VoucherService {
 	private MicroServiceUtil microServiceUtil;
 	@Autowired
 	private RestTemplate restTemplate;
+	List<BusinessService> serviceByCode = null;
 
 	final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-	// TODO:Fixme The receipts name should be based on business service type.
-	// Confirmed with Elzan: Use business service name
 	public static final String RECEIPTS_VOUCHER_NAME = "Other receipts";
 	public static final String RECEIPTS_VOUCHER_TYPE = "Receipt";
-	// TODO:Fixme Do we need to provide voucher description based on business
-	// service? Confirmed with Elzan: Use business service name alongwith
-	// 'Receipt' word postfixed
 	public static final String RECEIPTS_VOUCHER_DESCRIPTION = "Collection Module";
 	public static final String COLLECTIONS_EG_MODULES_ID = "10";
-
 	public static final Logger LOGGER = LoggerFactory.getLogger(VoucherServiceImpl.class);
-
-	private static final String RECEIPT_VIEW_SOURCEPATH = "/services/collection/receipts/receipt-viewReceipts.action?selectedReceipts=";
 	private static final String COLLECTION_MODULE_NAME = "Collections";
 	LinkedHashMap<String, BigDecimal> amountMapwithGlcode;
-	private VoucherIntegrationLogTO voucherIntegrationLogTO;
 
 	@Override
 	/**
@@ -91,8 +80,7 @@ public class VoucherServiceImpl implements VoucherService {
 		voucherRequest.setVouchers(Collections.singletonList(voucher));
 		voucherRequest.setRequestInfo(requestInfo);
 		voucherRequest.setTenantId(tenantId);
-		if (LOGGER.isInfoEnabled())
-			LOGGER.info("invoking rest call for creating voucher : URL :" + voucher_create_url);
+		LOGGER.debug("invoking rest call for creating voucher : URL :" + voucher_create_url);
 		return restTemplate.postForObject(voucher_create_url, voucherRequest, VoucherResponse.class);
 	}
 	
@@ -105,7 +93,7 @@ public class VoucherServiceImpl implements VoucherService {
 		String tenantId = receipt.getTenantId();
 		Bill bill = receipt.getBill().get(0);
 		String bsCode = bill.getBillDetails().get(0).getBusinessService();
-		List<BusinessService> serviceByCode = this.getBusinessServiceByCode(tenantId, bsCode);
+		serviceByCode = this.getBusinessServiceByCode(tenantId, bsCode);
 		return serviceByCode != null && !serviceByCode.isEmpty() ? serviceByCode.get(0).isVoucherCreationEnabled()
 				: false;
 	}
@@ -127,8 +115,7 @@ public class VoucherServiceImpl implements VoucherService {
 		requestInfo.setAuthToken("3fe19291-d1d0-48e8-bd46-8a6518d9acb2");
 		instAccCodeReq.setTenantId(tenantId);
 		instAccCodeReq.setRequestInfo(requestInfo);
-		if (LOGGER.isInfoEnabled())
-			LOGGER.info("invoking rest call for getting instrument account code : URL :" + instrument_account_code_url);
+		LOGGER.debug("invoking rest call for getting instrument account code : URL :" + instrument_account_code_url);
 		InstrumentAccountCodeResponse postForObject = restTemplate.postForObject(instrument_account_code_url,
 				instAccCodeReq, InstrumentAccountCodeResponse.class);
 		if (postForObject != null && !postForObject.getInstrumentAccountCodes().isEmpty()) {
@@ -139,9 +126,7 @@ public class VoucherServiceImpl implements VoucherService {
 				return instrumentAccountCodes.get(0);
 			}
 		}
-		voucherIntegrationLogTO.setStatus("FAILED");
-		voucherIntegrationLogTO.setDescription("ERROR : Account code mapping is missing for Instrument Type " + name);
-		throw new VoucherCustomException("ERROR -> Account code mapping is missing for Instrument Type " + name);
+		throw new VoucherCustomException("FAILED","Account code mapping is missing for Instrument Type "+name);
 	}
 	
 	/**
@@ -155,15 +140,10 @@ public class VoucherServiceImpl implements VoucherService {
 				+ propertiesManager.getVoucherCancelUrl();
 		try {
 			VoucherSearchRequest vSearchReq = this.getVoucherSearchReq(receiptRequest);
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info("invoking rest call for cancelling voucher : URL :" + voucher_cancel_url);
+			LOGGER.debug("invoking rest call for cancelling voucher : URL :" + voucher_cancel_url);
 			return restTemplate.postForObject(voucher_cancel_url, vSearchReq, VoucherResponse.class);
 		} catch (Exception e) {
-			voucherIntegrationLogTO.setStatus("FAILED");
-			voucherIntegrationLogTO.setDescription("ERROR occured while cancelling voucher in VoucherServiceImpl.cancelVoucher method");
-			throw new VoucherCustomException(
-					"ERROR occured while cancelling voucher in VoucherServiceImpl.cancelVoucher method "
-							+ e.getMessage());
+			throw new VoucherCustomException("FAILED","Failed to create voucher");
 		}
 	}
 	
@@ -200,9 +180,7 @@ public class VoucherServiceImpl implements VoucherService {
 		try {
 			response = restTemplate.postForObject(voucher_search_url, vSearchReq, VoucherResponse.class);
 		} catch (Exception e) {
-			voucherIntegrationLogTO.setStatus("WARNING");
-			voucherIntegrationLogTO.setDescription("ERROR occured while calling " + voucher_search_url + " to check the existence of voucher");
-			throw new VoucherCustomException(
+			throw new VoucherCustomException("FAILED",
 					"ERROR occured while calling " + voucher_search_url + " to check the existence of voucher");
 		}
 		boolean isExist = false;
@@ -223,12 +201,12 @@ public class VoucherServiceImpl implements VoucherService {
 	private void setVoucherDetails(Voucher voucher, Receipt receipt, String tenantId) throws Exception {
 		BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
 		String bsCode = billDetail.getBusinessService();
-		List<BusinessService> businessServices = this.getBusinessServiceByCode(tenantId, bsCode);
+		serviceByCode = serviceByCode != null & !serviceByCode.isEmpty() ? serviceByCode :this.getBusinessServiceByCode(tenantId, bsCode);
 		List<TaxHeadMaster> taxHeadMasterByBusinessServiceCode = this.getTaxHeadMasterByBusinessServiceCode(tenantId,
 				bsCode);
-		if (!businessServices.isEmpty()) {
-			BusinessService businessService = businessServices.get(0);
-			voucher.setName(RECEIPTS_VOUCHER_NAME);
+		if (!serviceByCode.isEmpty()) {
+			BusinessService businessService = serviceByCode.get(0);
+			voucher.setName(bsCode);
 			voucher.setType(RECEIPTS_VOUCHER_TYPE);
 			voucher.setFund(new Fund());
 			voucher.getFund().setCode(businessService.getFund());
@@ -243,7 +221,7 @@ public class VoucherServiceImpl implements VoucherService {
 			String schemeCode = businessService.getScheme() != null & !StringUtils.isEmpty(businessService.getScheme())
 					? businessService.getScheme() : null;
 			voucher.getScheme().setCode(schemeCode);
-			voucher.setDescription(RECEIPTS_VOUCHER_DESCRIPTION);
+			voucher.setDescription(bsCode+" Receipt");
 			// checking Whether manualReceipt date will be consider as
 			// voucherdate
 			if (billDetail.getManualReceiptDate() != null && billDetail.getManualReceiptDate().longValue() != 0
@@ -255,7 +233,7 @@ public class VoucherServiceImpl implements VoucherService {
 			Integer moduleId = this.getModuleIdByModuleName(COLLECTION_MODULE_NAME, tenantId);
 			voucher.setModuleId(Long.valueOf(moduleId != null ? moduleId.toString() : COLLECTIONS_EG_MODULES_ID));
 
-			voucher.setSource(RECEIPT_VIEW_SOURCEPATH + receipt.getReceiptNumber());
+			voucher.setSource(propertiesManager.getReceiptViewSourceUrl()+"?selectedReceipts="+ receipt.getReceiptNumber());
 
 			voucher.setLedgers(new ArrayList<>());
 			amountMapwithGlcode = new LinkedHashMap<>();
@@ -265,7 +243,7 @@ public class VoucherServiceImpl implements VoucherService {
 				List<TaxHeadMaster> findFirst = taxHeadMasterByBusinessServiceCode.stream()
 						.filter(tx -> tx.getTaxhead().equals(taxHeadCode)).collect(Collectors.toList());
 				if (findFirst != null && findFirst.isEmpty())
-					throw new VoucherCustomException("ERROR -> Taxhead code " + taxHeadCode
+					throw new VoucherCustomException("FAILED","Taxhead code " + taxHeadCode
 							+ " is not mapped with BusinessServiceCode " + bsCode);
 				String glcode = findFirst.get(0).getGlcode();
 				if (amountMapwithGlcode.get(glcode) != null) {
@@ -277,8 +255,7 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 
 			setNetReceiptAmount(voucher, receipt);
-			if(LOGGER.isInfoEnabled())
-				LOGGER.info("amountMapwithGlcode  ::: " + amountMapwithGlcode);
+			LOGGER.debug("amountMapwithGlcode  ::: " + amountMapwithGlcode);
 			// Iterating map and setting the ledger details to voucher.
 			amountMapwithGlcode.entrySet().stream().forEach(entry -> {
 				AccountDetail accountDetail = new AccountDetail();
@@ -326,7 +303,7 @@ public class VoucherServiceImpl implements VoucherService {
 	 * @param voucher
 	 * @param receipt
 	 * @throws VoucherCustomException
-	 * 
+	 * Function is used to set the paid amount as debit in finance system.
 	 */
 	private void setNetReceiptAmount(Voucher voucher, Receipt receipt) throws VoucherCustomException {
 		InstrumentAccountCodeContract instrumentAccountCode = this.getInstrumentAccountCode(receipt);
@@ -338,9 +315,7 @@ public class VoucherServiceImpl implements VoucherService {
 	private List<BusinessService> getBusinessServiceByCode(String tenantId, String bsCode) throws Exception {
 		List<BusinessService> propertyTaxBusinessService = microServiceUtil.getBusinessService(tenantId, bsCode);
 		if (propertyTaxBusinessService.isEmpty()){
-			voucherIntegrationLogTO.setStatus("FAILED");
-			voucherIntegrationLogTO.setDescription("ERROR : No Business Service Found for Code : " + bsCode);
-			throw new VoucherCustomException("ERROR -> No Business Service Found for Code : " + bsCode);
+			throw new VoucherCustomException("FAILED","Business service is not mapped with business code : " + bsCode);
 		}
 		List<BusinessService> collect = propertyTaxBusinessService.stream().filter(bs -> bs.getCode().equals(bsCode))
 				.collect(Collectors.toList());
@@ -359,9 +334,7 @@ public class VoucherServiceImpl implements VoucherService {
 			VoucherRequest request = new VoucherRequest(tenantId, requestInfo, null);
 			String url = propertiesManager.getErpURLBytenantId(tenantId) + propertiesManager.getModuleIdSearchUrl()
 					+ "?moduleName=" + moduleName;
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("invoking rest call for getting module id by name : URL : " + url);
-			}
+			LOGGER.debug("invoking rest call for getting module id by name : URL : " + url);
 			return restTemplate.postForObject(url, request, Integer.class);
 		} catch (Exception e) {
 			if (LOGGER.isErrorEnabled()) {

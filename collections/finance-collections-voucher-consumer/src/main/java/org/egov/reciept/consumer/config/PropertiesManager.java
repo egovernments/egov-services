@@ -114,9 +114,6 @@ public class PropertiesManager {
     @Value("${egov.services.egf.instrument.instruments.cancel}")
     private String instrumentCancel;
     
-    @Value("${egov.services.egf.instrument.instruments.dishonor}")
-    private String instrumentDishonor;
-    
     @Value("${fin.coe.erp.domain.name}")
     private String finCoeErpDomainName;
     
@@ -129,7 +126,13 @@ public class PropertiesManager {
     @Value("${egov.services.egf.voucher.moduleid.search}")
     private String moduleIdSearchUrl;
     
-    //TODO: Fixme : derive URL by 2 application properties 1. Domain 2. Env based 
+    @Value("${egov.services.collection.receipts.view.source.url}")
+    private String receiptViewSourceUrl;
+    
+    
+    @Value("${token.authorizaton.key}")
+    private String tokenAuhorizationtKey;
+    
     public String getErpURLBytenantId(String tenantId) throws VoucherCustomException {
     	try {
     		tenantId = tenantId.split(Pattern.quote("."))[1];
@@ -140,7 +143,7 @@ public class PropertiesManager {
     			return httpProtocol+"://"+tenantId+"."+finCoeErpDomainName+"/";
     		}
 		} catch (Exception e) {
-			throw new VoucherCustomException("ERROR occured while generating ERP url to interact with the finance coexistence. Please check the configuration in properties file.");
+			throw new VoucherCustomException("FAILED","ERROR occured while generating ERP url to interact with the finance coexistence. Please check the configuration in properties file.");
 		}
     }
 

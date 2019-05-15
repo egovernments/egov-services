@@ -36,7 +36,7 @@ SearchDefinitions:
     - name: data.financialYear
       isMandatory: true
       jsonPath: $.searchCriteria.financialYear
-      operator: !=
+      operator: NE
 
 
    output:

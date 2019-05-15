@@ -50,6 +50,7 @@ public class DemandBasedConsumer {
             log.error("Error while listening to value: " + record);
         }
         log.info("Number of batch records: " + demandBasedAssessmentRequest.getDemandBasedAssessments().size());
+        log.info("Batch request: " + demandBasedAssessmentRequest);
         RequestInfo requestInfo = demandBasedAssessmentRequest.getRequestInfo();
 
         Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);

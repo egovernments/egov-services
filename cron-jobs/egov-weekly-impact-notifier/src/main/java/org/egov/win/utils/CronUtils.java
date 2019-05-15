@@ -16,20 +16,20 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Component
 public class CronUtils {
-	
+
 	@Value("${egov.searcher.host}")
 	private String searcherHost;
 
 	@Value("${egov.searcher.endpoint}")
 	private String searcherEndpoint;
-	
+
 	@Value("${egov.impact.emailer.interval.in.secs}")
 	private Long timeInterval;
-	
+
 	private static final String MODULE_NAME = "{moduleName}";
 
 	private static final String SEARCH_NAME = "{searchName}";
-	
+
 	/**
 	 * Prepares request and uri for data search
 	 * 
@@ -37,16 +37,18 @@ public class CronUtils {
 	 * @param defName
 	 * @return SearcherRequest
 	 */
-	public SearcherRequest preparePlainSearchReq(StringBuilder uri, String defName){
+	public SearcherRequest preparePlainSearchReq(StringBuilder uri, String defName) {
 		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace(MODULE_NAME, CronConstants.SEARCHER_CRON_MOD_NAME).replace(SEARCH_NAME, defName);
+		String endPoint = searcherEndpoint.replace(MODULE_NAME, CronConstants.SEARCHER_CRON_MOD_NAME)
+				.replace(SEARCH_NAME, defName);
 		uri.append(endPoint);
 		HashMap<String, Long> param = new HashMap<>();
 		param.put("intervalinsecs", timeInterval);
-		SearcherRequest searcherRequest = SearcherRequest.builder().requestInfo(new RequestInfo()).searchCriteria(param).build();
+		SearcherRequest searcherRequest = SearcherRequest.builder().requestInfo(new RequestInfo()).searchCriteria(param)
+				.build();
 		return searcherRequest;
 	}
-	
+
 	/**
 	 * Returns mapper with all the appropriate properties reqd in our
 	 * functionalities.
@@ -61,9 +63,9 @@ public class CronUtils {
 
 		return mapper;
 	}
-	
+
 	/**
-	 * Fetches day and month of the data being fetched.
+	 * Fetches day and month alongwith suffix of the data being fetched.
 	 * 
 	 * @param epochTime
 	 * @return
@@ -72,14 +74,27 @@ public class CronUtils {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(epochTime);
 		StringBuilder date = new StringBuilder();
-		String suffix = "th ";
-		if((calendar.get(Calendar.DAY_OF_MONTH) % 10) == 1) {
-			suffix = "st ";
-		}else if ((calendar.get(Calendar.DAY_OF_MONTH) % 10) == 2) {
-			suffix = "nd ";
-		}else if((calendar.get(Calendar.DAY_OF_MONTH) % 10) == 3) {
-			suffix = "rd ";
+		String suffix = null;
+		if (Calendar.DAY_OF_MONTH >= 11 && Calendar.DAY_OF_MONTH <= 13) {
+			suffix = "th ";
+		} else {
+			Integer dateEndingwith = calendar.get(Calendar.DAY_OF_MONTH) % 10;
+			switch (dateEndingwith) {
+			case 1:
+				suffix = "st ";
+				break;
+			case 2:
+				suffix = "nd ";
+				break;
+			case 3:
+				suffix = "rd ";
+				break;
+			default:
+				suffix = "th ";
+				break;
+			}
 		}
+
 		date.append(calendar.get(Calendar.DAY_OF_MONTH)).append(suffix)
 				.append(new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)]);
 		return date.toString();

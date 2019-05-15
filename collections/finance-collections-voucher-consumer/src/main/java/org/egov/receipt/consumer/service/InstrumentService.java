@@ -106,7 +106,7 @@ public class InstrumentService {
 			InstrumentRequest request = new InstrumentRequest();
 			request.setInstruments(Collections.singletonList(instrumentContract));
 			request.setRequestInfo(requestInfo);
-			LOGGER.info("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate());
+			LOGGER.debug("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate());
 			return restTemplate.postForObject(
 					propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate(), request,
 					InstrumentResponse.class);
@@ -134,11 +134,11 @@ public class InstrumentService {
 	public void cancelInstrument(Receipt receipt) {
 		InstrumentRequest request = new InstrumentRequest();
 		this.setInstrumentRequest(request, receipt);
-		LOGGER.info("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCancel());
+		LOGGER.debug("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCancel());
 		InstrumentResponse postForObject = restTemplate.postForObject(
 				propertiesManager.getHostUrl() + propertiesManager.getInstrumentCancel(), request,
 				InstrumentResponse.class);
-		LOGGER.info("InstrumentResponse :::: " + postForObject);
+		LOGGER.debug("InstrumentResponse :::: " + postForObject);
 	}
 
 	private void setInstrumentRequest(InstrumentRequest request, Receipt receipt) {

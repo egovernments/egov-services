@@ -76,7 +76,7 @@ public class FinancialStatusService {
 
         requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
         reqWrapper.setRequestInfo(requestInfo);
-        LOGGER.info("call:" + bd_url);
+        LOGGER.debug("call:" + bd_url);
         FinancialStatusResponse response = restTemplate.postForObject(bd_url, reqWrapper, FinancialStatusResponse.class);
         if (response.getFinancialStatuses() != null && !response.getFinancialStatuses().isEmpty())
             return response.getFinancialStatuses().get(0);

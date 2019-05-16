@@ -1,19 +1,21 @@
-//loading env property
-require("dotenv").config();
 import http from "http";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 // import util from "util";
-import initializeDb from "./db";
 import initializeMDMS from "./utils/mdmsData";
+import db from "./db";
 import middleware from "./middleware";
 import api from "./api";
 import config from "./config.json";
-import tracer from "./middleware/tracer"
+import tracer from "./middleware/tracer";
+import terminusOptions from "./utils/health";
+import {SERVER_PORT} from './envVariables'
 var swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger.json");
+const { createTerminus } = require("@godaddy/terminus");
+
 // const validator = require('swagger-express-validator');
 
 // const opts = {
@@ -34,6 +36,9 @@ var swaggerUi = require("swagger-ui-express"),
 let app = express();
 app.server = http.createServer(app);
 
+// Enable health checks and kubernetes shutdown hooks
+createTerminus(app.server, terminusOptions);
+
 // logger
 app.use(morgan("dev"));
 
@@ -50,28 +55,23 @@ app.use(
   })
 );
 
-app.use(tracer())
-
+app.use(tracer());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// connect to db
-initializeDb(db => {
-  // internal middleware
-  app.use(middleware({ config, db }));
+// internal middleware
+app.use(middleware({ config, db }));
 
-  // app.use(validator(opts));
+// app.use(validator(opts));
 
-  // api router
-  //this should taken later for 
-  initializeMDMS((mdmsData)=>{
-    console.log(mdmsData);
-    app.use("/", api({ config, db,mdmsData }));
+// api router
+//this should taken later for
+initializeMDMS(mdmsData => {
+  console.log(mdmsData);
+  app.use("/", api({ config, db, mdmsData }));
 
-    app.server.listen(process.env.PORT || config.port, () => {
-      console.log(`Started on port ${app.server.address().port}`);
-    });
-  })
+  app.server.listen(SERVER_PORT , () => {
+    console.log(`Started on port ${app.server.address().port}`);
+  });
 });
-
 export default app;

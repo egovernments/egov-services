@@ -1,6 +1,8 @@
 const kafka = require("kafka-node");
+import {KAFKA_BROKER_HOST} from './envVariables'
+
 const Consumer = kafka.Consumer;
-let client = new kafka.KafkaClient({ kafkaHost: process.env.KAFKA_BROKER_HOST });
+let client = new kafka.KafkaClient({ kafkaHost: KAFKA_BROKER_HOST });
 
 const consumer = new Consumer(client, [{ topic: "SMS", offset: 0 }], {
   autoCommit: false

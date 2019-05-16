@@ -1,6 +1,7 @@
 import { Router } from "express";
 import producer from "../kafka/producer";
 import { requestInfoToResponseInfo ,addUUIDAndAuditDetails} from "../utils";
+import {KAFKA_TOPICS_FIRENOC_CREATE} from '../envVariables'
 
 export default ({ config, db }) => {
   let api = Router();
@@ -9,7 +10,7 @@ export default ({ config, db }) => {
     // console.log(body);
     body=addUUIDAndAuditDetails(body);
     payloads.push({
-      topic: process.env.KAFKA_TOPICS_FIRENOC_CREATE,
+      topic: KAFKA_TOPICS_FIRENOC_CREATE,
       messages:JSON.stringify(body)
     })
     // console.log("before",payloads);

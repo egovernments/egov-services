@@ -158,5 +158,9 @@ public class PropertyConfiguration {
     @Value("${egov.pt.demand.based.searcher.endpoint}")
     private String demandBasedSearcherEndpoint;
 
+    @Value("${pt.demand.based.batch.size}")
+    private Integer batchSize;
+
+
 
 }

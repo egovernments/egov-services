@@ -19,12 +19,15 @@ public class KafkaConfigBatch {
     @Autowired
     private KafkaProperties kafkaProperties;
 
+    @Autowired
+    private PropertyConfiguration propertyConfiguration;
+
     @Bean("consumerConfigsBatch")
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>(
                 kafkaProperties.buildConsumerProperties()
         );
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 50);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, propertyConfiguration.getBatchSize());
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 10000);
 
         return props;

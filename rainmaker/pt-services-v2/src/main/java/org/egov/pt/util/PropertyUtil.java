@@ -13,6 +13,7 @@ import org.egov.pt.web.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -108,15 +109,17 @@ public class PropertyUtil {
             else nonVacantProperties.add(property);
         });
 
-        PropertyRequest vacantPropertyRequest = PropertyRequest.builder().properties(vacantProperties)
-                .requestInfo(requestInfo).build();
+        if(!CollectionUtils.isEmpty(vacantProperties)){
+            PropertyRequest vacantPropertyRequest = PropertyRequest.builder().properties(vacantProperties)
+                    .requestInfo(requestInfo).build();
+            requests.add(vacantPropertyRequest);
+        }
 
-        PropertyRequest nonVacantPropertyRequest = PropertyRequest.builder().properties(nonVacantProperties)
-                .requestInfo(requestInfo).build();
-
-        requests.add(nonVacantPropertyRequest);
-        requests.add(vacantPropertyRequest);
-
+        if(!CollectionUtils.isEmpty(nonVacantProperties)){
+            PropertyRequest nonVacantPropertyRequest = PropertyRequest.builder().properties(nonVacantProperties)
+                    .requestInfo(requestInfo).build();
+            requests.add(nonVacantPropertyRequest);
+        }
 
         return requests;
     }

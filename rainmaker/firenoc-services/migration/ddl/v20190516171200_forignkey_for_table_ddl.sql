@@ -89,3 +89,6 @@ ALTER TABLE eg_fn_owner
           REFERENCES eg_fn_firenocdetail (uuid) MATCH SIMPLE
           ON UPDATE CASCADE
           ON DELETE CASCADE;
+
+ALTER TABLE eg_fn_buildinguoms
+          ADD COLUMN value character varying(128);

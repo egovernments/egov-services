@@ -39,8 +39,7 @@ export default (callback, requestInfo={}) => {
     },
     error => {
       console.log("error");
-      console.log(error);
-      callback({});
+      callback(error);
     }
   );
 };

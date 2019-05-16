@@ -112,6 +112,53 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings[*].id)].auditDetails.lastModifiedTime
 
+      - query: INSERT INTO eg_fn_buildingdocuments(uuid, tenantid, documenttype, filestoreid, active, documentuid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, buildinguuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        basePath: FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*
+        jsonMaps:
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.id
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].tenantId
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.documentType
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.fileStoreId
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.active
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.applicationDocuments.*.documentUid
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.createdBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.createdTime
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.applicationDocuments[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings[*][?({id} in @.applicationDocuments[*].id)].id
+
+      - query: INSERT INTO public.eg_fn_buildinguoms(uuid, code, activeuom, active, createdby, lastmodifiedby, createdtime, lastmodifiedtime, buildinguuid,value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+        basePath: FireNOCs.*.fireNOCDetails.buildings.*.uoms.*
+        jsonMaps:
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.id
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.code
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.isActiveUom
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.active
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.uoms[*].id)].auditDetails.createdBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.uoms[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.uoms[*].id)].auditDetails.createdTime
+
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.uoms[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings[*][?({id} in @.uoms[*].id)].id
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.value
 
 
        - query: INSERT INTO eg_fn_owner(uuid, tenantid, firenocdetailsuuid, isactive, isprimaryowner, ownertype, ownershippercentage, relationship, active, institutionid, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -217,5 +264,3 @@ serviceMaps:
            - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedBy
 
            - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
-
-       

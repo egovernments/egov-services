@@ -69,7 +69,6 @@ app.use(middleware({ config, db }));
 // api router
 //this should taken later for
 initializeMDMS(mdmsData => {
-  console.log(mdmsData);
   app.use("/", api({ config, db, mdmsData }));
 
   app.server.listen(SERVER_PORT, () => {

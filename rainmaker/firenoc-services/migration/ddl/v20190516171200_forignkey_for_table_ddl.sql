@@ -56,3 +56,36 @@ ALTER TABLE eg_fn_buidlings
             REFERENCES eg_fn_buidlings (uuid) MATCH SIMPLE
             ON UPDATE CASCADE
             ON DELETE CASCADE;
+
+ALTER TABLE eg_fn_buildingdocuments DROP COLUMN firenocdetailsuuid;
+
+ALTER TABLE eg_fn_buildingdocuments
+          RENAME "buildingId" TO buildinguuid;
+
+ALTER TABLE eg_fn_buildingdocuments
+          ALTER COLUMN buildinguuid TYPE character varying (64);
+
+ALTER TABLE eg_fn_buildingdocuments
+          ALTER COLUMN buildinguuid SET NOT NULL;
+
+ALTER TABLE eg_fn_buildingdocuments
+          ADD CONSTRAINT fk_eg_fn_buildingdocuments FOREIGN KEY (buildinguuid)
+          REFERENCES eg_fn_buidlings (uuid) MATCH SIMPLE
+          ON UPDATE CASCADE
+          ON DELETE CASCADE;
+
+ALTER TABLE eg_fn_institution
+              ALTER COLUMN firenocdetailsuuid TYPE character varying (64);
+ALTER TABLE eg_fn_institution
+              ALTER COLUMN firenocdetailsuuid SET NOT NULL;
+ALTER TABLE eg_fn_institution
+          ADD CONSTRAINT fk_eg_fn_institution_firenocdetailsuuid FOREIGN KEY (firenocdetailsuuid)
+          REFERENCES eg_fn_firenocdetail (uuid) MATCH SIMPLE
+          ON UPDATE CASCADE
+          ON DELETE CASCADE;
+
+ALTER TABLE eg_fn_owner
+          ADD CONSTRAINT fk_eg_fn_owner FOREIGN KEY (firenocdetailsuuid)
+          REFERENCES eg_fn_firenocdetail (uuid) MATCH SIMPLE
+          ON UPDATE CASCADE
+          ON DELETE CASCADE;

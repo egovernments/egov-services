@@ -66,7 +66,7 @@ public class DemandBasedConsumer {
      *
      * @param record Single update request
      */
-    @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
+ //   @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
     public void listenDeadLetterTopic(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;

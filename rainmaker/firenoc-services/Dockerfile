@@ -2,6 +2,8 @@ FROM node:11.15.0-alpine
 
 RUN apk add --update  bash
 COPY package.json /opt/package.json
+COPY .babelrc /opt/.babelrc
+
 COPY src /opt/src
 
 RUN cd /opt && npm install

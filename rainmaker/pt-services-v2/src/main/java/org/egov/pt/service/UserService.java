@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.request.User;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.web.models.*;
 import org.egov.tracer.model.CustomException;
@@ -16,6 +15,8 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 
 @Service
 @Slf4j
@@ -70,21 +71,22 @@ public class UserService {
                             if(userDetailResponse.getUser().get(0).getUuid()==null){
                                 throw new CustomException("INVALID USER RESPONSE","The user created has uuid as null");
                             }
-                            log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
-
                         }
                         else
-                        { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
-                          owner.setId(userDetailResponse.getUser().get(0).getId());
-                          owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
-                          addUserDefaultFields(property.getTenantId(),role,owner);
+                        {
+                          User user = userDetailResponse.getUser().get(0);
+                          if(isUserInfoChanged(user,owner)){
+                              owner.setId(userDetailResponse.getUser().get(0).getId());
+                              owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
+                              addUserDefaultFields(property.getTenantId(),role,owner);
 
-                          StringBuilder uri = new StringBuilder(userHost).append(userContextPath)
-                                              .append(userUpdateEndpoint);
-                          userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
-                            if(userDetailResponse.getUser().get(0).getUuid()==null){
-                                throw new CustomException("INVALID USER RESPONSE","The user updated has uuid as null");
-                            }
+                              StringBuilder uri = new StringBuilder(userHost).append(userContextPath)
+                                      .append(userUpdateEndpoint);
+                              userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
+                              if(userDetailResponse.getUser().get(0).getUuid()==null){
+                                  throw new CustomException("INVALID USER RESPONSE","The user updated has uuid as null");
+                              }
+                          }
                         }
                         // Assigns value of fields from user got from userDetailResponse to owner object
                         setOwnerFields(owner,userDetailResponse,requestInfo);
@@ -382,6 +384,20 @@ public class UserService {
 
     }
 
+    /**
+     * Checks if the fields are modified in search and update user
+     * @param user The user from search
+     * @param ownerInfo The user from update request
+     * @return true if any field is changed else false
+     */
+    private Boolean isUserInfoChanged(User user,OwnerInfo ownerInfo){
+        return !(equalsIgnoreCase(user.getName(),ownerInfo.getName())
+                && equalsIgnoreCase(user.getMobileNumber(),ownerInfo.getMobileNumber())
+                && equalsIgnoreCase(user.getGender(),ownerInfo.getGender())
+                && equalsIgnoreCase(user.getFatherOrHusbandName(),ownerInfo.getFatherOrHusbandName())
+                && equalsIgnoreCase(user.getEmailId(),ownerInfo.getEmailId())
+                && equalsIgnoreCase(user.getPermanentAddress(),ownerInfo.getPermanentAddress()));
+    }
 
 
 }

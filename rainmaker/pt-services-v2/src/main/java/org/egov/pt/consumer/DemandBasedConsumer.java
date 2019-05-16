@@ -66,7 +66,7 @@ public class DemandBasedConsumer {
      *
      * @param record Single update request
      */
-   // @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
     public void listenDeadLetterTopic(final HashMap<String, Object> record) {
 
         DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
@@ -102,6 +102,9 @@ public class DemandBasedConsumer {
             List<Property> properties = propertyService.getPropertiesWithOwnerInfo(criteria, requestInfo);
             setFields(properties, financialYear);
             propertyService.updateProperty(new PropertyRequest(requestInfo, properties));
+            if(errorTopic.equalsIgnoreCase(config.getDeadLetterTopicBatch()))
+                log.info("Batch Processed Successfully: {}",demandBasedAssessments);
+
         } catch (Exception e) {
             DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
                     .requestInfo(requestInfo).build();

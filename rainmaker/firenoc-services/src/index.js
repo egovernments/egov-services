@@ -1,3 +1,5 @@
+require("babel-core/register");
+require("babel-polyfill");
 import http from "http";
 import express from "express";
 import cors from "cors";
@@ -15,8 +17,6 @@ import { SERVER_PORT } from "./envVariables";
 var swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger.json");
 const { createTerminus } = require("@godaddy/terminus");
-require("babel-core/register");
-require("babel-polyfill");
 
 // const validator = require('swagger-express-validator');
 

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { mergeSearchResults, requestInfoToResponseInfo } from "../utils";
+import isEmpty from "lodash/isEmpty";
 
 export default ({ config, db }) => {
   let api = Router();
@@ -62,7 +63,10 @@ export default ({ config, db }) => {
       if (err) {
         console.log(err.stack);
       } else {
-        response.FireNOCs = await mergeSearchResults(res.rows, request.query);
+        response.FireNOCs =
+          res.rows && !isEmpty(res.rows)
+            ? await mergeSearchResults(res.rows, request.query)
+            : [];
         apiRes.json(response);
       }
     });

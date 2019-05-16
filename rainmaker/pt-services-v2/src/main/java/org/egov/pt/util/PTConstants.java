@@ -59,6 +59,7 @@ public class PTConstants {
 
     public static final String NOTIFICATION_OLDPROPERTYID_ABSENT = "pt.oldpropertyid.absent";
 
+    public static final String PT_PROPERTYTYPE_VACANT = "VACANT";
 
 
 

@@ -9,6 +9,7 @@ import org.egov.mdms.model.ModuleDetail;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.web.models.AuditDetails;
 import org.egov.pt.web.models.Property;
+import org.egov.pt.web.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 import static org.egov.pt.util.PTConstants.NOTIFICATION_LOCALE;
+import static org.egov.pt.util.PTConstants.PT_PROPERTYTYPE_VACANT;
 
 @Component
 public class PropertyUtil {
@@ -92,5 +94,31 @@ public class PropertyUtil {
         return uri;
     }
 
+
+    public List<PropertyRequest> aggregatePropertyRequest(PropertyRequest request){
+        RequestInfo requestInfo = request.getRequestInfo();
+        List<PropertyRequest> requests = new LinkedList<>();
+        List<Property> properties = request.getProperties();
+        List<Property> vacantProperties = new LinkedList<>();
+        List<Property> nonVacantProperties = new LinkedList<>();
+
+        properties.forEach(property -> {
+            if(property.getPropertyDetails().get(0).getPropertyType().equalsIgnoreCase(PT_PROPERTYTYPE_VACANT))
+                vacantProperties.add(property);
+            else nonVacantProperties.add(property);
+        });
+
+        PropertyRequest vacantPropertyRequest = PropertyRequest.builder().properties(vacantProperties)
+                .requestInfo(requestInfo).build();
+
+        PropertyRequest nonVacantPropertyRequest = PropertyRequest.builder().properties(nonVacantProperties)
+                .requestInfo(requestInfo).build();
+
+        requests.add(nonVacantPropertyRequest);
+        requests.add(vacantPropertyRequest);
+
+
+        return requests;
+    }
 
 }

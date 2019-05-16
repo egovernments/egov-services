@@ -6,6 +6,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.PropertyRepository;
+import org.egov.pt.util.PropertyUtil;
 import org.egov.pt.util.ResponseInfoFactory;
 import org.egov.pt.validator.PropertyValidator;
 import org.egov.pt.web.models.*;
@@ -37,6 +38,9 @@ public class PropertyService {
 
 	@Autowired
 	private CalculationService calculationService;
+
+	@Autowired
+	private PropertyUtil util;
 
 
 
@@ -121,18 +125,38 @@ public class PropertyService {
 
 	/**
 	 * Updates the property
+	 * @param propertyRequest PropertyRequest containing list of properties to be update
+	 * @return List of updated properties
+	 */
+	public List<Property> updateProperty(PropertyRequest propertyRequest) {
+		List<PropertyRequest> requests = util.aggregatePropertyRequest(propertyRequest);
+		List<Property> updatedProperties = new LinkedList<>();
+		requests.forEach(request -> {
+			userService.createCitizen(request);
+			propertyValidator.validateUpdateRequest(request);
+			enrichmentService.enrichCreateRequest(request,true);
+			userService.createUser(request);
+			calculationService.calculateTax(request);
+			producer.push(config.getUpdatePropertyTopic(), request);
+			updatedProperties.addAll(request.getProperties());
+		});
+
+		return updatedProperties;
+	}
+
+
+	/**
+	 * System updates the property
 	 * @param request PropertyRequest containing list of properties to be update
 	 * @return List of updated properties
 	 */
-	public List<Property> updateProperty(PropertyRequest request) {
-		userService.createCitizen(request);
+/*	public List<Property> updatePropertyWithoutUser(PropertyRequest request) {
 		propertyValidator.validateUpdateRequest(request);
 		enrichmentService.enrichCreateRequest(request,true);
-		userService.createUser(request);
 		calculationService.calculateTax(request);
 		producer.push(config.getUpdatePropertyTopic(), request);
 		return request.getProperties();
-	}
+	}*/
 
 
 

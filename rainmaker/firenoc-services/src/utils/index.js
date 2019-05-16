@@ -216,6 +216,13 @@ export const addUUIDAndAuditDetails = request => {
         building.applicationDocuments = building.applicationDocuments.map(
           applicationDocument => {
             applicationDocument.id = uuidv1();
+            return applicationDocument;
+          }
+        );
+        building.uoms = building.uoms.map(
+          uom => {
+            uom.id = uuidv1();
+            return uom;
           }
         );
         return building;

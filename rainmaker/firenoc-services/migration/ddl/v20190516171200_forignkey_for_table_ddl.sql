@@ -92,3 +92,14 @@ ALTER TABLE eg_fn_owner
 
 ALTER TABLE eg_fn_buildinguoms
           ADD COLUMN value character varying(128);
+
+ALTER TABLE eg_fn_buidlings
+          ADD COLUMN usagetype character varying(64);
+
+ALTER TABLE eg_fn_buidlings DROP CONSTRAINT fk_eg_fn_buildings;
+
+ALTER TABLE eg_fn_buidlings
+    ADD CONSTRAINT fk_eg_fn_buildings_firenocdetailuuid FOREIGN KEY (firenocdetailsuuid)
+    REFERENCES eg_fn_firenocdetail (uuid) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;

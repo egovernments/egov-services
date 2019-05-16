@@ -11,10 +11,12 @@ import api from "./api";
 import config from "./config.json";
 import tracer from "./middleware/tracer";
 import terminusOptions from "./utils/health";
-import {SERVER_PORT} from './envVariables'
+import { SERVER_PORT } from "./envVariables";
 var swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger.json");
 const { createTerminus } = require("@godaddy/terminus");
+require("babel-core/register");
+require("babel-polyfill");
 
 // const validator = require('swagger-express-validator');
 
@@ -70,7 +72,7 @@ initializeMDMS(mdmsData => {
   console.log(mdmsData);
   app.use("/", api({ config, db, mdmsData }));
 
-  app.server.listen(SERVER_PORT , () => {
+  app.server.listen(SERVER_PORT, () => {
     console.log(`Started on port ${app.server.address().port}`);
   });
 });

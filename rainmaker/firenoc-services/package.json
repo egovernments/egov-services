@@ -1,5 +1,5 @@
 {
-  "name": "egov-ui-transform-service",
+  "name": "egov-firenoc-services",
   "version": "0.0.2",
   "private": true,
   "description": "Starter project for an ES6 RESTful Express API",

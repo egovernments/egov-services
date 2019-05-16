@@ -1,4 +1,4 @@
-FROM node:8.4-alpine
+FROM node:11.15.0-alpine
 
 RUN apk add --update  bash
 COPY package.json /opt/package.json

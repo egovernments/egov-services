@@ -124,12 +124,50 @@ const getFinalResult = async (ownerIdArray, responseArray) => {
   );
 };
 
+const getBuidingUoms = (rowData, uoms) => {
+  if (uoms.findIndex(item => item.id === rowData.uomuuid) === -1) {
+    uoms.push({
+      id: rowData.uomuuid,
+      code: rowData.code,
+      value: rowData.value,
+      isActiveUom: rowData.activeuom,
+      active: rowData.active
+    });
+  }
+
+  return uoms;
+};
+
+const getApplicationDocuments = (rowData, applicationDocs) => {
+  if (
+    applicationDocs.findIndex(item => item.id === rowData.documentuuid) === -1
+  ) {
+    applicationDocs.push({
+      id: rowData.documentuuid,
+      tenantId: rowData.tenantid,
+      documentType: rowData.documenttype,
+      fileStoreId: rowData.fileStoreid,
+      documentUid: rowData.documentuid,
+      auditDetails: {
+        createdby: rowData.documentCreatedBy,
+        lastmodifiedby: rowData.documentLastModifiedBy,
+        createdtime: rowData.documentCreatedTime,
+        lastmodifiedtime: rowData.documentLastModifiedTime
+      }
+    });
+  }
+
+  return applicationDocs;
+};
+
 export const mergeSearchResults = async response => {
   const responseArray = []; //Array holding filtered table data
   const ownerIdArray = []; //holds all rows owners data
   response.forEach(element => {
     const buildings = [];
     const owners = [];
+    const buildingsUoms = [];
+    const applicationDocs = [];
 
     // check if the firenoc id is already present in the array .If doesnt exists then perform further operation
     const isItemPresent =
@@ -140,16 +178,16 @@ export const mergeSearchResults = async response => {
       fireNocByIDArray.forEach((eachItem, index) => {
         buildings.push({
           id: eachItem.buildingid,
-          tenantId: eachItem.buildingtenantid,
+          tenantId: eachItem.tenantid,
           name: eachItem.buildingname,
           usageType: eachItem.usagetype,
-          noOfFloors: eachItem.nooffloors,
-          noOfBasements: eachItem.noofbasements,
-          plotsize: eachItem.plotsize,
-          builtupArea: eachItem.builtuparea,
-          heightOfBuilding: eachItem.heightOfBuilding,
-          applicationDocuments: []
+          uoms: getBuidingUoms(eachItem, buildingsUoms),
+          applicationDocuments: getApplicationDocuments(
+            eachItem,
+            applicationDocs
+          )
         });
+
         owners.push({
           id: eachItem.ownerid,
           userName: eachItem.username,
@@ -173,7 +211,7 @@ export const mergeSearchResults = async response => {
             applicationdate: JSON.parse(BigInt(element.applicationdate)),
             fireNOCDetails: {
               id: element.firenocdetailsid,
-              applicationNumber: element.applicationNumber,
+              applicationNumber: element.applicationnumber,
               applicationStatus: status[element.action],
               fireNOCType: element.firenoctype,
               firestationId: "",
@@ -188,7 +226,7 @@ export const mergeSearchResults = async response => {
               buildings: buildings && uniqBy(buildings, "id"),
               propertyDetails: {},
               applicantDetails: {
-                ownerShipType: element.ownerType,
+                ownerShipType: element.ownertype,
                 owners: owners && uniqBy(owners, "id"),
                 additionalDetail: {}
               },

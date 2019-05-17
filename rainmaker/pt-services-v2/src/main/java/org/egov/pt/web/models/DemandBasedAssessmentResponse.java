@@ -13,7 +13,7 @@ public class DemandBasedAssessmentResponse {
     @JsonProperty("ResponseInfo")
     ResponseInfo responseInfo;
 
-    @JsonProperty("demandBasedAssessments")
+    @JsonProperty("demandBasedAssessment")
     List<DemandBasedAssessment> demandBasedAssessments;
 
 }

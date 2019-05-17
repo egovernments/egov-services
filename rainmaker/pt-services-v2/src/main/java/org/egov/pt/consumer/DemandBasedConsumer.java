@@ -3,15 +3,14 @@ package org.egov.pt.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.service.PropertyService;
 import org.egov.pt.web.models.*;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -38,22 +37,28 @@ public class DemandBasedConsumer {
     /**
      * Listens on the bulk update topic and pushes failed batches on dead letter topic
      *
-     * @param record The input bulk update requests
+     * @param records The input bulk update requests
      */
     @KafkaListener(topics = {"${persister.demand.based.topic}"}, containerFactory = "kafkaListenerContainerFactoryBatch")
-    public void listen(final HashMap<String, Object> record) {
+    public void listen(final List<Message<?>> records) {
 
-        DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
-        try {
-            demandBasedAssessmentRequest = mapper.convertValue(record, DemandBasedAssessmentRequest.class);
-        } catch (final Exception e) {
-            log.error("Error while listening to value: " + record);
+        List<DemandBasedAssessment> demandBasedAssessments = new ArrayList<>();
+        RequestInfo requestInfo =
+                mapper.convertValue(records.get(0).getPayload(), DemandBasedAssessmentRequest.class).getRequestInfo();
+
+        for(Message record : records) {
+            DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
+            try {
+                demandBasedAssessmentRequest = mapper.convertValue(record.getPayload(), DemandBasedAssessmentRequest.class);
+                demandBasedAssessments.add(demandBasedAssessmentRequest.getDemandBasedAssessment());
+            } catch (final Exception e) {
+                log.error("Error while listening to value: " + record);
+            }
         }
-        log.info("Number of batch records: " + demandBasedAssessmentRequest.getDemandBasedAssessments().size());
-        log.info("Batch request: " + demandBasedAssessmentRequest);
-        RequestInfo requestInfo = demandBasedAssessmentRequest.getRequestInfo();
+        log.info("Number of batch records: " + demandBasedAssessments.size());
 
-        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
+
+        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessments);
 
         for (Map.Entry<String, List<DemandBasedAssessment>> entry : tenantIdToDemandBasedAssessmentMap.entrySet()) {
             createAssessment(requestInfo, entry.getValue(), config.getDeadLetterTopicBatch());
@@ -64,22 +69,28 @@ public class DemandBasedConsumer {
      * Listens on the dead letter topic of the bulk request and processes
      * every record individually and pushes failed records on error topic
      *
-     * @param record Single update request
+     * @param records Single update request
      */
- //   @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
-    public void listenDeadLetterTopic(final HashMap<String, Object> record) {
+    @KafkaListener(topics = {"${persister.demand.based.dead.letter.topic.batch}"}, containerFactory = "kafkaListenerContainerFactory")
+    public void listenDeadLetterTopic(final List<Message<?>> records) {
 
-        DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
-        try {
-            demandBasedAssessmentRequest = mapper.convertValue(record, DemandBasedAssessmentRequest.class);
-        } catch (final Exception e) {
-            log.error("Error while listening to value: " + record);
+
+
+        List<DemandBasedAssessment> demandBasedAssessments = new ArrayList<>();
+        RequestInfo requestInfo =
+                mapper.convertValue(records.get(0).getPayload(), DemandBasedAssessmentRequest.class).getRequestInfo();
+
+        for(Message record : records) {
+            DemandBasedAssessmentRequest demandBasedAssessmentRequest = null;
+            try {
+                demandBasedAssessmentRequest = mapper.convertValue(record.getPayload(), DemandBasedAssessmentRequest.class);
+                demandBasedAssessments.add(demandBasedAssessmentRequest.getDemandBasedAssessment());
+            } catch (final Exception e) {
+                log.error("Error while listening to value: " + record);
+            }
         }
-        log.info("Number of records: " + demandBasedAssessmentRequest.getDemandBasedAssessments().size());
-        log.info("Assessment to updated: " + demandBasedAssessmentRequest.getDemandBasedAssessments().get(0).getAssessmentNumber());
-        RequestInfo requestInfo = demandBasedAssessmentRequest.getRequestInfo();
 
-        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessmentRequest);
+        Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = groupByTenantId(demandBasedAssessments);
 
         for (Map.Entry<String, List<DemandBasedAssessment>> entry : tenantIdToDemandBasedAssessmentMap.entrySet()) {
             createAssessment(requestInfo, entry.getValue(), config.getDeadLetterTopicSingle());
@@ -110,10 +121,9 @@ public class DemandBasedConsumer {
                     .requestInfo(requestInfo).build();
 
             for (DemandBasedAssessment demandBasedAssessment : demandBasedAssessments) {
-                request.setDemandBasedAssessments(Collections.singletonList(demandBasedAssessment));
+                request.setDemandBasedAssessment(demandBasedAssessment);
                 log.error("UPDATE ERROR: ", e);
                 log.info("error topic: {}", errorTopic);
-                log.info("error request: {}", request);
                 producer.push(errorTopic, request);
             }
         }
@@ -162,10 +172,10 @@ public class DemandBasedConsumer {
      * @param request The update request
      * @return Map of tenantId to DemandBasedAssessment
      */
-    private Map<String, List<DemandBasedAssessment>> groupByTenantId(DemandBasedAssessmentRequest request) {
+    private Map<String, List<DemandBasedAssessment>> groupByTenantId(List<DemandBasedAssessment> request) {
         Map<String, List<DemandBasedAssessment>> tenantIdToDemandBasedAssessmentMap = new HashMap<>();
 
-        request.getDemandBasedAssessments().forEach(demandBasedAssessment -> {
+        request.forEach(demandBasedAssessment -> {
             if (tenantIdToDemandBasedAssessmentMap.containsKey(demandBasedAssessment.getTenantId()))
                 tenantIdToDemandBasedAssessmentMap.get(demandBasedAssessment.getTenantId()).add(demandBasedAssessment);
             else {

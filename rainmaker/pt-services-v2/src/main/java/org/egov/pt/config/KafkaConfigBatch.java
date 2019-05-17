@@ -28,6 +28,7 @@ public class KafkaConfigBatch {
                 kafkaProperties.buildConsumerProperties()
         );
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, propertyConfiguration.getBatchSize());
+        props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 900000);
         props.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 10000);
 
         return props;
@@ -51,7 +52,9 @@ public class KafkaConfigBatch {
 
     @Bean
     public Map<String, Object> producerConfigs() {
-        Map<String, Object> props = new HashMap<>();
+        Map<String, Object> props = new HashMap<>(
+                kafkaProperties.buildProducerProperties()
+        );
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 org.apache.kafka.common.serialization.StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,

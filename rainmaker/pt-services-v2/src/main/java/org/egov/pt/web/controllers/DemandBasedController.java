@@ -9,6 +9,7 @@ import org.egov.pt.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,8 @@ public class DemandBasedController {
     @Autowired
     private Producer producer;
 
-
+    @Autowired
+    private KafkaTemplate kafkaTemplate;
 
 
     @RequestMapping(value = "/_generate", method = RequestMethod.POST)
@@ -47,11 +49,14 @@ public class DemandBasedController {
         Object response = serviceRequestRepository.fetchResult(getSearcherUrl(), searchCriteriaRequest);
         DemandBasedAssessmentResponse demandBasedAssessmentResponse = mapper.convertValue(response,DemandBasedAssessmentResponse.class);
         enrichFinancialYear(demandBasedAssessmentResponse.getDemandBasedAssessments(), demandGenerationRequest.getFinancialYear());
-        DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
-                .requestInfo(demandGenerationRequest.getRequestInfo())
-                .demandBasedAssessments(demandBasedAssessmentResponse.getDemandBasedAssessments())
-                .build();
-        producer.push(config.getDemandBasedPTTopic(),request);
+
+        for(DemandBasedAssessment assessment : demandBasedAssessmentResponse.getDemandBasedAssessments()) {
+            DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
+                    .requestInfo(demandGenerationRequest.getRequestInfo())
+                    .demandBasedAssessment(assessment)
+                    .build();
+            kafkaTemplate.send(config.getDemandBasedPTTopic(), request);
+        }
         return new ResponseEntity<>(demandBasedAssessmentResponse, HttpStatus.OK);
     }
 

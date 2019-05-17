@@ -62,7 +62,7 @@ ALTER TABLE eg_fn_buidlings
 ALTER TABLE eg_fn_buildingdocuments DROP COLUMN firenocdetailsuuid;
 
 ALTER TABLE eg_fn_buildingdocuments
-          RENAME "buildingId" TO buildinguuid;
+          RENAME buildingid TO buildinguuid;
 
 ALTER TABLE eg_fn_buildingdocuments
           ALTER COLUMN buildinguuid TYPE character varying (64);

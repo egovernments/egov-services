@@ -1,3 +1,5 @@
+-- New table and added relation to old tables
+
 CREATE TABLE eg_fn_buildinguoms
 (
     uuid character varying(64) NOT NULL,

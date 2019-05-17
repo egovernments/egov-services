@@ -109,7 +109,7 @@ public class VoucherServiceImpl implements VoucherService {
 		String name = receipt.getInstrument().getInstrumentType().getName();
 		InstrumentAccountCodeReq instAccCodeReq = new InstrumentAccountCodeReq();
 		String tenantId = receipt.getTenantId();
-		final String instrument_account_code_url = propertiesManager.getHostUrl()
+		final String instrument_account_code_url = propertiesManager.getInstrumentHostUrl()
 				+ propertiesManager.getInstrumentAccountCodeUrl() + "?tenantId=" + tenantId + "&instrumentType.name="+name;
 		RequestInfo requestInfo = new RequestInfo();
 		requestInfo.setAuthToken("3fe19291-d1d0-48e8-bd46-8a6518d9acb2");

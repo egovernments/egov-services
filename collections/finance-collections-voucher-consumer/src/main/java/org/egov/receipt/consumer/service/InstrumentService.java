@@ -106,9 +106,9 @@ public class InstrumentService {
 			InstrumentRequest request = new InstrumentRequest();
 			request.setInstruments(Collections.singletonList(instrumentContract));
 			request.setRequestInfo(requestInfo);
-			LOGGER.debug("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate());
+			LOGGER.debug("call:" + propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCreate());
 			return restTemplate.postForObject(
-					propertiesManager.getHostUrl() + propertiesManager.getInstrumentCreate(), request,
+					propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCreate(), request,
 					InstrumentResponse.class);
 			
 		} catch (Exception e) {
@@ -134,9 +134,9 @@ public class InstrumentService {
 	public void cancelInstrument(Receipt receipt) {
 		InstrumentRequest request = new InstrumentRequest();
 		this.setInstrumentRequest(request, receipt);
-		LOGGER.debug("call:" + propertiesManager.getHostUrl() + propertiesManager.getInstrumentCancel());
+		LOGGER.debug("call:" + propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel());
 		InstrumentResponse postForObject = restTemplate.postForObject(
-				propertiesManager.getHostUrl() + propertiesManager.getInstrumentCancel(), request,
+				propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel(), request,
 				InstrumentResponse.class);
 		LOGGER.debug("InstrumentResponse :::: " + postForObject);
 	}

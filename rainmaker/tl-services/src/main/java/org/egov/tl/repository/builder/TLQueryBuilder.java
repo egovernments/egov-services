@@ -62,8 +62,7 @@ public class TLQueryBuilder {
             +LEFT_OUTER_JOIN_STRING
             +"eg_tl_verificationdocument tlverdoc ON tlverdoc.tradelicensedetailid = tld.id"
             +LEFT_OUTER_JOIN_STRING
-            +"eg_tl_institution tlinsti ON tlinsti.tradelicensedetailid = tld.id"
-            +" WHERE ";
+            +"eg_tl_institution tlinsti ON tlinsti.tradelicensedetailid = tld.id ";
 
 
       private final String paginationWrapper = "SELECT * FROM " +
@@ -81,6 +80,7 @@ public class TLQueryBuilder {
         StringBuilder builder = new StringBuilder(QUERY);
 
         if(criteria.getAccountId()!=null){
+            addClauseIfRequired(preparedStmtList,builder);
             builder.append(" tl.accountid = ? ");
             preparedStmtList.add(criteria.getAccountId());
 

@@ -90,7 +90,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 	 * Function which is used to fetch the finance service mdms data based on Business Service code.
 	 */
 	public Object getFinanceServiceMdmsData(String tenantId,String businessServiceCode) throws VoucherCustomException{
-		String mdmsUrl = manager.getHostUrl() + manager.getMdmsSearchUrl();
+		String mdmsUrl = manager.getMdmsHostUrl() + manager.getMdmsSearchUrl();
 		String authToken = tokenService.generateAdminToken(tenantId); 
         requestInfo.setAuthToken(authToken);
         ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();

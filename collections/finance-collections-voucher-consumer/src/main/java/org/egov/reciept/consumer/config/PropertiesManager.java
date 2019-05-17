@@ -60,8 +60,8 @@ import lombok.ToString;
 @ToString
 public class PropertiesManager {
 
-    @Value("${egov.services.host}")
-    private String hostUrl;
+    @Value("${egov.services.egov.user.host}")
+    private String userHostUrl;
 
     @Value("${egov.services.common.masters.businessdetails.url}")
     private String businessDetailsServiceUrl;
@@ -129,6 +129,17 @@ public class PropertiesManager {
     @Value("${egov.services.collection.receipts.view.source.url}")
     private String receiptViewSourceUrl;
     
+    @Value("${egov.services.mdms.hostname}")
+    private String mdmsHostUrl;
+    
+    @Value("${egov.services.mdms.hostname}")
+    private String instrumentHostUrl;
+    
+    @Value("${egov.services.collections.hostname}")
+    private String collectionsHostUrl;
+    
+    @Value("${egov.services.egfmaster.hostname}")
+    private String egfMasterHostUrl;
     
     @Value("${token.authorizaton.key}")
     private String tokenAuhorizationtKey;

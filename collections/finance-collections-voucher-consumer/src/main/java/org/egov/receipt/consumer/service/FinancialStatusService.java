@@ -68,7 +68,7 @@ public class FinancialStatusService {
 
     public FinancialStatus getByCode(String code, String tenantId) {
 
-        final String bd_url = propertiesManager.getHostUrl() + propertiesManager.getFinancialStatusesSearch() + "?tenantId="
+        final String bd_url = propertiesManager.getEgfMasterHostUrl() + propertiesManager.getFinancialStatusesSearch() + "?tenantId="
                 + tenantId + "&moduleType=Instrument&code=" + code;
 
         RequestInfo requestInfo = new RequestInfo();

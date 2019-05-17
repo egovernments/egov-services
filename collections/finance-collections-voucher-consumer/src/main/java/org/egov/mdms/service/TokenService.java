@@ -84,7 +84,7 @@ public class TokenService {
 
         try {
             LOGGER.debug("call:" + propertiesManager.getTokenGenUrl());
-            Object response = restTemplate.postForObject(propertiesManager.getHostUrl() + propertiesManager.getTokenGenUrl(),
+            Object response = restTemplate.postForObject(propertiesManager.getUserHostUrl() + propertiesManager.getTokenGenUrl(),
                     request, Object.class);
             if (response != null) {
 				String authToken = String.valueOf(((HashMap) response).get("access_token"));

@@ -53,11 +53,15 @@ public class UserService {
         RequestInfo requestInfo = request.getRequestInfo();
         Role role = getCitizenRole();
         Map<String, User> uuidToUserMap  = getUuidToUserMap(request);
+
+        // Fetches the unique mobileNumbers from all the owners
+        Set<String> mobileNumberToBeSearched = getMobileNumbersToBeSearched(request,uuidToUserMap);
+        Set<String> listOfMobileNumbers = getMobileNumbers(mobileNumberToBeSearched, requestInfo, request.getProperties().get(0).getTenantId());
+        log.info("Unique MobileNumbers: " + listOfMobileNumbers);
+
         properties.forEach(property -> {
             property.getPropertyDetails().forEach(propertyDetail -> {
-                // Fetches the unique mobileNumbers from all the owners
-                Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail, requestInfo, property.getTenantId());
-                log.info("Unique MobileNumbers: " + listOfMobileNumbers);
+
                 propertyDetail.getOwners().forEach(owner -> {
                     User userFromUserService = null;
                     addUserDefaultFields(property.getTenantId(), role, owner);
@@ -179,14 +183,11 @@ public class UserService {
     /**
      * Fetches all the unique mobileNumbers from a propertyDetail
      *
-     * @param propertyDetail whose unique mobileNumbers are needed to be fetched
+     * @param listOfMobileNumbers MobileNumbers to be searched
      * @return list of all unique mobileNumbers in the given propertyDetail
      */
-    private Set<String> getMobileNumbers(PropertyDetail propertyDetail, RequestInfo requestInfo, String tenantId) {
-        Set<String> listOfMobileNumbers = new HashSet<>();
-        propertyDetail.getOwners().forEach(owner -> {
-            listOfMobileNumbers.add(owner.getMobileNumber());
-        });
+    private Set<String> getMobileNumbers(Set<String> listOfMobileNumbers, RequestInfo requestInfo, String tenantId) {
+
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         UserSearchRequest userSearchRequest = new UserSearchRequest();
         userSearchRequest.setRequestInfo(requestInfo);
@@ -195,12 +196,13 @@ public class UserService {
         userSearchRequest.setUserType("CITIZEN");
         Set<String> availableMobileNumbers = new HashSet<>();
 
-        listOfMobileNumbers.forEach(mobilenumber -> {
-            userSearchRequest.setMobileNumber(mobilenumber);
-            UserDetailResponse userDetailResponse = userCall(userSearchRequest, uri);
-            if (CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                availableMobileNumbers.add(mobilenumber);
-        });
+        if(!CollectionUtils.isEmpty(listOfMobileNumbers))
+            listOfMobileNumbers.forEach(mobilenumber -> {
+                userSearchRequest.setMobileNumber(mobilenumber);
+                UserDetailResponse userDetailResponse = userCall(userSearchRequest, uri);
+                if (CollectionUtils.isEmpty(userDetailResponse.getUser()))
+                    availableMobileNumbers.add(mobilenumber);
+            });
         return availableMobileNumbers;
     }
 
@@ -470,6 +472,26 @@ public class UserService {
                 })
         );
         return new LinkedList<>(userUuids);
+    }
+
+
+    /**
+     * Returns list of mobileNumbers to be searched
+     * @param request The propertyRequest
+     * @param uuidToUserMap The uuid to user map from search
+     * @return list of mobileNumbers to be searched
+     */
+    private Set<String> getMobileNumbersToBeSearched(PropertyRequest request,Map<String, User> uuidToUserMap){
+        Set<String> mobileNumbers = new HashSet<>();
+        request.getProperties().forEach(property -> {
+            property.getPropertyDetails().forEach(propertyDetail -> {
+                propertyDetail.getOwners().forEach(ownerInfo -> {
+                    if(!(ownerInfo.getUuid()!=null && uuidToUserMap.containsKey(ownerInfo.getUuid())))
+                        mobileNumbers.add(ownerInfo.getMobileNumber());
+                });
+            });
+        });
+        return mobileNumbers;
     }
 
 

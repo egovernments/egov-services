@@ -458,7 +458,6 @@ public class EnrichmentService {
         Set<String> licenseIds = new HashSet<>();
         licenses.forEach(license -> licenseIds.add(license.getId()));
         criteria.setIds(new LinkedList<>(licenseIds));
-        criteria.setTenantId(licenses.get(0).getTenantId());
         return criteria;
     }
 

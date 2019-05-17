@@ -95,50 +95,63 @@ public class TLQueryBuilder {
             return builder.toString();
         }
 
-        builder.append(" tl.tenantid=? ");
-        preparedStmtList.add(criteria.getTenantId());
+        if(criteria.getTenantId()!=null){
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append(" tl.tenantid=? ");
+            preparedStmtList.add(criteria.getTenantId());
+        }
+
 
         List<String> ids = criteria.getIds();
         if(!CollectionUtils.isEmpty(ids)) {
-            builder.append("and tl.id IN (").append(createQuery(ids)).append(")");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append(" tl.id IN (").append(createQuery(ids)).append(")");
             addToPreparedStatement(preparedStmtList,ids);
         }
 
         List<String> ownerIds = criteria.getOwnerIds();
         if(!CollectionUtils.isEmpty(ownerIds)) {
-            builder.append("and (tlowner.id IN (").append(createQuery(ownerIds)).append(")");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append(" (tlowner.id IN (").append(createQuery(ownerIds)).append(")");
             addToPreparedStatement(preparedStmtList,ownerIds);
-            builder.append(" AND tlowner.active = ? ) ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append(" tlowner.active = ? ) ");
             preparedStmtList.add(true);
         }
 
         if(criteria.getApplicationNumber()!=null){
-            builder.append(" and tl.applicationnumber = ? ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append("  tl.applicationnumber = ? ");
             preparedStmtList.add(criteria.getApplicationNumber());
         }
 
         if(criteria.getStatus()!=null){
-            builder.append(" and tl.status = ? ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append("  tl.status = ? ");
             preparedStmtList.add(criteria.getStatus());
         }
 
         if(criteria.getLicenseNumber()!=null){
-            builder.append(" and tl.licensenumber = ? ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append("  tl.licensenumber = ? ");
             preparedStmtList.add(criteria.getLicenseNumber());
         }
 
         if(criteria.getOldLicenseNumber()!=null){
-            builder.append(" and tl.oldlicensenumber = ? ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append("  tl.oldlicensenumber = ? ");
             preparedStmtList.add(criteria.getOldLicenseNumber());
         }
 
         if(criteria.getFromDate()!=null){
-            builder.append(" and tl.applicationDate >= ? ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append("  tl.applicationDate >= ? ");
             preparedStmtList.add(criteria.getFromDate());
         }
 
         if(criteria.getToDate()!=null){
-            builder.append(" and tl.applicationDate <= ? ");
+            addClauseIfRequired(preparedStmtList,builder);
+            builder.append("  tl.applicationDate <= ? ");
             preparedStmtList.add(criteria.getToDate());
         }
 
@@ -190,6 +203,13 @@ public class TLQueryBuilder {
     }
 
 
+    private static void addClauseIfRequired(List<Object> values, StringBuilder queryString) {
+        if (values.isEmpty())
+            queryString.append(" WHERE ");
+        else {
+            queryString.append(" AND");
+        }
+    }
 
 
 

@@ -1,0 +1,146 @@
+{
+    "DataConfigs": {
+       "serviceName": "PGR - rainmaker",
+       "version": "1.0.0",
+       "mappings": [
+          {
+             "topic": "pgr-pdf-generation",
+             "staticConfigPath": "https://raw.githubusercontent.com/egovernments/egov-services/vishal-feature-filestore/core/egov-indexer/src/main/resources/rainmaker-pgr-indexer.yml",
+             "mappings": [
+                {
+                   "direct": [
+                      {
+                         "variable": "$tenantId",
+                         "value": {
+                              "path":"$.propertyDetails.tenantId",
+                              "type":"Object",
+                              "format":{
+                                 
+                                    "style": "tableExample",
+                                            "table": {
+                                               "body": [
+                                                  ["floor", "usage type", "unitArea"]
+                                                  
+                                               ]
+                                            }
+                                         
+                                 
+                                 
+
+
+                              }
+                         }
+                      },
+                      {
+                         "variable":"variable",
+                         "value":{
+                            "path":"",
+                            "type":"array",
+                            "format":{
+
+                            }
+                         }  
+                      },
+                      {
+                         "variable": "$variable",
+                         "valueJsonPath": "$.Data.value"
+                      }
+                   ]
+                },
+                {
+                   "derived": [
+                      {
+                         "variable": "$variable",
+                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                      },
+                      {
+                         "variable": "$variable",
+                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                      }
+                   ]
+                },
+                {
+                   "externalAPI": [
+                      {
+                         "variable": "$variable",
+                         "path": "http://egov-location.egov:8080/egov-location/location/v11/boundarys/_search",
+                         "queryParam": "hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId",
+                         "apiRequest": {
+                            "RequestInfo": {
+                               "apiId": "org.egov.pt",
+                               "ver": "1.0",
+                               "ts": 1502890899493,
+                               "action": "asd",
+                               "did": "4354648646",
+                               "key": "xyz",
+                               "msgId": "654654",
+                               "requesterId": "61",
+                               "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d",
+                               "userInfo": {
+                                  "id": 73
+                               }
+                            }
+                         },
+                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                      },
+                      {
+                         "variable": "$variable",
+                         "path": "http://egov-location.egov:8080/egov-location/location/v11/boundarys/_search",
+                         "queryParam": "hierarchyTypeCode=ADMIN,boundaryType=locality,codes=$.addressDetail.mohalla,tenantId=$.tenantId",
+                         "apiRequest": {
+                            "RequestInfo": {
+                               "apiId": "org.egov.pt",
+                               "ver": "1.0",
+                               "ts": 1502890899493,
+                               "action": "asd",
+                               "did": "4354648646",
+                               "key": "xyz",
+                               "msgId": "654654",
+                               "requesterId": "61",
+                               "authToken": "02dbe5be-28df-4d82-954f-3d27c56cca7d",
+                               "userInfo": {
+                                  "id": 73
+                               }
+                            }
+                         },
+                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                      }
+                   ]
+                },
+                {
+                   "mdmsDenormalization": [
+                      {
+                         "variable": "$variable",
+                         "moduleName": "common-masters",
+                         "masterName": "Department",
+                         "tenantId": "pb",
+                         "filter": "[?(@.code == $department)]",
+                         "filterMapping": [
+                            {
+                               "variable": "$department",
+                               "valueJsonpath": "$.department"
+                            }
+                         ],
+                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                      },
+                      {
+                         "variable": "$variable",
+                         "moduleName": "common-masters",
+                         "masterName": "Department",
+                         "tenantId": "pb",
+                         "filter": "[?(@.code == $department)]",
+                         "filterMapping": [
+                            {
+                               "variable": "$department",
+                               "valueJsonpath": "$.department"
+                            }
+                         ],
+                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                      }
+                   ]
+                }
+             ]
+          }
+       ]
+    }
+ }

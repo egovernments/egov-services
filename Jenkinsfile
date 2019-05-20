@@ -15,6 +15,7 @@ try {
 
         def docker_file_exists = fileExists("${path}/Dockerfile")
 
+        cleanup_jenkins_workspaces.groovy = load("jenkins/cleanup_jenkins_workspaces.groovy")
         code_builder = load("jenkins/code_builder.groovy")
         notifier = load("jenkins/notifier.groovy")
         currentBuild.displayName = "${BUILD_ID}-${commit_id}"
@@ -23,6 +24,7 @@ try {
           code_builder.build(path, ci_image)
         }
         else {
+          cleanup_jenkins_workspaces.groovy = load("jenkins/cleanup_jenkins_workspaces.groovy")
           archiver = load("jenkins/archiver.groovy")
           image_builder = load("jenkins/image_builder.groovy")
           code_builder.build(path, ci_image)

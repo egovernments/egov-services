@@ -9,7 +9,7 @@ def notifier = "";
 
 try {
     node("slave"){
-        git clean -fdx
+        cleanWs deleteDirs: true
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')

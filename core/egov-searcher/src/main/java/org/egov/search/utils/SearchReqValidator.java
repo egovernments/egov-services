@@ -32,6 +32,7 @@ public class SearchReqValidator {
 	private SearchUtils searchUtils;
 	
 	public void validate(SearchRequest searchRequest, String moduleName, String searchName) {
+		checkforNullChecks(searchRequest);
 		logger.info("Validating search request....");
 		Map<String, SearchDefinition> searchDefinitionMap = runner.getSearchDefinitionMap();
 		Definition searchDefinition = null;
@@ -71,5 +72,20 @@ public class SearchReqValidator {
 			throw new CustomException(errorMap);
 		
 		
+	}
+
+	public void checkforNullChecks(SearchRequest searchRequest)
+	{
+		Map<String, String> errorMap = new HashMap<>();
+		if(searchRequest.getRequestInfo()==null)
+		{
+			errorMap.put("400", "Requestinfo is missing: ");
+			throw new CustomException(errorMap);
+		}
+		if(searchRequest.getSearchCriteria()==null)
+		{
+			errorMap.put("400", "Searchcriteria is missing: ");
+			throw new CustomException(errorMap);
+		}
 	}
 }

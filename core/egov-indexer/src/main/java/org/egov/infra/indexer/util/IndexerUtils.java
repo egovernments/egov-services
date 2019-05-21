@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.util;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -504,7 +505,9 @@ public class IndexerUtils {
 				log.info("NULL found in place of timestamp field.");
 				return context;
 			}
-			Date date = new Date(Long.valueOf(epochValue));
+			String ret=convertEpochToLong(epochValue);
+			Long value=Long.valueOf(ret);
+			Date date = new Date(value);
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
@@ -517,7 +520,20 @@ public class IndexerUtils {
 		return context;
 
 	}
-	
+
+	/**
+	 * Method to convert double with scientific precision plain long
+	 * ex:- 1.5534533434E10-->15534533434
+	 *
+	 * @param value
+	 * @return
+	 */
+	public String convertEpochToLong(String value){
+		DecimalFormat df = new DecimalFormat("#");
+		df.setMaximumFractionDigits(0);
+		String ret= df.format(Double.valueOf(value));
+		return ret;
+	}
 	/**
 	 * Method to encode non ascii characters.
 	 * 

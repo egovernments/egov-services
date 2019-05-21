@@ -10,41 +10,27 @@
                 {
                    "direct": [
                       {
-                         "variable": "$tenantId",
+                         "variable": "content[0].table.body[0].[1].stack[0].text",
                          "value": {
-                              "path":"$.propertyDetails.tenantId",
-                              "type":"Object",
-                              "format":{
-                                 
-                                    "style": "tableExample",
-                                            "table": {
-                                               "body": [
-                                                  ["floor", "usage type", "unitArea"]
-                                                  
-                                               ]
-                                            }
-                                         
-                                 
-                                 
-
-
-                              }
+                              "path":"propertyDetails.tenantId"
+                              
                          }
                       },
                       {
-                         "variable":"variable",
+                         "variable":"content[0].table.body[0].[1].stack[1].text",
                          "value":{
-                            "path":"",
-                            "type":"array",
-                            "format":{
-
-                            }
+                            "path":"propertyDetails.units[0].usageCategoryMajor"
+                            
                          }  
                       },
                       {
-                         "variable": "$variable",
-                         "valueJsonPath": "$.Data.value"
+                         "variable": "content[1].columns[0].text[1].text",
+                         "value":{
+                              "path":"propertyDetails.units[0].usageCategoryMinor"
+                           
+                          } 
                       }
+                      
                    ]
                 },
                 {

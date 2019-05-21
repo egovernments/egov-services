@@ -19,6 +19,7 @@ import dataconfig from "./pdfgenerator.json";
 import * as pdfmake from "pdfmake/build/pdfmake";
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import get from "lodash/get";
+import set from "lodash/set";
 import { strict } from "assert";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -63,56 +64,6 @@ function createPdfBinary(docDefinition, successCallback, errorCallback) {
       if (err) {
         console.log("Error!");
       } else {
-        //getting data from json
-        // for (var attributename in data) {
-        //   console.log(attributename, ": ", data[attributename]);
-        // }
-        //printing array of objects
-      
-        // var arr = [];
-        // var len;
-        // for (var attributename in data) {
-        //   var obj = {
-        //     key: ""
-        //   };
-        //   obj.key = attributename;
-        //   obj.value = data[attributename];
-
-        //   if (attributename == "propertyDetails") {
-        //     arr.push(data[attributename].units);
-        //     len = data[attributename].units.length;
-        //   }
-        // }
-
-        // for (var i = 0; i < len; i++) {
-        //   console.log(arr[0][i]);
-        // }
-
-        var directArr=[];
-        var obj={
-        	key:"",
-        	value:""
-        };
-
-         var ob="";
-         var i=0;
-         var key=[];
-         var value=[];
-          key.push(get(dataconfig,'DataConfigs.mappings[0].mappings[0].direct',''));
-          // value.push(get(dataconfig,'DataConfigs,mappings[0].mappings[0].direct',''));
-          //directArr.push(key);
-         
-         
-         
-        
-        console.log(key);
-        // for(var i=0;i<directArr.length;i++)
-        // {	console.log(directArr[i]);	}
-        // for(var att in dataconfig)
-        // {
-        // 		get()
-        // }
-
         console.log("URL: " + body);
       }
     });
@@ -127,20 +78,43 @@ function createPdfBinary(docDefinition, successCallback, errorCallback) {
 }
 
 app.post("/pdf", function(req, res) {
-  var reqbody =
-   {
-    text:req.body
-   };
+  
+  var directArr=[];         
+  var obj={
+     jPath:"",
+     val:""
+    //  type:"",
+    //  format:""
+      
+  };
+  var o={};
+  o=get(dataconfig,'DataConfigs.mappings[0].mappings[0].direct',[]);
+  
+  directArr=o.map((item)=>{   
+    return {
+      jPath:item.variable,
+      val:get(req.body,item.value.path,''),
+      type:item.type,
+      format:item.format
+      
+    }
+  });
+  
+  
+  for(var i=0;i<directArr.length;i++)
+  {
+    // console.log(directArr[i].jPath);
+    // console.log(directArr[i].val);
+    set(receipt_data,directArr[i].jPath,directArr[i].val);
+  }
 
   //function to download pdf automatically
   createPdfBinary(
     receipt_data,(response) => {
       // doc successfully created
-      // res.send(reqbody.text);
-      //console.log(reqbody.text);
       res.json({
         status: 200,
-        data: reqbody.text
+        data: req.body
       });
     },
     error => {
@@ -164,7 +138,7 @@ app.post("/pdf", function(req, res) {
   //  	}
   //  	);
 
-  /*function to sent binary data to s3
+  /*function to sent binary pdf data to s3
 	createPdfBinary(dd, function(binary) {
 	  res.contentType('application/pdf');
 	  console.log(req.body);
@@ -183,12 +157,12 @@ app.post("/create-receipt", (req, res) => {
 const PORT = 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+  console.log(`Server running at http:${PORT}/`);
 });
 
 /*
 
-app.server = http.createServer(app);
+app.server = http.createServer(app);
 
 // logger
 app.use(morgan('dev'));

@@ -25,11 +25,11 @@
             {
               "stack": [
                 {
-                  "text": "$tenantId",
+                  "text": "$value1",
                   "style": "receipt-logo-header"
                 },
                 {
-                  "text": "$content[0].table.body[1].stack[1].text",
+                  "text": "$value2",
                   "style": "receipt-logo-sub-header"
                 }
               ],
@@ -44,7 +44,7 @@
             {
               "text": [
                 {
-                  "text": "$content[0].table.body[1].text[0].text",
+                  "text": "$value3",
                   "bold": true,
                   "style": "receipt-no"
                 }
@@ -72,7 +72,7 @@
               "bold": true
             },
             {
-              "text": "$content",
+              "text": "$value4",
               "bold": false
             }
           ],

@@ -34,6 +34,14 @@ public class SearchController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(SearchController.class);
 
+	/**+
+	 *
+	 * @param allRequestParams represents all query params
+	 * @param moduleName modulename for search
+	 * @param searchName search definition name within module
+	 * @param searchRequest search request from client (contains search criteria)
+	 * @return data objects after reading DB, based on definition in config
+	 */
 	@PostMapping("/{moduleName}/{searchName}/_get")
 	@ResponseBody
 	public ResponseEntity<?> fetchData(@RequestParam HashMap<String,String> allRequestParams, @PathVariable("moduleName") String moduleName,

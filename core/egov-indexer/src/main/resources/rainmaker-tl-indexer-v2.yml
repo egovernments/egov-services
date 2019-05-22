@@ -26,9 +26,9 @@ ServiceMaps:
     indexes:
     - name: tradelicense-v2
       type: licenses
-      id: $.id, $.tenantid
+      id: $.id, $.tenantId
       isBulk: true
-      timeStampField: $.auditdetails.createdtime
+      timeStampField: $.auditDetails.createdTime
       jsonPath: $.Licenses
       customJsonMapping:
         indexMapping: {"Data":{"tradelicenseId":"","tradelicense":"","@timestamp":""}}
@@ -37,7 +37,7 @@ ServiceMaps:
           outJsonPath: $.Data.tradelicenseId
         - inJsonPath: $
           outJsonPath: $.Data.tradelicense
-        - inJsonPath: $.auditdetails.createdtime
+        - inJsonPath: $.auditDetails.createdTime
           outJsonPath: $.Data.@timestamp
 
   - topic: search-tl-tradelicense

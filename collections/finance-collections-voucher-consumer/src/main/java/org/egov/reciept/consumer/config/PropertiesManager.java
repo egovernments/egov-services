@@ -132,7 +132,7 @@ public class PropertiesManager {
     @Value("${egov.services.mdms.hostname}")
     private String mdmsHostUrl;
     
-    @Value("${egov.services.mdms.hostname}")
+    @Value("${egov.services.egfinstrument.hostname}")
     private String instrumentHostUrl;
     
     @Value("${egov.services.collections.hostname}")

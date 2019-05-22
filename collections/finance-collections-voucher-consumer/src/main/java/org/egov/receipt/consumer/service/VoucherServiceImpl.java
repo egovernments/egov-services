@@ -112,7 +112,7 @@ public class VoucherServiceImpl implements VoucherService {
 		final String instrument_account_code_url = propertiesManager.getInstrumentHostUrl()
 				+ propertiesManager.getInstrumentAccountCodeUrl() + "?tenantId=" + tenantId + "&instrumentType.name="+name;
 		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setAuthToken("3fe19291-d1d0-48e8-bd46-8a6518d9acb2");
+		requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
 		instAccCodeReq.setTenantId(tenantId);
 		instAccCodeReq.setRequestInfo(requestInfo);
 		LOGGER.debug("invoking rest call for getting instrument account code : URL :" + instrument_account_code_url);

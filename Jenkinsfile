@@ -32,6 +32,7 @@ try {
           image_builder.publish(service_name, commit_id)
           image_builder.clean(service_name, commit_id)
         }
+        cleanWs disableDeferredWipeout: true, deleteDirs: true
     }
 } catch (e) {
     node{

@@ -26,6 +26,7 @@ const create = (req, res) => {
 const enrichCreateData = reqBody => {
   reqBody.BillingSlabs.map(billingSlab => {
     billingSlab.id = uuid4();
+    billingSlab.auditDetails = {};
     upadteForAuditDetails(billingSlab.auditDetails, reqBody.RequestInfo);
   });
   return reqBody.BillingSlabs;

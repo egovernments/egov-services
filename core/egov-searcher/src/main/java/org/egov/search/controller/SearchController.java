@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.Valid;
 
 import org.egov.search.model.SearchRequest;
 import org.egov.search.service.SearchService;
@@ -37,23 +36,18 @@ public class SearchController {
 
 	@PostMapping("/{moduleName}/{searchName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@RequestParam HashMap<String,String> allRequestParams, @PathVariable("moduleName") String moduleName,
+	public ResponseEntity<?> fetchData(@RequestParam HashMap<String,String> allRequestParams, @PathVariable("moduleName") String moduleName,
 										   @PathVariable("searchName") String searchName,
 										   @RequestBody  final SearchRequest searchRequest) {
 		long startTime = new Date().getTime();
+		Object searchResult=null;
 		try
 		{
-			HashMap<String,String>searchcriteria=(HashMap<String,String>)searchRequest.getSearchCriteria();
-			if(searchcriteria!=null)
-			{
-				searchcriteria.putAll(allRequestParams);
-			}
-			else if(allRequestParams.keySet().size()>0){
-				searchRequest.setSearchCriteria(allRequestParams);
-			}
+			searchRequest.setSearchCriteria(searchService.fetchSearchCriteria((HashMap<String,String>)searchRequest.getSearchCriteria(),
+									allRequestParams));
 
 			searchReqValidator.validate(searchRequest, moduleName, searchName);
-			Object searchResult = searchService.searchData(searchRequest,moduleName,searchName);
+			searchResult = searchService.searchData(searchRequest,moduleName,searchName);
 		    Type type = new TypeToken<Map<String, Object>>() {}.getType();
 			Gson gson = new Gson();
 			Map<String, Object> data = gson.fromJson(searchResult.toString(), type);
@@ -62,6 +56,9 @@ public class SearchController {
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch(Exception e){
 			logger.error("Exception while searching for result: ",e);
+			if(null != searchResult)
+				return new ResponseEntity<>(searchResult, HttpStatus.OK);
+			else
 				throw e;
 		}
 	}

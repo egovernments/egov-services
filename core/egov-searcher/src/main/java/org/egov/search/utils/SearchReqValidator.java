@@ -32,7 +32,7 @@ public class SearchReqValidator {
 	private SearchUtils searchUtils;
 	
 	public void validate(SearchRequest searchRequest, String moduleName, String searchName) {
-		checkforNullChecks(searchRequest);
+		checkIfEmptySearch(searchRequest);
 		logger.info("Validating search request....");
 		Map<String, SearchDefinition> searchDefinitionMap = runner.getSearchDefinitionMap();
 		Definition searchDefinition = null;
@@ -74,7 +74,7 @@ public class SearchReqValidator {
 		
 	}
 
-	public void checkforNullChecks(SearchRequest searchRequest)
+	public void checkIfEmptySearch(SearchRequest searchRequest)
 	{
 		Map<String, String> errorMap = new HashMap<>();
 		if(searchRequest.getRequestInfo()==null)

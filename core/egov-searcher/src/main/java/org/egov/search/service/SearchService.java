@@ -2,9 +2,9 @@ package org.egov.search.service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.egov.SearchApplicationRunnerImpl;
 import org.egov.common.contract.response.ResponseInfo;
@@ -102,5 +102,29 @@ public class SearchService {
 		
 		return documentContext.jsonString().toString();
 		
+	}
+
+	/**+
+	 *
+	 * @param searchCriteriafromBody :- search criteria coming from request body
+	 * @param searchCriteriafromUrl	:- search criteria coming from url query params
+	 * @return	search criteria with combination of both criterias
+	 */
+	public HashMap<String,String> fetchSearchCriteria(HashMap<String,String> searchCriteriafromBody,HashMap<String,String>searchCriteriafromUrl)
+	{
+		if((searchCriteriafromBody==null)&&((searchCriteriafromUrl==null)||(searchCriteriafromUrl.isEmpty())))
+		{
+			return null;
+		}
+		else if((searchCriteriafromUrl==null)&&searchCriteriafromUrl.isEmpty()){
+			return searchCriteriafromBody;
+		}
+		else if((searchCriteriafromBody==null)&&(!searchCriteriafromUrl.isEmpty())){
+			return 	searchCriteriafromUrl;
+		}
+		else{
+			searchCriteriafromBody.putAll(searchCriteriafromUrl);
+			return searchCriteriafromBody;
+		}
 	}
 }

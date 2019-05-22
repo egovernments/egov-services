@@ -38,6 +38,7 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
   searchReqParam.calculationType = config.CALCULATON_TYPE;
 
   let nocfee = 0;
+  let buidingnocfees = [];
 
   for (
     let i = 0;
@@ -79,7 +80,24 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
           : config.MIN_PROVISIONAL;
       buidingnocfee = max(buidingnocfee, minimumFee);
     }
-    nocfee += buidingnocfee;
+
+    //calculation logic for multiple buildings --currently sum
+    buidingnocfees.push(buidingnocfee);
+  }
+  switch (config.MULTI_BUILDING_CALC_METHOD) {
+    case "SUM":
+      nocfee = buidingnocfees.reduce((a, b) => a + b, 0);
+      break;
+    case "AVERAGE":
+      nocfee =
+        buidingnocfees.reduce((a, b) => a + b, 0) / buidingnocfees.length;
+      break;
+    case "MAX":
+      nocfee = Math.max(...buidingnocfees);
+      break;
+    case "MIN":
+      nocfee = Math.min(...buidingnocfees);
+      break;
   }
   const feeEstimate = {
     category: "TAX",

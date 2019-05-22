@@ -112,7 +112,7 @@ public class SearchService {
 	 */
 	public HashMap<String,String> fetchSearchCriteria(HashMap<String,String> searchCriteriafromBody,HashMap<String,String>searchCriteriafromUrl)
 	{
-		if(((searchCriteriafromBody == null) || searchCriteriafromBody.isEmpty()) && ((searchCriteriafromUrl == null) && searchCriteriafromUrl.isEmpty()))
+		if(((searchCriteriafromBody == null) || searchCriteriafromBody.isEmpty()) && ((searchCriteriafromUrl == null) || searchCriteriafromUrl.isEmpty()))
 		{
 			return null;
 		}
@@ -121,7 +121,7 @@ public class SearchService {
 			if((searchCriteriafromUrl==null)||searchCriteriafromUrl.isEmpty()){
 				return searchCriteriafromBody;
 			}
-			else if((searchCriteriafromBody==null)&&(!searchCriteriafromUrl.isEmpty())){
+			else if((searchCriteriafromBody==null)||searchCriteriafromBody.isEmpty()){
 				return 	searchCriteriafromUrl;
 			}
 			else{

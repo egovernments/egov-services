@@ -11,16 +11,34 @@ ServiceMaps:
       isBulk: true
       timeStampField: $.auditDetails.createdTime
       jsonPath: $.Licenses
+      customJsonMapping:
+        indexMapping: {"Data":{"tradelicenseId":"","tradelicense":"","@timestamp":""}}
+        fieldMapping:
+        - inJsonPath: $.id
+          outJsonPath: $.Data.tradelicenseId
+        - inJsonPath: $
+          outJsonPath: $.Data.tradelicense
+        - inJsonPath: $.auditDetails.createdTime
+          outJsonPath: $.Data.@timestamp
 
   - topic: update-tl-tradelicense
     configKey: INDEX
     indexes:
     - name: tradelicense-v2
       type: licenses
-      id: $.id, $.tenantId
+      id: $.id, $.tenantid
       isBulk: true
-      timeStampField: $.auditDetails.createdTime
+      timeStampField: $.auditdetails.createdtime
       jsonPath: $.Licenses
+      customJsonMapping:
+        indexMapping: {"Data":{"tradelicenseId":"","tradelicense":"","@timestamp":""}}
+        fieldMapping:
+        - inJsonPath: $.id
+          outJsonPath: $.Data.tradelicenseId
+        - inJsonPath: $
+          outJsonPath: $.Data.tradelicense
+        - inJsonPath: $.auditdetails.createdtime
+          outJsonPath: $.Data.@timestamp
 
   - topic: search-tl-tradelicense
     configKey: LEGACYINDEX
@@ -30,7 +48,7 @@ ServiceMaps:
       id: $.id, $.tenantid
       isBulk: true
       timeStampField: $.auditdetails.createdtime
-      jsonPath: $.Licenses.*
+      jsonPath: $.Licenses
       customJsonMapping:
         indexMapping: {"Data":{"tradelicenseId":"","tradelicense":"","@timestamp":""}}
         fieldMapping:

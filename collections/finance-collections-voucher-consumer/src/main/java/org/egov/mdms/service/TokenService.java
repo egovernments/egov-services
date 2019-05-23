@@ -83,16 +83,15 @@ public class TokenService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, header);
 
         try {
-            LOGGER.debug("call:" + propertiesManager.getTokenGenUrl());
-            Object response = restTemplate.postForObject(propertiesManager.getUserHostUrl() + propertiesManager.getTokenGenUrl(),
+            LOGGER.debug("call: {}", propertiesManager.getTokenGenUrl());
+            Object response = restTemplate.postForObject(propertiesManager.getUserHostUrl().trim() + propertiesManager.getTokenGenUrl().trim(),
                     request, Object.class);
             if (response != null) {
 				String authToken = String.valueOf(((HashMap) response).get("access_token"));
-				LOGGER.debug("Generated AUth token : "+ authToken);
 				return authToken;
 			}
         } catch (RestClientException e) {
-            LOGGER.debug("Eror while getting admin authtoken"+ e);
+            LOGGER.error("Eror while getting admin authtoken : {}", e);
             return null;
         }
         return null;

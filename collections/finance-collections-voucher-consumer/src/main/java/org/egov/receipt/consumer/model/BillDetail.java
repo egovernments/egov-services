@@ -57,7 +57,7 @@ public class BillDetail {
 
     private String voucherHeader;
 
-//    private CollectionType collectionType;
+    private CollectionType collectionType;
 
     private String boundary;
 

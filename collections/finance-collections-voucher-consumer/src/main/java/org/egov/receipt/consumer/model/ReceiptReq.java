@@ -2,8 +2,6 @@ package org.egov.receipt.consumer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.egov.common.contract.request.RequestInfo;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;

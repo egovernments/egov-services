@@ -2,9 +2,11 @@ package org.egov.receipt.consumer.service;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.receipt.consumer.entity.VoucherIntegrationLog;
+import org.egov.receipt.consumer.model.FinanceMdmsModel;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.VoucherResponse;
 import org.egov.receipt.consumer.repository.VoucherIntegartionLogRepository;
+import org.egov.reciept.consumer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,62 +28,46 @@ public class EgfKafkaListener {
 	private InstrumentService instrumentService;
 	@Autowired
 	private VoucherIntegartionLogRepository voucherIntegartionLogRepository;
+	@Autowired
+	private PropertiesManager manager;
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(EgfKafkaListener.class);
 	private static final String RECEIPT_TYPE = "Receipt";
 	private static String voucherNumber = "";
 	
-	@KafkaListener(topics = "${egov.collection.receipt.voucher.save.topic}")
-    public void processToCreateReceiptVoucher(ConsumerRecord<String, String> record) {
-		ReceiptReq request = null;
-		LOGGER.debug("topic : " + record.topic() + "\t\t" + "value : " + record.value());
+	@KafkaListener(topics = {"${egov.collection.receipt.voucher.save.topic}","${egov.collection.receipt.voucher.cancel.topic}"})	
+    public void process(ConsumerRecord<String, String> record) {
         VoucherResponse voucherResponse = null;
+        ReceiptReq request = null;
+        FinanceMdmsModel finSerMdms = new FinanceMdmsModel();
         try {
-            request = objectMapper.readValue(record.value(), ReceiptReq.class);
-            if(LOGGER.isDebugEnabled())
-            	LOGGER.debug("Recieved reciept request : "+request);
-               if (voucherService.isVoucherCreationEnabled(request)) {
-            	   voucherResponse = voucherService.createReceiptVoucher(request);
-           		   LOGGER.debug("voucherResponse : "+voucherResponse);
-            	   if(voucherResponse != null){
-            		   String status = voucherResponse.getResponseInfo().getStatus();
-            		   voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
-            		   if(status.equals("201")){
-            				  LOGGER.debug("Voucher created successfully with voucher number : "+voucherNumber);
-            		   }
-            		   receiptService.updateReceipt(request, voucherResponse);
-            		   instrumentService.createInstrument(request, voucherResponse);
-            		   this.getBackupToDB(request,Status.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber);
-            	   }
-               }else{
-            	   this.getBackupToDB(request,Status.FAILED,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService());
-           		   LOGGER.debug("Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService());
-               }
+        	String topic = record.topic();
+        	request = objectMapper.readValue(record.value(), ReceiptReq.class);
+        	LOGGER.info("topic : {} ,  request : {}", topic, request);
+        	if(topic.equals(manager.getVoucherCreateTopic())){
+        		if (voucherService.isVoucherCreationEnabled(request, finSerMdms)) {
+        			voucherResponse = voucherService.createReceiptVoucher(request, finSerMdms);
+        			voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
+        			receiptService.updateReceipt(request, voucherResponse);
+        			instrumentService.createInstrument(request, voucherResponse);
+        			this.getBackupToDB(request,Status.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber);
+        		}else{
+        			//Todo : Status should be different
+        			this.getBackupToDB(request,Status.FAILED,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService());
+        		}
+        	}else if(topic.equals(manager.getVoucherCancelTopic())){
+                String voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
+                if(voucherService.isVoucherExists(request)){
+                	voucherService.cancelReceiptVoucher(request);
+                	instrumentService.cancelInstrument(request.getReceipt().get(0),request.getRequestInfo());
+     			   	this.getBackupToDB(request,Status.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!");
+                }else{
+                	this.getBackupToDB(request,Status.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber);
+                }
+        	}
         } catch (Exception e) {
         	this.getBackupToDB(request,Status.FAILED,e.getMessage());
        		LOGGER.error(e.getMessage());
-        }
-    }
-	@KafkaListener(topics = "${egov.collection.receipt.voucher.cancel.topic}")
-    public void processToCancelReceiptVoucher(ConsumerRecord<String, String> record) {
-		ReceiptReq request = null;
-		LOGGER.debug("topic : " + record.topic() + "\t\t" + "value : " + record.value());
-        try {
-            request = objectMapper.readValue(record.value(), ReceiptReq.class);
-            String voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
-            LOGGER.debug("Recieved reciept request : "+request);
-            if(voucherService.isVoucherExists(request)){
-            	voucherService.cancelReceiptVoucher(request);
-            	instrumentService.cancelInstrument(request.getReceipt().get(0));
- 			   	this.getBackupToDB(request,Status.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!");
-            }else{
-            	LOGGER.debug("Voucher is not found for voucherNumber : "+voucherNumber);
-            	this.getBackupToDB(request,Status.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber);
-            }
-        } catch (Exception e) {
-        	this.getBackupToDB(request,Status.FAILED,e.getMessage());
-        	if(LOGGER.isErrorEnabled())
-        		LOGGER.error(e.getMessage());
         }
     }
 	

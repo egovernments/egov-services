@@ -144,6 +144,14 @@ public class PropertiesManager {
     @Value("${token.authorizaton.key}")
     private String tokenAuhorizationtKey;
     
+    @Value("${egov.collection.receipt.voucher.save.topic}")
+    private String voucherCreateTopic;
+    
+    @Value("${egov.collection.receipt.voucher.cancel.topic}")
+    private String voucherCancelTopic;
+    
+    private String siAuthToken;
+    
     public String getErpURLBytenantId(String tenantId) throws VoucherCustomException {
     	try {
     		tenantId = tenantId.split(Pattern.quote("."))[1];

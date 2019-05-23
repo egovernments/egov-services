@@ -40,17 +40,19 @@
 
 package org.egov.receipt.consumer.service;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.service.TokenService;
 import org.egov.receipt.consumer.model.FinancialStatus;
 import org.egov.receipt.consumer.model.FinancialStatusResponse;
+import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.RequestInfoWrapper;
+import org.egov.receipt.consumer.repository.ServiceRequestRepository;
+import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.egov.reciept.consumer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class FinancialStatusService {
@@ -58,26 +60,21 @@ public class FinancialStatusService {
     public static final Logger LOGGER = LoggerFactory.getLogger(FinancialStatusService.class);
 
     @Autowired
-    private RestTemplate restTemplate;
+    private ServiceRequestRepository serviceRequestRepository;
+    
+    @Autowired
+	private ObjectMapper mapper;
 
     @Autowired
     private PropertiesManager propertiesManager;
 
-    @Autowired
-    private TokenService tokenService;
+    public FinancialStatus getByCode(String code, String tenantId, RequestInfo requestInfo) throws VoucherCustomException {
 
-    public FinancialStatus getByCode(String code, String tenantId) {
-
-        final String bd_url = propertiesManager.getEgfMasterHostUrl() + propertiesManager.getFinancialStatusesSearch() + "?tenantId="
-                + tenantId + "&moduleType=Instrument&code=" + code;
-
-        RequestInfo requestInfo = new RequestInfo();
+        final StringBuilder bd_url = new StringBuilder(propertiesManager.getEgfMasterHostUrl() + propertiesManager.getFinancialStatusesSearch() + "?tenantId="
+                + tenantId + "&moduleType=Instrument&code=" + code);
         RequestInfoWrapper reqWrapper = new RequestInfoWrapper();
-
-        requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
         reqWrapper.setRequestInfo(requestInfo);
-        LOGGER.debug("call:" + bd_url);
-        FinancialStatusResponse response = restTemplate.postForObject(bd_url, reqWrapper, FinancialStatusResponse.class);
+        FinancialStatusResponse response = mapper.convertValue(serviceRequestRepository.fetchResult(bd_url, reqWrapper, tenantId), FinancialStatusResponse.class);
         if (response.getFinancialStatuses() != null && !response.getFinancialStatuses().isEmpty())
             return response.getFinancialStatuses().get(0);
         else

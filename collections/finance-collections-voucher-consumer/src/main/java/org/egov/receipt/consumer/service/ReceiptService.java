@@ -39,32 +39,29 @@
  */
 
 package org.egov.receipt.consumer.service;
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.service.TokenService;
 import org.egov.receipt.consumer.model.Receipt;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.ReceiptResponse;
 import org.egov.receipt.consumer.model.VoucherResponse;
+import org.egov.receipt.consumer.repository.ServiceRequestRepository;
+import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.egov.reciept.consumer.config.PropertiesManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ReceiptService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(ReceiptService.class);
-    
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
-    private TokenService tokenService;
-
     @Autowired
     private PropertiesManager propertiesManager;
+    
+    @Autowired
+    private ServiceRequestRepository serviceRequestRepository;
+    
+    @Autowired
+	private ObjectMapper mapper;
 
     /**
      * 
@@ -72,20 +69,15 @@ public class ReceiptService {
      * @param voucherResponse
      * @return
      * Function is used to send the update of receipt with voucher number to collection service.
+     * @throws VoucherCustomException 
+     * @throws  
      */
-    public ReceiptResponse updateReceipt(ReceiptReq receiptRequest, VoucherResponse voucherResponse) {
-
-        RequestInfo requestInfo = new RequestInfo();
+    public ReceiptResponse updateReceipt(ReceiptReq receiptRequest, VoucherResponse voucherResponse) throws VoucherCustomException {
         Receipt receipt = receiptRequest.getReceipt().get(0);
-		requestInfo.setAuthToken(tokenService.generateAdminToken(receipt.getTenantId()));
-
+        StringBuilder url = new StringBuilder(propertiesManager.getCollectionsHostUrl() + propertiesManager.getReceiptsUpdate());
         receipt.getBill().get(0).getBillDetails().get(0)
                 .setVoucherHeader(voucherResponse.getVouchers().get(0).getVoucherNumber());
-
-        receiptRequest.setRequestInfo(requestInfo);
-       	LOGGER.debug("call:" + propertiesManager.getCollectionsHostUrl() + propertiesManager.getReceiptsUpdate());
-        return restTemplate.postForObject(propertiesManager.getCollectionsHostUrl() + propertiesManager.getReceiptsUpdate(), receiptRequest,
-                ReceiptResponse.class);
+        return mapper.convertValue(serviceRequestRepository.fetchResult(url, receiptRequest, receipt.getTenantId()), ReceiptResponse.class);
     }
 
 }

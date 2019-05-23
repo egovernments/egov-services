@@ -41,27 +41,26 @@
 package org.egov.receipt.consumer.service;
 
 import java.util.Collections;
-import org.egov.mdms.service.TokenService;
 import org.egov.receipt.consumer.model.FinancialStatus;
 import org.egov.receipt.consumer.model.Instrument;
 import org.egov.receipt.consumer.model.InstrumentContract;
 import org.egov.receipt.consumer.model.InstrumentRequest;
 import org.egov.receipt.consumer.model.InstrumentResponse;
-import org.egov.receipt.consumer.model.InstrumentStatusEnum;
 import org.egov.receipt.consumer.model.InstrumentVoucherContract;
 import org.egov.receipt.consumer.model.Receipt;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.VoucherResponse;
+import org.egov.receipt.consumer.repository.ServiceRequestRepository;
+import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.egov.reciept.consumer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @Service
 public class InstrumentService {
@@ -71,16 +70,16 @@ public class InstrumentService {
 	private static final String FINANCE_STATUS_NEW = "New";
 
 	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
-	private TokenService tokenService;
-
-	@Autowired
 	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private FinancialStatusService financialStatusService;
+	
+	@Autowired
+    private ServiceRequestRepository serviceRequestRepository;
+    
+    @Autowired
+	private ObjectMapper mapper;
 
 	/**
 	 * 
@@ -93,24 +92,18 @@ public class InstrumentService {
 		
 		try {
 			Receipt receipt = receiptRequest.getReceipt().get(0);
-			FinancialStatus status = financialStatusService.getByCode(FINANCE_STATUS_NEW, receipt.getTenantId());
-			RequestInfo requestInfo = new RequestInfo();
-			requestInfo.setAuthToken(tokenService.generateAdminToken(receipt.getTenantId()));
-			
+			FinancialStatus status = financialStatusService.getByCode(FINANCE_STATUS_NEW, receipt.getTenantId(), receiptRequest.getRequestInfo());
 			Instrument instrument = receipt.getInstrument();
 			InstrumentContract instrumentContract = instrument.toContract();
 			instrumentContract.setFinancialStatus(status);
 			if (voucherResponse != null) {
 				prepareInstrumentVoucher(instrumentContract, voucherResponse, receipt);
 			}
+			StringBuilder url = new StringBuilder(propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCreate());
 			InstrumentRequest request = new InstrumentRequest();
 			request.setInstruments(Collections.singletonList(instrumentContract));
-			request.setRequestInfo(requestInfo);
-			LOGGER.debug("call:" + propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCreate());
-			return restTemplate.postForObject(
-					propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCreate(), request,
-					InstrumentResponse.class);
-			
+			request.setRequestInfo(receiptRequest.getRequestInfo());
+			return mapper.convertValue(serviceRequestRepository.fetchResult(url, request, receipt.getTenantId()), InstrumentResponse.class);
 		} catch (Exception e) {
 			LOGGER.error("ERROR occured while creating instrument "+e.getStackTrace());
 		}
@@ -130,20 +123,16 @@ public class InstrumentService {
 	 * 
 	 * @param receipt
 	 * Function is used to cancel the instruments
+	 * @throws VoucherCustomException 
 	 */
-	public void cancelInstrument(Receipt receipt) {
+	public void cancelInstrument(Receipt receipt, RequestInfo requestInfo) throws VoucherCustomException {
+		StringBuilder url = new StringBuilder(propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel());
 		InstrumentRequest request = new InstrumentRequest();
-		this.setInstrumentRequest(request, receipt);
-		LOGGER.debug("call:" + propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel());
-		InstrumentResponse postForObject = restTemplate.postForObject(
-				propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel(), request,
-				InstrumentResponse.class);
-		LOGGER.debug("InstrumentResponse :::: " + postForObject);
+		this.setInstrumentRequest(request, receipt, requestInfo);
+		serviceRequestRepository.fetchResult(url, request, receipt.getTenantId());
 	}
 
-	private void setInstrumentRequest(InstrumentRequest request, Receipt receipt) {
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setAuthToken(tokenService.generateAdminToken(receipt.getTenantId()));
+	private void setInstrumentRequest(InstrumentRequest request, Receipt receipt, RequestInfo requestInfo) {
 		Instrument instrument = receipt.getInstrument();
 		InstrumentContract instrumentContract = instrument.toContract();
 		request.setInstruments(Collections.singletonList(instrumentContract));

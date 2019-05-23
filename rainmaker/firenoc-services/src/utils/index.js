@@ -242,13 +242,28 @@ export const mergeSearchResults = async response => {
   return result;
 };
 
-export const addUUIDAndAuditDetails = request => {
-  request.FireNOCs = request.FireNOCs.map(fireNOC => {
-    fireNOC.id = uuidv1();
-    fireNOC.fireNOCDetails.id = uuidv1();
-    //id gen service should be integrated here
-    fireNOC.fireNOCDetails.applicationNumber = `PB-NOC-${rn(options)}`;
-    fireNOC.fireNOCDetails.buildings = fireNOC.fireNOCDetails.buildings.map(
+
+export const addIDGenId=async(requestInfo,idRequests)=>{
+  let requestBody={
+    RequestInfo:requestInfo,
+    idRequests
+  }
+  let idGenResponse=await httpRequest({
+    endPoint: "/egov-idgen/id/_generate",
+    requestBody
+  });
+  return get(idGenResponse,"idResponses[0].id")
+}
+
+export const addUUIDAndAuditDetails =async (request) => {
+  let {FireNOCs,RequestInfo}=request;
+  //for loop should be replaced new alternative
+  for (var i = 0; i < FireNOCs.length; i++) {
+    FireNOCs[i].id = uuidv1();
+    FireNOCs[i].fireNOCDetails.id = uuidv1();
+    FireNOCs[i].fireNOCDetails.applicationNumber=await addIDGenId(RequestInfo,[{tenantId:FireNOCs[i].tenantId,format:`PB-FN-APP-[cy:yyyy/mm/dd]-[SEQ_EG_TL_APL]`}]);
+    console.log(FireNOCs[i].fireNOCDetails.applicationNumber);
+    FireNOCs[i].fireNOCDetails.buildings = FireNOCs[i].fireNOCDetails.buildings.map(
       building => {
         building.id = uuidv1();
         building.applicationDocuments = building.applicationDocuments.map(
@@ -266,22 +281,22 @@ export const addUUIDAndAuditDetails = request => {
         return building;
       }
     );
-    fireNOC.fireNOCDetails.propertyDetails.address.id = uuidv1();
-    fireNOC.fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
-    fireNOC.fireNOCDetails.applicantDetails.owners = fireNOC.fireNOCDetails.applicantDetails.owners.map(
+    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = uuidv1();
+    FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
+    FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[i].fireNOCDetails.applicantDetails.owners.map(
       owner => {
         owner.id = owner.id ? owner.id : uuidv1();
         return owner;
       }
     );
-    fireNOC.auditDetails = {
+    FireNOCs[i].auditDetails = {
       createdBy: "Murali M",
       lastModifiedBy: "",
       createdTime: new Date().getTime(),
       lastModifiedTime: 0
     };
-    return fireNOC;
-  });
+  }
+  request.FireNOCs=FireNOCs;
   return request;
 };
 

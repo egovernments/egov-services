@@ -2,13 +2,17 @@ import { Router } from "express";
 import producer from "../kafka/producer";
 import { requestInfoToResponseInfo ,addUUIDAndAuditDetails} from "../utils";
 import {KAFKA_TOPICS_FIRENOC_CREATE} from '../envVariables'
+const asyncHandler = require('express-async-handler');
+// var Validator = require('swagger-model-validator');
+// var swaggerDocument = new Validator("../swagger.json");
+
 
 export default ({ config, db }) => {
   let api = Router();
-  api.post("/_create", function({ body }, res) {
+  api.post("/_create", asyncHandler(async ({ body }, res,next)=> {
     let payloads=[];
-    // console.log(body);
-    body=addUUIDAndAuditDetails(body);
+    body=await addUUIDAndAuditDetails(body);
+    console.log(body);
     payloads.push({
       topic: KAFKA_TOPICS_FIRENOC_CREATE,
       messages:JSON.stringify(body)
@@ -16,15 +20,12 @@ export default ({ config, db }) => {
     // console.log("before",payloads);
     // console.log(body);
     producer.send(payloads, function(err, data) {
-      // console.log(err);
-      // console.log(data);
       let response = {
         ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
         FireNOCs: body.FireNOCs
       };
       res.json(response);
     });
-    // res.json("");
-  });
+  }));
   return api;
 };

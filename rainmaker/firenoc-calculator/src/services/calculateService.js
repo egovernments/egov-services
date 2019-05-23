@@ -37,6 +37,33 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
     calculateCriteria.fireNOC.fireNOCDetails.fireNOCType;
   searchReqParam.calculationType = config.CALCULATON_TYPE;
 
+  let calculation = {
+    applicationNumber: null,
+    fireNoc: null,
+    tenantId: searchReqParam.tenantId,
+    taxHeadEstimates: []
+  };
+  const feeEstimate = await calculateNOCFee(calculateCriteria, config, pool);
+  calculation.taxHeadEstimates.push(feeEstimate);
+  if (calculateCriteria.fireNOC.fireNOCDetails.adhocPenalty) {
+    const adhocPenaltyEstimate = calculateAdhocPenalty(calculateCriteria);
+    calculation.taxHeadEstimates.push(adhocPenaltyEstimate);
+  }
+  if (calculateCriteria.fireNOC.fireNOCDetails.adhocRebate) {
+    const adhocRebateEstimate = calculateAdhocRebate(calculateCriteria);
+    calculation.taxHeadEstimates.push(adhocRebateEstimate);
+  }
+  //   const taxEstimate = await calculateTaxes(
+  //     calculateCriteria,
+  //     config,
+  //     calculation
+  //   );
+  //   calculation.taxHeadEstimates.push(taxEstimate);
+
+  return calculation;
+};
+
+const calculateNOCFee = async (calculateCriteria, config, pool) => {
   let nocfee = 0;
   let buidingnocfees = [];
 
@@ -100,16 +127,29 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
       break;
   }
   const feeEstimate = {
-    category: "TAX",
+    category: "FEE",
     taxHeadCode: "FIRENOC_FEES",
     estimateAmount: nocfee
   };
-  let calculation = {
-    applicationNumber: null,
-    fireNoc: null,
-    tenantId: searchReqParam.tenantId,
-    taxHeadEstimates: []
-  };
-  calculation.taxHeadEstimates.push(feeEstimate);
-  return calculation;
+  return feeEstimate;
 };
+
+const calculateAdhocPenalty = calculateCriteria => {
+  const adhocPenaltyEstimate = {
+    category: "PENALTY",
+    taxHeadCode: "FIRENOC_ADHOC_PENALTY",
+    estimateAmount: calculateCriteria.fireNOC.fireNOCDetails.adhocPenalty
+  };
+  return adhocPenaltyEstimate;
+};
+
+const calculateAdhocRebate = calculateCriteria => {
+  const adhocRebateEstimate = {
+    category: "REBATE",
+    taxHeadCode: "FIRENOC_ADHOC_REBATE",
+    estimateAmount: calculateCriteria.fireNOC.fireNOCDetails.adhocRebate
+  };
+  return adhocRebateEstimate;
+};
+
+const calculateTaxes = (calculateCriteria, config, calculations) => {};

@@ -27,7 +27,12 @@ public class APIDetails {
 
 	@JsonProperty("customQueryParam")
 	public String customQueryParam;
-	
+
+	@NotNull
+	@JsonProperty("startingOffset")
+	public Integer startingOffset;
+
+
 	@NotNull
 	@JsonProperty("paginationDetails")
 	public PaginationDetails paginationDetails;

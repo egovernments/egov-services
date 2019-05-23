@@ -102,7 +102,7 @@ public class LegacyIndexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(1);
 
 	/**
@@ -170,7 +170,8 @@ public class LegacyIndexService {
 				if (threadRun) {
 					log.info("JobStarted: " + legacyIndexRequest.getJobId());
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
-					Integer offset = 0;
+					Integer offset = legacyIndexRequest.getApiDetails().getStartingOffset() == null ?
+							0 : legacyIndexRequest.getApiDetails().getStartingOffset();
 					Integer count = 0;
 					Integer presentCount = 0;
 					Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()

@@ -87,7 +87,7 @@ public class EgfKafkaListener {
 	}
 	
 	private void prepareVoucherIntegrationLog(VoucherIntegrationLog voucherIntegrationLog, ReceiptReq request){
-		voucherIntegrationLog.setReferenceNumber(request.getReceipt().get(0).getReceiptNumber());
+		voucherIntegrationLog.setReferenceNumber(request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
 		ObjectMapper mappper = new ObjectMapper();
 		try {
 			String jsonReq = mappper.writeValueAsString(request);

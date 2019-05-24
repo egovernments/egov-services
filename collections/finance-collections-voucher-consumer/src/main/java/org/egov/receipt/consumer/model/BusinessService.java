@@ -22,4 +22,5 @@ public class BusinessService {
 	private String subscheme;
 	private Long validFrom;
 	private Long validTo;
+	private String businessService;
 }

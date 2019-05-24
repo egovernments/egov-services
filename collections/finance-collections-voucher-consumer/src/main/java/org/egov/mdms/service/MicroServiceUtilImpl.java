@@ -1,7 +1,6 @@
 package org.egov.mdms.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +26,9 @@ import com.jayway.jsonpath.JsonPath;
 @Service
 public class MicroServiceUtilImpl implements MicroServiceUtil{
 	private static final String FIN_MODULE_NAME = "FinanceModule";
+	private static final String BILLSERVICE_MODULE_NAME = "BillingService";
 	@Autowired
 	private PropertiesManager manager;
-	@Autowired
-	private ModuleDetail moduleDetail;
 	@Autowired
 	private MdmsCriteria mdmscriteria;
 	@Autowired
@@ -81,12 +79,11 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 	 */
 	public void getFinanceServiceMdmsData(String tenantId,String businessServiceCode, RequestInfo requestInfo, FinanceMdmsModel finSerMdms) throws VoucherCustomException{
 		StringBuilder mdmsUrl = new StringBuilder(manager.getMdmsHostUrl()+manager.getMdmsSearchUrl());
-        ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
-        this.prepareMasterDetailsArray(masterDetailsList, businessServiceCode);
-        moduleDetail.setModuleName(FIN_MODULE_NAME);
-        moduleDetail.setMasterDetails(masterDetailsList);
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		this.addFinanceModule(moduleDetails, businessServiceCode);
+		this.addBillingServiceModule(moduleDetails, businessServiceCode);
         mdmscriteria.setTenantId(tenantId);
-        mdmscriteria.setModuleDetails(Arrays.asList(moduleDetail));
+        mdmscriteria.setModuleDetails(moduleDetails);
         mdmsrequest.setRequestInfo(requestInfo);
         mdmsrequest.setMdmsCriteria(mdmscriteria);
         try {
@@ -99,9 +96,32 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		}
 	}
 	
-	private void prepareMasterDetailsArray(ArrayList<MasterDetail> masterDetailsList,String businessServiceCode){
+	private void addFinanceModule(List<ModuleDetail> moduleDetails,String businessServiceCode){
+		ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
 		masterDetailsList.add(new MasterDetail("BusinessServiceMapping","[?(@.code=='" + businessServiceCode + "')]"));
 		masterDetailsList.add(new MasterDetail("TaxHeadMasterGlCodeMapping","[?(@.billingservicecode=='" + businessServiceCode + "')]"));
+		moduleDetails.add(new ModuleDetail(FIN_MODULE_NAME, masterDetailsList));
 	}
-	
+
+	private void addBillingServiceModule(List<ModuleDetail> moduleDetails,String businessServiceCode){
+		ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
+		masterDetailsList.add(new MasterDetail("BusinessService","[?(@.code=='" + businessServiceCode + "')]"));
+		moduleDetails.add(new ModuleDetail(BILLSERVICE_MODULE_NAME, masterDetailsList));
+	}
+
+	@Override
+	public String getBusinessServiceName(String tenantId,String code, RequestInfo requestInfo, FinanceMdmsModel finSerMdms) throws VoucherCustomException {
+		if(finSerMdms.getFinanceServiceMdmsData() == null){
+			this.getFinanceServiceMdmsData(tenantId, code, requestInfo, finSerMdms);
+		}
+		List<BusinessService> list = new ArrayList<>();
+		try {
+			if(finSerMdms.getFinanceServiceMdmsData() != null){
+				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.BillingService.BusinessService"),new TypeReference<List<BusinessService>>(){});
+			}
+		} catch (Exception e) {
+			throw new VoucherCustomException("FAILED","Error while parsing mdms data. Check the business/account head mapping json file.");
+		}
+		return !list.isEmpty() ? list.get(0).getBusinessService() : code;
+	}
 }

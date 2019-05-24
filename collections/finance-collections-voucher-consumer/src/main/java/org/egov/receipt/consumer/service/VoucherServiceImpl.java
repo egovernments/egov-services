@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.mdms.service.MicroServiceUtil;
-import org.egov.mdms.service.TokenService;
 import org.egov.receipt.consumer.model.AccountDetail;
 import org.egov.receipt.consumer.model.AppConfigValues;
 import org.egov.receipt.consumer.model.Bill;
@@ -50,8 +49,6 @@ public class VoucherServiceImpl implements VoucherService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 	@Autowired
-	private TokenService tokenService;
-	@Autowired
 	private MicroServiceUtil microServiceUtil;
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -79,14 +76,12 @@ public class VoucherServiceImpl implements VoucherService {
 		String tenantId = receipt.getTenantId();
 		final StringBuilder voucher_create_url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId)
 				+ propertiesManager.getVoucherCreateUrl());
-		RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
 		VoucherRequest voucherRequest = new VoucherRequest();
 		Voucher voucher = new Voucher();
 		voucher.setTenantId(tenantId);
 		this.setVoucherDetails(voucher, receipt, tenantId, receiptRequest.getRequestInfo(), finSerMdms);
 		voucherRequest.setVouchers(Collections.singletonList(voucher));
-		voucherRequest.setRequestInfo(requestInfo);
+		voucherRequest.setRequestInfo(receiptRequest.getRequestInfo());
 		voucherRequest.setTenantId(tenantId);
 		return mapper.convertValue(serviceRequestRepository.fetchResult(voucher_create_url, voucherRequest, tenantId), VoucherResponse.class);
 	}
@@ -211,7 +206,8 @@ public class VoucherServiceImpl implements VoucherService {
 		List<TaxHeadMaster> taxHeadMasterByBusinessServiceCode = this.getTaxHeadMasterByBusinessServiceCode(tenantId,
 				bsCode, requestInfo, finSerMdms);
 		BusinessService businessService = serviceByCode.get(0);
-		voucher.setName(bsCode);
+		String businessServiceName = microServiceUtil.getBusinessServiceName(tenantId, bsCode, requestInfo, finSerMdms);
+		voucher.setName(businessServiceName);
 		voucher.setType(RECEIPTS_VOUCHER_TYPE);
 		voucher.setFund(new Fund());
 		voucher.getFund().setCode(businessService.getFund());
@@ -226,7 +222,7 @@ public class VoucherServiceImpl implements VoucherService {
 		String schemeCode = businessService.getScheme() != null & !StringUtils.isEmpty(businessService.getScheme())
 				? businessService.getScheme() : null;
 		voucher.getScheme().setCode(schemeCode);
-		voucher.setDescription(bsCode + " Receipt");
+		voucher.setDescription(businessServiceName + " Receipt");
 		// checking Whether manualReceipt date will be consider as
 		// voucherdate
 		if (billDetail.getManualReceiptDate() != null && billDetail.getManualReceiptDate().longValue() != 0
@@ -239,7 +235,7 @@ public class VoucherServiceImpl implements VoucherService {
 		voucher.setModuleId(Long.valueOf(egModules != null ? egModules.getId().toString() : COLLECTIONS_EG_MODULES_ID));
 
 		voucher.setSource(
-				propertiesManager.getReceiptViewSourceUrl() + "?selectedReceipts=" + receipt.getReceiptNumber());
+				propertiesManager.getReceiptViewSourceUrl() + "?selectedReceipts=" + receipt.getBill().get(0).getBillDetails().get(0).getReceiptNumber());
 
 		voucher.setLedgers(new ArrayList<>());
 		amountMapwithGlcode = new LinkedHashMap<>();

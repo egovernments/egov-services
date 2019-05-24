@@ -79,23 +79,27 @@ public class DataTransformationService {
 		try {
 			kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
 			for (int i = 0; i < kafkaJsonArray.length(); i++) {
+				String id = null;
 				if (null != kafkaJsonArray.get(i)) {
 					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
+					id = indexerUtils.buildIndexId(index, stringifiedObject);
 					if (isCustom) {
 						String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject);
-						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, customIndexJson);
+						jsonTobeIndexed.append(customIndexJson);
+/*						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, customIndexJson);
 						if (null != builder)
-							jsonTobeIndexed = builder;
+							jsonTobeIndexed = builder;*/
 					} else {
-						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, null);
+						jsonTobeIndexed.append(stringifiedObject);
+/*						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, null);
 						if (null != builder)
-							jsonTobeIndexed = builder;
+							jsonTobeIndexed = builder;*/
 					}
 				} else {
 					log.info("null json in kafkajsonarray, index: " + i);
 					continue;
 				}
-				indexerService.indexWithESId(index, jsonTobeIndexed.toString());
+				indexerService.indexWithESId(index, jsonTobeIndexed.toString(), id);
 				log.info("indexed with id!!!!!");
 			}
 			result = jsonTobeIndexed.toString();

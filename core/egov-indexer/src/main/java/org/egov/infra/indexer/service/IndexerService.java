@@ -121,13 +121,9 @@ public class IndexerService {
 	 */
 	public void validateAndIndex(String finalJson, String url, Index index) throws Exception {
 		if (!StringUtils.isEmpty(finalJson)) {
-			if (finalJson.startsWith("{ \"index\""))
-				bulkIndexer.indexJsonOntoES(url.toString(), finalJson, index);
-			else 
-				indexWithESId(index, finalJson);
+			bulkIndexer.indexJsonOntoES(url.toString(), finalJson, index);
 		} else {
 			log.error("Indexing will not be done, please modify the data and retry.");
-			log.error("Object: " + finalJson);
 		}
 	}
 
@@ -139,10 +135,9 @@ public class IndexerService {
 	 * @param index
 	 * @throws Exception
 	 */
-	public void indexWithESId(Index index, String finalJson) throws Exception {
+	public void indexWithESId(Index index, String finalJson, String id) throws Exception {
 		StringBuilder urlForNonBulk = new StringBuilder();
-		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
-				.append("_index");
+		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append(id);
 		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson, index);
 	}
 

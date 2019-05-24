@@ -45,11 +45,11 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
   };
   const feeEstimate = await calculateNOCFee(calculateCriteria, config, pool);
   calculation.taxHeadEstimates.push(feeEstimate);
-  if (calculateCriteria.fireNOC.fireNOCDetails.adhocPenalty) {
+  if (calculateCriteria.fireNOC.fireNOCDetails.additionalDetail.adhocPenalty) {
     const adhocPenaltyEstimate = calculateAdhocPenalty(calculateCriteria);
     calculation.taxHeadEstimates.push(adhocPenaltyEstimate);
   }
-  if (calculateCriteria.fireNOC.fireNOCDetails.adhocRebate) {
+  if (calculateCriteria.fireNOC.fireNOCDetails.additionalDetail.adhocRebate) {
     const adhocRebateEstimate = calculateAdhocRebate(calculateCriteria);
     calculation.taxHeadEstimates.push(adhocRebateEstimate);
   }
@@ -138,7 +138,8 @@ const calculateAdhocPenalty = calculateCriteria => {
   const adhocPenaltyEstimate = {
     category: "PENALTY",
     taxHeadCode: "FIRENOC_ADHOC_PENALTY",
-    estimateAmount: calculateCriteria.fireNOC.fireNOCDetails.adhocPenalty
+    estimateAmount:
+      calculateCriteria.fireNOC.fireNOCDetails.additionalDetail.adhocPenalty
   };
   return adhocPenaltyEstimate;
 };
@@ -147,7 +148,8 @@ const calculateAdhocRebate = calculateCriteria => {
   const adhocRebateEstimate = {
     category: "REBATE",
     taxHeadCode: "FIRENOC_ADHOC_REBATE",
-    estimateAmount: calculateCriteria.fireNOC.fireNOCDetails.adhocRebate
+    estimateAmount:
+      calculateCriteria.fireNOC.fireNOCDetails.additionalDetail.adhocRebate
   };
   return adhocRebateEstimate;
 };

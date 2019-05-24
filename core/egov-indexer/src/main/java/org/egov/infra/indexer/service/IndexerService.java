@@ -107,7 +107,7 @@ public class IndexerService {
 		} else {
 			jsonToBeIndexed = dataTransformationService.buildJsonForIndex(index, kafkaJson, isBulk, false);
 		}
-		validateAndIndex(jsonToBeIndexed, url.toString(), index);
+		//validateAndIndex(jsonToBeIndexed, url.toString(), index);
 		log.info("Total time taken: " + ((new Date().getTime()) - startTime) + "ms");
 	}
 

@@ -35,7 +35,9 @@ public class DataTransformationService {
 	@Autowired
 	private IndexerUtils indexerUtils;
 	
-
+	@Autowired
+	private IndexerService indexerService;
+	
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;
 
@@ -93,6 +95,8 @@ public class DataTransformationService {
 					log.info("null json in kafkajsonarray, index: " + i);
 					continue;
 				}
+				indexerService.indexWithESId(index, jsonTobeIndexed.toString());
+				log.info("indexed with id!!!!!");
 			}
 			result = jsonTobeIndexed.toString();
 		} catch (Exception e) {

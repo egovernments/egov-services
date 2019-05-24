@@ -9,6 +9,7 @@ def notifier = "";
 
 try {
     node("slave"){
+        cleanWs disableDeferredWipeout: true
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
@@ -31,7 +32,6 @@ try {
           image_builder.publish(service_name, commit_id)
           image_builder.clean(service_name, commit_id)
         }
-        cleanWs disableDeferredWipeout: true, deleteDirs: true
     }
 } catch (e) {
     node{

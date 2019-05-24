@@ -101,7 +101,7 @@ public class LegacyIndexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
 
 	/**
@@ -294,6 +294,7 @@ public class LegacyIndexService {
 	public void childThreadExecutor(LegacyIndexRequest legacyIndexRequest, ObjectMapper mapper, Object response) {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
+			ObjectMapper mapper = indexerUtils.getObjectMapper();
 			public void run() {
 				if (threadRun) {									
 					try {
@@ -308,7 +309,7 @@ public class LegacyIndexService {
 							propertyResponse.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
 							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), propertyResponse);
 						}else {
-							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), response.toString());
+							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
 							//indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
 						}
 					}

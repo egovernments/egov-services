@@ -6,21 +6,18 @@ import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 // import util from "util";
-import initializeMDMS from "./utils/mdmsData";
 import db from "./db";
 import middleware from "./middleware";
 import api from "./api";
 import config from "./config.json";
 import tracer from "./middleware/tracer";
 import terminusOptions from "./utils/health";
-import { SERVER_PORT } from "./envVariables";
+import envVariables from "./envVariables";
 var swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger.json");
 const { createTerminus } = require("@godaddy/terminus");
 
-
 // const validator = require('swagger-express-validator');
-
 
 // const opts = {
 //   schema:swaggerDocument, // Swagger schema
@@ -70,19 +67,20 @@ app.use(middleware({ config, db }));
 // app.use(validator(opts));
 
 // api router
-//this should taken later for
-initializeMDMS(mdmsData => {
-  app.use("/", api({ config, db, mdmsData }));
 
-  //error handler middleware
-  app.use(function(err, req, res) {
-   console.log(err);
-   res.status(500);
-   res.send("Oops, something went wrong.")
-  });
+app.use("/", api({ config, db }));
 
-  app.server.listen(SERVER_PORT, () => {
-    console.log(`Started on port ${app.server.address().port}`);
-  });
+//error handler middleware
+app.use(function(err, req, res) {
+  console.log(err);
+  res.status(500);
+  res.send("Oops, something went wrong.");
 });
+
+console.log(envVariables.SERVER_PORT);
+
+app.server.listen(envVariables.SERVER_PORT, () => {
+  console.log(`Started on port ${app.server.address().port}`);
+});
+
 export default app;

@@ -2,7 +2,7 @@ serviceMaps:
  serviceName: fn-services
  mappings:
  - version: 1.0
-   description: Persists fireNOC details in EG_FN_FireNOC  table
+   description: Persists fireNOC details in eg_fn_firenoc  table
    fromTopic: save-fn-firenoc
    isTransaction: true
    queryMaps:
@@ -247,4 +247,5 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings[*][?({id} in @.uoms[*].id)].id
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.value
-       
+
+               

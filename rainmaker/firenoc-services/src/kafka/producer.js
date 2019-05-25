@@ -1,5 +1,5 @@
 var kafka = require("kafka-node");
-import {KAFKA_BROKER_HOST} from '../envVariables'
+import envVariables from "../envVariables";
 
 const Producer = kafka.Producer;
 let client;
@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === "development") {
   client = new kafka.Client();
   console.log("local - ");
 } else {
-  client = new kafka.KafkaClient({ kafkaHost: KAFKA_BROKER_HOST });
+  client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });
   console.log("cloud - ");
 }
 

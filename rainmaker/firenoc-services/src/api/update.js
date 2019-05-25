@@ -1,16 +1,16 @@
 import { Router } from "express";
 import producer from "../kafka/producer";
-import {KAFKA_TOPICS_FIRENOC_UPDATE} from '../envVariables'
+import envVariables from "../envVariables";
 
 export default ({ config, db }) => {
   let api = Router();
   api.post("/_update", function({ body }, res) {
-    let payloads=[];
+    let payloads = [];
     payloads.push({
-      topic: KAFKA_TOPICS_FIRENOC_UPDATE,
-      messages:JSON.stringify(body)
-    })
-    console.log("before",payloads);
+      topic: envVariables.KAFKA_TOPICS_FIRENOC_UPDATE,
+      messages: JSON.stringify(body)
+    });
+    console.log("before", payloads);
     producer.send(payloads, function(err, data) {
       console.log(err);
       console.log(data);

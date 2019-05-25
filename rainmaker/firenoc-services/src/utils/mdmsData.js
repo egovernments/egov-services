@@ -1,18 +1,9 @@
 import { httpRequest } from "./api";
+import envVariables from "../envVariables";
 
-export default (callback, requestInfo={}) => {
-  console.log(requestInfo);
+export default async (requestInfo = {}) => {
   var requestBody = {
-    RequestInfo: {
-      apiId: "Rainmaker",
-      ver: ".01",
-      action: "_search",
-      did: "1",
-      key: "",
-      msgId: "20170310130900|en_IN",
-      requesterId: "",
-      authToken: "f452cc70-1262-4d18-b784-1e7c1a6f76ea"
-    },
+    RequestInfo: requestInfo,
     MdmsCriteria: {
       tenantId: "pb.amritsar",
       moduleDetails: [
@@ -32,14 +23,12 @@ export default (callback, requestInfo={}) => {
       ]
     }
   };
-  httpRequest({ endPoint: "/egov-mdms-service/v1/_search", requestBody }).then(
-    mdmsResponse => {
-      console.log("success");
-      callback(mdmsResponse);
-    },
-    error => {
-      console.log("error");
-      callback(error);
-    }
-  );
+  var mdmsResponse = await httpRequest({
+    hostURL: envVariables.EGOV_MDMS_HOST,
+    endPoint: `${envVariables.EGOV_MDMS_CONTEXT_PATH}${
+      envVariables.EGOV_MDMS_SEARCH_ENPOINT
+    }`,
+    requestBody
+  });
+  return mdmsResponse;
 };

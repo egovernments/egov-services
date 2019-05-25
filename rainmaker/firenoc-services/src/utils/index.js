@@ -2,15 +2,10 @@ import uniqBy from "lodash/uniqBy";
 import uniq from "lodash/uniq";
 import get from "lodash/get";
 import { httpRequest } from "./api";
+import envVariables from "../envVariables";
 
 const uuidv1 = () => {
   return require("uuid/v4")();
-};
-
-var rn = require("random-number");
-var options = {
-  min: 100,
-  integer: true
 };
 
 export const requestInfoToResponseInfo = (requestinfo, success) => {
@@ -52,7 +47,10 @@ const getOwnerResponse = async uuids => {
     uuid: uuids
   };
   const response = await httpRequest({
-    endPoint: "/user/_search",
+    hostURL: envVariables.EGOV_USER_HOST,
+    endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
+      envVariables.EGOV_USER_SEARCH_ENDPOINT
+    }`,
     queryObject: [],
     requestBody,
     headers: []
@@ -242,53 +240,60 @@ export const mergeSearchResults = async response => {
   return result;
 };
 
-
-export const addIDGenId=async(requestInfo,idRequests)=>{
-  let requestBody={
-    RequestInfo:requestInfo,
+export const addIDGenId = async (requestInfo, idRequests) => {
+  let requestBody = {
+    RequestInfo: requestInfo,
     idRequests
-  }
-  let idGenResponse=await httpRequest({
-    endPoint: "/egov-idgen/id/_generate",
+  };
+  let idGenResponse = await httpRequest({
+    hostURL: envVariables.EGOV_IDGEN_HOST,
+    endPoint: `${envVariables.EGOV_IDGEN_CONTEXT_PATH}${
+      envVariables.EGOV_IDGEN_GENERATE_ENPOINT
+    }`,
     requestBody
   });
-  return get(idGenResponse,"idResponses[0].id")
-}
+  return get(idGenResponse, "idResponses[0].id");
+};
 
-export const addUUIDAndAuditDetails =async (request) => {
-  let {FireNOCs,RequestInfo}=request;
+export const addUUIDAndAuditDetails = async request => {
+  let { FireNOCs, RequestInfo } = request;
   //for loop should be replaced new alternative
   for (var i = 0; i < FireNOCs.length; i++) {
     FireNOCs[i].id = uuidv1();
     FireNOCs[i].fireNOCDetails.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicationNumber=await addIDGenId(RequestInfo,[{tenantId:FireNOCs[i].tenantId,format:`PB-FN-APP-[cy:yyyy/mm/dd]-[SEQ_EG_TL_APL]`}]);
-    console.log(FireNOCs[i].fireNOCDetails.applicationNumber);
-    FireNOCs[i].fireNOCDetails.buildings = FireNOCs[i].fireNOCDetails.buildings.map(
-      building => {
-        building.id = uuidv1();
-        building.applicationDocuments = building.applicationDocuments.map(
-          applicationDocument => {
-            applicationDocument.id = uuidv1();
-            return applicationDocument;
-          }
-        );
-        building.uoms = building.uoms.map(
-          uom => {
-            uom.id = uuidv1();
-            return uom;
-          }
-        );
-        return building;
-      }
+    FireNOCs[i].fireNOCDetails.applicationNumber = await addIDGenId(
+      RequestInfo,
+      [
+        {
+          tenantId: FireNOCs[i].tenantId,
+          format: envVariables.EGOV_APPLICATION_FORMATE
+        }
+      ]
     );
+    FireNOCs[i].fireNOCDetails.buildings = FireNOCs[
+      i
+    ].fireNOCDetails.buildings.map(building => {
+      building.id = uuidv1();
+      building.applicationDocuments = building.applicationDocuments.map(
+        applicationDocument => {
+          applicationDocument.id = uuidv1();
+          return applicationDocument;
+        }
+      );
+      building.uoms = building.uoms.map(uom => {
+        uom.id = uuidv1();
+        return uom;
+      });
+      return building;
+    });
     FireNOCs[i].fireNOCDetails.propertyDetails.address.id = uuidv1();
     FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[i].fireNOCDetails.applicantDetails.owners.map(
-      owner => {
-        owner.id = owner.id ? owner.id : uuidv1();
-        return owner;
-      }
-    );
+    FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
+      i
+    ].fireNOCDetails.applicantDetails.owners.map(owner => {
+      owner.id = owner.id ? owner.id : uuidv1();
+      return owner;
+    });
     FireNOCs[i].auditDetails = {
       createdBy: "Murali M",
       lastModifiedBy: "",
@@ -296,8 +301,35 @@ export const addUUIDAndAuditDetails =async (request) => {
       lastModifiedTime: 0
     };
   }
-  request.FireNOCs=FireNOCs;
+  request.FireNOCs = FireNOCs;
   return request;
+};
+
+export const createWorkFlow = async body => {
+  let processInstances = body.FireNOCs.map(fireNOC => {
+    return {
+      tenantId: fireNOC.tenantId,
+      businessService: BUSINESS_SERVICE,
+      businessId: fireNOC.fireNOCDetails.applicationNumber,
+      action: fireNOC.fireNOCDetails.action,
+      comment: fireNOC.fireNOCDetails.comment,
+      assignee: fireNOC.fireNOCDetails.assignee,
+      // sla: 0,
+      // previousStatus: null,
+      moduleName: BUSINESS_SERVICE
+    };
+  });
+  let requestBody = {
+    RequestInfo: requestInfo,
+    ProcessInstances: processInstances
+  };
+  await httpRequest({
+    hostURL: envVariables.EGOV_WORKFLOW_HOST,
+    endPoint: `${envVariables.EGOV_WORKFLOW_TRANSITION_PATH}${
+      envVariables.EGOV_WORKFLOW_TRANSITION_ENDPOINT
+    }`,
+    requestBody
+  });
 };
 
 export const addQueryArg = (url, queries = []) => {

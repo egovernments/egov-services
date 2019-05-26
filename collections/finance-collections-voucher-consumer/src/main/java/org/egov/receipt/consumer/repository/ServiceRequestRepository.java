@@ -26,7 +26,6 @@ public class ServiceRequestRepository {
 	private RestTemplate restTemplate;
 	@Autowired
 	private TokenService tokenService;
-	private int callCounter = 0;
 	/**
 	 * Fetches results from searcher framework based on the uri and request that define what is to be searched.
 	 * 
@@ -43,19 +42,14 @@ public class ServiceRequestRepository {
 		try {
 			response = restTemplate.postForObject(uri.toString(), request, Map.class);
 		}catch(HttpClientErrorException e) {
-			// callCounter is to avoid the recursive call on multiple unauthorized access.
-			if(e.getStatusCode().equals(HttpStatus.UNAUTHORIZED) && callCounter == 0){
-				log.error("Unauthorized accessed : Retrying with SYSTEM auth token.");
+			if(e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
+				log.error("Unauthorized accessed : Retrying http uri {} with SYSTEM auth token.",uri.toString());
 				response = this.retryHttpCallOnUnauthorizedAccess(uri, request, tenantId);
-			}else if(e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
-				// initializing to zero for next request call.
-				callCounter = 0;
-				log.error("Unauthorized accessed : Failed to access even after retrying with SYSTEM auth token : ",e);
-				throw new VoucherCustomException("FAILED","Failed to access uri : "+uri+" even after retrying with SYSTEM auth token");
+			}else{
+				log.error("Exception while fetching from searcher: ",e);
+				throw new VoucherCustomException("FAILED",e.getMessage());
 			}
 		}catch(Exception e) {
-			// initializing to zero for next request call.
-			callCounter = 0;
 			log.error("Exception while fetching from searcher: ",e);
 			throw new VoucherCustomException("FAILED","Exception while fetching from searcher.");
 		}
@@ -72,11 +66,16 @@ public class ServiceRequestRepository {
 				requestInfo = (RequestInfo) field.get(request);
 				requestInfo.setAuthToken(tokenService.generateAdminToken(tenantId));
 				ReflectionUtils.setField(field, request, requestInfo);
-				field = ReflectionUtils.findField(clazz, "requestInfo");
-				callCounter++;
-				return this.fetchResult(uri, request, tenantId);				
+				return restTemplate.postForObject(uri.toString(), request, Map.class);
+			}else{
+				throw new VoucherCustomException("FAILED","requestInfo properties is not found in uri "+uri.toString());
 			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
+		} catch(HttpClientErrorException e) {
+			if(e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
+				log.error("Unauthorized accessed : Even after retrying with SYSTEM auth token.");
+				throw new VoucherCustomException("FAILED","Error occurred even after retrying uri "+uri.toString()+" with SYSTEM auth token.");
+			}
+		}catch (IllegalArgumentException | IllegalAccessException e) {
 			log.error(e.getMessage());
 		}
 	    return null;

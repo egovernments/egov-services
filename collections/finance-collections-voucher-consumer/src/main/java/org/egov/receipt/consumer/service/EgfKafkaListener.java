@@ -1,5 +1,7 @@
 package org.egov.receipt.consumer.service;
 
+import java.util.Date;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.receipt.consumer.entity.VoucherIntegrationLog;
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
@@ -98,6 +100,7 @@ public class EgfKafkaListener {
 		voucherIntegrationLog.setVoucherNumber(voucherNumber);
 		voucherIntegrationLog.setType(RECEIPT_TYPE);
 		voucherIntegrationLog.setTenantId(request.getReceipt().get(0).getTenantId());
+		voucherIntegrationLog.setCreatedDate(new Date());
 	}
 }
 

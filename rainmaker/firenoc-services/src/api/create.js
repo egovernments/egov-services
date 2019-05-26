@@ -8,8 +8,6 @@ import {
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
 const asyncHandler = require("express-async-handler");
-// var Validator = require('swagger-model-validator');
-// var swaggerDocument = new Validator("../swagger.json");
 
 export default ({ config, db }) => {
   let api = Router();
@@ -25,8 +23,6 @@ export default ({ config, db }) => {
         topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
         messages: JSON.stringify(body)
       });
-      // console.log("before",payloads);
-      // console.log(body);
       producer.send(payloads, function(err, data) {
         let response = {
           ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),

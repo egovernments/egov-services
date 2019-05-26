@@ -1,5 +1,7 @@
 package org.egov.receipt.consumer.entity;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +21,5 @@ String type;
 String requestJson;
 String description;
 String tenantId;
+Date createdDate;
 }

@@ -57,11 +57,11 @@ const envVariables = {
   //user service configurations
   EGOV_USER_HOST:
     process.env.EGOV_USER_HOST || "https://egov-micro-dev.egovernments.org",
-  EGOV_USER_CONTEXT_PATH: process.env.EGOV_USER_CONTEXT_PATH || "/user/users",
+  EGOV_USER_CONTEXT_PATH: process.env.EGOV_USER_CONTEXT_PATH || "/user",
   EGOV_USER_CREATE_ENDPOINT:
-    process.env.EGOV_USER_CREATE_ENDPOINT || "/_createnovalidate",
+    process.env.EGOV_USER_CREATE_ENDPOINT || "/users/_createnovalidate",
   EGOV_USER_SEARCH_ENDPOINT:
-    process.env.EGOV_USER_SEARCH_ENDPOINT || "/user/_search",
+    process.env.EGOV_USER_SEARCH_ENDPOINT || "/_search",
   EGOV_USER_UPDATE_ENDPOINT:
     process.env.EGOV_USER_UPDATE_ENDPOINT || "/_updatenovalidate",
   EGOV_USER_USERNAME_PREFIX: process.env.EGOV_USER_USERNAME_PREFIX || "FN-",

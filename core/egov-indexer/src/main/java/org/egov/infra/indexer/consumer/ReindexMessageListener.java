@@ -37,7 +37,7 @@ public class ReindexMessageListener implements MessageListener<String, String> {
 	 * 1. Re-index
 	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
-		log.info("Topic: " + data.topic());		
+		log.info("Topic: " + data.topic() + " | Partition: "+data.partition());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		if(data.topic().equals(reindexTopic)) {
 			try {

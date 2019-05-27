@@ -37,7 +37,7 @@ public class PTCustomIndexMessageListener implements MessageListener<String, Str
 	 * index jobs: 1. PT custom index
 	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
-		log.info("Topic: " + data.topic());
+		log.info("Topic: " + data.topic() + " | Partition: "+data.partition());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		try {
 			PropertyRequest propertyRequest = mapper.readValue(data.value(), PropertyRequest.class);

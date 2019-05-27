@@ -38,7 +38,7 @@ public class LegacyIndexMessageListener implements MessageListener<String, Strin
 	 * 1. Legacy Index
 	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
-		log.info("Topic: " + data.topic());		
+		log.info("Topic: " + data.topic() + " | Partition: "+data.partition());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		if(data.topic().equals(legacyIndexTopic)) {
 			try {

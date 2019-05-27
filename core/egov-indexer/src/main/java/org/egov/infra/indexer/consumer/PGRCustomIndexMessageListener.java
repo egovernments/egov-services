@@ -34,7 +34,7 @@ public class PGRCustomIndexMessageListener implements MessageListener<String, St
 	 * index jobs: 1. PGR custom index
 	 */
 	public void onMessage(ConsumerRecord<String, String> data) {
-		log.info("Topic: " + data.topic());
+		log.info("Topic: " + data.topic() + " | Partition: "+data.partition());		
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		try {
 			ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);

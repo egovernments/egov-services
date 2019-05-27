@@ -101,8 +101,8 @@ public class LegacyIndexService {
 	@Value("${egov.core.index.thread.poll.ms}")
 	private Long indexThreadPollInterval;
 
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
-	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(5);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(1);
 
 	/**
 	 * Creates a legacy index job by making an entry into the eg_indexer_job and returns response with job identifiers.

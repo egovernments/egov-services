@@ -101,13 +101,11 @@ public class IndexerService {
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_bulk");
 		startTime = new Date().getTime();
-		String jsonToBeIndexed = new String();
 		if (null != index.getCustomJsonMapping()) {
-			jsonToBeIndexed = dataTransformationService.buildJsonForIndex(index, kafkaJson, isBulk, true);
+			dataTransformationService.constructBodyAndIndex(index, kafkaJson, isBulk, true);
 		} else {
-			jsonToBeIndexed = dataTransformationService.buildJsonForIndex(index, kafkaJson, isBulk, false);
+			dataTransformationService.constructBodyAndIndex(index, kafkaJson, isBulk, false);
 		}
-		//validateAndIndex(jsonToBeIndexed, url.toString(), index);
 		log.info("Total time taken: " + ((new Date().getTime()) - startTime) + "ms");
 	}
 
@@ -137,7 +135,7 @@ public class IndexerService {
 	 */
 	public void indexWithESId(Index index, String finalJson, String id) throws Exception {
 		StringBuilder urlForNonBulk = new StringBuilder();
-		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append(id);
+		urlForNonBulk.append(esHostUrl).append("/").append(index.getName()).append("/").append(index.getType()).append("/").append(id);
 		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson, index);
 	}
 

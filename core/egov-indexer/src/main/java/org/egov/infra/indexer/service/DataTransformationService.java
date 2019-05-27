@@ -64,7 +64,7 @@ public class DataTransformationService {
 
 	/**
 	 * Tranformation method that transforms the input data to match the es index as
-	 * per config
+	 * per config and sends it to es
 	 * 
 	 * @param index
 	 * @param kafkaJson
@@ -72,9 +72,8 @@ public class DataTransformationService {
 	 * @param isCustom
 	 * @return
 	 */
-	public String constructBodyAndIndex(Index index, String kafkaJson, boolean isBulk, boolean isCustom) {
+	public void constructBodyAndIndex(Index index, String kafkaJson, boolean isBulk, boolean isCustom) {
 		StringBuilder jsonTobeIndexed = null;
-		String result = null;
 		JSONArray kafkaJsonArray = null;
 		try {
 			kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
@@ -96,13 +95,11 @@ public class DataTransformationService {
 				}
 				indexerService.indexWithESId(index, jsonTobeIndexed.toString(), id);
 			}
-			result = jsonTobeIndexed.toString();
 		} catch (Exception e) {
 			indexerUtils.postToErrorQueue(kafkaJson, e);
 			log.error("Error while building jsonstring for indexing", e);
 		}
-
-		return result;
+		log.info("No. of records indexed: "+kafkaJsonArray.length());
 	}
 
 	/**

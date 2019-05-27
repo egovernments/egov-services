@@ -309,8 +309,8 @@ public class LegacyIndexService {
 							propertyResponse.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
 							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), propertyResponse);
 						}else {
-							indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
-							//indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+							//indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
 						}
 					}
 				} catch (Exception e) {

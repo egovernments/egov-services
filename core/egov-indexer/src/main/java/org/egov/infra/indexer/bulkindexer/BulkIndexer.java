@@ -47,7 +47,6 @@ public class BulkIndexer {
 			if(url.contains("_bulk")) {
 				response = restTemplate.postForObject(url.toString(), entity, Map.class);
 			}else {
-				log.info("url: "+url);
 				restTemplate.put(url.toString(), entity, Map.class);
 			}
 			if (url.contains("_bulk")) {

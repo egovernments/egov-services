@@ -260,6 +260,9 @@ public class VoucherServiceImpl implements VoucherService {
 		setNetReceiptAmount(voucher, receipt, requestInfo);
 		LOGGER.debug("amountMapwithGlcode  ::: {}", amountMapwithGlcode);
 		// Iterating map and setting the ledger details to voucher.
+		if(amountMapwithGlcode.size() == 0){
+			new VoucherCustomException("FAILED", "ZERO receipt found");
+		}
 		amountMapwithGlcode.entrySet().stream().forEach(entry -> {
 				AccountDetail accountDetail = new AccountDetail();
 				accountDetail.setGlcode(entry.getKey());
@@ -306,11 +309,14 @@ public class VoucherServiceImpl implements VoucherService {
 	 *             Function is used to set the paid amount as debit in finance
 	 *             system.
 	 */
-	private void setNetReceiptAmount(Voucher voucher, Receipt receipt, RequestInfo requestInfo) throws VoucherCustomException {
-		InstrumentAccountCodeContract instrumentAccountCode = this.getInstrumentAccountCode(receipt, requestInfo);
-		String glcode = instrumentAccountCode.getAccountCode().getGlcode();
+	private void setNetReceiptAmount(Voucher voucher, Receipt receipt, RequestInfo requestInfo)
+			throws VoucherCustomException {
 		BigDecimal amountPaid = receipt.getBill().get(0).getBillDetails().get(0).getAmountPaid();
-		amountMapwithGlcode.put(glcode, new BigDecimal(-amountPaid.doubleValue()));
+		if (amountPaid.compareTo(new BigDecimal(0)) != 0) {
+			InstrumentAccountCodeContract instrumentAccountCode = this.getInstrumentAccountCode(receipt, requestInfo);
+			String glcode = instrumentAccountCode.getAccountCode().getGlcode();
+			amountMapwithGlcode.put(glcode, new BigDecimal(-amountPaid.doubleValue()));
+		}
 	}
 
 	/**

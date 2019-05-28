@@ -260,8 +260,8 @@ public class VoucherServiceImpl implements VoucherService {
 		setNetReceiptAmount(voucher, receipt, requestInfo);
 		LOGGER.debug("amountMapwithGlcode  ::: {}", amountMapwithGlcode);
 		// Iterating map and setting the ledger details to voucher.
-		if(amountMapwithGlcode.size() == 0){
-			new VoucherCustomException("FAILED", "ZERO receipt found");
+		if(amountMapwithGlcode.isEmpty()){
+			new VoucherCustomException("FAILED", "This receipt does not require voucher creation.");
 		}
 		amountMapwithGlcode.entrySet().stream().forEach(entry -> {
 				AccountDetail accountDetail = new AccountDetail();

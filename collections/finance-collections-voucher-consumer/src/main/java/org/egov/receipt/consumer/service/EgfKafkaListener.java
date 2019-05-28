@@ -35,11 +35,11 @@ public class EgfKafkaListener {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(EgfKafkaListener.class);
 	private static final String RECEIPT_TYPE = "Receipt";
-	private static String voucherNumber = "";
 	
 	@KafkaListener(topics = {"${egov.collection.receipt.voucher.save.topic}","${egov.collection.receipt.voucher.cancel.topic}"})	
     public void process(ConsumerRecord<String, String> record) {
         VoucherResponse voucherResponse = null;
+        String voucherNumber = "";
         ReceiptReq request = null;
         FinanceMdmsModel finSerMdms = new FinanceMdmsModel();
         try {
@@ -52,23 +52,23 @@ public class EgfKafkaListener {
         			voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
         			receiptService.updateReceipt(request, voucherResponse);
         			instrumentService.createInstrument(request, voucherResponse);
-        			this.getBackupToDB(request,Status.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber);
+        			this.getBackupToDB(request,Status.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber,voucherNumber);
         		}else{
         			//Todo : Status should be different
-        			this.getBackupToDB(request,Status.FAILED,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService());
+        			this.getBackupToDB(request,Status.FAILED,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService(),voucherNumber);
         		}
         	}else if(topic.equals(manager.getVoucherCancelTopic())){
-                String voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
+                voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
                 if(voucherService.isVoucherExists(request)){
                 	voucherService.cancelReceiptVoucher(request);
                 	instrumentService.cancelInstrument(request.getReceipt().get(0),request.getRequestInfo());
-     			   	this.getBackupToDB(request,Status.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!");
+     			   	this.getBackupToDB(request,Status.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!",voucherNumber);
                 }else{
-                	this.getBackupToDB(request,Status.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber);
+                	this.getBackupToDB(request,Status.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber,voucherNumber);
                 }
         	}
         } catch (Exception e) {
-        	this.getBackupToDB(request,Status.FAILED,e.getMessage());
+        	this.getBackupToDB(request,Status.FAILED,e.getMessage(),voucherNumber);
        		LOGGER.error(e.getMessage());
         }
     }
@@ -76,19 +76,19 @@ public class EgfKafkaListener {
 	/**
 	 * function use to take a backup to DB after success/failure of voucher creation process.
 	 */
-	private void getBackupToDB(ReceiptReq request,Status status, String description){
+	private void getBackupToDB(ReceiptReq request,Status status, String description, String voucherNumber){
 		try {
 			VoucherIntegrationLog voucherIntegrationLog = new VoucherIntegrationLog();
 			voucherIntegrationLog.setStatus(status.toString());
 			voucherIntegrationLog.setDescription(description);
-			this.prepareVoucherIntegrationLog(voucherIntegrationLog, request);
+			this.prepareVoucherIntegrationLog(voucherIntegrationLog, request, voucherNumber);
 			voucherIntegartionLogRepository.saveVoucherIntegrationLog(voucherIntegrationLog);			
 		} catch (Exception e) {
 			LOGGER.error("ERROR occurred while doing a backup to databases. "+e.getMessage());
 		}
 	}
 	
-	private void prepareVoucherIntegrationLog(VoucherIntegrationLog voucherIntegrationLog, ReceiptReq request){
+	private void prepareVoucherIntegrationLog(VoucherIntegrationLog voucherIntegrationLog, ReceiptReq request, String voucherNumber){
 		voucherIntegrationLog.setReferenceNumber(request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
 		ObjectMapper mappper = new ObjectMapper();
 		try {

@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.receipt.consumer.entity.VoucherIntegrationLog;
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
+import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.VoucherResponse;
 import org.egov.receipt.consumer.repository.VoucherIntegartionLogRepository;
@@ -52,23 +53,23 @@ public class EgfKafkaListener {
         			voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
         			receiptService.updateReceipt(request, voucherResponse);
         			instrumentService.createInstrument(request, voucherResponse);
-        			this.getBackupToDB(request,Status.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber,voucherNumber);
+        			this.getBackupToDB(request,ProcessStatus.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber,voucherNumber);
         		}else{
         			//Todo : Status should be different
-        			this.getBackupToDB(request,Status.FAILED,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService(),voucherNumber);
+        			this.getBackupToDB(request,ProcessStatus.NA,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService(),voucherNumber);
         		}
         	}else if(topic.equals(manager.getVoucherCancelTopic())){
                 voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
                 if(voucherService.isVoucherExists(request)){
                 	voucherService.cancelReceiptVoucher(request);
                 	instrumentService.cancelInstrument(request.getReceipt().get(0),request.getRequestInfo());
-     			   	this.getBackupToDB(request,Status.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!",voucherNumber);
+     			   	this.getBackupToDB(request,ProcessStatus.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!",voucherNumber);
                 }else{
-                	this.getBackupToDB(request,Status.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber,voucherNumber);
+                	this.getBackupToDB(request,ProcessStatus.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber,voucherNumber);
                 }
         	}
         } catch (Exception e) {
-        	this.getBackupToDB(request,Status.FAILED,e.getMessage(),voucherNumber);
+        	this.getBackupToDB(request,ProcessStatus.FAILED,e.getMessage(),voucherNumber);
        		LOGGER.error(e.getMessage());
         }
     }
@@ -76,10 +77,10 @@ public class EgfKafkaListener {
 	/**
 	 * function use to take a backup to DB after success/failure of voucher creation process.
 	 */
-	private void getBackupToDB(ReceiptReq request,Status status, String description, String voucherNumber){
+	private void getBackupToDB(ReceiptReq request,ProcessStatus status, String description, String voucherNumber){
 		try {
 			VoucherIntegrationLog voucherIntegrationLog = new VoucherIntegrationLog();
-			voucherIntegrationLog.setStatus(status.toString());
+			voucherIntegrationLog.setStatus(status.name());
 			voucherIntegrationLog.setDescription(description);
 			this.prepareVoucherIntegrationLog(voucherIntegrationLog, request, voucherNumber);
 			voucherIntegartionLogRepository.saveVoucherIntegrationLog(voucherIntegrationLog);			
@@ -102,8 +103,4 @@ public class EgfKafkaListener {
 		voucherIntegrationLog.setTenantId(request.getReceipt().get(0).getTenantId());
 		voucherIntegrationLog.setCreatedDate(new Date());
 	}
-}
-
-enum Status{
-	FAILED,SUCCESS
 }

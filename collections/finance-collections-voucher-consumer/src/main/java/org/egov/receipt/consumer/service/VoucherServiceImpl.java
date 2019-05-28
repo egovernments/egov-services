@@ -24,6 +24,7 @@ import org.egov.receipt.consumer.model.Fund;
 import org.egov.receipt.consumer.model.InstrumentAccountCodeContract;
 import org.egov.receipt.consumer.model.InstrumentAccountCodeReq;
 import org.egov.receipt.consumer.model.InstrumentAccountCodeResponse;
+import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.Receipt;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.RequestInfo;
@@ -246,7 +247,7 @@ public class VoucherServiceImpl implements VoucherService {
 				List<TaxHeadMaster> findFirst = taxHeadMasterByBusinessServiceCode.stream()
 						.filter(tx -> tx.getTaxhead().equals(taxHeadCode)).collect(Collectors.toList());
 				if (findFirst != null && findFirst.isEmpty())
-					throw new VoucherCustomException("FAILED",
+					throw new VoucherCustomException(ProcessStatus.FAILED.name(),
 							"Taxhead code " + taxHeadCode + " is not mapped with BusinessServiceCode " + bsCode);
 				String glcode = findFirst.get(0).getGlcode();
 				if (amountMapwithGlcode.get(glcode) != null) {
@@ -261,7 +262,7 @@ public class VoucherServiceImpl implements VoucherService {
 		LOGGER.debug("amountMapwithGlcode  ::: {}", amountMapwithGlcode);
 		// Iterating map and setting the ledger details to voucher.
 		if(amountMapwithGlcode.isEmpty()){
-			new VoucherCustomException("FAILED", "This receipt does not require voucher creation.");
+			throw new VoucherCustomException(ProcessStatus.NA.name(), "This receipt does not require voucher creation.");
 		}
 		amountMapwithGlcode.entrySet().stream().forEach(entry -> {
 				AccountDetail accountDetail = new AccountDetail();
@@ -333,7 +334,7 @@ public class VoucherServiceImpl implements VoucherService {
 		List<BusinessService> propertyTaxBusinessService = microServiceUtil.getBusinessService(tenantId, bsCode,
 				requestInfo, finSerMdms);
 		if (propertyTaxBusinessService.isEmpty()) {
-			throw new VoucherCustomException("FAILED", "Business service is not mapped with business code : " + bsCode);
+			throw new VoucherCustomException(ProcessStatus.FAILED.name(), "Business service is not mapped with business code : " + bsCode);
 		}
 		List<BusinessService> collect = propertyTaxBusinessService.stream().filter(bs -> bs.getCode().equals(bsCode))
 				.collect(Collectors.toList());

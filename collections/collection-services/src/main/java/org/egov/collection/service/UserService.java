@@ -39,7 +39,8 @@ public class UserService {
 		UserResponse userResponse = null;
 		Map<String, String> response = new HashMap<>();
 		request.put("RequestInfo", requestInfo);
-		request.put("mobileNumber", phoneNo);
+		request.put("userName", phoneNo);
+		request.put("type", "CITIZEN");
 		request.put("tenantid", tenantId.split("\\.")[0]);
 		StringBuilder url = new StringBuilder();
 		url.append(properties.getUserHost()).append(properties.getUserSearchEnpoint());

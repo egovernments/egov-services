@@ -78,8 +78,11 @@ public class IdGenRepository {
                 .build()
                 .toUriString();
         try {
+        	log.info("Reqq: "+req);
+        	log.info("url: "+uri);
             IdGenerationResponse idGenerationResponse = restTemplate.postForObject(uri, req,
                     IdGenerationResponse.class);
+            log.info("idGenerationResponse: "+idGenerationResponse);
             return idGenerationResponse.getIdResponses().get(0).getId();
         } catch (HttpClientErrorException e) {
             log.error("ID Gen Service failure ", e);

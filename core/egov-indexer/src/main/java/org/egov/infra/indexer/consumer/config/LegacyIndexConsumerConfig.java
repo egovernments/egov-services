@@ -130,12 +130,11 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
 
 	public KafkaMessageListenerContainer<String, String> container() throws Exception {
 		setTopics();
-		ContainerProperties properties = new ContainerProperties(initializeTopicsAndPartitions()); 
+		ContainerProperties properties = new ContainerProperties(this.topics); 
 		properties.setPauseEnabled(true);
 		properties.setPauseAfter(0);
 		properties.setMessageListener(indexerMessageListener);
-		log.info("t: "+properties.getTopicPartitions().length);
-
+		
 		log.info("Custom KafkaListenerContainer built...");
 
 		return new KafkaMessageListenerContainer<>(consumerFactory(), properties);

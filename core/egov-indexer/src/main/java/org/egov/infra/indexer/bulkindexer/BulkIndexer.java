@@ -61,7 +61,7 @@ public class BulkIndexer {
 			indexerUtils.orchestrateListenerOnESHealth();
 		} catch (Exception e) {
 			indexerUtils.postToErrorQueue(indexJson, e);
-			log.error("Exception while trying to index to ES. Note: ES is not Down.", e);
+			log.error("Exception while trying to index to ES. Note: ES is not Down." + e);
 		}
 	}
 

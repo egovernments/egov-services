@@ -91,7 +91,7 @@ public class LegacyIndexService {
 
 	@Autowired
 	private PGRCustomDecorator pgrCustomDecorator;
-	
+
 	@Autowired
 	private PTCustomDecorator ptCustomDecorator;
 
@@ -105,7 +105,8 @@ public class LegacyIndexService {
 	private final ScheduledExecutorService schedulerofChildThreads = Executors.newScheduledThreadPool(1);
 
 	/**
-	 * Creates a legacy index job by making an entry into the eg_indexer_job and returns response with job identifiers.
+	 * Creates a legacy index job by making an entry into the eg_indexer_job and
+	 * returns response with job identifiers.
 	 * 
 	 * @param legacyindexRequest
 	 * @return
@@ -169,8 +170,8 @@ public class LegacyIndexService {
 				if (threadRun) {
 					log.info("JobStarted: " + legacyIndexRequest.getJobId());
 					ObjectMapper mapper = indexerUtils.getObjectMapper();
-					Integer offset = legacyIndexRequest.getApiDetails().getStartingOffset() == null ?
-							0 : legacyIndexRequest.getApiDetails().getStartingOffset();
+					Integer offset = legacyIndexRequest.getApiDetails().getStartingOffset() == null ? 0
+							: legacyIndexRequest.getApiDetails().getStartingOffset();
 					Integer count = 0;
 					Integer presentCount = 0;
 					Integer size = null != legacyIndexRequest.getApiDetails().getPaginationDetails().getMaxPageSize()
@@ -204,15 +205,7 @@ public class LegacyIndexService {
 								threadRun = false;
 								break;
 							} else {
-								List<Object> searchResponse = JsonPath.read(response,
-										legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								if(searchResponse.size() < size) {
-									for(long i = 0; i < 10000000; i++) {i = i;}
-									log.info("Retrying Offset: "+offset+" and Size: "+size);
-									response = restTemplate.postForObject(uri, request, Map.class);
-									searchResponse = JsonPath.read(response,
-											legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								}
+								List<Object> searchResponse = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
 								if (!CollectionUtils.isEmpty(searchResponse)) {
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
@@ -220,12 +213,9 @@ public class LegacyIndexService {
 									log.info("Size of res: " + searchResponse.size() + " and Count: " + count
 											+ " and offset: " + offset);
 								} else {
-									log.info("Request: " + request);
-									log.info("URI: " + uri);
-									log.info("Response: " + response);
 									if (count > size) {
 										count = (count - size) + presentCount;
-									}else if(count == size) {
+									} else if (count == size) {
 										count = presentCount;
 									}
 									log.info("Size Count FINAL: " + count);
@@ -235,7 +225,7 @@ public class LegacyIndexService {
 								}
 							}
 						} catch (Exception e) {
-							log.info("JOBFAILED!!! Offset: "+offset+" Size: "+size);
+							log.info("JOBFAILED!!! Offset: " + offset + " Size: " + size);
 							log.info("Request: " + request);
 							log.info("URI: " + uri);
 							log.error("Exception: ", e);
@@ -295,33 +285,65 @@ public class LegacyIndexService {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
 			ObjectMapper mapper = indexerUtils.getObjectMapper();
+
 			public void run() {
-				if (threadRun) {									
+				if (threadRun) {
 					try {
-					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
-						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
-								ServiceResponse.class);
-						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
-					} else {
-						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
-							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response), PropertyResponse.class);
-							propertyResponse.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
+						if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
+							ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
+									ServiceResponse.class);
+							PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
+						} else if (legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
+							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response),
+									PropertyResponse.class);
+							propertyResponse
+									.setProperties(ptCustomDecorator.transformData(propertyResponse.getProperties()));
 							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), propertyResponse);
-						}else {
-							//indexerService.esIndexer(legacyIndexRequest.getLegacyIndexTopic(), mapper.writeValueAsString(response));
-							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), response);
+						} else {
+							batchAndProduce(response, legacyIndexRequest);
 						}
+					} catch (Exception e) {
+						threadRun = false;
 					}
-				} catch (Exception e) {
 					threadRun = false;
 				}
 				threadRun = false;
 			}
-				threadRun = false;
-			}
 		};
-		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50, TimeUnit.MILLISECONDS);
+		schedulerofChildThreads.scheduleAtFixedRate(childThreadJob, 0, indexThreadPollInterval + 50,
+				TimeUnit.MILLISECONDS);
+	}
+	
+	
+	/**
+	 * Batches the input list to batches of 10 each and puts it onto the queue for processing.
+	 * 
+	 * @param response
+	 * @param legacyTopic
+	 */
+	private void batchAndProduce(Object response, LegacyIndexRequest legacyIndexRequest) {
+		List<Object> dataList = JsonPath.read(response, legacyIndexRequest.getApiDetails().getResponseJsonPath());
+		Map<String, Object> indexRequest = new HashMap<>();
+		int size = 10;
+		int i = 0;
+		while(i < dataList.size()) {
+			List<Object> batch = null;
+			int fromIndex = i;
+			int toIndex = fromIndex + size;
+			if(toIndex <= dataList.size()) {
+				batch = dataList.subList(fromIndex, toIndex);
+			}else {
+				if(fromIndex < dataList.size()) {
+					toIndex = dataList.size();
+					batch = dataList.subList(fromIndex, toIndex);
+				}
+			}
+			String key = legacyIndexRequest.getApiDetails().getResponseJsonPath().split("\\.")[1];
+			indexRequest.put(key, batch);
+			indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexRequest);
+			i = toIndex;
+		}
 	}
 
 }

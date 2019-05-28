@@ -42,6 +42,7 @@ package org.egov.reciept.consumer.config;
 
 import java.util.regex.Pattern;
 
+import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -162,7 +163,7 @@ public class PropertiesManager {
     			return httpProtocol+"://"+tenantId+"."+finCoeErpDomainName+"/";
     		}
 		} catch (Exception e) {
-			throw new VoucherCustomException("FAILED","ERROR occured while generating ERP url to interact with the finance coexistence. Please check the configuration in properties file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"ERROR occured while generating ERP url to interact with the finance coexistence. Please check the configuration in properties file.");
 		}
     }
 

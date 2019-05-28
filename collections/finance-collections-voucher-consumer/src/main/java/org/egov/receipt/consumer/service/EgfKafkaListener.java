@@ -9,6 +9,7 @@ import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.VoucherResponse;
 import org.egov.receipt.consumer.repository.VoucherIntegartionLogRepository;
+import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.egov.reciept.consumer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +69,10 @@ public class EgfKafkaListener {
                 	this.getBackupToDB(request,ProcessStatus.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber,voucherNumber);
                 }
         	}
-        } catch (Exception e) {
+        }catch(VoucherCustomException e){
+        	this.getBackupToDB(request,e.getStatus(),e.getMessage(),voucherNumber);
+        	LOGGER.error(e.getMessage());
+        }catch (Exception e) {
         	this.getBackupToDB(request,ProcessStatus.FAILED,e.getMessage(),voucherNumber);
        		LOGGER.error(e.getMessage());
         }

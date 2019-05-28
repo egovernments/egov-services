@@ -10,6 +10,7 @@ import org.egov.receipt.consumer.model.MasterDetail;
 import org.egov.receipt.consumer.model.MdmsCriteria;
 import org.egov.receipt.consumer.model.MdmsCriteriaReq;
 import org.egov.receipt.consumer.model.ModuleDetail;
+import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.TaxHeadMaster;
 import org.egov.receipt.consumer.repository.ServiceRequestRepository;
@@ -49,7 +50,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.BusinessServiceMapping"),new TypeReference<List<BusinessService>>(){});
 			}			
 		} catch (Exception e) {
-			throw new VoucherCustomException("FAILED","Error while parsing mdms data. Check the business/account head mapping json file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data. Check the business/account head mapping json file.");
 		}
 		return list;
 	}
@@ -65,7 +66,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.TaxHeadMasterGlCodeMapping"),new TypeReference<List<TaxHeadMaster>>(){});
 			}			
 		} catch (Exception e) {
-			throw new VoucherCustomException("FAILED","Error while parsing mdms data. Check the business/account head mapping json file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data. Check the business/account head mapping json file.");
 		}
 		return list;
 	}
@@ -92,7 +93,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
         } catch (ServiceCallException e) {
 			
         } catch (Exception e) {
-        	throw new VoucherCustomException("FAILED","Error Occured While calling the URL : "+mdmsUrl);
+        	throw new VoucherCustomException(ProcessStatus.FAILED,"Error Occured While calling the URL : "+mdmsUrl);
 		}
 	}
 	
@@ -120,7 +121,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.BillingService.BusinessService"),new TypeReference<List<BusinessService>>(){});
 			}
 		} catch (Exception e) {
-			throw new VoucherCustomException("FAILED","Error while parsing mdms data. Check the business/account head mapping json file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data. Check the business/account head mapping json file.");
 		}
 		return !list.isEmpty() ? list.get(0).getBusinessService() : code;
 	}

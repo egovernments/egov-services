@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.egov.mdms.service.TokenService;
+import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,11 @@ public class ServiceRequestRepository {
 				response = this.retryHttpCallOnUnauthorizedAccess(uri, request, tenantId);
 			}else{
 				log.error("Exception while fetching from searcher: ",e);
-				throw new VoucherCustomException("FAILED",e.getMessage());
+				throw new VoucherCustomException(ProcessStatus.FAILED,e.getMessage());
 			}
 		}catch(Exception e) {
 			log.error("Exception while fetching from searcher: ",e);
-			throw new VoucherCustomException("FAILED","Exception while fetching from searcher.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Exception while fetching from searcher.");
 		}
 		return response;
 	}
@@ -68,12 +69,12 @@ public class ServiceRequestRepository {
 				ReflectionUtils.setField(field, request, requestInfo);
 				return restTemplate.postForObject(uri.toString(), request, Map.class);
 			}else{
-				throw new VoucherCustomException("FAILED","requestInfo properties is not found in uri "+uri.toString());
+				throw new VoucherCustomException(ProcessStatus.FAILED,"requestInfo properties is not found in uri "+uri.toString());
 			}
 		} catch(HttpClientErrorException e) {
 			if(e.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
 				log.error("Unauthorized accessed : Even after retrying with SYSTEM auth token.");
-				throw new VoucherCustomException("FAILED","Error occurred even after retrying uri "+uri.toString()+" with SYSTEM auth token.");
+				throw new VoucherCustomException(ProcessStatus.FAILED,"Error occurred even after retrying uri "+uri.toString()+" with SYSTEM auth token.");
 			}
 		}catch (IllegalArgumentException | IllegalAccessException e) {
 			log.error(e.getMessage());

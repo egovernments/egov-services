@@ -83,6 +83,7 @@ public class IndexerService {
 	}
 	
 
+
 	/**
 	 * This method deals with 3 types of uses cases that indexer supports: 1. Index
 	 * the entire object that you receive from the queue 2. Take just a part of the
@@ -101,11 +102,13 @@ public class IndexerService {
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_bulk");
 		startTime = new Date().getTime();
+		String jsonToBeIndexed = new String();
 		if (null != index.getCustomJsonMapping()) {
-			dataTransformationService.constructBodyAndIndex(index, kafkaJson, isBulk, true);
+			jsonToBeIndexed = dataTransformationService.buildJsonForIndex(index, kafkaJson, isBulk, true);
 		} else {
-			dataTransformationService.constructBodyAndIndex(index, kafkaJson, isBulk, false);
+			jsonToBeIndexed = dataTransformationService.buildJsonForIndex(index, kafkaJson, isBulk, false);
 		}
+		validateAndIndex(jsonToBeIndexed, url.toString(), index);
 		log.info("Total time taken: " + ((new Date().getTime()) - startTime) + "ms");
 	}
 

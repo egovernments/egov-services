@@ -62,9 +62,10 @@ public class DataTransformationService {
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 
+
 	/**
 	 * Tranformation method that transforms the input data to match the es index as
-	 * per config and sends it to es
+	 * per config
 	 * 
 	 * @param index
 	 * @param kafkaJson
@@ -72,37 +73,35 @@ public class DataTransformationService {
 	 * @param isCustom
 	 * @return
 	 */
-	public void constructBodyAndIndex(Index index, String kafkaJson, boolean isBulk, boolean isCustom) {
-		StringBuilder jsonTobeIndexed = null;
+	public String buildJsonForIndex(Index index, String kafkaJson, boolean isBulk, boolean isCustom) {
+		StringBuilder jsonTobeIndexed = new StringBuilder();
+		String result = null;
 		JSONArray kafkaJsonArray = null;
-		Boolean hasErrorOccured = false;
 		try {
 			kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
 			for (int i = 0; i < kafkaJsonArray.length(); i++) {
-				String id = null;
-				jsonTobeIndexed = new StringBuilder();
 				if (null != kafkaJsonArray.get(i)) {
 					String stringifiedObject = indexerUtils.buildString(kafkaJsonArray.get(i));
-					id = indexerUtils.buildIndexId(index, stringifiedObject);
 					if (isCustom) {
 						String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject);
-						jsonTobeIndexed.append(customIndexJson);
+						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, customIndexJson);
+						if (null != builder)
+							jsonTobeIndexed = builder;
 					} else {
-						jsonTobeIndexed.append(stringifiedObject);
+						StringBuilder builder = appendIdToJson(index, jsonTobeIndexed, stringifiedObject, null);
+						if (null != builder)
+							jsonTobeIndexed = builder;
 					}
 				} else {
-					log.info("null json in kafkajsonarray, index: " + i);
 					continue;
 				}
-				indexerService.indexWithESId(index, jsonTobeIndexed.toString(), id);
 			}
+			result = jsonTobeIndexed.toString();
 		} catch (Exception e) {
-			hasErrorOccured = true;
-			indexerUtils.postToErrorQueue(kafkaJson, e);
 			log.error("Error while building jsonstring for indexing", e);
 		}
-		if(!hasErrorOccured)
-			log.info("No. of records indexed: "+kafkaJsonArray.length());
+
+		return result;
 	}
 
 	/**

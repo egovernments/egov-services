@@ -134,9 +134,9 @@ public class ReceiptController {
     @PostMapping(value = "/_migratetov1")
 	@ResponseBody
 	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper,
-			@RequestParam(required = false) Integer startBatch) {
+			@RequestParam(required = false) Integer startBatch,  @RequestParam(required=true) Integer batchSizeInput) {
 
-		Map<String, String> resultMap = migrationService.migrateToV1(startBatch);
+		Map<String, String> resultMap = migrationService.migrateToV1(startBatch, batchSizeInput);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 

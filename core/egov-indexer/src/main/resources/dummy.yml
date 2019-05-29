@@ -1,0 +1,12 @@
+ServiceMaps:
+  serviceName: Dummy
+  version: 2.0.0
+  mappings:
+  - topic: dummy-topic
+    configKey: INDEX
+    indexes:
+    - name: testindextest
+      type: test
+      id: $.id, $.tenantId
+      isBulk: false
+      timeStampField: $.createdTime

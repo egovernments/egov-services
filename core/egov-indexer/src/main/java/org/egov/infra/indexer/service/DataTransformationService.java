@@ -75,6 +75,7 @@ public class DataTransformationService {
 	public void constructBodyAndIndex(Index index, String kafkaJson, boolean isBulk, boolean isCustom) {
 		StringBuilder jsonTobeIndexed = null;
 		JSONArray kafkaJsonArray = null;
+		Boolean hasErrorOccured = false;
 		try {
 			kafkaJsonArray = indexerUtils.constructArrayForBulkIndex(kafkaJson, index, isBulk);
 			for (int i = 0; i < kafkaJsonArray.length(); i++) {
@@ -96,10 +97,12 @@ public class DataTransformationService {
 				indexerService.indexWithESId(index, jsonTobeIndexed.toString(), id);
 			}
 		} catch (Exception e) {
+			hasErrorOccured = true;
 			indexerUtils.postToErrorQueue(kafkaJson, e);
 			log.error("Error while building jsonstring for indexing", e);
 		}
-		log.info("No. of records indexed: "+kafkaJsonArray.length());
+		if(!hasErrorOccured)
+			log.info("No. of records indexed: "+kafkaJsonArray.length());
 	}
 
 	/**

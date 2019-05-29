@@ -141,12 +141,24 @@ public class ReceiptValidator {
 
 		Map<String, String> errorMap = new HashMap<>();
 
-		Set<String> receiptNumbers = receipts.stream().map(Receipt::getReceiptNumber).collect(Collectors.toSet());
+		Set<String> receiptNumbers = new HashSet<>();
 
+		/*
+		 * Collecting receipt number from bill details 
+		 * since receipt create/update request doesn't not have receipt number directly
+		 */
+		for (Receipt receipt : receipts) {
+			receipt.getBill().forEach(bill -> receiptNumbers.addAll(
+					bill.getBillDetails().stream().map(BillDetail::getReceiptNumber).collect(Collectors.toSet())));
+		}
+		
 		List<Receipt> receiptsFromDb = collectionRepository
 				.fetchReceipts(ReceiptSearchCriteria.builder().receiptNumbers(receiptNumbers)
 						.status(ReceiptStatus.statusesByCategory(ReceiptStatus.Category.OPEN)).build());
-
+		/*
+		 * WARNING: logic will break when bill contains multiple bill details, since there will be multiple receiptnos for a given bill.
+		 * Point of error -  Receipt::getReceiptNumber.
+		 */
 		Map<String, List<Receipt>> receiptsByReceiptNumber = receiptsFromDb.stream()
 				.collect(Collectors.groupingBy(Receipt::getReceiptNumber));
 

@@ -126,8 +126,8 @@ public class DemandValidatorV1 {
 		/*
 		 * grouping by the list of taxHeads to a map of businessService and List of taxHead codes
 		 */
-		Map<String, List<String>> businessTaxCodeMap = taxHeads.stream().collect(Collectors.groupingBy(
-				TaxHeadMaster::getService, Collectors.mapping(TaxHeadMaster::getCode, Collectors.toList())));
+		Map<String, Map<String,TaxHeadMaster>> businessTaxCodeMap = taxHeads.stream().collect(Collectors.groupingBy(
+				TaxHeadMaster::getService, Collectors.toMap(TaxHeadMaster::getCode, Function.identity())));
 		
 		/*
 		 * mdms-data read returns a list of hashMap which is converted to array of tax-period and then to list
@@ -156,7 +156,8 @@ public class DemandValidatorV1 {
 		for (Demand demand : demands) {
 
 			List<DemandDetail> details = demand.getDemandDetails();
-			List<String> taxHeadCodes = businessTaxCodeMap.get(demand.getBusinessService());
+			Map<String, TaxHeadMaster> taxHeadMap = businessTaxCodeMap.get(demand.getBusinessService());
+			System.err.println(" the taxhead map : " + taxHeadMap);
 			detailsForValidation.addAll(details);
 
 			if (isCreate) {
@@ -172,8 +173,10 @@ public class DemandValidatorV1 {
 
 			details.forEach(detail -> {
 
-				if (!taxHeadCodes.contains(detail.getTaxHeadMasterCode()))
+				if (!taxHeadMap.containsKey(detail.getTaxHeadMasterCode()))
 					taxHeadsNotFound.add(detail.getTaxHeadMasterCode());
+				else
+					alterDebitTaxToNegativeInCaseOfPositve(taxHeadMap, detail);
 			});
 
 			validateTaxPeriod(taxPeriodBusinessMap, demand, errorMap, businessServicesWithNoTaxPeriods);
@@ -200,6 +203,26 @@ public class DemandValidatorV1 {
 		 * method separated to increase readability
 		 * */
 		throwErrorForCreate(businessServicesWithNoTaxPeriods, businessServicesNotFound, taxHeadsNotFound, errorMap);
+	}
+
+	/**
+	 * Altering tax/collection value of a demand to negative if it's tax-head is debit 
+	 *  
+	 * @param taxHeadMap
+	 * @param detail
+	 */
+	private void alterDebitTaxToNegativeInCaseOfPositve(Map<String, TaxHeadMaster> taxHeadMap, DemandDetail detail) {
+		/*
+		 * setting tax amount to negative in case of debit tax-head and positive tax
+		 * value
+		 */
+		TaxHeadMaster taxHead = taxHeadMap.get(detail.getTaxHeadMasterCode());
+		if (taxHead.getIsDebit() && detail.getTaxAmount().compareTo(BigDecimal.ZERO) > 0) {
+
+			detail.setTaxAmount(detail.getTaxAmount().negate());
+			if (detail.getCollectionAmount().compareTo(BigDecimal.ZERO) > 0)
+				detail.setCollectionAmount(detail.getCollectionAmount().negate());
+		}
 	}
 
 	/**

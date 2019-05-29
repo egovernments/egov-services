@@ -33,15 +33,19 @@ public class Demand   {
         @JsonProperty("id")
         private String id;
 
+        @NotNull
         @JsonProperty("tenantId")
         private String tenantId;
 
+        @NotNull
         @JsonProperty("consumerCode")
         private String consumerCode;
 
+        @NotNull
         @JsonProperty("consumerType")
         private String consumerType;
 
+        @NotNull
         @JsonProperty("businessService")
         private String businessService;
 
@@ -49,9 +53,11 @@ public class Demand   {
         @JsonProperty("payer")
         private User payer;
 
+        @NotNull
         @JsonProperty("taxPeriodFrom")
         private Long taxPeriodFrom;
 
+        @NotNull
         @JsonProperty("taxPeriodTo")
         private Long taxPeriodTo;
 

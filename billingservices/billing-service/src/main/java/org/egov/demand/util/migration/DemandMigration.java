@@ -25,8 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class DemandMigration {
 	
-	public static final String SELECT_QUERY = "SELECT * FROM (SELECT *, DENSE_RANK() OVER (ORDER BY did) offset_ FROM " 
-			+ " (select d.id as did,dl.id as dlid,dl.demandid as dldemandid,"
+	public static final String SELECT_QUERY = "select d.id as did,dl.id as dlid,dl.demandid as dldemandid,"
 			+ "d.consumercode as dconsumercode,d.consumertype as dconsumertype,d.taxperiodfrom as dtaxperiodfrom,"
 			+ "d.taxperiodto as dtaxperiodto,U.uuid as payer,null as dbillexpirytime,"
 			+ " d.businessservice as dbusinessservice,d.status as status,d.minimumamountpayable as dminimumamountpayable, "
@@ -38,8 +37,8 @@ public class DemandMigration {
 			+ " d.lastmodifiedby as dlastmodifiedby,d.lastmodifiedtime as dlastmodifiedtime,d.tenantid as dtenantid "
 			+ " from egbs_demand d inner join egbs_demanddetail dl ON d.id=dl.demandid AND d.tenantid=dl.tenantid "
 			+ " LEFT OUTER JOIN eg_user U ON U.id::CHARACTER VARYING=d.owner"
-			+ " WHERE d.businessservice IN ('TL','PT') AND d.tenantid ilike 'pb%' ) " 
-			+ " result) result_offset WHERE offset_ > ? AND offset_ <= ?;";
+			+ " WHERE d.businessservice IN ('TL','PT') AND d.tenantid ilike 'pb%' "
+			+ " AND d.id IN (select id from egbs_demand order by id offset ? limit ?);";
 	
 	public static final String COUNT_QUERY = "select count(*) from egbs_demand where businessservice IN ('TL','PT') AND tenantid ilike 'pb%';";
 	
@@ -121,14 +120,19 @@ public class DemandMigration {
 				return responseMap;
 			}
 			addResponseToMap(demands,responseMap,"SUCCESS");
-		}
+			log.info(" count completed : " + i + batchSize);
+		} 
 		
 		return responseMap;
 	}
 	
 	private void addResponseToMap(List<Demand> demands, Map<String, String> responseMap, String message) {
 
-		demands.forEach(demand -> responseMap.put(demand.getId(), message));
+		demands.forEach(demand -> {
+			
+			responseMap.put(demand.getId(), message);
+			log.info("the demand id : " + demand.getId() + " message : " + message);
+		});
 	}
 
 	private void postDemands(List<Demand> demands) {

@@ -97,7 +97,7 @@ public class DemandMigration {
 		};
 	}
 	
-	public Map<String, String> migrateToV1(Integer startBatch) {
+	public Map<String, String> migrateToV1(Integer startBatch, Integer batchSizeInput) {
 		
 		Map<String, String> responseMap = new HashMap<>();
 		
@@ -105,10 +105,13 @@ public class DemandMigration {
 		int i = 0;
 		if (null != startBatch && startBatch > 0)
 			i = startBatch;
-
+		
+		if(null != batchSizeInput && batchSizeInput > 0)
+			batchSize = batchSizeInput;
+		
 		for( ; i<count;i = i+batchSize) {
 
-			List<Demand> demands = jdbcTemplate.query(SELECT_QUERY, new Object[] { i, i + batchSize }, demandRowMapper);
+			List<Demand> demands = jdbcTemplate.query(SELECT_QUERY, new Object[] { i, batchSize }, demandRowMapper);
 			try {
 
 				apportionDemands(demands);
@@ -120,7 +123,7 @@ public class DemandMigration {
 				return responseMap;
 			}
 			addResponseToMap(demands,responseMap,"SUCCESS");
-			log.info(" count completed : " + i + batchSize);
+			log.info(" count completed : " + i);
 		} 
 		
 		return responseMap;

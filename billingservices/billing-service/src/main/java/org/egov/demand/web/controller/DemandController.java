@@ -146,9 +146,9 @@ public class DemandController {
     @PostMapping(value = "/_migratetov1")
     @ResponseBody
 	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper,
-			@RequestParam(required=false) Integer batchStart) {
+			@RequestParam(required=false) Integer batchStart, @RequestParam(required=true) Integer batchSizeInput) {
 
-		Map<String, String> resultMap = migrationService.migrateToV1(batchStart);
+		Map<String, String> resultMap = migrationService.migrateToV1(batchStart, batchSizeInput);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
     

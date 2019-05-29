@@ -708,5 +708,22 @@
         "$.code"
       ]
     }
+  },
+  "FinanceModule": {
+    "BusinessServiceMapping": {
+      "masterName": "BusinessServiceMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "TaxHeadMasterGlCodeMapping": {
+      "masterName": "TaxHeadMasterGlCodeMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.billingservicecode",
+         "$.taxhead"
+      ]
+    }
   }
 }

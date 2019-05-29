@@ -164,7 +164,8 @@ public class ReceiptValidator {
 
 		for (Receipt receipt : receipts) {
 
-			if (receiptsByReceiptNumber.containsKey(receipt.getReceiptNumber())) {
+			if (receiptsByReceiptNumber
+					.containsKey(receipt.getBill().get(0).getBillDetails().get(0).getReceiptNumber())) {
 				Bill bill = receipt.getBill().get(0);
 				BillDetail billDetail = bill.getBillDetails().get(0);
 

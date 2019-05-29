@@ -25,9 +25,7 @@ public class ReceiptMigration {
 
 	public static final String COUNT_QUERY = "select count(*) from egcl_receiptheader rh WHERE rh.businessdetails IN ('PT','TL')";
 
-	public static final String RECEIPT_SEARCH_QUERY = " SELECT * FROM (SELECT *, DENSE_RANK() OVER (ORDER BY rh_id) offset_ FROM "
-			+ " "
-			+ " (Select rh.id as rh_id,rh.payeename as rh_payername,rh.payeeAddress as rh_payerAddress, rh.payeeEmail as rh_payerEmail,"
+	public static final String RECEIPT_SEARCH_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payername,rh.payeeAddress as rh_payerAddress, rh.payeeEmail as rh_payerEmail,"
 			+ " rh.payeemobile as rh_payermobile, rh.paidBy as rh_paidBy, rh.referenceNumber as rh_referenceNumber, rh.referenceDate "
 			+ " as rh_referenceDate,rh.receiptType as rh_receiptType, rh.receiptNumber as rh_receiptNumber, rh.receiptDate as rh_receiptDate,"
 			+ " rh.referenceDesc as rh_referenceDesc, rh.manualReceiptNumber as rh_manualReceiptNumber, rh.fund as rh_fund, rh.function "
@@ -67,9 +65,8 @@ public class ReceiptMigration {
 			+ " LEFT JOIN egcl_instrumentheader ins ON recins.instrumentheader=ins.id "
 			+ " LEFT OUTER JOIN egbs_demand d ON d.consumercode=rh.consumercode AND "
 			+ " d.taxperiodfrom=SPLIT_PART(rd.description,'-',2)::BIGINT AND d.taxperiodto=SPLIT_PART(rd.description,'-',3)::BIGINT "
-			+ " WHERE rh.businessdetails IN ('PT','TL')"
-			+ " ORDER BY rd.ordernumber) "
-			+ " result) result_offset WHERE offset_ > ? AND offset_ <= ?";
+			+ " WHERE rh.businessdetails IN ('PT','TL') AND rh.id IN (select id from egcl_receiptheader offset ? limit ?)"
+			+ " ORDER BY rd.ordernumber ";
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -80,10 +77,7 @@ public class ReceiptMigration {
 	@Autowired
 	private CollectionRepository repository;
 
-	@Value("${migration.batch.value}")
-	private Integer batchSize;
-
-	public Map<String, String> migrateToV1(Integer startBatch) {
+	public Map<String, String> migrateToV1(Integer startBatch, Integer batchSizeInput) {
 
 		Map<String, String> resultMap = new LinkedHashMap<>();
 
@@ -93,9 +87,9 @@ public class ReceiptMigration {
 		if (null != startBatch && startBatch > 0)
 			i = startBatch;
 
-		for (; i < count; i = i + batchSize) {
+		for (; i < count; i = i + batchSizeInput) {
 
-			List<Receipt> receipts = jdbcTemplate.query(RECEIPT_SEARCH_QUERY, new Object[] { i, i + batchSize },
+			List<Receipt> receipts = jdbcTemplate.query(RECEIPT_SEARCH_QUERY, new Object[] { i, batchSizeInput },
 					collectionRowMapper);
 			try {
 				apportionAndSaveReceipts(receipts, resultMap);

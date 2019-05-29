@@ -3,7 +3,6 @@ import logger from "./logger";
 import envVariables from "../envVariables";
 
 const createAxiosInstance = hostURL => {
-  console.log(hostURL);
   let instance = axios.create({
     baseURL: hostURL,
     headers: {

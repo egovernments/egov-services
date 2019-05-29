@@ -14,22 +14,21 @@ export default ({ config, db }) => {
   api.post(
     "/_create",
     asyncHandler(async ({ body }, res, next) => {
-      let payloads = [];
-      let mdms = await mdmsData(body.RequestInfo);
-      body = await addUUIDAndAuditDetails(body);
-      // await createWorkFlow(body);
-      // console.log(body);
-      payloads.push({
-        topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
-        messages: JSON.stringify(body)
-      });
-      producer.send(payloads, function(err, data) {
-        let response = {
-          ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
-          FireNOCs: body.FireNOCs
-        };
-        res.json(response);
-      });
+        let payloads = [];
+        let mdms = await mdmsData(body.RequestInfo);
+        body = await addUUIDAndAuditDetails(body);
+        let workflowResponse=await createWorkFlow(body);
+        payloads.push({
+          topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
+          messages: JSON.stringify(body)
+        });
+        producer.send(payloads, function(err, data) {
+          let response = {
+            ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
+            FireNOCs: body.FireNOCs
+          };
+          res.json(response);
+        });
     })
   );
   return api;

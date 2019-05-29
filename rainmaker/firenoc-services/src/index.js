@@ -71,10 +71,14 @@ app.use(middleware({ config, db }));
 app.use("/", api({ config, db }));
 
 //error handler middleware
-app.use(function(err, req, res) {
-  console.log(err);
-  res.status(500);
-  res.send("Oops, something went wrong.");
+app.use((err, req, res, next) =>{
+  if (!err.errorType) {
+    res.status(err.status).json(err.data);
+  }
+  else {
+    res.status(500);
+    res.send("Oops, something went wrong.");
+  }
 });
 
 console.log(envVariables.SERVER_PORT);

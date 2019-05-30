@@ -1,25 +1,11 @@
 package org.egov.enc.web.models;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.egov.enc.models.MethodEnum;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Builder;
 
 /**
  * Encryption / Decryption Request Meta-data and Values

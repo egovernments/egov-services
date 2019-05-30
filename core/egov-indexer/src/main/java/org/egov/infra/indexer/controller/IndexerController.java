@@ -1,6 +1,7 @@
 package org.egov.infra.indexer.controller;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.producer.IndexerProducer;
@@ -30,56 +31,75 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexerController {
 
 	public static final Logger logger = LoggerFactory.getLogger(IndexerController.class);
-	
+
 	@Autowired
 	private IndexerProducer indexerProducer;
-	
+
 	@Autowired
 	private IndexerApplicationRunnerImpl runner;
-	
+
 	@Autowired
 	private IndexerService service;
-	
+
 	@Autowired
 	private ReindexService reindexService;
-	
+
 	@Autowired
 	private LegacyIndexService legacyIndexService;
-	
+
 	@Autowired
 	private ResponseInfoFactory factory;
-	
+
 	@Autowired
 	private Validator validator;
-	
-	//This is testing API 
-    @PostMapping("/_index")
-    @ResponseBody
-    private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
-    	try{
-    		indexerProducer.producer(topic, indexJson);
-    	}catch(Exception e){
-    		return new ResponseEntity<>(indexJson ,HttpStatus.INTERNAL_SERVER_ERROR);
-    	}
-		return new ResponseEntity<>(indexJson ,HttpStatus.OK);
 
-    }
-    
-    @PostMapping("/_reindex")
-    @ResponseBody
-    private ResponseEntity<?> reIndexData(@Valid @RequestBody ReindexRequest reindexRequest){
-    	validator.validaterReindexRequest(reindexRequest);
-    	ReindexResponse response = reindexService.createReindexJob(reindexRequest);
-		return new ResponseEntity<>(response ,HttpStatus.OK);
+	/**
+	 * Endpoint for indexing data onto ES
+	 * 
+	 * @param topic
+	 * @param indexJson
+	 * @return
+	 */
+	@PostMapping("/(key)/_index")
+	@ResponseBody
+	private ResponseEntity<?> produceIndexJson(@PathParam("key") String topic,
+			@RequestBody Object indexJson) {
+		try {
+			indexerProducer.producer(topic, indexJson);
+		} catch (Exception e) {
+			return new ResponseEntity<>(indexJson, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(indexJson, HttpStatus.OK);
 
-    }
-    
-    @PostMapping("/_legacyindex")
-    @ResponseBody
-    private ResponseEntity<?> legacyIndexData(@Valid @RequestBody LegacyIndexRequest legacyIndexRequest){
-    	validator.validaterLegacyindexRequest(legacyIndexRequest);
-    	LegacyIndexResponse response = legacyIndexService.createLegacyindexJob(legacyIndexRequest);
-		return new ResponseEntity<>(response ,HttpStatus.OK);
+	}
 
-    }
+	/**
+	 * Endpoint to intiate a reindex job
+	 * 
+	 * @param reindexRequest
+	 * @return
+	 */
+	@PostMapping("/_reindex")
+	@ResponseBody
+	private ResponseEntity<?> reIndexData(@Valid @RequestBody ReindexRequest reindexRequest) {
+		validator.validaterReindexRequest(reindexRequest);
+		ReindexResponse response = reindexService.createReindexJob(reindexRequest);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+
+	/**
+	 * Endpojnt to intiate a legacy index job
+	 * 
+	 * @param legacyIndexRequest
+	 * @return
+	 */
+	@PostMapping("/_legacyindex")
+	@ResponseBody
+	private ResponseEntity<?> legacyIndexData(@Valid @RequestBody LegacyIndexRequest legacyIndexRequest) {
+		validator.validaterLegacyindexRequest(legacyIndexRequest);
+		LegacyIndexResponse response = legacyIndexService.createLegacyindexJob(legacyIndexRequest);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
 }

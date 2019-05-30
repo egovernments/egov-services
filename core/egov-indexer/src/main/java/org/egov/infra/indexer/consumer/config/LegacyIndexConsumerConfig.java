@@ -66,6 +66,8 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
 	private IndexerApplicationRunnerImpl runner;
 
 	public String[] topics = {};
+	
+	private TopicPartitionInitialOffset[] topicPartitions = {};
 
 	@Override
 	public void run(final ApplicationArguments arg0) throws Exception {
@@ -130,6 +132,7 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
 
 	public KafkaMessageListenerContainer<String, String> container() throws Exception {
 		setTopics();
+		initializeTopicsAndPartitions();
 		ContainerProperties properties = new ContainerProperties(this.topics); 
 		properties.setPauseEnabled(true);
 		properties.setPauseAfter(0);
@@ -145,7 +148,7 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
 	 * 
 	 * @return
 	 */
-	public TopicPartitionInitialOffset[] initializeTopicsAndPartitions() {
+	public void initializeTopicsAndPartitions() {
 		String[] topics = this.topics;
 		TopicPartitionInitialOffset[] topicPartitionsInitialOffsetArray = new TopicPartitionInitialOffset[topics.length];
 		for (int i = 0; i < topicPartitionsInitialOffsetArray.length; i++) {
@@ -153,7 +156,7 @@ public class LegacyIndexConsumerConfig implements ApplicationRunner {
 					defaultNoOfPartitions);
 			topicPartitionsInitialOffsetArray[i] = topicPartitionOffset;
 		}
-		return topicPartitionsInitialOffsetArray;
+		this.topicPartitions = topicPartitionsInitialOffsetArray;
 	}
 
 	public boolean startContainer() {

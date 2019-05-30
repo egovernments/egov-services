@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * Encryption / Decryption Request Meta-data and Values
@@ -21,12 +22,15 @@ import javax.validation.Valid;
 @Builder
 public class EncReqObject {
 
+    @NotNull
     @JsonProperty("tenantId")
     private String tenantId = null;
 
+    @NotNull
     @JsonProperty("type")
     private String type = null;
 
+    @NotNull
     @JsonProperty("value")
     @Valid
     private Object value = null;

@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Object with the value to be signed
  */
@@ -53,9 +55,11 @@ public class SignRequest   {
 //    @JsonProperty("typeOfValue")
 //    private TypeOfValueEnum typeOfValue = null;
 
+    @NotNull
     @JsonProperty("tenantId")
     private String tenantId = null;
 
+    @NotNull
     @JsonProperty("value")
     private String value = null;
 

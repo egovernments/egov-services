@@ -6,6 +6,8 @@ import lombok.*;
 import org.egov.enc.models.Signature;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Object with the value and signature to be verified
  */
@@ -20,9 +22,11 @@ import org.springframework.validation.annotation.Validated;
 @Builder
 public class VerifyRequest   {
 
+    @NotNull
     @JsonProperty("value")
     private String value = null;
 
+    @NotNull
     @JsonProperty("signature")
     private Signature signature = null;
 

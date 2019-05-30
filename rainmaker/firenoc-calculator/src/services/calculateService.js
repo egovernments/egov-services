@@ -1,14 +1,23 @@
 import config from "../config/config";
 import { requestInfoToResponseInfo } from "../utils";
 import { searchService } from "../controller/search";
+import { generateDemand } from "./demandService";
 
 export const calculateService = async (req, pool) => {
   let calculalteResponse = {};
+  const requestInfo = req.body.RequestInfo;
+  const tenantId = req.body.CalulationCriteria[0].tenantId;
+
   calculalteResponse.ResponseInfo = requestInfoToResponseInfo(
-    req.body.RequestInfo,
+    requestInfo,
     true
   );
-  calculalteResponse.Calculation = await getCalculation(req, pool, config);
+
+  let calculations = await getCalculation(req, pool, config);
+  calculalteResponse.Calculation = calculations;
+
+  let a = await generateDemand(requestInfo, tenantId, calculations, config);
+  console.log(a);
   return calculalteResponse;
 };
 
@@ -23,7 +32,7 @@ const getCalculation = async (req, pool, config) => {
       pool
     );
 
-    console.log("calculation", calculation);
+    // console.log("calculation", calculation);
     calculations.push(calculation);
   }
 
@@ -38,12 +47,17 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
   searchReqParam.calculationType = config.CALCULATON_TYPE;
 
   let calculation = {
-    applicationNumber: null,
-    fireNoc: null,
+    applicationNumber: calculateCriteria.applicationNumber,
+    fireNoc: calculateCriteria.fireNOC,
     tenantId: searchReqParam.tenantId,
     taxHeadEstimates: []
   };
-  const feeEstimate = await calculateNOCFee(calculateCriteria, config, pool);
+  const feeEstimate = await calculateNOCFee(
+    searchReqParam,
+    calculateCriteria,
+    config,
+    pool
+  );
   calculation.taxHeadEstimates.push(feeEstimate);
   if (calculateCriteria.fireNOC.fireNOCDetails.additionalDetail.adhocPenalty) {
     const adhocPenaltyEstimate = calculateAdhocPenalty(calculateCriteria);
@@ -63,10 +77,14 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
   return calculation;
 };
 
-const calculateNOCFee = async (calculateCriteria, config, pool) => {
+const calculateNOCFee = async (
+  searchReqParam,
+  calculateCriteria,
+  config,
+  pool
+) => {
   let nocfee = 0;
   let buidingnocfees = [];
-
   for (
     let i = 0;
     i < calculateCriteria.fireNOC.fireNOCDetails.buildings.length;

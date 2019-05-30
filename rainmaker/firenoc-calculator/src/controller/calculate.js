@@ -9,7 +9,7 @@ const calculalte = async (req, res, pool) => {
     true
   );
   calculalteResponse = await calculateService(req, pool);
-  console.log("calculalteResponse", calculalteResponse);
+  // console.log("calculalteResponse", calculalteResponse);
   res.send(calculalteResponse);
 };
 

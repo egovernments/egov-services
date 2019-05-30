@@ -50,3 +50,10 @@ export const addQueryArg = (url, queries = []) => {
     return url;
   }
 };
+
+export const generateDemandSearchURL = () => {
+  let url = "";
+  url = url + process.env.EGOV_DEMAND_SEARCH_ENDPOINT;
+  url = `${url}?tenantId={1}&businessService={2}&consumerCode={3}`;
+  return url;
+};

@@ -1,42 +1,43 @@
 import axios from "axios";
 import logger from "./logger";
-// import {HOST_URL, process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED} from '../envVariables'
 
-// Remove host url
-const instance = axios.create({
-  baseURL: "/",
-  headers: {
-    "Content-Type": "application/json"
-  }
-});
+const createAxiosInstance = hostURL => {
+  console.log(hostURL);
+  let instance = axios.create({
+    baseURL: hostURL,
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
 
-// Add interceptor to log before request is made
-instance.interceptors.request.use(
-  function(config) {
-    logRequest(config);
-    return config;
-  },
-  function(error) {
-    logErrorResponse(error);
-    // Do something with request error
-    return Promise.reject(error);
-  }
-);
+  // add interceptor to log before request is made
+  instance.interceptors.request.use(
+    function(config) {
+      logRequest(config);
+      return config;
+    },
+    function(error) {
+      logErrorResponse(error);
+      // Do something with request error
+      return Promise.reject(error);
+    }
+  );
 
-// Add interceptor to log after response is received
-instance.interceptors.response.use(
-  function(response) {
-    // Do something with response data
-    logResponse(response);
-    return response;
-  },
-  function(error) {
-    //   logErrorResponse(error)
-    // Do something with response error
-    return Promise.reject(error);
-  }
-);
-
+  //add interceptor to log after response is received
+  instance.interceptors.response.use(
+    function(response) {
+      // Do something with response data
+      logResponse(response);
+      return response;
+    },
+    function(error) {
+      error;
+      // Do something with response error
+      return Promise.reject(error);
+    }
+  );
+  return instance;
+};
 function logRequest(config) {
   const { url, method, data } = config;
   if (process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED) {
@@ -72,7 +73,8 @@ function logErrorResponse(error) {
   //     // The request was made and the server responded with a status code
   //     // that falls out of the range of 2xx
   //     console.log(error.response.data);
-  //     console.log(error.response.status);
+  //     console.log(error.responsinstance;
+  // );
   //     console.log(error.response.headers);
   //   } else if (error.request) {
   //     // The request was made but no response was received
@@ -84,6 +86,7 @@ function logErrorResponse(error) {
   //     console.log('Error', error.message);
   //   }
   //   console.log(error.config);
+  console.log(error);
 }
 
-export default instance;
+export default createAxiosInstance;

@@ -191,15 +191,11 @@ public class ReceiptValidator {
 		List<Receipt> receiptsFromDb = collectionRepository
 				.fetchReceipts(ReceiptSearchCriteria.builder().receiptNumbers(receiptNumbers)
 						.status(ReceiptStatus.statusesByCategory(ReceiptStatus.Category.OPEN)).build());
-		/*
-		 * WARNING: logic will break when bill contains multiple bill details, since there will be multiple receiptnos for a given bill.
-		 * Point of error -  Receipt::getReceiptNumber.
-		 */
+		
 		Map<String, List<Receipt>> receiptsByReceiptNumber = receiptsFromDb.stream()
 				.collect(Collectors.groupingBy(Receipt::getReceiptNumber));
 
 		for (Receipt receipt : receipts) {
-
 			if (receiptsByReceiptNumber
 					.containsKey(receipt.getBill().get(0).getBillDetails().get(0).getReceiptNumber())) {
 				Bill bill = receipt.getBill().get(0);

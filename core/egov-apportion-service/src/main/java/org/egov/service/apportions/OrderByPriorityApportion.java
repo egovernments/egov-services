@@ -65,6 +65,7 @@ public class OrderByPriorityApportion implements Apportion {
 
 
         for (BillDetail billDetail : billDetails){
+        	
             if(!config.getApportionByValueAndOrder())
                 billDetail.getBillAccountDetails().sort(Comparator.comparing(BillAccountDetail::getAmount));
             else
@@ -72,6 +73,7 @@ public class OrderByPriorityApportion implements Apportion {
 
 
             for(BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
+            	
                 amount = billAccountDetail.getAmount();
                 isAmountPositive = amount.compareTo(BigDecimal.ZERO) >= 0;
 
@@ -97,6 +99,7 @@ public class OrderByPriorityApportion implements Apportion {
                     remainingAmount = remainingAmount.subtract(amount);
                 }
             }
+            billDetail.setAmountPaid(amountPaid.subtract(remainingAmount));
         }
 
         //If advance amount is available

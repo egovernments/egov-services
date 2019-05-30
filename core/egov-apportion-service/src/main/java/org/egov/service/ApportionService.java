@@ -1,17 +1,25 @@
 package org.egov.service;
 
+import static org.egov.util.ApportionConstants.DEFAULT;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.egov.config.ApportionConfig;
 import org.egov.producer.Producer;
 import org.egov.util.ApportionUtil;
-import org.egov.web.models.*;
+import org.egov.web.models.ApportionRequest;
+import org.egov.web.models.AuditDetails;
+import org.egov.web.models.BillDetail;
+import org.egov.web.models.BillInfo;
+import org.egov.web.models.TaxAndPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.egov.util.ApportionConstants.*;
 
 
 @Service
@@ -70,34 +78,33 @@ public class ApportionService {
                 .getUuid()).createdTime(System.currentTimeMillis()).build();
 
         for (BillInfo billInfo : billInfos) {
+        	
             // Create a map of businessService to list of billDetails belonging to that businessService
             Map<String, List<BillDetail>> businessServiceToBillDetails = util.groupByBusinessService(billInfo.getBillDetails());
 
+			for (TaxAndPayment taxAndPayment : billInfo.getTaxAndPayments()) {
 
-            Map<String, BigDecimal> collectionMap = new HashMap<>();
-            for (TaxAndPayment taxAndPayment : billInfo.getTaxAndPayments()) {
-                collectionMap.put(taxAndPayment.getBusinessService(), taxAndPayment.getAmountPaid());
-            }
+				String businessKey = taxAndPayment.getBusinessService();
+				BigDecimal amountPaid = taxAndPayment.getAmountPaid();
 
-            // Iterate over the collectionMap in BillInfo object
-            for (Map.Entry<String, BigDecimal> entry : collectionMap.entrySet()) {
-                List<BillDetail> billDetails = businessServiceToBillDetails.get(entry.getKey());
+				List<BillDetail> billDetails = businessServiceToBillDetails.get(businessKey);
 
-                if (CollectionUtils.isEmpty(billDetails))
-                    continue;
+				if (CollectionUtils.isEmpty(billDetails))
+					continue;
 
-                // Get the appropriate implementation of Apportion
-                if (isApportionPresent(entry.getKey()))
-                    apportion = getApportion(entry.getKey());
-                else apportion = getApportion(DEFAULT);
+				// Get the appropriate implementation of Apportion
+				if (isApportionPresent(businessKey))
+					apportion = getApportion(businessKey);
+				else
+					apportion = getApportion(DEFAULT);
 
-                /*
-                 * Apportion the paid amount among the given list of billDetail
-                 * */
-                apportion.apportionPaidAmount(billDetails, entry.getValue(), masterData);
-                billInfo.setAuditDetails(auditDetails);
-            }
-        }
+				/*
+				 * Apportion the paid amount among the given list of billDetail
+				 */
+				apportion.apportionPaidAmount(billDetails, amountPaid, masterData);
+				billInfo.setAuditDetails(auditDetails);
+			}
+		}
 
 
 

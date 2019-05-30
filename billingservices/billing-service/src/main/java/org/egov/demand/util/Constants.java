@@ -6,8 +6,6 @@ import java.util.List;
 
 public class Constants {
 	
-	private Constants() {}
-	
 	public static final String DB_TYPE_JSONB = "jsonb";
 
 	public static final String MODULE_NAME = "BillingService";
@@ -132,4 +130,5 @@ public class Constants {
 	public static final String BUSINESSSERVICE_SERVICES_FILTER = "@.code in [VAL]";
 	public static final String MDMS_NO_FILTER_BUSINESSSERVICE = "$.MdmsRes.BillingService.BusinessService.*";
 
+	private Constants() {}
 }

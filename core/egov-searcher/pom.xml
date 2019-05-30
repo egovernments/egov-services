@@ -22,14 +22,10 @@
 
 	<dependencies>
         <dependency>
-			<groupId>org.egov.services</groupId>
-			<artifactId>services-common</artifactId>
-			<version>0.9.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>services-common</artifactId>
+            <version>1.0.0-RELEASE</version>
+        </dependency>
 
 		<!-- hot swapping, disable cache for template, enable live reload -->
 		 <dependency>
@@ -115,16 +111,21 @@
     </distributionManagement>
     
     <repositories>
-    <repository>
+        <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>
             <url>https://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
         </repository>
-		<repository>
-			<id>repo.egovernments.org.snapshots</id>
-			<name>eGov ERP Snapshots Repository</name>
-			<url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
-		</repository>
+        <repository>
+            <id>repo.egovernments.org.snapshots</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>repo.egovernments.org.public</id>
+            <name>eGov Public Repository Group</name>
+            <url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
+        </repository>
     </repositories>
     
 	<build>

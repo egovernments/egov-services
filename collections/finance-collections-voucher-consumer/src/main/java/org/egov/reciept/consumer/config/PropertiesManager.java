@@ -42,6 +42,7 @@ package org.egov.reciept.consumer.config;
 
 import java.util.regex.Pattern;
 
+import org.egov.common.contract.request.User;
 import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.springframework.beans.factory.annotation.Value;
@@ -152,6 +153,7 @@ public class PropertiesManager {
     private String voucherCancelTopic;
     
     private String siAuthToken;
+    private User siUserInfo;
     
     public String getErpURLBytenantId(String tenantId) throws VoucherCustomException {
     	try {

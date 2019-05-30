@@ -162,7 +162,9 @@ public class VoucherServiceImpl implements VoucherService {
 		String voucherNumber = billDetail.getVoucherHeader();
 		vSearchReq.setVoucherNumbers(voucherNumber);
 		vSearchReq.setTenantId(tenantId);
-		vSearchReq.setRequestInfo(receiptRequest.getRequestInfo());
+		RequestInfo requestInfo = receiptRequest.getRequestInfo();
+		requestInfo.setAuthToken(propertiesManager.getSiAuthToken());
+		vSearchReq.setRequestInfo(requestInfo);
 		return vSearchReq;
 	}
 
@@ -288,6 +290,7 @@ public class VoucherServiceImpl implements VoucherService {
 	 * @throws VoucherCustomException 
 	 */
 	private boolean isManualReceiptDateEnabled(String tenantId, RequestInfo requestInfo) throws VoucherCustomException {
+		requestInfo.setAuthToken(propertiesManager.getSiAuthToken());
 		VoucherRequest request = new VoucherRequest(tenantId, requestInfo, null);
 		StringBuilder url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId)
 				+ propertiesManager.getManualReceiptDateConfigUrl());
@@ -313,7 +316,7 @@ public class VoucherServiceImpl implements VoucherService {
 	private void setNetReceiptAmount(Voucher voucher, Receipt receipt, RequestInfo requestInfo)
 			throws VoucherCustomException {
 		BigDecimal amountPaid = receipt.getBill().get(0).getBillDetails().get(0).getAmountPaid();
-		if (amountPaid.compareTo(new BigDecimal(0)) != 0) {
+		if (amountPaid != null && amountPaid.compareTo(new BigDecimal(0)) != 0) {
 			InstrumentAccountCodeContract instrumentAccountCode = this.getInstrumentAccountCode(receipt, requestInfo);
 			String glcode = instrumentAccountCode.getAccountCode().getGlcode();
 			amountMapwithGlcode.put(glcode, new BigDecimal(-amountPaid.doubleValue()));
@@ -366,6 +369,7 @@ public class VoucherServiceImpl implements VoucherService {
 	 * @throws VoucherCustomException 
 	 */
 	private EgModules getModuleIdByModuleName(String moduleName, String tenantId, RequestInfo requestInfo) throws VoucherCustomException {
+		requestInfo.setAuthToken(propertiesManager.getSiAuthToken());
 		VoucherRequest request = new VoucherRequest(tenantId, requestInfo, null);
 		StringBuilder url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId) + propertiesManager.getModuleIdSearchUrl() + "?moduleName=" + moduleName);
 		try {

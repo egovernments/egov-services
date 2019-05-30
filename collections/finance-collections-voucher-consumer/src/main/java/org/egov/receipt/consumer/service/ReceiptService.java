@@ -77,6 +77,7 @@ public class ReceiptService {
         StringBuilder url = new StringBuilder(propertiesManager.getCollectionsHostUrl() + propertiesManager.getReceiptsUpdate());
         receipt.getBill().get(0).getBillDetails().get(0)
                 .setVoucherHeader(voucherResponse.getVouchers().get(0).getVoucherNumber());
+        receiptRequest.getRequestInfo().setUserInfo(propertiesManager.getSiUserInfo());
         return mapper.convertValue(serviceRequestRepository.fetchResult(url, receiptRequest, receipt.getTenantId()), ReceiptResponse.class);
     }
 

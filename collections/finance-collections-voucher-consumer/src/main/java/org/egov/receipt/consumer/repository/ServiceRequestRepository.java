@@ -47,8 +47,8 @@ public class ServiceRequestRepository {
 				log.error("Unauthorized accessed : Retrying http uri {} with SYSTEM auth token.",uri.toString());
 				response = this.retryHttpCallOnUnauthorizedAccess(uri, request, tenantId);
 			}else{
-				log.error("Exception while fetching from searcher: ",e);
-				throw new VoucherCustomException(ProcessStatus.FAILED,e.getMessage());
+				log.error("Exception while fetching from searcher: ",e.getResponseBodyAsString());
+				throw new VoucherCustomException(ProcessStatus.FAILED,e.getResponseBodyAsString());
 			}
 		}catch(Exception e) {
 			log.error("Exception while fetching from searcher: ",e);

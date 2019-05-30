@@ -223,6 +223,9 @@ public class ReceiptValidator {
 					receiptFromDb.getInstrument().setPayee(bill.getPayerName());
 				}
 
+                if(!StringUtils.isEmpty(billDetail.getVoucherHeader()))
+                billDetailFromDb.setVoucherHeader(billDetail.getVoucherHeader());
+
 				billDetailFromDb.setAdditionalDetails(
 						jsonMerge(billDetailFromDb.getAdditionalDetails(), billDetail.getAdditionalDetails()));
 

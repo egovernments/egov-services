@@ -59,10 +59,16 @@ public class BusinessServiceDetail {
 
     @NotNull
     private String businessService;
+    
+    private String code;
 
     private List<String> collectionModesNotAllowed = new ArrayList<>();
 
     private Boolean partPaymentAllowed;
+    
+    private Boolean isAdvanceAllowed;
+    
+    private Long demandUpdateTime;
 
     private Boolean callBackForApportioning;
 

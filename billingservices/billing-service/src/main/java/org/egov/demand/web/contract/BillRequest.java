@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Builder.Default;
 /**
  * BillRequest
  */
@@ -23,8 +24,9 @@ public class BillRequest   {
 	
   @JsonProperty("RequestInfo")
   private RequestInfo requestInfo;
-
+  
   @JsonProperty("Bills")
+  @Default
   private List<Bill> bills = new ArrayList<>();
 }
 

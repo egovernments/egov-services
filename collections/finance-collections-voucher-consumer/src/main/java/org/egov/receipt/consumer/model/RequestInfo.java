@@ -50,6 +50,8 @@ package org.egov.receipt.consumer.model;
 import org.egov.common.contract.request.User;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,5 +74,6 @@ public class RequestInfo {
     private String msgId;
     private String authToken;
     private String correlationId;
+    @JsonIgnore
     private User userInfo;
 }

@@ -39,19 +39,25 @@
  */
 package org.egov.demand.web.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.service.DemandService;
+import org.egov.demand.util.migration.DemandMigration;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.DemandValidator;
+import org.egov.demand.web.validator.DemandValidatorV1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +66,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,7 +84,14 @@ public class DemandController {
 	private ResponseFactory responseFactory;
 
 	@Autowired
+	@Deprecated
 	private DemandValidator demandValidator;
+	
+	@Autowired
+	private DemandValidatorV1 demandValidatorV1;
+	
+	@Autowired
+	private DemandMigration migrationService;
 
 	/**
 	 * API to create demands
@@ -89,41 +103,61 @@ public class DemandController {
 
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest) {
+
 		log.info("the demand request object : " + demandRequest);
-		RequestInfo requestInfo = demandRequest.getRequestInfo();
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
-		}
-		demandValidator.validate(demandRequest, bindingResult);
-		if (bindingResult.hasErrors()) {
-		        if (bindingResult.getFieldErrors() != null && !bindingResult.getFieldErrors().isEmpty())
-		            log.info(bindingResult.getFieldErrors().get(0).getDefaultMessage());
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
-		}
-		DemandResponse demandResponse =  demandService.create(demandRequest);
-		log.info("the Response Object from service : "+demandResponse);
+		/*
+		 * validating master data using mdms and user data
+		 */
+		demandValidatorV1.validatedemandForCreate(demandRequest, true);
+		DemandResponse demandResponse = demandService.create(demandRequest);
+
 		return new ResponseEntity<>(demandResponse, HttpStatus.CREATED);
 	}
 
 	@PostMapping("_update")
-	public ResponseEntity<?> update(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> update(@RequestBody @Valid DemandRequest demandRequest) {
 
-		RequestInfo requestInfo = demandRequest.getRequestInfo();
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
-					HttpStatus.BAD_REQUEST);
-		}
-
-		demandValidator.validateForUpdate(demandRequest, bindingResult);
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo),
-					HttpStatus.BAD_REQUEST);
-		}
+		/*
+		 * validating master data using mdms and user data
+		 */
+		demandValidatorV1.validateForUpdate(demandRequest);
 		return new ResponseEntity<>(demandService.updateAsync(demandRequest), HttpStatus.CREATED);
 	}
+
+	@PostMapping("_search")
+	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid DemandCriteria demandCriteria) {
+
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		
+		demandValidatorV1.validateDemandCriteria(demandCriteria);
+		
+		List<Demand> demands = demandService.getDemands(demandCriteria, requestInfo);
+		DemandResponse response = DemandResponse.builder().demands(demands)
+				.responseInfo(responseFactory.getResponseInfo(requestInfo, HttpStatus.OK)).build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	/*
+	 * migration api
+	 */
+	
+    @PostMapping(value = "/_migratetov1")
+    @ResponseBody
+	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper,
+			@RequestParam(required=false) Integer batchStart, @RequestParam(required=true) Integer batchSizeInput) {
+
+		Map<String, String> resultMap = migrationService.migrateToV1(batchStart, batchSizeInput);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+    
+	/*
+	 * @Deprecated methods
+	 */
 	
 	@PostMapping("collection/_update")
+	@Deprecated
 	public ResponseEntity<?> updateCollection(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
@@ -135,17 +169,7 @@ public class DemandController {
 		return new ResponseEntity<>(demandService.updateCollection(demandRequest), HttpStatus.CREATED);
 	}
 
-	@PostMapping("_search")
-	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
-									@ModelAttribute @Valid DemandCriteria demandCriteria, BindingResult bindingResult) {
-		demandValidator.validateDemandCriteria(demandCriteria, bindingResult);
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<>(demandService.getDemands(demandCriteria, requestInfo), HttpStatus.OK);
-	}
-
+	@Deprecated
 	@PostMapping("/demanddetail/_search")
 	public ResponseEntity<?> demandDetailSearch(@RequestBody RequestInfoWrapper requestInfoWrapper,
 												@ModelAttribute @Valid DemandDetailCriteria demandDetailCriteria, BindingResult bindingResult) {
@@ -157,6 +181,7 @@ public class DemandController {
 		return new ResponseEntity<>(demandService.getDemandDetails(demandDetailCriteria, requestInfo), HttpStatus.OK);
 	}
 	
+	@Deprecated
 	@PostMapping("_updatemis")
 	public ResponseEntity<?> updateMIS(@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid DemandUpdateMisRequest demandRequest, BindingResult bindingResult) {
@@ -170,6 +195,7 @@ public class DemandController {
 		return new ResponseEntity<>(demandService.updateMISAsync(demandRequest), HttpStatus.CREATED);
 	}
 	
+	@Deprecated
 	@PostMapping("/_dues")
 	public ResponseEntity<?> getDemandDues(@RequestBody RequestInfoWrapper requestInfoWrapper,
 												@ModelAttribute @Valid DemandDueCriteria demandDueCriteria, BindingResult bindingResult) {

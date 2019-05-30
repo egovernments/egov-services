@@ -42,7 +42,6 @@ package org.egov.demand.repository.rowmapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.AuditDetails;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.TaxHeadMaster;

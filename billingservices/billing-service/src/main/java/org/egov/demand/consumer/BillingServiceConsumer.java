@@ -7,26 +7,19 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.CollectionReceiptRequest;
 import org.egov.demand.model.BillDetail.StatusEnum;
-import org.egov.demand.model.DemandUpdateMisRequest;
-import org.egov.demand.model.enums.Status;
 import org.egov.demand.repository.BillRepository;
-import org.egov.demand.service.BusinessServDetailService;
-import org.egov.demand.service.DemandAdjustmentService;
 import org.egov.demand.service.DemandService;
-import org.egov.demand.service.GlCodeMasterService;
 import org.egov.demand.service.ReceiptService;
-import org.egov.demand.service.TaxHeadMasterService;
-import org.egov.demand.service.TaxPeriodService;
-import org.egov.demand.web.contract.*;
-import org.egov.tracer.model.CustomException;
+import org.egov.demand.web.contract.BillRequest;
+import org.egov.demand.web.contract.DemandRequest;
+import org.egov.demand.web.contract.Receipt;
+import org.egov.demand.web.contract.ReceiptRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +43,6 @@ public class BillingServiceConsumer {
 	@Autowired
 	private ReceiptService receiptService;
 
-	@Autowired
-	private DemandAdjustmentService demandAdjustmentService;
 
 	@KafkaListener(topics = { "${kafka.topics.receipt.update.collecteReceipt}", "${kafka.topics.save.bill}",
 			"${kafka.topics.save.demand}", "${kafka.topics.update.demand}", "${kafka.topics.receipt.update.demand}",
@@ -92,15 +83,15 @@ public class BillingServiceConsumer {
 					.tenantId(collectionReceiptRequest.getTenantId()).build();
 			log.debug("the receipt request is -------------------" + receiptRequest);
 
-			receiptService.updateDemandFromReceipt(receiptRequest, StatusEnum.CREATED);
+			receiptService.updateDemandFromReceipt(receiptRequest, StatusEnum.CREATED, false);
 		}
 
 		/*
 		 * update demand for receipt cancellation
 		 */
 		else if (applicationProperties.getReceiptCancellationTopic().equals(topic)) {
-			demandAdjustmentService
-					.adjustDemandOnReceiptCancellation(objectMapper.convertValue(consumerRecord, ReceiptRequest.class));
+			receiptService.updateDemandFromReceipt(objectMapper.convertValue(consumerRecord, ReceiptRequest.class),
+					StatusEnum.CANCELLED, true);
 		}
 	}
 }

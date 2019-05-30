@@ -40,6 +40,15 @@
 
 package org.egov.demand.service;
 
+import static org.egov.demand.util.Constants.CONSUMERCODES_REPLACE_TEXT;
+import static org.egov.demand.util.Constants.EG_BS_BILL_NO_DEMANDS_FOUND_KEY;
+import static org.egov.demand.util.Constants.EG_BS_BILL_NO_DEMANDS_FOUND_MSG;
+import static org.egov.demand.util.Constants.TENANTID_REPLACE_TEXT;
+import static org.egov.demand.util.Constants.URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE_KEY;
+import static org.egov.demand.util.Constants.URL_NOT_CONFIGURED_FOR_DEMAND_UPDATE_MSG;
+import static org.egov.demand.util.Constants.URL_NOT_CONFIGURED_REPLACE_TEXT;
+import static org.egov.demand.util.Constants.URL_PARAMS_FOR_SERVICE_BASED_DEMAND_APIS;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,10 +82,6 @@ import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.repository.ServiceRequestRepository;
-
-import static org.egov.demand.util.Constants.*;
-
-import org.egov.demand.util.Constants;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -91,7 +96,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -39,12 +39,10 @@
  */
 package org.egov.demand.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
-import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.BusinessServiceDetailRepository;
 import org.egov.demand.util.SequenceGenService;
@@ -109,11 +107,8 @@ public class BusinessServDetailService {
     }
 
     public BusinessServiceDetailResponse updateAsync(BusinessServiceDetailRequest businessServiceDetailRequest) {
-        RequestInfo requestInfo = businessServiceDetailRequest.getRequestInfo();
-        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
-        String userId = businessServiceDetailRequest.getRequestInfo().getUserInfo().getId().toString();
-        Long currEpochDate = new Date().getTime();
-        AuditDetail auditDetail;
+
+    	List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
         /*for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
             auditDetail = businessServiceDetail.getAuditDetails();
             auditDetail.setLastModifiedBy(userId);

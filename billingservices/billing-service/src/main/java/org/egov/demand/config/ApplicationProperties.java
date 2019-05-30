@@ -185,12 +185,6 @@ public class ApplicationProperties {
 	private String demandIndexTopic;
 	
 	
-	public String commonsSearchPageSizeDefault() {
-		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
-	}
-	
-	
-	
 	/*
 	 * billing service v1.1
 	 */
@@ -215,4 +209,9 @@ public class ApplicationProperties {
 	
 	@Value("#{${bs.businesscode.demand.updateurl}}")
 	private Map<String, String> businessCodeAndDemandUpdateUrlMap;
+	
+	public String commonsSearchPageSizeDefault() {
+		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);
+	}
+	
 }

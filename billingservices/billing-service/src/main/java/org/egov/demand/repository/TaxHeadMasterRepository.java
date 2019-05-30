@@ -143,7 +143,7 @@ public class TaxHeadMasterRepository {
 		log.debug("create requestInfo:"+ requestInfo);
 		log.debug("create taxHeadMasters:"+ taxHeadMasters);
 		
-		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.Insert_Query, new BatchPreparedStatementSetter() {
+		jdbcTemplate.batchUpdate(TaxHeadMasterQueryBuilder.INSERT_QUERY, new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {
@@ -190,7 +190,7 @@ public class TaxHeadMasterRepository {
 		log.debug("update requestInfo:"+ requestInfo);
 		log.debug("update taxHeadMasters:"+ taxHeadMasters);
 		
-		jdbcTemplate.batchUpdate(taxHeadMasterQueryBuilder.Update_Query, new BatchPreparedStatementSetter() {
+		jdbcTemplate.batchUpdate(TaxHeadMasterQueryBuilder.UPDATE_QUERY, new BatchPreparedStatementSetter() {
 			
 			@Override
 			public void setValues(PreparedStatement ps, int index) throws SQLException {

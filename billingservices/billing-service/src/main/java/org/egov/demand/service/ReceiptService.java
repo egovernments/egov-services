@@ -34,7 +34,7 @@ public class ReceiptService {
 	private DemandService demandService;
 	
 
-	public void updateDemandFromReceipt(ReceiptRequest receiptRequest, StatusEnum status) {
+	public void updateDemandFromReceipt(ReceiptRequest receiptRequest, StatusEnum status, Boolean isReceiptCancellation) {
 
 		if (null != receiptRequest && CollectionUtils.isEmpty(receiptRequest.getReceipt())
 				|| Objects.isNull(receiptRequest)
@@ -54,7 +54,7 @@ public class ReceiptService {
 
 		BillRequest billRequest = BillRequest.builder().requestInfo(receiptRequest.getRequestInfo()).bills(bills)
 				.build();
-		updateDemandFromBill(billRequest,demandIds, false);
+		updateDemandFromBill(billRequest,demandIds, isReceiptCancellation);
 	}
 
 	/**

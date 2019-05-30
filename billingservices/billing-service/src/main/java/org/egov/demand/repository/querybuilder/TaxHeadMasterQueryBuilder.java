@@ -3,9 +3,7 @@ package org.egov.demand.repository.querybuilder;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaxHeadMasterQueryBuilder {
 	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	public final String Update_Query = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?,"
+	public static final String UPDATE_QUERY = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?,"
 			+ " name = ?, code=?, isdebit = ?, isactualdemand = ?, orderno = ?, validfrom = ?, validtill = ?,"
 			+ " lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and id = ?";
 
-	public final String Insert_Query = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
+	public static final String INSERT_QUERY = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
 			+ " service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill,"
 			+ " createdby, createdtime, lastmodifiedby, lastmodifiedtime)"
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -89,7 +84,7 @@ public class TaxHeadMasterQueryBuilder {
 
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final TaxHeadMasterCriteria searchTaxHeads) {
 		

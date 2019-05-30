@@ -1,6 +1,7 @@
 package org.egov.infra.indexer.controller;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.producer.IndexerProducer;
@@ -53,9 +54,9 @@ public class IndexerController {
 	private Validator validator;
 	
 	//This is testing API 
-    @PostMapping("/_index")
+    @PostMapping("{key}/_index")
     @ResponseBody
-    private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
+    private ResponseEntity<?> produceIndexJson(@PathParam("key") String topic, @RequestBody Object indexJson){
     	try{
     		indexerProducer.producer(topic, indexJson);
     	}catch(Exception e){

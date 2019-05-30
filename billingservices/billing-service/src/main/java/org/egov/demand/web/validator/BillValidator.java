@@ -19,13 +19,15 @@ public class BillValidator {
 	 */
 	public void validateBillGenRequest(GenerateBillCriteria generateBillCriteria) {
 
+		boolean demandIdNotProvided = null == generateBillCriteria.getDemandId();
+			
 		boolean payerDataNotProvided = (generateBillCriteria.getMobileNumber() == null
 				&& generateBillCriteria.getEmail() == null);
 		
 		boolean isCombinationOfBusinessOrCosnumerCodeMissing = generateBillCriteria.getBusinessService() == null
 				|| generateBillCriteria.getConsumerCode() == null;
 
-		if (payerDataNotProvided && isCombinationOfBusinessOrCosnumerCodeMissing)
+		if (demandIdNotProvided && payerDataNotProvided && isCombinationOfBusinessOrCosnumerCodeMissing)
 			throw new CustomException(BILL_GEN_MANDATORY_FIELDS_MISSING_KEY, BILL_GEN_MANDATORY_FIELDS_MISSING_MSG);
 
 	}

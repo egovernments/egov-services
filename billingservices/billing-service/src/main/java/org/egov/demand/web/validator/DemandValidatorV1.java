@@ -157,7 +157,7 @@ public class DemandValidatorV1 {
 
 			List<DemandDetail> details = demand.getDemandDetails();
 			Map<String, TaxHeadMaster> taxHeadMap = businessTaxCodeMap.get(demand.getBusinessService());
-			System.err.println(" the taxhead map : " + taxHeadMap);
+			log.info(" the taxhead map : " + taxHeadMap);
 			detailsForValidation.addAll(details);
 
 			if (isCreate) {

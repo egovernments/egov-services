@@ -42,6 +42,7 @@ package org.egov.mdms.service;
 
 import java.util.HashMap;
 
+import org.egov.common.contract.request.User;
 import org.egov.reciept.consumer.config.PropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+
 @Service
 public class TokenService {
 
@@ -65,6 +70,9 @@ public class TokenService {
 
     @Autowired
     private PropertiesManager propertiesManager;
+    
+    @Autowired
+	private ObjectMapper mapper;
 
     public String generateAdminToken(String tenantId) {
 
@@ -88,6 +96,9 @@ public class TokenService {
                     request, Object.class);
             if (response != null) {
 				String authToken = String.valueOf(((HashMap) response).get("access_token"));
+				User userInfo = mapper.convertValue(JsonPath.read(response, "$.UserRequest"),new TypeReference<User>(){});
+				propertiesManager.setSiAuthToken(authToken);
+				propertiesManager.setSiUserInfo(userInfo);
 				return authToken;
 			}
         } catch (RestClientException e) {

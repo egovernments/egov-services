@@ -47,6 +47,7 @@
  */
 package org.egov.receipt.consumer.model;
 
+import org.egov.common.contract.request.User;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -71,4 +72,5 @@ public class RequestInfo {
     private String msgId;
     private String authToken;
     private String correlationId;
+    private User userInfo;
 }

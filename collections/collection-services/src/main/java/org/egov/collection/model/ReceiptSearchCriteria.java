@@ -96,9 +96,8 @@ public class ReceiptSearchCriteria {
     private List<String> billIds;
 
     private boolean receiptDetailsRequired;
-
-    //Deprecated
-//    private Integer pageSize;
+    
+    private String mobileNo;
 
     private Integer offset;
 

@@ -356,7 +356,7 @@ public class CollectionsQueryBuilder {
             preparedStatementValues.put("tenantId", searchCriteria.getTenantId());
 
         }
-
+        
         if (searchCriteria.getReceiptNumbers() != null && !searchCriteria.getReceiptNumbers().isEmpty()) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.receiptNumber IN (:receiptNumbers)  ");
@@ -473,6 +473,12 @@ public class CollectionsQueryBuilder {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.payerid IN (:payerid)  ");
             preparedStatementValues.put("payerid", searchCriteria.getPayerIds());
+        }
+        
+        if (StringUtils.isNotBlank(searchCriteria.getMobileNo())) {
+            addClauseIfRequired(preparedStatementValues, selectQuery);
+            selectQuery.append(" rh.payermobile = :payermobile");
+            preparedStatementValues.put("payermobile", searchCriteria.getMobileNo());
         }
     }
 

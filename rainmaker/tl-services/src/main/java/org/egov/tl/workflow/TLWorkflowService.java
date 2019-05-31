@@ -34,7 +34,7 @@ public class TLWorkflowService {
      * @param request The update tradeLicense Request
      */
     public void updateStatus(TradeLicenseRequest request){
-        actionValidator.validateUpdateRequest(request);
+        actionValidator.validateUpdateRequest(request,null);
         changeStatus(request);
     }
 

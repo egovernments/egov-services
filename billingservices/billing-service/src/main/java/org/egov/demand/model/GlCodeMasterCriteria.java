@@ -1,14 +1,13 @@
 package org.egov.demand.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,9 +25,13 @@ public class GlCodeMasterCriteria {
 	private String tenantId;
 	@NotNull
 	private String service;
+	
 	@NotNull
-	private Set<String> taxHead = new HashSet<String>();
-	private Set<String> id = new HashSet<String>();
+	@Default
+	private Set<String> taxHead = new HashSet<>();
+	
+	@Default
+	private Set<String> id = new HashSet<>();
 	private String glCode;
 	private Long fromDate;
 	private Long toDate;

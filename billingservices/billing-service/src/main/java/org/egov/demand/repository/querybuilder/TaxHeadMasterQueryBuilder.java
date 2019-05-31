@@ -3,9 +3,7 @@ package org.egov.demand.repository.querybuilder;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.TaxHeadMasterCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaxHeadMasterQueryBuilder {
 	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-	
-	public final String Update_Query = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?,"
+	public static final String UPDATE_QUERY = "UPDATE public.egbs_taxheadmaster SET  category = ?, service = ?,"
 			+ " name = ?, code=?, isdebit = ?, isactualdemand = ?, orderno = ?, validfrom = ?, validtill = ?,"
 			+ " lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and id = ?";
 
-	public final String Insert_Query = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
+	public static final String INSERT_QUERY = "INSERT INTO egbs_taxheadmaster(id, tenantid, category,"
 			+ " service, name, code, isdebit,isactualdemand, orderno, validfrom, validtill,"
 			+ " createdby, createdtime, lastmodifiedby, lastmodifiedtime)"
 			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -86,22 +81,17 @@ public class TaxHeadMasterQueryBuilder {
 			preparedStatementValues.add( searchTaxHead.getIsDebit());
 		}
 		
-		if (searchTaxHead.getValidFrom() != null && searchTaxHead.getValidTill() != null) {
-			selectQuery.append(" AND taxhead.validfrom <= ?");
-			preparedStatementValues.add(searchTaxHead.getValidFrom());
-			selectQuery.append(" AND taxhead.validtill >= ?");
-			preparedStatementValues.add(searchTaxHead.getValidTill());
-		}
+
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final TaxHeadMasterCriteria searchTaxHeads) {
 		
 		selectQuery.append(" ORDER BY taxhead.validfrom,taxhead.code");
 
 		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
+	/*	long pageSize = Integer.parseInt(applicationProperties.commonsSearchPageSizeDefault());
 		if (searchTaxHeads.getSize() != null)
 			pageSize = searchTaxHeads.getSize();
 		preparedStatementValues.add(pageSize); // Set limit to pageSize
@@ -111,7 +101,7 @@ public class TaxHeadMasterQueryBuilder {
 		long pageNumber = 0; // Default pageNo is zero meaning first page
 		if (searchTaxHeads.getOffset() != null)
 			pageNumber = searchTaxHeads.getOffset() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to*/
 															// pageNo * pageSize
 	}
 	

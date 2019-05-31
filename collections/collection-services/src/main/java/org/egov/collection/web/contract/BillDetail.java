@@ -39,26 +39,17 @@
  */
 package org.egov.collection.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.*;
+import org.egov.collection.model.enums.CollectionType;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import org.egov.collection.model.enums.CollectionType;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -82,6 +73,8 @@ public class BillDetail {
     private String consumerCode;
 
     private String consumerType;
+
+    private Long expiryDate;
 
     private BigDecimal minimumAmount;
 

@@ -352,7 +352,11 @@ public class CollectionsQueryBuilder {
 
         if (StringUtils.isNotBlank(searchCriteria.getTenantId())) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
-            selectQuery.append(" rh.tenantId =:tenantId");
+            if(searchCriteria.getTenantId().split("\\.").length > 1)
+                selectQuery.append(" rh.tenantId =:tenantId");
+            else
+                selectQuery.append(" rh.tenantId LIKE ':tenantId%'");
+            
             preparedStatementValues.put("tenantId", searchCriteria.getTenantId());
 
         }

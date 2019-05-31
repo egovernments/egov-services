@@ -74,6 +74,5 @@ public class RequestInfo {
     private String msgId;
     private String authToken;
     private String correlationId;
-    @JsonIgnore
     private User userInfo;
 }

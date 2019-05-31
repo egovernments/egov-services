@@ -282,12 +282,13 @@ export const addUUIDAndAuditDetails =async (request) => {
     FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
     FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[i].fireNOCDetails.applicantDetails.owners.map(
       owner => {
-        owner.id = owner.id ? owner.id : uuidv1();
+        //user integration create, search and update is pending
+        owner.id = uuidv1();
         return owner;
       }
     );
     FireNOCs[i].auditDetails = {
-      createdBy: "Murali M",
+      createdBy: get(RequestInfo,"userInfo.uuid",''),
       lastModifiedBy: "",
       createdTime: new Date().getTime(),
       lastModifiedTime: 0

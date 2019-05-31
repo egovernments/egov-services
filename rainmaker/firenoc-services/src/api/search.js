@@ -53,17 +53,20 @@ export default ({ config, db }) => {
         queryObj.fromDate
       } ORDER BY FN.uuid`;
     } else {
-      console.log("Select From Date");
+      // console.log("Select From Date");
       sqlQuery = `${sqlQuery.substring(
         0,
         sqlQuery.length - 3
       )} ORDER BY FN.uuid`;
     }
 
+    console.log(text);
+
     db.query(sqlQuery, async (err, res) => {
       if (err) {
         console.log(err.stack);
       } else {
+        console.log(JSON.stringify(res.rows));
         response.FireNOCs =
           res.rows && !isEmpty(res.rows)
             ? await mergeSearchResults(res.rows, request.query)

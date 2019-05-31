@@ -1,0 +1,98 @@
+ReportDefinitions:
+  - reportName: CollectionRegister
+    summary: Collection Register
+    version: 1.0.0
+    moduleName: rainmaker-common
+    sourceColumns:
+      - name: service
+        label: reports.common.CollectionRegister.service
+        type: string
+        source: common
+        total: false
+      - name: channel
+        label: reports.common.CollectionRegister.channel
+        type: string
+        source: common
+        total: false
+      - name: noofreceipts
+        label: reports.common.CollectionRegister.noofreceipts
+        type: string
+        source: common
+        total: true
+      - name: cash
+        label: reports.common.CollectionRegister.cash
+        type: number
+        source: common
+        total: true
+      - name: cheque
+        label: reports.common.CollectionRegister.cheque
+        type: number
+        source: common
+        total: true
+      - name: dd
+        label: reports.common.CollectionRegister.dd
+        type: number
+        source: common
+        total: true
+      - name: online
+        label: reports.common.CollectionRegister.online
+        type: number
+        source: common
+        total: true
+      - name: card
+        label: reports.common.CollectionRegister.card
+        type: number
+        source: common
+        total: true
+      - name: total
+        label: reports.common.CollectionRegister.total
+        type: number
+        source: common
+        total: true
+
+    searchParams:
+      - name: fromDate
+        label: reports.common.CollectionRegister.fromdate
+        type: epoch
+        source: common
+        isMandatory: true
+        searchClause: AND receiptdate >= $fromDate
+      - name: toDate
+        label: reports.common.CollectionRegister.todate
+        type: epoch
+        source: common
+        isMandatory: true
+        searchClause: AND receiptdate <= $toDate
+      - name: channel
+        label: reports.common.CollectionRegister.channel
+        type: singlevaluelist
+        pattern: 'list://COUNTER:COUNTER,ONLINE:ONLINE,FIELD:FIELD'
+        source: common
+        isMandatory: false
+        searchClause: AND collectiontype = $channel
+      - name: paymentMode
+        label: reports.common.CollectionRegister.mode
+        type: singlevaluelist
+        pattern: 'list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque'
+        source: common
+        isMandatory: false
+        searchClause: AND instrumenttype = $paymentMode
+      - name: service
+        label: reports.common.CollectionRegister.service
+        type: multivaluelist
+        pattern: https://egov-common-masters:8080/egov-common-masters/businessDetails/_search?tenantId=$tenantid&active=true|$.BusinessDetails[*].code|$.BusinessDetails[*].name
+        source: common
+        wrapper: true
+        state: true
+        isMandatory: true
+        searchClause: AND rt.businessdetails IN ($service)
+      - name: ulb
+        label: reports.common.CollectionRegister.ulb
+        type: singlevaluelist
+        pattern: https://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
+        source: common
+        wrapper: true
+        isMandatory: false
+        searchClause: AND rt.tenantId = $ulb
+    query: select bd.name service,collectiontype channel,count(*) noofreceipts,sum(case when instrumenttype='Cash' then ins.amount end) as cash, sum(case when instrumenttype='Cheque' then ins.amount end) as cheque, sum(case when instrumenttype='DD' then ins.amount end) as DD, sum(case when instrumenttype='Online' then ins.amount end) as online, sum(case when instrumenttype='Card' then amount end) as card,sum(amount) total from egcl_receiptheader_v1 rt inner join egcl_receiptinstrument ihead on rt.id=receiptheader inner join egcl_instrumentheader_v1 ins on instrumentheader=ins.id inner join eg_businessdetails bd on rt.tenantid = bd.tenantid and rt.businessdetails = bd.code
+    groupby: group by service,collectiontype

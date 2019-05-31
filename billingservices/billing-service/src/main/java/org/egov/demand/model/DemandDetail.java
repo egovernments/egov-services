@@ -45,7 +45,4 @@ public class DemandDetail   {
 
         @JsonProperty("tenantId")
         private String tenantId;
-
-
 }
-

@@ -21,9 +21,6 @@ import org.egov.receipt.consumer.model.FinanceMdmsModel;
 import org.egov.receipt.consumer.model.Function;
 import org.egov.receipt.consumer.model.Functionary;
 import org.egov.receipt.consumer.model.Fund;
-import org.egov.receipt.consumer.model.InstrumentAccountCodeContract;
-import org.egov.receipt.consumer.model.InstrumentAccountCodeReq;
-import org.egov.receipt.consumer.model.InstrumentAccountCodeResponse;
 import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.Receipt;
 import org.egov.receipt.consumer.model.ReceiptReq;
@@ -100,35 +97,6 @@ public class VoucherServiceImpl implements VoucherService {
 		List<BusinessService> serviceByCode = this.getBusinessServiceByCode(tenantId, bsCode, req.getRequestInfo(), finSerMdms);
 		return serviceByCode != null && !serviceByCode.isEmpty() ? serviceByCode.get(0).isVoucherCreationEnabled()
 				: false;
-	}
-
-	/**
-	 * 
-	 * @param receipt
-	 * @return
-	 * @throws VoucherCustomException
-	 *             Function which is used to get the AccountCodeContract based
-	 *             on the Account code from running Instrument Service. By which
-	 *             we can get the mapped glcode for Account code.
-	 */
-	private InstrumentAccountCodeContract getInstrumentAccountCode(Receipt receipt, RequestInfo requestInfo) throws VoucherCustomException {
-		String name = receipt.getInstrument().getInstrumentType().getName();
-		InstrumentAccountCodeReq instAccCodeReq = new InstrumentAccountCodeReq();
-		String tenantId = receipt.getTenantId();
-		final StringBuilder instrument_account_code_url = new StringBuilder(propertiesManager.getInstrumentHostUrl()
-				+ propertiesManager.getInstrumentAccountCodeUrl() + "?tenantId=" + tenantId + "&instrumentType.name="+name);
-		instAccCodeReq.setTenantId(tenantId);
-		instAccCodeReq.setRequestInfo(requestInfo);
-		InstrumentAccountCodeResponse postForObject = mapper.convertValue(serviceRequestRepository.fetchResult(instrument_account_code_url, instAccCodeReq, tenantId), InstrumentAccountCodeResponse.class);
-		if (postForObject != null && !postForObject.getInstrumentAccountCodes().isEmpty()) {
-			List<InstrumentAccountCodeContract> instrumentAccountCodes = postForObject.getInstrumentAccountCodes()
-					.stream().filter(iac -> iac.getInstrumentType().getName().equals(name))
-					.collect(Collectors.toList());
-			if (!instrumentAccountCodes.isEmpty()) {
-				return instrumentAccountCodes.get(0);
-			}
-		}
-		throw new VoucherCustomException(ProcessStatus.FAILED, "Account code mapping is missing for Instrument Type " + name);
 	}
 
 	/**
@@ -260,7 +228,7 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 		}
 
-		setNetReceiptAmount(voucher, receipt, requestInfo);
+		this.setNetReceiptAmount(receipt, requestInfo, tenantId, bsCode, finSerMdms);
 		LOGGER.debug("amountMapwithGlcode  ::: {}", amountMapwithGlcode);
 		// Iterating map and setting the ledger details to voucher.
 		if(amountMapwithGlcode.isEmpty()){
@@ -307,18 +275,23 @@ public class VoucherServiceImpl implements VoucherService {
 
 	/**
 	 * 
-	 * @param voucher
 	 * @param receipt
+	 * @param tenantId 
+	 * @param businessCode 
+	 * @param finSerMdms 
 	 * @throws VoucherCustomException
 	 *             Function is used to set the paid amount as debit in finance
 	 *             system.
 	 */
-	private void setNetReceiptAmount(Voucher voucher, Receipt receipt, RequestInfo requestInfo)
+	private void setNetReceiptAmount(Receipt receipt, RequestInfo requestInfo, String tenantId, String businessCode, FinanceMdmsModel finSerMdms)
 			throws VoucherCustomException {
 		BigDecimal amountPaid = receipt.getBill().get(0).getBillDetails().get(0).getAmountPaid();
 		if (amountPaid != null && amountPaid.compareTo(new BigDecimal(0)) != 0) {
-			InstrumentAccountCodeContract instrumentAccountCode = this.getInstrumentAccountCode(receipt, requestInfo);
-			String glcode = instrumentAccountCode.getAccountCode().getGlcode();
+			String instrumentType = receipt.getInstrument().getInstrumentType().getName();;
+			String glcode = microServiceUtil.getGlcodeByInstrumentType(tenantId, businessCode, requestInfo, finSerMdms, instrumentType);
+			if(glcode == null){
+				throw new VoucherCustomException(ProcessStatus.FAILED, "Account code mapping is missing for Instrument Type " + instrumentType);
+			}
 			amountMapwithGlcode.put(glcode, new BigDecimal(-amountPaid.doubleValue()));
 		}
 	}

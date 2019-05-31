@@ -13,4 +13,6 @@ public interface MicroServiceUtil {
 	public List<BusinessService> getBusinessService(String tenantId, String code, RequestInfo requestInfo, FinanceMdmsModel finSerMdms)  throws Exception;
 	String getBusinessServiceName(String tenantId, String code, RequestInfo requestInfo, FinanceMdmsModel finSerMdms)
 			throws VoucherCustomException;
+	String getGlcodeByInstrumentType(String tenantId, String businessCode, RequestInfo requestInfo,
+			FinanceMdmsModel finSerMdms, String instrumentType) throws VoucherCustomException;
 }

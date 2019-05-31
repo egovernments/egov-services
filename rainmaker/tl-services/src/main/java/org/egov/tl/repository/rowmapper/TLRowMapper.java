@@ -186,6 +186,8 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
         }
 
         if(rs.getString("tl_acc_id")!=null && rs.getBoolean("tl_acc_active")) {
+            Integer count = rs.getInt("count");
+            if(rs.wasNull()){count = null;}
             Accessory accessory = Accessory.builder()
                     .accessoryCategory(rs.getString("accessoryCategory"))
                     .uom(rs.getString("tl_acc_uom"))
@@ -193,6 +195,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                     .uomValue(rs.getString("tl_acc_uomvalue"))
                     .tenantId(tenantId)
                     .active(rs.getBoolean("tl_acc_active"))
+                    .count(count)
                     .build();
             tradeLicense.getTradeLicenseDetail().addAccessoriesItem(accessory);
         }

@@ -467,7 +467,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 			
 		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
 		    {
-		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+		            if(name.equals(sc.getName())){
 		            	if(sc.getSearchClause() != null) {
 		            		if(searchParam.getInput() instanceof ArrayList<?>){
 		            			LOGGER.info("Coming in to the instance of ArrayList ");

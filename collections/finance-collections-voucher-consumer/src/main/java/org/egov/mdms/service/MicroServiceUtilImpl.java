@@ -3,9 +3,11 @@ package org.egov.mdms.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.receipt.consumer.model.BusinessService;
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
+import org.egov.receipt.consumer.model.InstrumentGlCodeMapping;
 import org.egov.receipt.consumer.model.MasterDetail;
 import org.egov.receipt.consumer.model.MdmsCriteria;
 import org.egov.receipt.consumer.model.MdmsCriteriaReq;
@@ -66,7 +68,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.TaxHeadMasterGlCodeMapping"),new TypeReference<List<TaxHeadMaster>>(){});
 			}			
 		} catch (Exception e) {
-			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data. Check the business/account head mapping json file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for TaxHeadMasterGlCodeMapping master. Check the business/account head mapping json file.");
 		}
 		return list;
 	}
@@ -101,6 +103,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
 		masterDetailsList.add(new MasterDetail("BusinessServiceMapping","[?(@.code=='" + businessServiceCode + "')]"));
 		masterDetailsList.add(new MasterDetail("TaxHeadMasterGlCodeMapping","[?(@.billingservicecode=='" + businessServiceCode + "')]"));
+		masterDetailsList.add(new MasterDetail("InstrumentGLcodeMapping",null));
 		moduleDetails.add(new ModuleDetail(FIN_MODULE_NAME, masterDetailsList));
 	}
 
@@ -121,8 +124,27 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.BillingService.BusinessService"),new TypeReference<List<BusinessService>>(){});
 			}
 		} catch (Exception e) {
-			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data. Check the business/account head mapping json file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for BusinessService master. Check the business/account head mapping json file.");
 		}
 		return !list.isEmpty() ? list.get(0).getBusinessService() : code;
 	}
+	
+	@Override
+	public String getGlcodeByInstrumentType(String tenantId,String businessCode,RequestInfo requestInfo, FinanceMdmsModel finSerMdms,String instrumentType) throws VoucherCustomException {
+		if(finSerMdms.getFinanceServiceMdmsData() == null){
+			this.getFinanceServiceMdmsData(tenantId, businessCode, requestInfo, finSerMdms);
+		}
+		List<InstrumentGlCodeMapping> list = new ArrayList<>();
+		try {
+			if(finSerMdms.getFinanceServiceMdmsData() != null){
+				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.InstrumentGLcodeMapping"),new TypeReference<List<InstrumentGlCodeMapping>>(){});
+			}
+		} catch (Exception e) {
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for InstrumentGLcodeMapping master. Check the business/account head mapping json file.");
+		}
+		List<InstrumentGlCodeMapping> collect = list.stream().filter(inst -> inst.getInstrumenttype().equals(instrumentType)).collect(Collectors.toList());
+		return !collect.isEmpty() ? collect.get(0).getGlcode() : null;
+	}
+	
+	
 }

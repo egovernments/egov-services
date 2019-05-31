@@ -287,14 +287,14 @@ public class EstimationService {
 
 		// usage exemption
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_UNIT_USAGE_EXEMPTION).estimateAmount(
-		        usageExemption.setScale(2, 2)).build());
-		payableTax = payableTax.subtract(usageExemption);
+		        usageExemption.setScale(2, 2).negate()).build());
+		payableTax = payableTax.add(usageExemption);
 
 		// owner exemption
 		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear, propertyBasedExemptionMasterMap);
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_OWNER_EXEMPTION).estimateAmount(
-		        userExemption.setScale(2, 2)).build());
-		payableTax = payableTax.subtract(userExemption);
+		        userExemption.setScale(2, 2).negate()).build());
+		payableTax = payableTax.add(userExemption);
 
 		// Fire cess
 		List<Object> fireCessMasterList = timeBasedExemeptionMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER);
@@ -310,7 +310,7 @@ public class EstimationService {
 
 		// get applicable rebate and penalty
 		Map<String, BigDecimal> rebatePenaltyMap = payService.applyPenaltyRebateAndInterest(payableTax, BigDecimal.ZERO,
-				0L, assessmentYear, timeBasedExemeptionMasterMap);
+				 assessmentYear, timeBasedExemeptionMasterMap,null);
 
 		if (null != rebatePenaltyMap) {
 
@@ -320,7 +320,7 @@ public class EstimationService {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_TIME_REBATE).estimateAmount(rebate).build());
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_TIME_PENALTY).estimateAmount(penalty).build());
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_TIME_INTEREST).estimateAmount(interest).build());
-			payableTax = payableTax.subtract(rebate).add(penalty).add(interest);
+			payableTax = payableTax.add(rebate).add(penalty).add(interest);
 		}
 
 		// AdHoc Values (additional rebate or penalty manually entered by the employee)
@@ -330,7 +330,7 @@ public class EstimationService {
 
 		if (null != detail.getAdhocExemption() && detail.getAdhocExemption().compareTo(payableTax.add(fireCess)) <= 0) {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_ADHOC_REBATE)
-					.estimateAmount(detail.getAdhocExemption()).build());
+					.estimateAmount(detail.getAdhocExemption().negate()).build());
 		}
 		else if (null != detail.getAdhocExemption()) {
 			throw new CustomException(PT_ADHOC_REBATE_INVALID_AMOUNT, PT_ADHOC_REBATE_INVALID_AMOUNT_MSG + taxAmt);
@@ -405,13 +405,13 @@ public class EstimationService {
         if (null != decimalEstimate) {
 			decimalEstimate.setCategory(taxHeadCategoryMap.get(decimalEstimate.getTaxHeadCode()));
             estimates.add(decimalEstimate);
-            if (PT_DECIMAL_CEILING_CREDIT.equalsIgnoreCase(decimalEstimate.getTaxHeadCode()))
+            if (decimalEstimate.getEstimateAmount().compareTo(BigDecimal.ZERO)>=0)
                 taxAmt = taxAmt.add(decimalEstimate.getEstimateAmount());
             else
                 rebate = rebate.add(decimalEstimate.getEstimateAmount());
         }
 
-		BigDecimal totalAmount = taxAmt.add(penalty).subtract(rebate).subtract(exemption);
+		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption);
 		// false in the argument represents that the demand shouldn't be updated from this call
 		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(ptTax, criteria, requestInfo, false);
 

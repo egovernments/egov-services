@@ -59,7 +59,15 @@ const createDemand = async (requestInfo, calculations, config) => {
     demands.push(demand);
   });
 
-  //TODO make create call
+  let DemandRequest = {
+    RequestInfo,
+    Demands: demands
+  };
+  var demandCreateResponse = await httpRequest({
+    hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
+    endPoint: process.env.EGOV_DEMAND_CREATE_ENDPOINT,
+    requestBody: DemandRequest
+  });
 };
 
 const updateDemand = async (
@@ -92,7 +100,15 @@ const updateDemand = async (
     demands.push(demand);
   });
 
-  //TODO make create call
+  let DemandRequest = {
+    RequestInfo,
+    Demands: demands
+  };
+  var demandUpdateResponse = await httpRequest({
+    hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
+    endPoint: process.env.EGOV_DEMAND_UPDATE_ENDPOINT,
+    requestBody: DemandRequest
+  });
 };
 
 const searchDemand = async (requestInfo, tenantId, consumercodeList) => {

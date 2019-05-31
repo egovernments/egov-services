@@ -47,11 +47,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
-import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.AuditDetails;
 import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.CollectedReceipt;
 import org.egov.demand.model.Demand;
@@ -63,14 +64,20 @@ import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.CollectedReceiptsRowMapper;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
+import org.egov.demand.util.Constants;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.DemandRequest;
+import org.egov.tracer.model.CustomException;
+import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,17 +97,32 @@ public class DemandRepository {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	public List<Demand> getDemands(DemandCriteria demandCriteria, Set<String> ownerIds) {
+	@Autowired
+	private DemandRowMapper demandRowMapper;
+	
+	@Autowired
+	private ObjectMapper mapper;
+	
+	public List<Demand> getDemands(DemandCriteria demandCriteria) {
 
 		List<Object> preparedStatementValues = new ArrayList<>();
-		String searchDemandQuery = demandQueryBuilder.getDemandQuery(demandCriteria, ownerIds, preparedStatementValues);
+		String searchDemandQuery = demandQueryBuilder.getDemandQuery(demandCriteria, preparedStatementValues);
 		return jdbcTemplate.query(searchDemandQuery, preparedStatementValues.toArray(), new DemandRowMapper());
 	}
 	
-	public List<Demand> getDemandsForConsumerCodes(Map<String,Set<String>> businessConsumercodeMap,String tenantId){
-		
-		String sql = demandQueryBuilder.getDemandQueryForConsumerCodes(businessConsumercodeMap, tenantId);
-		return jdbcTemplate.query(sql,new DemandRowMapper());
+	/**
+	 * Fetches demand from DB based on a map of business code and set of consumer codes
+	 * 
+	 * @param businessConsumercodeMap
+	 * @param tenantId
+	 * @return
+	 */
+	public List<Demand> getDemandsForConsumerCodes(Map<String, Set<String>> businessConsumercodeMap, String tenantId) {
+
+		List<Object> presparedStmtList = new ArrayList<>();
+		String sql = demandQueryBuilder.getDemandQueryForConsumerCodes(businessConsumercodeMap, presparedStmtList,
+				tenantId);
+		return jdbcTemplate.query(sql, presparedStmtList.toArray(), demandRowMapper);
 	}
 
 	public List<DemandDetail> getDemandDetails(DemandDetailCriteria demandDetailCriteria) {
@@ -110,19 +132,23 @@ public class DemandRepository {
 		return jdbcTemplate.query(searchDemandDetailQuery, preparedStatementValues.toArray(),new DemandDetailRowMapper());
 	}
 
+	@Transactional
 	public void save(DemandRequest demandRequest) {
 
-		log.info("DemandRepository save, the request object : " + demandRequest);
+		log.debug("DemandRepository save, the request object : " + demandRequest);
 		List<Demand> demands = demandRequest.getDemands();
 		List<DemandDetail> demandDetails = new ArrayList<>();
+		
 		for (Demand demand : demands) {
 			demandDetails.addAll(demand.getDemandDetails());
 		}
-		log.info("DemandRepository save, demands ---->> "+demands+" \n demanddetails ---->> "+demandDetails);
+		
 		insertBatch(demands, demandDetails);
-		log.info("Demands saved >>>> ");
+		log.debug("Demands saved >>>> ");
+		insertBatchForAudit(demands, demandDetails);
 	}
 	
+	@Transactional
 	public void update(DemandRequest demandRequest) {
 
 		List<Demand> demands = demandRequest.getDemands();
@@ -131,11 +157,12 @@ public class DemandRepository {
 		List<Demand> newDemands = new ArrayList<>();
 		List<DemandDetail> newDemandDetails = new ArrayList<>();
 
-		DemandCriteria demandCriteria = DemandCriteria.builder().demandId(demands
-						.stream().map(demand -> demand.getId()).collect(Collectors.toSet()))
-						.tenantId(demands.get(0).getTenantId()).build();
-		List<Demand> existingDemands = getDemands(demandCriteria, null);
-		System.err.println("repository demands "+existingDemands);
+		DemandCriteria demandCriteria = DemandCriteria.builder()
+				.demandId(demands.stream().map(Demand::getId).collect(Collectors.toSet()))
+				.tenantId(demands.get(0).getTenantId()).build();
+		List<Demand> existingDemands = getDemands(demandCriteria);
+		
+		log.debug("repository demands "+existingDemands);
 		Map<String, String> existingDemandMap = existingDemands.stream().collect(
 						Collectors.toMap(Demand::getId, Demand::getId));
 		Map<String, String> existingDemandDetailMap = new HashMap<>();
@@ -156,13 +183,18 @@ public class DemandRepository {
 					oldDemandDetails.add(demandDetail);
 			}
 		}
+		
 		updateBatch(oldDemands, oldDemandDetails);
-		if(!newDemands.isEmpty() || !newDemandDetails.isEmpty())
-		insertBatch(newDemands, newDemandDetails);
+		insertBatchForAudit(oldDemands, oldDemandDetails);
+		
+		if (!newDemands.isEmpty() || !newDemandDetails.isEmpty()) {
+			
+			insertBatch(newDemands, newDemandDetails);
+			insertBatchForAudit(newDemands, newDemandDetails);
+		}
 	}
 
-	@Transactional
-	private void insertBatch(List<Demand> newDemands, List<DemandDetail> newDemandDetails) {
+	public void insertBatch(List<Demand> newDemands, List<DemandDetail> newDemandDetails) {
 
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_INSERT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
@@ -170,13 +202,13 @@ public class DemandRepository {
 				
 				Demand demand = newDemands.get(rowNum);
 				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
-				AuditDetail auditDetail = demand.getAuditDetail();
-				Long ownerId = null != demand.getOwner() ? demand.getOwner().getId() : null;
+				AuditDetails auditDetail = demand.getAuditDetails();
+				String payerUuid = null != demand.getPayer() ? demand.getPayer().getUuid() : null;
 				ps.setString(1, demand.getId());
 				ps.setString(2, demand.getConsumerCode());
 				ps.setString(3, demand.getConsumerType());
 				ps.setString(4, demand.getBusinessService());
-				ps.setObject(5, ownerId);
+				ps.setString(5, payerUuid);
 				ps.setLong(6, demand.getTaxPeriodFrom());
 				ps.setLong(7, demand.getTaxPeriodTo());
 				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
@@ -186,6 +218,8 @@ public class DemandRepository {
 				ps.setLong(12, auditDetail.getLastModifiedTime());
 				ps.setString(13, demand.getTenantId());
 				ps.setString(14, status);
+				ps.setObject(15, getPGObject(demand.getAdditionalDetails()));
+				ps.setObject(16, demand.getBillExpiryTime());
 			}
 
 			@Override
@@ -197,8 +231,9 @@ public class DemandRepository {
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_DETAIL_INSERT_QUERY, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+				
 				DemandDetail demandDetail = newDemandDetails.get(rowNum);
-				AuditDetail auditDetail = demandDetail.getAuditDetail();
+				AuditDetails auditDetail = demandDetail.getAuditDetails();
 				ps.setString(1, demandDetail.getId());
 				ps.setString(2, demandDetail.getDemandId());
 				ps.setString(3, demandDetail.getTaxHeadMasterCode());
@@ -209,6 +244,7 @@ public class DemandRepository {
 				ps.setLong(8, auditDetail.getCreatedTime());
 				ps.setLong(9, auditDetail.getLastModifiedTime());
 				ps.setString(10, demandDetail.getTenantId());
+				ps.setObject(11, getPGObject(demandDetail.getAdditionalDetails()));
 			}
 
 			@Override
@@ -218,31 +254,30 @@ public class DemandRepository {
 		});
 	}
 	
-	@Transactional
-	private void updateBatch(List<Demand> oldDemands, List<DemandDetail> oldDemandDetails) {
+	public void updateBatch(List<Demand> oldDemands, List<DemandDetail> oldDemandDetails) {
 
 		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_UPDATE_QUERY, new BatchPreparedStatementSetter() {
 
 			@Override
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
 				Demand demand = oldDemands.get(rowNum);
-				
+
 				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
-				AuditDetail auditDetail = demand.getAuditDetail();
-				ps.setString(1, demand.getId());
-				ps.setString(2, demand.getConsumerCode());
-				ps.setString(3, demand.getConsumerType());
-				ps.setString(4, demand.getBusinessService());
-				ps.setLong(5, demand.getOwner().getId());
-				ps.setLong(6, demand.getTaxPeriodFrom());
-				ps.setLong(7, demand.getTaxPeriodTo());
-				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
-				ps.setString(9, auditDetail.getLastModifiedBy());
-				ps.setLong(10, auditDetail.getLastModifiedTime());
-				ps.setString(11, demand.getTenantId());
-				ps.setString(12, status);
-				ps.setString(13, demand.getId());
-				ps.setString(14, demand.getTenantId());
+				String payerUuid = null != demand.getPayer() ? demand.getPayer().getUuid() : null;
+				AuditDetails auditDetail = demand.getAuditDetails();
+
+				ps.setString(1, payerUuid);
+				ps.setLong(2, demand.getTaxPeriodFrom());
+				ps.setLong(3, demand.getTaxPeriodTo());
+				ps.setBigDecimal(4, demand.getMinimumAmountPayable());
+				ps.setString(5, auditDetail.getLastModifiedBy());
+				ps.setLong(6, auditDetail.getLastModifiedTime());
+				ps.setString(7, demand.getTenantId());
+				ps.setString(8, status);
+				ps.setObject(9, getPGObject(demand.getAdditionalDetails()));
+				ps.setObject(10, demand.getBillExpiryTime());
+				ps.setString(11, demand.getId());
+				ps.setString(12, demand.getTenantId());
 			}
 
 			@Override
@@ -256,17 +291,16 @@ public class DemandRepository {
 			@Override
 			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
 				DemandDetail demandDetail = oldDemandDetails.get(rowNum);
-				AuditDetail auditDetail = demandDetail.getAuditDetail();
-				ps.setString(1, demandDetail.getId());
-				ps.setString(2, demandDetail.getDemandId());
-				ps.setString(3, demandDetail.getTaxHeadMasterCode());
-				ps.setBigDecimal(4, demandDetail.getTaxAmount());
-				ps.setBigDecimal(5, demandDetail.getCollectionAmount());
-				ps.setString(6, auditDetail.getLastModifiedBy());
-				ps.setLong(7, auditDetail.getLastModifiedTime());
+				AuditDetails auditDetail = demandDetail.getAuditDetails();
+
+				ps.setBigDecimal(1, demandDetail.getTaxAmount());
+				ps.setBigDecimal(2, demandDetail.getCollectionAmount());
+				ps.setString(3, auditDetail.getLastModifiedBy());
+				ps.setLong(4, auditDetail.getLastModifiedTime());
+				ps.setObject(5, getPGObject(demandDetail.getAdditionalDetails()));
+				ps.setString(6, demandDetail.getId());
+				ps.setString(7, demandDetail.getDemandId());
 				ps.setString(8, demandDetail.getTenantId());
-				ps.setString(9, demandDetail.getId());
-				ps.setString(10, demandDetail.getTenantId());
 			}
 
 			@Override
@@ -275,7 +309,75 @@ public class DemandRepository {
 			}
 		});
 	}
+	
+	
+	/*
+	 * Audit 
+	 */
+	
+	@Transactional
+	public void insertBatchForAudit(List<Demand> demands, List<DemandDetail> demandDetails) {
+
+		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_AUDIT_INSERT_QUERY, new BatchPreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+
+				Demand demand = demands.get(rowNum);
+				String status = demand.getStatus() != null ? demand.getStatus().toString() : null;
+				AuditDetails auditDetail = demand.getAuditDetails();
+				String payerUuid = null != demand.getPayer() ? demand.getPayer().getUuid() : null;
+				ps.setString(1, demand.getId());
+				ps.setString(2, demand.getConsumerCode());
+				ps.setString(3, demand.getConsumerType());
+				ps.setString(4, demand.getBusinessService());
+				ps.setString(5, payerUuid);
+				ps.setLong(6, demand.getTaxPeriodFrom());
+				ps.setLong(7, demand.getTaxPeriodTo());
+				ps.setBigDecimal(8, demand.getMinimumAmountPayable());
+				ps.setString(9, auditDetail.getLastModifiedBy());
+				ps.setLong(10, auditDetail.getLastModifiedTime());
+				ps.setString(11, demand.getTenantId());
+				ps.setString(12, status);
+				ps.setObject(13, getPGObject(demand.getAdditionalDetails()));
+				ps.setString(14, UUID.randomUUID().toString());
+				ps.setObject(15, demand.getBillExpiryTime());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return demands.size();
+			}
+		});
+
+		jdbcTemplate.batchUpdate(DemandQueryBuilder.DEMAND_DETAIL_AUDIT_INSERT_QUERY,
+				new BatchPreparedStatementSetter() {
+					@Override
+					public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+
+						DemandDetail demandDetail = demandDetails.get(rowNum);
+						AuditDetails auditDetail = demandDetail.getAuditDetails();
+						ps.setString(1, demandDetail.getId());
+						ps.setString(2, demandDetail.getDemandId());
+						ps.setString(3, demandDetail.getTaxHeadMasterCode());
+						ps.setBigDecimal(4, demandDetail.getTaxAmount());
+						ps.setBigDecimal(5, demandDetail.getCollectionAmount());
+						ps.setString(6, auditDetail.getLastModifiedBy());
+						ps.setLong(7, auditDetail.getLastModifiedTime());
+						ps.setString(8, demandDetail.getTenantId());
+						ps.setObject(9, getPGObject(demandDetail.getAdditionalDetails()));
+						ps.setString(10, UUID.randomUUID().toString());
+					}
+
+					@Override
+					public int getBatchSize() {
+						return demandDetails.size();
+					}
+				});
+	}
+	
 	//update mis method for updating consumer code
+	@Deprecated
 	public void updateMIS(DemandUpdateMisRequest demandRequest) {
 
 		jdbcTemplate.update(demandQueryBuilder.getDemandUpdateMisQuery(demandRequest), new PreparedStatementSetter() {
@@ -289,6 +391,7 @@ public class DemandRepository {
 		});
 	}
 	
+	@Deprecated
 	public void saveCollectedReceipts(List<BillDetail> billDetails,RequestInfo requestInfo) {
 		List<String> ids=sequenceGenService.getIds(billDetails.size(), applicationProperties.getCollectedReceiptSequence());
 		
@@ -300,9 +403,9 @@ public class DemandRepository {
 				ps.setString(1, ids.get(rowNum));
 				ps.setString(2, billDetail.getBusinessService());
 				ps.setString(3, billDetail.getConsumerCode());
-				ps.setString(4, billDetail.getReceiptNumber());
+				ps.setString(4, null);
 				ps.setBigDecimal(5, billDetail.getTotalAmount());
-				ps.setLong(6, billDetail.getReceiptDate());
+				ps.setObject(6, null);
 				ps.setString(7, billDetail.getStatus().toString());
 				ps.setString(8, billDetail.getTenantId());
 				ps.setString(9, requestInfo.getUserInfo().getId().toString());
@@ -318,7 +421,36 @@ public class DemandRepository {
 		});
 	}
 	
+	@Deprecated
 	public List<CollectedReceipt> getCollectedReceipts(DemandCriteria demandCriteria){
 		return jdbcTemplate.query(demandQueryBuilder.getCollectedReceiptsQuery(demandCriteria), new CollectedReceiptsRowMapper());
+	}
+
+	/*
+	 * Utility methods
+	 */
+	/**
+	 * converts the object to a pgObject for persistence
+	 * 
+	 * @param additionalDetails
+	 * @return
+	 */
+	private PGobject getPGObject(Object additionalDetails) {
+
+		String value = null;
+		try {
+			value = mapper.writeValueAsString(additionalDetails);
+		} catch (JsonProcessingException e) {
+			throw new CustomException(Constants.EG_BS_JSON_EXCEPTION_KEY, Constants.EG_BS_JSON_EXCEPTION_MSG);
+		}
+
+		PGobject json = new PGobject();
+		json.setType(Constants.DB_TYPE_JSONB);
+		try {
+			json.setValue(value);
+		} catch (SQLException e) {
+			throw new CustomException(Constants.EG_BS_JSON_EXCEPTION_KEY, Constants.EG_BS_JSON_EXCEPTION_MSG);
+		}
+		return json;
 	}
 }

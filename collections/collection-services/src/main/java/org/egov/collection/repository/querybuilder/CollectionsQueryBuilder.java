@@ -352,13 +352,15 @@ public class CollectionsQueryBuilder {
 
         if (StringUtils.isNotBlank(searchCriteria.getTenantId())) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
-            if(searchCriteria.getTenantId().split("\\.").length > 1)
+            if(searchCriteria.getTenantId().split("\\.").length > 1) {
                 selectQuery.append(" rh.tenantId =:tenantId");
-            else
-                selectQuery.append(" rh.tenantId LIKE ':tenantId%'");
+                preparedStatementValues.put("tenantId", searchCriteria.getTenantId());
+            }
+            else {
+                selectQuery.append(" rh.tenantId LIKE :tenantId");
+                preparedStatementValues.put("tenantId", searchCriteria.getTenantId() + "%");
+            }
             
-            preparedStatementValues.put("tenantId", searchCriteria.getTenantId());
-
         }
         
         if (searchCriteria.getReceiptNumbers() != null && !searchCriteria.getReceiptNumbers().isEmpty()) {

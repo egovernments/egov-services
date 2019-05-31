@@ -27,7 +27,10 @@ export const generateDemand = async (
       updatecalculations.push(calculation);
     else createcalculations.push(calculation);
   });
-  if (createcalculations > 0) createDemand(requestInfo, calculations, config);
+  if (createcalculations > 0)
+    createDemand(requestInfo, createcalculations, config);
+  if (updatecalculations > 0)
+    updateDemand(requestInfo, updatecalculations, config, demandsSearch);
   return "uri";
 };
 
@@ -56,12 +59,40 @@ const createDemand = async (requestInfo, calculations, config) => {
     demands.push(demand);
   });
 
-  var uri = ``;
-  var demandsSearch = await httpRequest({
-    hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
-    endPoint: uri,
-    requestBody
+  //TODO make create call
+};
+
+const updateDemand = async (
+  requestInfo,
+  calculations,
+  config,
+  demandsSearch
+) => {
+  let demandMap = {};
+  demandsSearch.map(demand => {
+    demandMap = { ...demandMap, [demand.consumerCode]: demand };
   });
+  let demands = [];
+  calculations.map(calculation => {
+    let tenantId = calculation.tenantId;
+    let consumerCode = calculation.applicationNumber;
+    let fireNOC = calculation.fireNOC;
+    let demand = demandMap[consumerCode];
+    demand.demandDetails = [];
+
+    calculation.taxHeadEstimates.map(taxHeadEstimate => {
+      let demandDetail = {
+        taxHeadMasterCode: taxHeadEstimate.taxHeadCode,
+        taxAmount: taxHeadEstimate.estimateAmount,
+        collectionAmount: 0,
+        tenantId
+      };
+      demand.demandDetails.push(demandDetail);
+    });
+    demands.push(demand);
+  });
+
+  //TODO make create call
 };
 
 const searchDemand = async (requestInfo, tenantId, consumercodeList) => {

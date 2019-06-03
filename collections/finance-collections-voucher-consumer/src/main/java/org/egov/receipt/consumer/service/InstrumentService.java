@@ -41,6 +41,9 @@
 package org.egov.receipt.consumer.service;
 
 import java.util.Collections;
+
+import org.egov.mdms.service.MicroServiceUtil;
+import org.egov.receipt.consumer.model.FinanceMdmsModel;
 import org.egov.receipt.consumer.model.FinancialStatus;
 import org.egov.receipt.consumer.model.Instrument;
 import org.egov.receipt.consumer.model.InstrumentContract;
@@ -69,17 +72,19 @@ public class InstrumentService {
 
 	private static final String FINANCE_STATUS_NEW = "New";
 
-	@Autowired
-	private PropertiesManager propertiesManager;
+	private static final String FINANCE_STATUS_CANCELLED = "Cancelled";
 
 	@Autowired
-	private FinancialStatusService financialStatusService;
+	private PropertiesManager propertiesManager;
 	
 	@Autowired
     private ServiceRequestRepository serviceRequestRepository;
     
     @Autowired
 	private ObjectMapper mapper;
+    
+    @Autowired
+	private MicroServiceUtil microServiceUtil;
 
 	/**
 	 * 
@@ -87,35 +92,32 @@ public class InstrumentService {
 	 * @param voucherResponse
 	 * @return
 	 * Function is used to create the instrument for created voucher.
+	 * @throws VoucherCustomException 
 	 */
-	public InstrumentResponse createInstrument(ReceiptReq receiptRequest, VoucherResponse voucherResponse) {
+	public InstrumentResponse createInstrument(ReceiptReq receiptRequest, VoucherResponse voucherResponse, FinanceMdmsModel finSerMdms) throws VoucherCustomException {
 		
-		try {
 			Receipt receipt = receiptRequest.getReceipt().get(0);
-			FinancialStatus status = financialStatusService.getByCode(FINANCE_STATUS_NEW, receipt.getTenantId(), receiptRequest.getRequestInfo());
+			FinancialStatus status  = microServiceUtil.getFinancialStatusByCode(receipt.getTenantId(), receiptRequest.getRequestInfo(), finSerMdms, FINANCE_STATUS_NEW);
 			Instrument instrument = receipt.getInstrument();
 			InstrumentContract instrumentContract = instrument.toContract();
 			instrumentContract.setFinancialStatus(status);
 			if (voucherResponse != null) {
-				prepareInstrumentVoucher(instrumentContract, voucherResponse, receipt);
+				prepareInstrumentVoucher(instrumentContract, voucherResponse.getVouchers().get(0).getVoucherNumber(), receipt.getReceiptNumber());
 			}
 			StringBuilder url = new StringBuilder(propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCreate());
 			InstrumentRequest request = new InstrumentRequest();
 			request.setInstruments(Collections.singletonList(instrumentContract));
 			request.setRequestInfo(receiptRequest.getRequestInfo());
 			return mapper.convertValue(serviceRequestRepository.fetchResult(url, request, receipt.getTenantId()), InstrumentResponse.class);
-		} catch (Exception e) {
-			LOGGER.error("ERROR occured while creating instrument "+e.getStackTrace());
-		}
-		return null;
+		
 	}
 
-	private void prepareInstrumentVoucher(InstrumentContract instrumentContract, VoucherResponse voucherResponse,
-			Receipt receipt) {
+	private void prepareInstrumentVoucher(InstrumentContract instrumentContract, String voucherNumber,
+			String receiptNumber) {
 
 		InstrumentVoucherContract ivContract = new InstrumentVoucherContract();
-		ivContract.setVoucherHeaderId(voucherResponse.getVouchers().get(0).getVoucherNumber());
-		ivContract.setReceiptHeaderId(receipt.getReceiptNumber());
+		ivContract.setVoucherHeaderId(voucherNumber);
+		ivContract.setReceiptHeaderId(receiptNumber);
 		instrumentContract.setInstrumentVouchers(Collections.singletonList(ivContract));
 	}
 
@@ -125,18 +127,19 @@ public class InstrumentService {
 	 * Function is used to cancel the instruments
 	 * @throws VoucherCustomException 
 	 */
-	public void cancelInstrument(Receipt receipt, RequestInfo requestInfo) throws VoucherCustomException {
-		StringBuilder url = new StringBuilder(propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel());
-		InstrumentRequest request = new InstrumentRequest();
-		this.setInstrumentRequest(request, receipt, requestInfo);
-		serviceRequestRepository.fetchResult(url, request, receipt.getTenantId());
-	}
-
-	private void setInstrumentRequest(InstrumentRequest request, Receipt receipt, RequestInfo requestInfo) {
+	public void cancelInstrument(ReceiptReq receiptReq, FinanceMdmsModel finSerMdms) throws VoucherCustomException {
+		RequestInfo requestInfo = receiptReq.getRequestInfo();
+		Receipt receipt = receiptReq.getReceipt().get(0);
+		FinancialStatus status  = microServiceUtil.getFinancialStatusByCode(receipt.getTenantId(), requestInfo , finSerMdms, FINANCE_STATUS_CANCELLED);
 		Instrument instrument = receipt.getInstrument();
 		InstrumentContract instrumentContract = instrument.toContract();
+		instrumentContract.setFinancialStatus(status);
+		prepareInstrumentVoucher(instrumentContract, receipt.getBill().get(0).getBillDetails().get(0).getVoucherHeader(), receipt.getReceiptNumber());
+		StringBuilder url = new StringBuilder(propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel());
+		InstrumentRequest request = new InstrumentRequest();
 		request.setInstruments(Collections.singletonList(instrumentContract));
 		request.setRequestInfo(requestInfo);
+		mapper.convertValue(serviceRequestRepository.fetchResult(url, request, receipt.getTenantId()), InstrumentResponse.class);
 	}
 
 }

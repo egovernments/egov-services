@@ -53,7 +53,7 @@ public class EgfKafkaListener {
         			voucherResponse = voucherService.createReceiptVoucher(request, finSerMdms);
         			voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
         			receiptService.updateReceipt(request, voucherResponse);
-        			instrumentService.createInstrument(request, voucherResponse);
+        			instrumentService.createInstrument(request, voucherResponse, finSerMdms);
         			this.getBackupToDB(request,ProcessStatus.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber,voucherNumber);
         		}else{
         			//Todo : Status should be different
@@ -63,7 +63,7 @@ public class EgfKafkaListener {
                 voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
                 if(voucherService.isVoucherExists(request)){
                 	voucherService.cancelReceiptVoucher(request);
-                	instrumentService.cancelInstrument(request.getReceipt().get(0),request.getRequestInfo());
+                	instrumentService.cancelInstrument(request,finSerMdms);
      			   	this.getBackupToDB(request,ProcessStatus.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!",voucherNumber);
                 }else{
                 	this.getBackupToDB(request,ProcessStatus.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber,voucherNumber);

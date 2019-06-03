@@ -459,8 +459,36 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	return finalQuery.toString();
 	}
 
+	private StringBuffer processSearchClauseReplacements(List<SearchParam> searchParams, ReportDefinition reportDefinition,
+														 StringBuffer query) {
+		String queryStr = query.toString();
+
+		for (SearchColumn sc : reportDefinition.getSearchParams()) {
+			SearchParam searchParam = null;
+
+			for (SearchParam sp: searchParams) {
+				if (sc.getName().equals(sp.getName())){
+					searchParam = sp;
+				}
+			}
+
+			if (searchParam == null && !sc.getIsMandatory()) {
+				// we haven't found the search param to be used
+				// so blank out this condition. Since $param is already used for variable replacement
+				// we will use $_param to be replaced with the search condition
+				queryStr = queryStr.replaceAll("\\$_" + sc.getName(), "");
+			} else {
+				queryStr = queryStr.replaceAll("\\$_" + sc.getName(), sc.getSearchClause().replace("$","\\$"));
+			}
+		}
+
+		return new StringBuffer(queryStr);
+	}
+
 	private StringBuffer addSearchClause(List<SearchParam> searchParams, ReportDefinition reportDefinition,
 			StringBuffer query) {
+		query = processSearchClauseReplacements(searchParams, reportDefinition, query);
+
 		for(SearchParam searchParam : searchParams){
 			
 			Object name = searchParam.getName();

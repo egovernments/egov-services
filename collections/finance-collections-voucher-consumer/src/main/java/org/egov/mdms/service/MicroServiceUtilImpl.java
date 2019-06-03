@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.egov.receipt.consumer.model.BusinessService;
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
+import org.egov.receipt.consumer.model.FinancialStatus;
 import org.egov.receipt.consumer.model.InstrumentGlCodeMapping;
 import org.egov.receipt.consumer.model.MasterDetail;
 import org.egov.receipt.consumer.model.MdmsCriteria;
@@ -104,6 +105,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		masterDetailsList.add(new MasterDetail("BusinessServiceMapping","[?(@.code=='" + businessServiceCode + "')]"));
 		masterDetailsList.add(new MasterDetail("TaxHeadMasterGlCodeMapping","[?(@.billingservicecode=='" + businessServiceCode + "')]"));
 		masterDetailsList.add(new MasterDetail("InstrumentGLcodeMapping",null));
+		masterDetailsList.add(new MasterDetail("FinanceInstrumentStatusMapping",null));
 		moduleDetails.add(new ModuleDetail(FIN_MODULE_NAME, masterDetailsList));
 	}
 
@@ -146,5 +148,21 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		return !collect.isEmpty() ? collect.get(0).getGlcode() : null;
 	}
 	
-	
+	@Override
+	public FinancialStatus getFinancialStatusByCode(String tenantId,RequestInfo requestInfo, FinanceMdmsModel finSerMdms,String statusCode) throws VoucherCustomException {
+		if(finSerMdms.getFinanceServiceMdmsData() == null){
+			this.getFinanceServiceMdmsData(tenantId, null, requestInfo, finSerMdms);
+		}
+		List<FinancialStatus> list = new ArrayList<>();
+		try {
+			if(finSerMdms.getFinanceServiceMdmsData() != null){
+				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.FinanceInstrumentStatusMapping"),new TypeReference<List<FinancialStatus>>(){});
+			}
+		} catch (Exception e) {
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for EgfInstrumentStatusMapping master. Check the EgfInstrumentStatusMapping.json file.");
+		}
+		List<FinancialStatus> collect = list.stream().filter(fs -> fs.getCode().equals(statusCode)).collect(Collectors.toList());
+		return !collect.isEmpty() ? collect.get(0) : null;
+	}
+
 }

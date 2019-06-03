@@ -40,6 +40,19 @@
 
 package org.egov.mseva.service;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.egov.mseva.config.PropertiesManager;
+import org.egov.mseva.model.AuditDetails;
+import org.egov.mseva.producer.MsevaEventsProducer;
+import org.egov.mseva.utils.ResponseInfoFactory;
+import org.egov.mseva.web.contract.EventRequest;
+import org.egov.mseva.web.contract.EventResponse;
+import org.egov.mseva.web.validator.MsevaValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
@@ -49,5 +62,61 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class MsevaService {
+	
+	@Autowired
+	private PropertiesManager properties;
+	
+	@Autowired
+	private MsevaEventsProducer producer;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfo;
+	
+	@Autowired
+	private MsevaValidator validator;
+	
+	public EventResponse createEvents(EventRequest request) {
+		validator.validateCreateEvent(request);
+		log.info("enriching and storing the event......");
+		enrichCreateEvent(request);
+		producer.push(properties.getSaveEventsTopic(), request);
+		
+		return EventResponse.builder()
+				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
+				.events(request.getEvents()).build();
+	}
+	
+	public EventResponse updateEvents(EventRequest request) {
+		producer.push(properties.getUpdateEventsTopic(), request);
+		
+		return EventResponse.builder()
+				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
+				.events(request.getEvents()).build();
+	}
+	
+	private void enrichCreateEvent(EventRequest request) {
+		Map<String, String> recepientEventMap = new HashMap<>();
+		request.getEvents().forEach(event -> {
+			event.setId(UUID.randomUUID().toString());
+			event.getActions().setId(UUID.randomUUID().toString());
+			event.getActions().setEventId(event.getId());
+			
+			if(!event.getToUsers().isEmpty()) {
+				event.getToRoles().clear();
+			} //toUsers will take precedence over toRoles.
+			
+			if(!event.getToUsers().isEmpty()) {
+				event.getToUsers().forEach(user -> recepientEventMap.put(user, event.getId()));
+			}
+			if(!event.getToRoles().isEmpty()) {
+				event.getToRoles().forEach(role -> recepientEventMap.put(role, event.getId()));
+			}
+			AuditDetails auditDetails = AuditDetails.builder().createdBy(request.getRequestInfo().getUserInfo().getUuid())
+					.createdTime(new Date().getTime()).build();
+			
+			event.setAuditDetails(auditDetails);
+
+		});
+	}
 	
 }

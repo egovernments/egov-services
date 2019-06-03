@@ -40,28 +40,32 @@
 
 package org.egov.mseva.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.springframework.validation.annotation.Validated;
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-@Validated
-@Data
+import lombok.Setter;
+import lombok.ToString;
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class RefRequest {
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EventResponse {
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
+		
+	private List<Event> events;
 
 
 }

@@ -38,33 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.mseva.model.enums;
+package org.egov.mseva.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.List;
 
-public enum Reference {
-	EMPLOYEE("EMPLOYEE"), CITIZEN("CITIZEN"), SYSTEM("SYSTEM");
+import javax.validation.constraints.NotNull;
 
-	private String value;
+import org.egov.common.contract.request.RequestInfo;
+import org.springframework.validation.annotation.Validated;
 
-	Reference(String value) {
-		this.value = value;
-	}
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	@Override
-	@JsonValue
-    public String toString() {
-        return name();
-    }
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-	@JsonCreator
-	public static Reference fromValue(String passedValue) {
-		for (Reference obj : Reference.values()) {
-			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
-				return obj;
-			}
-		}
-		return null;
-	}
+@Validated
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class EventRequest {
+
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	
+	private List<Event> events;
+
+
 }

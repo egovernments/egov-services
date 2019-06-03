@@ -38,31 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.mseva.web.contract;
+package org.egov.mseva.model.enums;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import org.egov.common.contract.response.ResponseInfo;
+public enum Status {
+	ACTIVE("ACTIVE"), INACTIVE("INACTIVE"), CANCELLED("CANCELLED");
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+	private String value;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class RefResponse {
+	Status(String value) {
+		this.value = value;
+	}
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+	@Override
+	@JsonValue
+    public String toString() {
+        return name();
+    }
 
+	@JsonCreator
+	public static Status fromValue(String passedValue) {
+		for (Status obj : Status.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
+	}
 }

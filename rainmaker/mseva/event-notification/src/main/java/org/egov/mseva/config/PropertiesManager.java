@@ -59,49 +59,16 @@ public class PropertiesManager {
 	@Value("${egov.mdms.search.endpoint}")
 	public String mdmsSearchEndpoint;
 	
-	@Value("${egov.user.host}")
-	public String userHost;
-	
-	@Value("${egov.user.search.endpoint}")
-	public String userSearchEndpoint;
-	
-	@Value("${egov.user.create.endpoint}")
-	public String userCreateEndpoint;
-	
-	@Value("${egov.user.update.endpoint}")
-	public String userUpdateEndpoint;
-
-	@Value("${egov.localization.host}")
-	public String localizationHost;
-	
-	@Value("${egov.localization.search.endpoint}")
-	public String localizationSearcEndpoint;
-	
-	@Value("${egov.idgen.host}")
-	public String idGenHost;
-	
-	@Value("${egov.idgen.path}")
-	public String idGenEndpoint;
 	
 	
 	//Kafka Topics
-	@Value("${kafka.topics.save.service}")
-	public String saveEmployeeTopic;
+	@Value("${kafka.topics.save.events}")
+	public String saveEventsTopic;
 	
-	@Value("${kafka.topics.update.service}")
-	public String UpdateEmployeeTopic;
-	
-	@Value("${kafka.topics.notification.sms}")
-	public String coreNotificationTopic;
+	@Value("${kafka.topics.update.events}")
+	public String updateEventsTopic;
 	
 	
 	//Variables
-	@Value("${egov.idgen.ack.name}")
-	public String hrmsIdGenKey;
 	
-	@Value("${egov.idgen.ack.format}")
-	public String hrmsIdGenFormat;
-	
-	@Value("${open.search.enabled.roles}")
-	public String openSearchEnabledRoles;
 }

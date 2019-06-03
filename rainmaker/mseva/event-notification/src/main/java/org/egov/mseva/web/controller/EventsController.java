@@ -40,14 +40,73 @@
 
 package org.egov.mseva.web.controller;
 
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+
+import org.egov.mseva.service.MsevaService;
+import org.egov.mseva.web.contract.EventRequest;
+import org.egov.mseva.web.contract.EventResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/v1/events")
 public class EventsController {
+	
+	@Autowired
+	private MsevaService service;
+	
+	
+	/**
+	 * Endpoint to create events in the system.
+	 * 
+	 * @param topic
+	 * @param indexJson
+	 * @return
+	 */
+	@PostMapping("/_create")
+	@ResponseBody
+	private ResponseEntity<?> create(@RequestBody @Valid EventRequest request) {
+		EventResponse response = service.createEvents(request);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+	
+	/**
+	 * Endpoint to upate events in the system.
+	 * 
+	 * @param topic
+	 * @param indexJson
+	 * @return
+	 */
+	@PostMapping("/_update")
+	@ResponseBody
+	private ResponseEntity<?> update(@RequestBody @Valid EventRequest request) {
+		return new ResponseEntity<>(request, HttpStatus.OK);
+
+	}
+	
+	/**
+	 * Endpoint to search events in the system.
+	 * 
+	 * @param topic
+	 * @param indexJson
+	 * @return
+	 */
+	@PostMapping("/_search")
+	@ResponseBody
+	private ResponseEntity<?> search(@RequestBody @Valid EventRequest request) {
+		return new ResponseEntity<>(request, HttpStatus.OK);
+
+	}
 	
 }

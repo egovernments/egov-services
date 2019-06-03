@@ -258,10 +258,10 @@ public class WorkflowService {
      * @param requestInfo info about the request
      */
     public static void updateAuditDetails(Receipt receipt, RequestInfo requestInfo){
-        receipt.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId());
+        receipt.getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
         receipt.getAuditDetails().setLastModifiedDate(System.currentTimeMillis());
 
-        receipt.getInstrument().getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId());
+        receipt.getInstrument().getAuditDetails().setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
         receipt.getInstrument().getAuditDetails().setLastModifiedDate(System.currentTimeMillis());
     }
 

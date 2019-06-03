@@ -174,36 +174,12 @@ definitions:
 
   BillInfo:
     type: object
+    allOf: 
+      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-1.yml#/definitions/Bill'
     properties:
-      id:
-        type: number
-        description: id of the billInfo object    
-      payeeName:
-        type: string
-        description: Owner/User which needs to be referred from UserService.
-      payeeAddress:
-        type: string
-        description: Consumer address defined in bill.
-      payeeEmail:
-        type: string
-        description: Consumer email defined in bill.
       paidBy:
         type: string
         description: Name of the Person who is making payment.
-      isActive:
-        type: boolean
-        description: active status of the bill.
-      isCancelled:
-        type: boolean
-        description: cancellation state of the bill.
-      tenantId:
-        type: string
-        description: Tenant Id.
-      mobileNumber:
-        type: string
-        description: Consumer mobileNumber defined in bill.
-      auditDetails:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       billDetails:
         type: array
         items:
@@ -211,56 +187,13 @@ definitions:
 
   BillDetails:
     type: object
+    allOf: 
+      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-1.yml#/definitions/BillDetail'
     properties:
-      id:
-        type: number
-        description: id of the BillDetails object 
-      businessDetailsCode:
-        type: string
-        description: BusinessDetails code.
-      refNo:
-        type: string
-        description: Bill number.
-      bill:
-        type: string
-        description: Bill.
-      billDate:
-        type: string
-        format: date
-        description: Bill date.
-      billNumber:
-        type: string
-        format: date
-        description: Bill Number.
-      consumerCode:
-        type: string
-        description: Consumer code defined in bill.
-      consumerType:
-        type: string
-        description: Consumer type defined in bill.
-      billDescription:
-        type: string
-        description: Summarized bill description.
-      minimumAmount:
-        type: number
-        format: bigdecimal
-        description: Minimum bill amount to be paid.
-      totalAmount:
-        type: number
-        format: bigdecimal
-        description: Total bill amount to be paid.
       amountPaid:
         type: number
         format: double
         description: Amount paid by the citizen.
-      collectionModesNotAllowed:
-        type: array
-        items: 
-          type: string
-        description: List of collection modes not allowed.
-      event: 
-        type: string
-        description: CREATED, CANCELLED, INSTRUMENT_BOUNCED
       receiptNumber:
         type: string
         description: Receipt Number generated in Collection system.
@@ -276,14 +209,6 @@ definitions:
            - ADHOC
            - BILLBASED
            - CHALLAN
-      collectionType:
-        description: Type of collection.
-        items:
-          type: string
-          enum:
-           - COUNTER
-           - FIELD
-           - ONLINE
       channel:
         type: string
         description: To be used by third party applications, to send the channel name.
@@ -297,21 +222,6 @@ definitions:
         description: Remarks to describe Reason For Cancellation.
         items:
           type: string
-      displayMessage:
-        type: string
-        description: Remarks to be displayed on receipt.
-      tenantId:
-        type: string
-        description: Tenant Id.
-      businessService:
-        type: string
-        description: businessService details of the bill details.
-      callBackForApportioning:
-        type: boolean
-        description: apportioning call based on this value.
-      partPaymentAllowed:
-        type: boolean
-        description: decides if partpayment is allowed
       manualReceiptNumber:
         type: string
         description: Manual Receipt Number for legacy reciepts.
@@ -321,57 +231,7 @@ definitions:
       billAccountDetails:
         type: array
         items:
-          $ref: '#/definitions/BillAccountDetails'
-
-  BillAccountDetails:
-    type: object
-    properties:
-      id:
-        type: number
-        description: id of the BillAccountDetails object 
-      glcode:
-        type: string
-        description: Chart of account code.
-      order:
-        type: integer
-        format: int32
-        description : Order number used for apportioning amount in case of part payment.
-      accountDescription:
-        type: string
-        description : Account description to be printed on receipt.
-      creditAmount:
-        type: number
-        format: bigdecimal
-        description: Credit account head amount.
-      debitAmount:
-        type: number
-        format: bigdecimal
-        description: Debit account head amount.
-      functionCode:
-        type: string
-        description: Funtion Code
-      isActualDemand:
-        type: boolean
-        description: True for tax/charges/penalty. False for advances(if any).
-      tenantId:
-        type: string
-        description: Tenant Id.
-      billDetail:
-        type: string
-        description: Bill Details.
-      purpose:
-        description: Purpose of Account head.
-        items:
-          type: string
-          enum:
-           - ARREAR_AMOUNT
-           - CURRENT_AMOUNT
-           - ADVANCE_AMOUNT
-           - ARREAR_LATEPAYMENT_CHARGES
-           - CURRENT_LATEPAYMENT_CHARGES
-           - CHEQUE_BOUNCE_PENALTY
-           - REBATE
-           - OTHERS
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-1.yml#/definitions/BillAccountDetail'
 
   Instrument:
     type: object

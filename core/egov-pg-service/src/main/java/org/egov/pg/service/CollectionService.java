@@ -10,6 +10,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,19 +27,28 @@ public class CollectionService {
     public List<Receipt> generateReceipt(RequestInfo requestInfo, Transaction transaction) {
 
 
-        BillDetail billDetail = BillDetail.builder()
-                .amountPaid(new BigDecimal(transaction.getTxnAmount()))
-                .collectionType(CollectionType.ONLINE)
-                .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
-                .build();
+        List<BillDetail> billDetails = new ArrayList<>();
+
+        for(TaxAndPayment taxAndPayment : transaction.getTaxAndPayments()){
+            BillDetail billDetail = BillDetail.builder()
+                    .amountPaid(taxAndPayment.getAmountPaid())
+                    .totalAmount(taxAndPayment.getTaxAmount())
+                    .businessService(taxAndPayment.getBusinessService())
+                    .collectionType(CollectionType.ONLINE)
+                    .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
+                    .build();
+
+            billDetails.add(billDetail);
+        }
 
         Bill bill = Bill.builder()
-                .payeeName(transaction.getUser().getName())
+                .payerName(transaction.getUser().getName())
                 .tenantId(transaction.getTenantId())
                 .mobileNumber(transaction.getUser().getMobileNumber())
                 .paidBy(transaction.getUser().getName())
                 .id(transaction.getBillId())
-                .billDetails(Collections.singletonList(billDetail))
+                .taxAndPayments(transaction.getTaxAndPayments())
+                .billDetails(billDetails)
                 .build();
 
             Instrument instrument = Instrument.builder()
@@ -59,7 +69,6 @@ public class CollectionService {
 
             ReceiptReq receiptReq = ReceiptReq.builder()
                     .receipt(Collections.singletonList(receipt))
-                    .tenantId(transaction.getTenantId())
                     .requestInfo(requestInfo)
                     .build();
 
@@ -74,19 +83,28 @@ public class CollectionService {
     public List<Receipt> validateProvisionalReceipt(TransactionRequest transactionRequest){
         Transaction transaction = transactionRequest.getTransaction();
 
-        BillDetail billDetail = BillDetail.builder()
-                .amountPaid(new BigDecimal(transaction.getTxnAmount()))
-                .collectionType(CollectionType.ONLINE)
-                .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
-                .build();
+        List<BillDetail> billDetails = new ArrayList<>();
+
+        for(TaxAndPayment taxAndPayment : transaction.getTaxAndPayments()){
+            BillDetail billDetail = BillDetail.builder()
+                    .amountPaid(taxAndPayment.getAmountPaid())
+                    .totalAmount(taxAndPayment.getTaxAmount())
+                    .businessService(taxAndPayment.getBusinessService())
+                    .collectionType(CollectionType.ONLINE)
+                    .billAccountDetails(Collections.singletonList(new BillAccountDetail()))
+                    .build();
+
+            billDetails.add(billDetail);
+        }
 
         Bill bill = Bill.builder()
-                .payeeName(transactionRequest.getRequestInfo().getUserInfo().getName())
+                .payerName(transactionRequest.getRequestInfo().getUserInfo().getName())
                 .tenantId(transaction.getTenantId())
                 .mobileNumber(transactionRequest.getRequestInfo().getUserInfo().getMobileNumber())
                 .paidBy(transactionRequest.getRequestInfo().getUserInfo().getName())
                 .id(transaction.getBillId())
-                .billDetails(Collections.singletonList(billDetail))
+                .taxAndPayments(transaction.getTaxAndPayments())
+                .billDetails(billDetails)
                 .build();
 
 
@@ -108,7 +126,6 @@ public class CollectionService {
 
         ReceiptReq receiptReq = ReceiptReq.builder()
                 .receipt(Collections.singletonList(receipt))
-                .tenantId(transaction.getTenantId())
                 .requestInfo(transactionRequest.getRequestInfo())
                 .build();
 

@@ -1,10 +1,10 @@
 package org.egov.pg.models;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -15,27 +15,48 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Bill {
-    //TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
-    private String id;
+    // TODO some of the fields are mandatory in yml, lets discuss billdetail and billaccountdetail also for more clarity
+	
+	  @JsonProperty("id")
+	  private String id = null;
 
-    private String payeeName;
+	  @JsonProperty("mobileNumber")
+	  private String mobileNumber = null;
+	  
+	  @JsonProperty("paidBy")
+	  private String paidBy = null;
 
-    private String payeeAddress;
+	  @JsonProperty("payerName")
+	  private String payerName = null;
 
-    private String payeeEmail;
+	  @JsonProperty("payerAddress")
+	  private String payerAddress = null;
 
-    private Boolean isActive;
+	  @JsonProperty("payerEmail")
+	  private String payerEmail = null;
 
-    private Boolean isCancelled;
+	  @JsonProperty("isActive")
+	  private Boolean isActive = null;
 
-    private String paidBy;
+	  @JsonProperty("isCancelled")
+	  private Boolean isCancelled = null;
 
-    @JsonProperty("billDetails")
-    private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
+	  @JsonProperty("additionalDetails")
+	  private Object additionalDetails = null;
 
-    private String tenantId;
+	  @JsonProperty("taxAndPayments")
+	  @Valid
+	  @NotNull
+	  private List<TaxAndPayment> taxAndPayments = null;
 
-    private String mobileNumber;
+	  @JsonProperty("billDetails")
+	  @Valid
+	  private List<BillDetail> billDetails = null;
+
+	  @JsonProperty("tenantId")
+	  private String tenantId = null;
+
+	  @JsonProperty("auditDetails")
+	  private AuditDetails auditDetails = null;
 
 }
-

@@ -4,6 +4,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
+import org.egov.tl.web.models.workflow.BusinessService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,10 +24,15 @@ public class ActionValidator {
 
     private WorkflowConfig workflowConfig;
 
+    private WorkflowService workflowService;
+
     @Autowired
-    public ActionValidator(WorkflowConfig workflowConfig) {
+    public ActionValidator(WorkflowConfig workflowConfig, WorkflowService workflowService) {
         this.workflowConfig = workflowConfig;
+        this.workflowService = workflowService;
     }
+
+
 
 
     /**
@@ -61,11 +67,11 @@ public class ActionValidator {
      * Validates the update request
      * @param request The tradeLciense update request
      */
-    public void validateUpdateRequest(TradeLicenseRequest request){
+    public void validateUpdateRequest(TradeLicenseRequest request,BusinessService businessService){
         validateDocumentsForUpdate(request);
        // validateRole(request);
        // validateAction(request);
-        validateIds(request);
+        validateIds(request,businessService);
     }
 
 
@@ -141,11 +147,10 @@ public class ActionValidator {
      * Validates if the any new object is added in the request
      * @param request The tradeLciense update request
      */
-    private void validateIds(TradeLicenseRequest request){
+    private void validateIds(TradeLicenseRequest request,BusinessService businessService){
         Map<String,String> errorMap = new HashMap<>();
         request.getLicenses().forEach(license -> {
-            if(!license.getStatus().equalsIgnoreCase(STATUS_APPLIED)
-                    && !license.getStatus().equalsIgnoreCase(STATUS_INITIATED)) {
+            if( !workflowService.isStateUpdatable(license.getStatus(), businessService)) {
                 if (license.getId() == null)
                     errorMap.put("INVALID UPDATE", "Id of tradeLicense cannot be null");
                 if(license.getTradeLicenseDetail().getId()==null)

@@ -671,20 +671,66 @@
         "$.code"
       ]
     },
-    "ApplicationType":{
+    "ApplicationType": {
       "masterName": "ApplicationType",
       "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     },
-    "FireStations":{
+    "FireStations": {
       "masterName": "FireStations",
       "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
     }
-
+  },
+  "BillingService": {
+    "TaxPeriod": {
+      "masterName": "TaxPeriod",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "TaxHeadMaster": {
+      "masterName": "TaxHeadMaster",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "BusinessService": {
+      "masterName": "BusinessService",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    }
+  },
+  "FinanceModule": {
+    "BusinessServiceMapping": {
+      "masterName": "BusinessServiceMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    },
+    "TaxHeadMasterGlCodeMapping": {
+      "masterName": "TaxHeadMasterGlCodeMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.billingservicecode",
+         "$.taxhead"
+      ]
+    },
+    "InstrumentGLcodeMapping": {
+      "masterName": "InstrumentGLcodeMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.instrumenttype"
+      ]
+    }
   }
 }

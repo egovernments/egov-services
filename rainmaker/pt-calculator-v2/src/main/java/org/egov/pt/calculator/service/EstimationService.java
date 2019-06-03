@@ -286,14 +286,15 @@ public class EstimationService {
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_TAX).estimateAmount(taxAmt.setScale(2, 2)).build());
 
 		// usage exemption
+		 usageExemption = usageExemption.setScale(2, 2).negate();
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_UNIT_USAGE_EXEMPTION).estimateAmount(
-		        usageExemption.setScale(2, 2).negate()).build());
+		        usageExemption).build());
 		payableTax = payableTax.add(usageExemption);
 
 		// owner exemption
-		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear, propertyBasedExemptionMasterMap);
-		estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_OWNER_EXEMPTION).estimateAmount(
-		        userExemption.setScale(2, 2).negate()).build());
+		BigDecimal userExemption = getExemption(detail.getOwners(), payableTax, assessmentYear,
+				propertyBasedExemptionMasterMap).setScale(2, 2).negate();
+		estimates.add(TaxHeadEstimate.builder().taxHeadCode(PT_OWNER_EXEMPTION).estimateAmount(userExemption).build());
 		payableTax = payableTax.add(userExemption);
 
 		// Fire cess

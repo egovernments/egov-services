@@ -57,3 +57,14 @@ export const generateDemandSearchURL = () => {
   url = `${url}?tenantId={1}&businessService={2}&consumerCode={3}`;
   return url;
 };
+
+export const generateGetBillURL = (tenantId, consumerCode) => {
+  let url = "";
+  url = url + process.env.EGOV_BILL_GEN_ENDPOINT;
+  url = `${url}?tenantId={1}&businessService={2}&consumerCode={3}`;
+  url = url.replace("{1}", tenantId);
+  url = url.replace("{2", process.env.BUSINESSSERVICE);
+  url = url.replace("{3}", consumerCode);
+
+  return url;
+};

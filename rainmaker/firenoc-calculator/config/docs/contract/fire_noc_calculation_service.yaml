@@ -43,7 +43,7 @@ paths:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
-        - name: applicationNumber
+        - name: consumerCode
           in: query
           description: Unique Fire NOC application number.
           required: true

@@ -1,4 +1,4 @@
-import { generateDemandSearchURL } from "../utils";
+import { generateDemandSearchURL, generateGetBillURL } from "../utils";
 import axios from "../config/httpClient";
 import { httpRequest } from "../utils/api";
 
@@ -116,11 +116,6 @@ const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
   uri = uri.replace("{1}", tenantId);
   uri = uri.replace("{2", process.env.BUSINESSSERVICE);
   uri = uri.replace("{3}", consumercodeList.join());
-  // console.log(uri);
-  // var mdmsResponse = await httpRequest({
-  //   hostURL: "https://swapi.co",
-  //   endPoint: "/api/starships/9"
-  // });
   let requestBody = { RequestInfo: requestInfo };
   var demandsSearch = await httpRequest({
     hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
@@ -129,6 +124,24 @@ const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
   });
 
   // console.log("error from api utils:", errorReponse);
-  console.log(demandsSearch);
   return demandsSearch;
+};
+
+export const generateBill = async (requestInfo, billCriteria) => {
+  const consumerCode = billCriteria.consumerCode;
+  const tenantId = billCriteria.tenantId;
+  let demandsSearch = await searchDemand(requestInfo, tenantId, consumerCode);
+
+  if (demandsSearch.Demands && demandsSearch.Demands.length > 0) {
+    let uri = generateGetBillURL(tenantId, consumerCode);
+    let requestBody = { RequestInfo: requestInfo };
+    var billResponse = await httpRequest({
+      hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
+      endPoint: uri,
+      requestBody
+    });
+  } else {
+    throw "Invalid Consumer Code ";
+  }
+  return billResponse;
 };

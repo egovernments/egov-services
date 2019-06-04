@@ -1,8 +1,5 @@
 package org.egov.receipt.consumer.model;
 
-
-
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -31,7 +28,7 @@ public enum CollectionType {
     @JsonCreator
 	public static CollectionType fromValue(String text) {
 		for (CollectionType b : CollectionType.values()) {
-			if (0 ==b.value.toString().compareTo(text)) {
+			if (0 ==b.value.compareTo(text)) {
 				return b;
 			}
 		}

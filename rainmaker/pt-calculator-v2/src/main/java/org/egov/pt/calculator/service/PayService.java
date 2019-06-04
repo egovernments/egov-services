@@ -1,22 +1,29 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
 import org.egov.pt.calculator.web.models.TaxHeadEstimate;
 import org.egov.pt.calculator.web.models.collections.Receipt;
-import org.egov.pt.calculator.web.models.demand.*;
+import org.egov.pt.calculator.web.models.demand.Bill;
+import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
+import org.egov.pt.calculator.web.models.demand.BillDetail;
+import org.egov.pt.calculator.web.models.demand.BillRequest;
+import org.egov.pt.calculator.web.models.demand.BillResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import net.minidev.json.JSONArray;
 import org.springframework.util.CollectionUtils;
 
-import static org.egov.pt.calculator.util.CalculatorConstants.SERVICE_FIELD_VALUE_PT;
+import net.minidev.json.JSONArray;
 
 /**
  * Deals with the functionality that are performed 

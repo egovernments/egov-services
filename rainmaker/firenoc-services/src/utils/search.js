@@ -4,7 +4,6 @@ import isEmpty from "lodash/isEmpty";
 import { httpRequest } from "./api";
 import envVariables from "../envVariables";
 
-
 const status = {
   INITIATE: "INITIATED",
   APPROVE: "APPROVED"
@@ -45,7 +44,7 @@ const fireNOCRowMapper = (row, mapper = {}) => {
     propertyDetails: {},
     applicantDetails: {
       ownerShipType: row.ownertype,
-      owners: get(fireNoc, "fireNOCDetails.applicantDetails.owners", []),
+      owners: fireNocOwnersRowMapper(row,get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])),
       additionalDetail: {}
     },
     additionalDetail: row.additionalDetail,
@@ -57,6 +56,26 @@ const fireNOCRowMapper = (row, mapper = {}) => {
   fireNoc.fireNOCDetails = fireNOCDetails;
   fireNoc.auditDetails = auditDetails;
   return fireNoc;
+};
+
+const fireNocOwnersRowMapper = (row, mapper = []) => {
+  let ownerIndex = findIndex(mapper, { id: row.ownerid });
+  let ownerObject = {
+          id: row.ownerid,
+          userName: row.username,
+          useruuid: row.useruuid,
+          active: row.active,
+          ownerType: row.ownertype,
+          relationship: row.relationship,
+          tenantId: row.tenantId,
+          fatherOrHusbandName: ""
+  };
+  if (ownerIndex != -1) {
+    mapper[ownerIndex] = ownerObject;
+  } else {
+    mapper.push(ownerObject);
+  }
+  return mapper;
 };
 
 const fireNocBuildingsRowMapper = (row, mapper = []) => {
@@ -123,93 +142,6 @@ const fireNocApplicationDocumentsRowMapper = (row, mapper = []) => {
 };
 
 export const mergeSearchResults = async response => {
-  // const responseArray = []; //Array holding filtered table data
-  // const ownerIdArray = []; //holds all rows owners data
-  // response.forEach(element => {
-  //   const buildings = [];
-  //   const owners = [];
-  //   const buildingsUoms = [];
-  //   const applicationDocs = [];
-  //
-  //   // check if the firenoc id is already present in the array .If doesnt exists then perform further operation
-  //   const isItemPresent =responseArray.findIndex(item => item.fid === element.fid) === -1;
-  //   if (isItemPresent) {
-  //     //filter array with unique firenoc id
-  //     const fireNocByIDArray = response.filter(obj => obj.fid === element.fid);
-  //     fireNocByIDArray.forEach((eachItem, index) => {
-  //       buildings.push({
-  //         id: eachItem.buildingid,
-  //         tenantId: eachItem.tenantid,
-  //         name: eachItem.buildingname,
-  //         usageType: eachItem.usagetype,
-  //         uoms: getBuidingUoms(eachItem, buildingsUoms),
-  //         applicationDocuments: getApplicationDocuments(
-  //           eachItem,
-  //           applicationDocs
-  //         )
-  //       });
-  //
-  //       owners.push({
-  //         id: eachItem.ownerid,
-  //         userName: eachItem.username,
-  //         useruuid: eachItem.useruuid,
-  //         active: eachItem.active,
-  //         ownerType: eachItem.ownertype,
-  //         relationship: eachItem.relationship,
-  //         tenantId: eachItem.tenantId,
-  //         fatherOrHusbandName: ""
-  //       });
-  //
-  //       // check if the current index is last item of the subarray, if true then push into final array
-  //       if (isItemPresent && index === fireNocByIDArray.length - 1) {
-  //         ownerIdArray.push({
-  //           id: eachItem.ownerid,
-  //           useruuid: eachItem.useruuid
-  //         });
-  //         responseArray.push({
-  //           ...element,
-  //           status: status[element.action],
-  //           applicationdate: JSON.parse(element.applicationdate?BigInt(element.applicationdate):element.applicationdate),
-  //           fireNOCDetails: {
-  //             id: element.firenocdetailsid,
-  //             applicationNumber: element.applicationnumber,
-  //             applicationStatus: status[element.action],
-  //             fireNOCType: element.firenoctype,
-  //             firestationId: "",
-  //             applicationDate: element.applicationdate,
-  //             financialYear: element.financialyear,
-  //             issuedDate: element.issueddate,
-  //             validFrom: element.validfrom,
-  //             validTo: element.validto,
-  //             action: element.action,
-  //             channel: element.channel,
-  //             noOfBuildings: "",
-  //             buildings: buildings && uniqBy(buildings, "id"),
-  //             propertyDetails: {},
-  //             applicantDetails: {
-  //               ownerShipType: element.ownertype,
-  //               owners: owners && uniqBy(owners, "id"),
-  //               additionalDetail: {}
-  //             },
-  //             additionalDetail: {},
-  //             auditDetails: {}
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  // });
-  // const result = await getFinalResult(ownerIdArray, responseArray);
-
-  // return result;
-
-  // let result={}
-  // set(result,`${response[i].fid}.id`,response[i].fid);
-  // set(result,`${response[i].fid}.tenantId`,response[i].tenantid);
-  // set(result,`${response[i].fid}.fireNOCNumber`,response[i].fireNOCNumber);
-  // set(result,`${response[i].fid}.provisionFireNOCNumber`,response[i].provisionFireNOCNumber);
-  // set(result,`${response[i].fid}.oldFireNOCNumber`,response[i].oldFireNOCNumber);
-  // set(result,`${response[i].fid}.dateOfApplied`,response[i].dateOfApplied);
   let result = [];
   for (var i = 0; i < response.length; i++) {
     let fireNoc = {};
@@ -222,6 +154,5 @@ export const mergeSearchResults = async response => {
       result.push(fireNoc);
     }
   }
-
   return result;
 };

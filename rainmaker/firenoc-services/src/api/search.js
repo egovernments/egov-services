@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { mergeSearchResults, requestInfoToResponseInfo } from "../utils";
+import { requestInfoToResponseInfo } from "../utils";
+import { mergeSearchResults } from "../utils/search";
 import isEmpty from "lodash/isEmpty";
 
 export default ({ config, db }) => {
@@ -17,8 +18,7 @@ export default ({ config, db }) => {
     const queryObj = JSON.parse(JSON.stringify(request.query));
     queryObj.action = actions[queryObj.status];
 
-    const text = `SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.dateOfApplied,FD.uuid as firenocdetailsid,FD.action,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FB.uuid as buildingid ,FB.name as buildingname,FB.usagetype,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship,FUOM.uuid as uomuuid,FUOM.code,FUOM.value,FUOM.activeuom,FBD.uuid as documentuuid,FUOM.active,FBD.documentType,FBD.filestoreid,FBD.documentuid,FBD.createdby as documentCreatedBy,FBD.lastmodifiedby as documentLastModifiedBy,FBD.createdtime as documentCreatedTime,FBD.lastmodifiedtime as documentLastModifiedTime FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) JOIN eg_fn_buildinguoms FUOM ON (FB.uuid = FUOM.buildinguuid) JOIN eg_fn_buildingdocuments FBD on(FB.uuid = FBD.buildinguuid) where FN.tenantid = '${
-      queryObj.tenantId
+    const text = `SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.dateOfApplied,FD.uuid as firenocdetailsid,FD.action,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FB.uuid as buildingid ,FB.name as buildingname,FB.usagetype,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship,FUOM.uuid as uomuuid,FUOM.code,FUOM.value,FUOM.activeuom,FBD.uuid as documentuuid,FUOM.active,FBD.documentType,FBD.filestoreid,FBD.documentuid,FBD.createdby as documentCreatedBy,FBD.lastmodifiedby as documentLastModifiedBy,FBD.createdtime as documentCreatedTime,FBD.lastmodifiedtime as documentLastModifiedTime FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) JOIN eg_fn_buildinguoms FUOM ON (FB.uuid = FUOM.buildinguuid) LEFT OUTER JOIN eg_fn_buildingdocuments FBD on(FB.uuid = FBD.buildinguuid) where FN.tenantid = '${queryObj.tenantId
     }' AND`;
 
     const queryKeys = Object.keys(queryObj);
@@ -53,7 +53,6 @@ export default ({ config, db }) => {
         queryObj.fromDate
       } ORDER BY FN.uuid`;
     } else {
-      // console.log("Select From Date");
       sqlQuery = `${sqlQuery.substring(
         0,
         sqlQuery.length - 3
@@ -66,7 +65,7 @@ export default ({ config, db }) => {
       if (err) {
         console.log(err.stack);
       } else {
-        console.log(JSON.stringify(res.rows));
+        // console.log(JSON.stringify(res.rows));
         response.FireNOCs =
           res.rows && !isEmpty(res.rows)
             ? await mergeSearchResults(res.rows, request.query)

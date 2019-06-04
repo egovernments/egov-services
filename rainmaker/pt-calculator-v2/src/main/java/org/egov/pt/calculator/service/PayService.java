@@ -68,8 +68,8 @@ public class PayService {
 
 		if (rebate.equals(BigDecimal.ZERO)) {
 			penalty = getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
-			interest = getInterest(taxAmt.subtract(collectedPtTax), assessmentYear,
-					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER),receipts);
+			interest = getInterest(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER),
+					receipts);
 		}
 
 		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate.setScale(2, 2).negate());
@@ -150,43 +150,46 @@ public class PayService {
 
 		if(interestStart < current){
 
-			if(CollectionUtils.isEmpty(receipts)){
+			if (CollectionUtils.isEmpty(receipts)) {
+				
 				long numberOfDaysInMillies = current - interestStart;
-				BigDecimal interestCalculated = calculateInterest(numberOfDaysInMillies,taxAmt,interestMap);
-				return interestCalculated;
+				return calculateInterest(numberOfDaysInMillies, taxAmt, interestMap);
 			}
 			else{
+				
 				BigDecimal applicableAmount;
 				BigDecimal interestCalculated;
 				int numberOfPeriods = receipts.size()+1;
 				long numberOfDaysInMillies;
 				Receipt receipt;
 
-				for(int i = 0 ; i<numberOfPeriods; i++){
+				for (int i = 0; i < numberOfPeriods; i++) {
 
-					if(i!=numberOfPeriods-1)
-					 receipt = receipts.get(i);
-					else receipt = receipts.get(i-1);
-					Bill bill = receipt.getBill().get(0);
+					if (i != numberOfPeriods - 1)
+						receipt = receipts.get(i);
+					else
+						receipt = receipts.get(i - 1);
+					
 					BillDetail detail = receipt.getBill().get(0).getBillDetails().get(0);
 
-					if(i==0){
+					if (i == 0) {
+
 						applicableAmount = taxAmt;
 						numberOfDaysInMillies = detail.getReceiptDate() - interestStart;
-						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
-					}
-					else if(i==numberOfPeriods-1){
-						applicableAmount = getRemainingAmount(receipt);;
-						numberOfDaysInMillies = detail.getReceiptDate() - current;
-						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
-					}
-					else {
-						Receipt receiptPrev = receipts.get(i-1);
+						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
+					} else if (i == numberOfPeriods - 1) {
+
+						applicableAmount = getRemainingAmount(receipt);
+						numberOfDaysInMillies = current - detail.getReceiptDate();
+						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
+					} else {
+
+						Receipt receiptPrev = receipts.get(i - 1);
 						Bill billPrev = receiptPrev.getBill().get(0);
 						BillDetail detailPrev = billPrev.getBillDetails().get(0);
 						applicableAmount = getRemainingAmount(receiptPrev);
 						numberOfDaysInMillies = detail.getReceiptDate() - detailPrev.getReceiptDate();
-						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
+						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					}
 					interestAmt = interestAmt.add(interestCalculated);
 				}

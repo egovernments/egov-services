@@ -55,13 +55,11 @@ public class VoucherServiceImpl implements VoucherService {
 
 	final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
-	public static final String RECEIPTS_VOUCHER_NAME = "Other receipts";
-	public static final String RECEIPTS_VOUCHER_TYPE = "Receipt";
-	public static final String RECEIPTS_VOUCHER_DESCRIPTION = "Collection Module";
-	public static final String COLLECTIONS_EG_MODULES_ID = "10";
-	public static final Logger LOGGER = LoggerFactory.getLogger(VoucherServiceImpl.class);
+	private static final String RECEIPTS_VOUCHER_TYPE = "Receipt";
+	private static final String COLLECTIONS_EG_MODULES_ID = "10";
+	private static final Logger LOGGER = LoggerFactory.getLogger(VoucherServiceImpl.class);
 	private static final String COLLECTION_MODULE_NAME = "Collections";
-	LinkedHashMap<String, BigDecimal> amountMapwithGlcode;
+	private LinkedHashMap<String, BigDecimal> amountMapwithGlcode;
 
 	@Override
 	/**

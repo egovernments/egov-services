@@ -1,6 +1,5 @@
 package org.egov.receipt.consumer.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;

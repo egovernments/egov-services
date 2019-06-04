@@ -13,13 +13,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class VoucherIntegrationLog {
-String id;
-String referenceNumber;
-String status;
-String voucherNumber;
-String type;
-String requestJson;
-String description;
-String tenantId;
-Date createdDate;
+private String id;
+private String referenceNumber;
+private String status;
+private String voucherNumber;
+private String type;
+private String requestJson;
+private String description;
+private String tenantId;
+private Date createdDate;
 }

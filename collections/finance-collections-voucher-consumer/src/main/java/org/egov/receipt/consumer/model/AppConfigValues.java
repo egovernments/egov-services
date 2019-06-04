@@ -10,6 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class AppConfigValues {
-String id;
-String value;
+private String id;
+private String value;
 }

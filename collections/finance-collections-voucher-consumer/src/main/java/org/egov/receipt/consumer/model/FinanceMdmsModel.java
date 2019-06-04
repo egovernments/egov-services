@@ -6,5 +6,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class FinanceMdmsModel {
-	Object financeServiceMdmsData;
+	private Object financeServiceMdmsData;
 }

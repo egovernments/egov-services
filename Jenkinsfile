@@ -10,7 +10,6 @@ def notifier = "";
 try {
     node("slave"){
         cleanWs disableDeferredWipeout: true, deleteDirs: true
-        master
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')

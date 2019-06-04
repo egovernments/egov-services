@@ -266,6 +266,35 @@ public class InstrumentServiceTest {
         assertEquals(expextedResult, actualResult);
 
     }
+    
+    @Test
+    public final void test_create_cash_zero_amount() {
+
+        List<Instrument> expextedResult = getInstruments();
+        expextedResult.get(0).getInstrumentType().setName("cash");
+        expextedResult.get(0).setAmount(new BigDecimal(0));
+
+        Pagination<InstrumentType> pit = getInstrumentType();
+        pit.getPagedData().get(0).setName("cash");
+
+        when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
+        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
+        when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class), anyObject()))
+                .thenReturn(getBankAccountContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject()))
+                .thenReturn(getFinancialStatusContract());
+        when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
+        when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
+
+        when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+        List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
+
+        assertEquals(expextedResult, actualResult);
+
+    }
+    
+    
 
     @Test(expected = InvalidDataException.class)
     public final void test_create_cash_null_transnumber() {

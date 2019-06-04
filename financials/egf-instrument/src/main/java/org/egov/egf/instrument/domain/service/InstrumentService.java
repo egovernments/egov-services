@@ -261,15 +261,15 @@ public class InstrumentService {
                     instrument.setBankAccount(bankAccount);
                 }*/
                 bankAccountContractRepository.getClass();
-                if (instrument.getFinancialStatus() != null) {
-                    instrument.getFinancialStatus().setTenantId(instrument.getTenantId());
-                    FinancialStatusContract financialStatus = financialStatusContractRepository
-                            .findById(instrument.getFinancialStatus(), requestInfo);
-                    if (financialStatus == null)
-                        throw new InvalidDataException("financialStatus", "financialStatus.invalid",
-                                " Invalid financialStatus");
-                    instrument.setFinancialStatus(financialStatus);
-                }
+//                if (instrument.getFinancialStatus() != null) {
+//                    instrument.getFinancialStatus().setTenantId(instrument.getTenantId());
+//                    FinancialStatusContract financialStatus = financialStatusContractRepository
+//                            .findById(instrument.getFinancialStatus(), requestInfo);
+//                    if (financialStatus == null)
+//                        throw new InvalidDataException("financialStatus", "financialStatus.invalid",
+//                                " Invalid financialStatus");
+//                    instrument.setFinancialStatus(financialStatus);
+//                }
                 if (instrument.getSurrenderReason() != null) {
                     instrument.getSurrenderReason().setTenantId(instrument.getTenantId());
                     SurrenderReason surrenderReason = surrenderReasonRepository

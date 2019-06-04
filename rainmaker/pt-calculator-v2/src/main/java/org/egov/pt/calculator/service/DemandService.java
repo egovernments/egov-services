@@ -154,6 +154,37 @@ public class DemandService {
 	 */
 	public BillResponse getBill(GetBillCriteria getBillCriteria, RequestInfoWrapper requestInfoWrapper) {
 
+		DemandResponse res = updateDemands(getBillCriteria, requestInfoWrapper);
+
+		/**
+		 * Loop through the demands and call generateBill for each demand.
+		 * Group the Bills and return the bill responsew
+		 */
+		List<Bill> bills = new LinkedList<>();
+		BillResponse billResponse;
+		ResponseInfo responseInfo = null;
+		StringBuilder billGenUrl;
+
+		for(Demand demand : res.getDemands()){
+			billGenUrl = utils.getBillGenUrl(getBillCriteria.getTenantId(), demand.getId(), demand.getConsumerCode());
+			billResponse = mapper.convertValue(repository.fetchResult(billGenUrl, requestInfoWrapper), BillResponse.class);
+			responseInfo = billResponse.getResposneInfo();
+			bills.addAll(billResponse.getBill());
+		}
+
+		return BillResponse.builder().resposneInfo(responseInfo).bill(bills).build();
+	}
+
+	/**
+	 * Method updates the demands based on the getBillCriteria
+	 * 
+	 * The response will be the list of demands updated for the 
+	 * @param getBillCriteria
+	 * @param requestInfoWrapper
+	 * @return
+	 */
+	public DemandResponse updateDemands(GetBillCriteria getBillCriteria, RequestInfoWrapper requestInfoWrapper) {
+		
 		if(getBillCriteria.getAmountExpected() == null) getBillCriteria.setAmountExpected(BigDecimal.ZERO);
 		validator.validateGetBillCriteria(getBillCriteria);
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -184,10 +215,11 @@ public class DemandService {
 
 		List<Demand> demandsToBeUpdated = new LinkedList<>();
 
-		for(String consumerCode : getBillCriteria.getConsumerCodes()){
-            Demand demand = consumerCodeToDemandMap.get(consumerCode);
-            if(demand==null)
-				throw new CustomException(CalculatorConstants.EMPTY_DEMAND_ERROR_CODE, "No demand found for the consumerCode: "+consumerCode);
+		for (String consumerCode : getBillCriteria.getConsumerCodes()) {
+			Demand demand = consumerCodeToDemandMap.get(consumerCode);
+			if (demand == null)
+				throw new CustomException(CalculatorConstants.EMPTY_DEMAND_ERROR_CODE,
+						"No demand found for the consumerCode: " + consumerCode);
 
 			if (demand.getStatus() != null
 					&& CalculatorConstants.DEMAND_CANCELLED_STATUS.equalsIgnoreCase(demand.getStatus().toString()))
@@ -209,25 +241,7 @@ public class DemandService {
 		DemandRequest request = DemandRequest.builder().demands(demandsToBeUpdated).requestInfo(requestInfo).build();
 		StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
 		repository.fetchResult(updateDemandUrl, request);
-
-
-		/**
-		 * Loop through the demands and call generateBill for each demand.
-		 * Group the Bills and return the bill responsew
-		 */
-		List<Bill> bills = new LinkedList<>();
-		BillResponse billResponse;
-		ResponseInfo responseInfo = null;
-		StringBuilder billGenUrl;
-
-		for(Demand demand : res.getDemands()){
-			billGenUrl = utils.getBillGenUrl(getBillCriteria.getTenantId(), demand.getId(), demand.getConsumerCode());
-			billResponse = mapper.convertValue(repository.fetchResult(billGenUrl, requestInfoWrapper), BillResponse.class);
-			responseInfo = billResponse.getResposneInfo();
-			bills.addAll(billResponse.getBill());
-		}
-
-		return BillResponse.builder().resposneInfo(responseInfo).bill(bills).build();
+		return res;
 	}
 
 	/**

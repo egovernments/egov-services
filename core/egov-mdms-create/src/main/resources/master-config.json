@@ -731,6 +731,13 @@
       "uniqueKeys": [
         "$.instrumenttype"
       ]
+    },
+    "FinanceInstrumentStatusMapping": {
+      "masterName": "FinanceInstrumentStatusMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   }
 }

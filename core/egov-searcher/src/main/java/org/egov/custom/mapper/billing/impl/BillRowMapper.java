@@ -29,7 +29,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 		while (rs.next()) {
 
 			String billId = rs.getString("b_id");
-			Bill bill = billMap.get("billId");
+			Bill bill = billMap.get(billId);
 
 			if (bill == null) {
 

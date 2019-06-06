@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.custom.mapper.billing.impl.BillAccountDetail.PurposeEnum;
-import org.egov.custom.rowmapper.CustomRowMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 

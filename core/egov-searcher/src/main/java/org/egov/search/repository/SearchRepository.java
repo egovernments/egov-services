@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.egov.custom.mapper.billing.impl.Bill;
 import org.egov.custom.mapper.billing.impl.BillRowMapper;
 import org.egov.search.model.Definition;
 import org.egov.search.model.SearchRequest;
@@ -21,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.DefaultPropertiesPersister;
 
@@ -75,7 +77,7 @@ public class SearchRepository {
 				searchDefinition.getQuery());
 		try {
 			Long startTime = new Date().getTime();
-			Object result = jdbcTemplate.queryForList(query, BillRowMapper.class);
+			List<Bill> result = jdbcTemplate.query(query, rowMapper);
 			Long endTime = new Date().getTime();
 			Long totalExecutionTime = endTime - startTime;
 			log.info("Query execution time in millisec: " + totalExecutionTime);

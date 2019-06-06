@@ -68,3 +68,13 @@ export const generateGetBillURL = (tenantId, consumerCode) => {
 
   return url;
 };
+
+export const generateFireNOCSearchURL = (tenantId, applicationNumber) => {
+  let url = "";
+  url = url + process.env.EGOV_FIRENOC_SEARCH_ENDPOINT;
+  url = `${url}?tenantId={1}&businessService={2}`;
+  url = url.replace("{1}", tenantId);
+  url = url.replace("{2", applicationNumber);
+
+  return url;
+};

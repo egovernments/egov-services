@@ -1,5 +1,4 @@
 import { generateDemandSearchURL, generateGetBillURL } from "../utils";
-import axios from "../config/httpClient";
 import { httpRequest } from "../utils/api";
 
 export const generateDemand = async (

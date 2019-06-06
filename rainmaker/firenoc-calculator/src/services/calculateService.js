@@ -2,6 +2,8 @@ import config from "../config/config";
 import { requestInfoToResponseInfo } from "../utils";
 import { searchService } from "../controller/search";
 import { generateDemand } from "./demandService";
+import { getFireNoc } from "./firenocService";
+import isEmpty from "lodash/isEmpty";
 
 export const calculateService = async (req, pool) => {
   let calculalteResponse = {};
@@ -18,16 +20,35 @@ export const calculateService = async (req, pool) => {
 
   let a = await generateDemand(requestInfo, tenantId, calculations, config);
   console.log(a);
+
   return calculalteResponse;
 };
 
 const getCalculation = async (req, pool, config) => {
   let calculations = [];
+  const requestInfo = req.body.RequestInfo;
   for (let i = 0; i < req.body.CalulationCriteria.length; i++) {
-    //TODO: if calculation criteria doesnt content fireNOC obj
+    let calculateCriteria = req.body.CalulationCriteria[i];
+    if (!calculateCriteria.fireNOC || isEmpty(calculateCriteria.fireNOC)) {
+      const applicationNumber = calculateCriteria.applicationNumber;
+      const tenantId = applicationNumber.tenantId;
+      let firefireNocSearchResponseNOC = getFireNoc(
+        requestInfo,
+        applicationNumber,
+        tenantId
+      );
+      if (
+        !firefireNocSearchResponseNOC.FireNOCs ||
+        isEmpty(firefireNocSearchResponseNOC.FireNOCs)
+      ) {
+        throw `FireNOC not found for application number: ${applicationNumber}`;
+      } else {
+        calculateCriteria.fireNOC = firefireNocSearchResponseNOC.FireNOCs[0];
+      }
+    }
 
     let calculation = await calculateForSingleReq(
-      req.body.CalulationCriteria[i],
+      calculateCriteria,
       config,
       pool
     );

@@ -24,5 +24,7 @@ public class Address {
 	private String  city;
 
 	private String  pincode;
+	
+	private String  locality;
 
 }

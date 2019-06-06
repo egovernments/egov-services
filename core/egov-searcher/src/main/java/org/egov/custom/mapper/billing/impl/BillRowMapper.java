@@ -84,6 +84,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 				address.setCity(rs.getString("ptadd_city"));
 				address.setLandmark(rs.getString("ptadd_landmark"));
 				address.setPincode(rs.getString("ptadd_pincode"));
+				address.setLocality(rs.getString("ptadd_locality"));
 				billDetail.setAddress(address);
 				
 				billDetailMap.put(billDetail.getId(), billDetail);

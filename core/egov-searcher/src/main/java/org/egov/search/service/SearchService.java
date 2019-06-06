@@ -47,6 +47,7 @@ public class SearchService {
 	public Object searchData(SearchRequest searchRequest, String moduleName, String searchName) {
 		Map<String, SearchDefinition> searchDefinitionMap = runner.getSearchDefinitionMap();
 		Definition searchDefinition = null;
+		Object data = null;
 		try{
 			searchDefinition = searchUtils.getSearchDefinition(searchDefinitionMap, moduleName, searchName);
 		}catch(CustomException e){
@@ -54,7 +55,11 @@ public class SearchService {
 		}
 		List<String> maps = new ArrayList<>();
 		try{
-			maps = searchRepository.searchData(searchRequest, searchDefinition);
+			if(!searchDefinition.getIsCustomerRowMapEnabled()) {
+				maps = searchRepository.searchData(searchRequest, searchDefinition);
+			}else {
+				data =  searchRepository.fetchWithCustomMapper(searchRequest, searchDefinition);
+			}
 		}catch(CustomException e){
 			throw e;
 		}catch(Exception e){
@@ -62,18 +67,19 @@ public class SearchService {
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"There was an error encountered at the Db");
 		}
-		Object data = null;
-		try{
-			data = formatResult(maps, searchDefinition, searchRequest);
-		}catch(Exception e){
-			logger.error("Exception: ",e);
-			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
-					"There was an error encountered while formatting the result, Verify output config from the yaml file.");
+		if(null == data) {
+			try{
+				data = formatResult(maps, searchDefinition, searchRequest);
+			}catch(Exception e){
+				logger.error("Exception: ",e);
+				throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
+						"There was an error encountered while formatting the result, Verify output config from the yaml file.");
+			}
 		}
+
 		
 		return data;
 	}
-	
 	
 	private String formatResult(List<String> maps, Definition searchDefinition, SearchRequest searchRequest){
 	    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();

@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+
 @Service
 public class SearchReqValidator {
 	
@@ -66,6 +68,10 @@ public class SearchReqValidator {
 				errorMap.put("400", "Missiing Mandatory Property: "+entry.getJsonPath());
 			}
 		});
+		
+		if(searchDefinition.getIsCustomerRowMapEnabled() && StringUtils.isEmpty(searchDefinition.getRowMapperKey()))
+			errorMap.put("INAVLID_DEFINITION", "rowMapperKey is mandatory when custom mapping is to be used. ");
+
 		
 		if(!errorMap.isEmpty())
 			throw new CustomException(errorMap);

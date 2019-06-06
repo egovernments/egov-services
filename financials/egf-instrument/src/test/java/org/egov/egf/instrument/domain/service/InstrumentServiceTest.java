@@ -812,8 +812,7 @@ public class InstrumentServiceTest {
 
         assertEquals(expextedResult, actualResult.get(0).getBankAccount());
     }*/
-    @Ignore
-    @Test(expected = InvalidDataException.class)
+    @Test
     public final void test_fetch_financialstatus_null() {
 
         List<Instrument> instruments = getInstrumentss();

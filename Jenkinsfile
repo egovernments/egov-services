@@ -9,6 +9,13 @@ def notifier = "";
 
 try {
     node("slave"){
+        def ws_file_exists = fileExists("${path}")
+        if(!ws_file_exists){
+            echo ws_file_exists
+            echo 'workspace is present'
+            cleanWs disableDeferredWipeout: true
+        }
+
         checkout scm
         sh "git rev-parse --short HEAD > .git/commit-id".trim()
         commit_id = readFile('.git/commit-id')
@@ -31,7 +38,6 @@ try {
           image_builder.publish(service_name, commit_id)
           image_builder.clean(service_name, commit_id)
         }
-        cleanWs deleteDirs: true
     }
 } catch (e) {
     node{

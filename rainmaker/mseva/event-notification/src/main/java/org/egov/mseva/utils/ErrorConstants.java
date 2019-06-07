@@ -20,4 +20,13 @@ public class ErrorConstants {
 	public static final String INVALID_FROM_TO_DATE_CODE = "MEN_INVALID_FROM_TO_DATE";
 	public static final String INVALID_FROM_TO_DATE_MSG = "Date invalid, fromDate and toDate cannot be greater than currentDate";
 
+	public static final String MEN_ERROR_FROM_MDMS_CODE = "MEN_ERROR_FROM_MDMS";
+	public static final String MEN_ERROR_FROM_MDMS_MSG = "There was an error while fetching event types from MDMS";
+	
+	public static final String MEN_NO_DATA_MDMS_CODE = "MEN_NO_DATA_MDMS";
+	public static final String MEN_NO_DATA_MDMS_MSG = "MDMS data for eventTypes is missing!";
+	
+	public static final String MEN_INVALID_EVENTTYPE_CODE = "MEN_INVALID_EVENTTYPE";
+	public static final String MEN_INVALID_EVENTTYPE_MSG = "The provided eventType is not valid.";
+	
 }

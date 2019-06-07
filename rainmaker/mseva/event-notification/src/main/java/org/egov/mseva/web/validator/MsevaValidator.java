@@ -1,15 +1,19 @@
 package org.egov.mseva.web.validator;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mseva.service.MDMSService;
 import org.egov.mseva.utils.ErrorConstants;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventRequest;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -19,18 +23,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MsevaValidator {
 	
+	@Autowired
+	private MDMSService mdmsService;
 	
 	public void validateCreateEvent(EventRequest request) {
 		log.info("Validating the request......");
 		Map<String, String> errorMap = new HashMap<>();
 		validateRI(request.getRequestInfo(), errorMap);
 		request.getEvents().forEach(event -> {
-			validateEventData(event, errorMap);
+			validateEventData(request.getRequestInfo(), event, errorMap);
 		});
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
 		
+	}
+	
+	public void validateUpdateEvent(EventRequest request) {
+		validateCreateEvent(request);
 	}
 	
 	private void validateRI(RequestInfo requestInfo, Map<String, String> errorMap) {
@@ -48,7 +58,7 @@ public class MsevaValidator {
 
 	}
 	
-	private void validateEventData(Event event, Map<String, String> errorMap) {
+	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
 		if(CollectionUtils.isEmpty(event.getToUsers()) && CollectionUtils.isEmpty(event.getToRoles())) {
 			errorMap.put(ErrorConstants.EMPTY_RECEPIENT_CODE, ErrorConstants.EMPTY_RECEPIENT_MSG);
 		}
@@ -61,6 +71,17 @@ public class MsevaValidator {
 				errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
 			}
 			
+		}
+		validateMDMSData(requestInfo, event, errorMap);
+	}
+	
+	private void validateMDMSData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
+		List<String> eventTypes = mdmsService.fetchEventTypes(requestInfo, event.getTenantId());
+		if(!CollectionUtils.isEmpty(eventTypes)) {
+			if(!eventTypes.contains(event.getEventType()))
+				throw new CustomException(ErrorConstants.MEN_INVALID_EVENTTYPE_CODE, ErrorConstants.MEN_INVALID_EVENTTYPE_MSG);
+		}else {
+			throw new CustomException(ErrorConstants.MEN_NO_DATA_MDMS_CODE, ErrorConstants.MEN_NO_DATA_MDMS_MSG);
 		}
 	}
 	

@@ -1,8 +1,8 @@
 package org.egov.mseva.repository;
 
 import java.util.Map;
+import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,33 +20,29 @@ public class RestCallRepository {
 
 	@Autowired
 	private RestTemplate restTemplate;
-
+		
 	/**
-	 * Fetches results from the given API and request and handles errors.
+	 * Fetches results from a REST service using the uri and object
 	 * 
 	 * @param requestInfo
 	 * @param serviceReqSearchCriteria
-	 * @return Object
+	 * @return Optional
 	 * @author vishal
 	 */
-	public Object fetchResult(StringBuilder uri, Object request) {
+	public Optional<Object> fetchResult(StringBuilder uri, Object request) {
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Object response = null;
 		try {
 			response = restTemplate.postForObject(uri.toString(), request, Map.class);
-		} catch (HttpClientErrorException e) {
-			log.error("External Service threw an Exception: ", e);
-			if (!StringUtils.isEmpty(e.getResponseBodyAsString())) {
-				throw new ServiceCallException(e.getResponseBodyAsString());
-			}
-		} catch (Exception e) {
-			log.error("Exception while fetching from searcher: ", e);
-			log.info("req: " + (request));
+		}catch(HttpClientErrorException e) {
+			log.error("External Service threw an Exception: ",e);
+			throw new ServiceCallException(e.getResponseBodyAsString());
+		}catch(Exception e) {
+			log.error("Exception while fetching data: ",e);
 		}
-
-		return response;
-
+		return Optional.ofNullable(response);
+		
 	}
 
 }

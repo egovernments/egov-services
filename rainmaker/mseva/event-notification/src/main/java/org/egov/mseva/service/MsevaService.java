@@ -87,6 +87,9 @@ public class MsevaService {
 	}
 	
 	public EventResponse updateEvents(EventRequest request) {
+		validator.validateUpdateEvent(request);
+		log.info("enriching and storing the event......");
+		enrichUpdateEvent(request);
 		producer.push(properties.getUpdateEventsTopic(), request);
 		
 		return EventResponse.builder()
@@ -113,6 +116,28 @@ public class MsevaService {
 			}
 			AuditDetails auditDetails = AuditDetails.builder().createdBy(request.getRequestInfo().getUserInfo().getUuid())
 					.createdTime(new Date().getTime()).build();
+			
+			event.setAuditDetails(auditDetails);
+
+		});
+	}
+	
+	private void enrichUpdateEvent(EventRequest request) {
+		Map<String, String> recepientEventMap = new HashMap<>();
+		request.getEvents().forEach(event -> {			
+			if(!event.getToUsers().isEmpty()) {
+				event.getToRoles().clear();
+			} //toUsers will take precedence over toRoles.
+			
+			if(!event.getToUsers().isEmpty()) {
+				event.getToUsers().forEach(user -> recepientEventMap.put(user, event.getId()));
+			}
+			if(!event.getToRoles().isEmpty()) {
+				event.getToRoles().forEach(role -> recepientEventMap.put(role, event.getId()));
+			}
+			AuditDetails auditDetails = event.getAuditDetails();
+			auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
+			auditDetails.setLastModifiedTime(new Date().getTime());
 			
 			event.setAuditDetails(auditDetails);
 

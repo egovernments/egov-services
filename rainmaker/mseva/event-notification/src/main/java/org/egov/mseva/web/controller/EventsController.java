@@ -91,7 +91,8 @@ public class EventsController {
 	@PostMapping("/_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid EventRequest request) {
-		return new ResponseEntity<>(request, HttpStatus.OK);
+		EventResponse response = service.updateEvents(request);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
 	

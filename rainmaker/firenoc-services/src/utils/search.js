@@ -3,7 +3,9 @@ import findIndex from "lodash/findIndex";
 import isEmpty from "lodash/isEmpty";
 import { httpRequest } from "./api";
 import envVariables from "../envVariables";
+import userService from "../services/userService";
 
+let requestInfo = {};
 const status = {
   INITIATE: "INITIATED",
   APPROVE: "APPROVED"
@@ -42,26 +44,30 @@ const fireNOCRowMapper = (row, mapper = {}) => {
       get(fireNoc, "fireNOCDetails.buildings", [])
     ),
     propertyDetails: {
-      id:row.puuid,
-      propertyId:row.propertyid,
-      address:{
-        tenantId:row.tenantid,
-        doorNo:row.pdoorno,
-        latitude:row.platitude,
-        longitude:row.plongitude,
-        addressNumber:row.paddressNumber,
-        buildingName:row.pbuildingname,
-        city:row.pcity,
-        locality:{
-          code:row.plocality
+      id: row.puuid,
+      propertyId: row.propertyid,
+      address: {
+        tenantId: row.tenantid,
+        doorNo: row.pdoorno,
+        latitude: row.platitude,
+        longitude: row.plongitude,
+        addressNumber: row.paddressNumber,
+        buildingName: row.pbuildingname,
+        city: row.pcity,
+        locality: {
+          code: row.plocality
         },
-        pincode:row.ppincode,
-        street:row.pstreet,
+        pincode: row.ppincode,
+        street: row.pstreet
       }
     },
     applicantDetails: {
       ownerShipType: row.ownertype,
-      owners: fireNocOwnersRowMapper(row,get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])),
+      owners: fireNocOwnersRowMapper(
+        row,
+        get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])
+      ),
+      //TODO handle additioanldetails in rowmapper
       additionalDetail: {}
     },
     additionalDetail: row.additionaldetail,
@@ -75,22 +81,25 @@ const fireNOCRowMapper = (row, mapper = {}) => {
   return fireNoc;
 };
 
-const fireNocOwnersRowMapper = (row, mapper = []) => {
+const fireNocOwnersRowMapper = async (row, mapper = []) => {
   let ownerIndex = findIndex(mapper, { id: row.ownerid });
   let ownerObject = {
-          id: row.ownerid,
-          userName: row.username,
-          useruuid: row.useruuid,
-          active: row.active,
-          ownerType: row.ownertype,
-          relationship: row.relationship,
-          tenantId: row.tenantId,
-          fatherOrHusbandName: ""
+    id: row.ownerid,
+    userName: row.username,
+    useruuid: row.useruuid,
+    active: row.active,
+    ownerType: row.ownertype,
+    relationship: row.relationship,
+    tenantId: row.tenantId,
+    fatherOrHusbandName: ""
   };
   if (ownerIndex != -1) {
     mapper[ownerIndex] = ownerObject;
   } else {
-    mapper.push(ownerObject);
+    let user = {};
+    if (row.useruuid) user = searchUser(requestInfo, row.useruuid);
+
+    mapper.push({ ...user, ...ownerObject });
   }
   return mapper;
 };
@@ -102,12 +111,18 @@ const fireNocBuildingsRowMapper = (row, mapper = []) => {
     tenantId: row.tenantid,
     name: row.buildingname,
     usageType: row.usagetype,
-    uoms:fireNocUomsRowMapper(row),
+    uoms: fireNocUomsRowMapper(row),
     applicationDocuments: fireNocApplicationDocumentsRowMapper(row)
   };
   if (buildingIndex != -1) {
-    buildingObject.uoms= fireNocUomsRowMapper(row, get(mapper[buildingIndex], "uoms", []));
-    buildingObject.applicationDocuments=fireNocApplicationDocumentsRowMapper(row,get(mapper[buildingIndex], "applicationDocuments", []));
+    buildingObject.uoms = fireNocUomsRowMapper(
+      row,
+      get(mapper[buildingIndex], "uoms", [])
+    );
+    buildingObject.applicationDocuments = fireNocApplicationDocumentsRowMapper(
+      row,
+      get(mapper[buildingIndex], "applicationDocuments", [])
+    );
     mapper[buildingIndex] = buildingObject;
   } else {
     mapper.push(buildingObject);
@@ -157,7 +172,8 @@ const fireNocApplicationDocumentsRowMapper = (row, mapper = []) => {
   return mapper;
 };
 
-export const mergeSearchResults = async response => {
+export const mergeSearchResults = async (response, query = {}, reqInfo) => {
+  requestInfo = reqInfo;
   let result = [];
   for (var i = 0; i < response.length; i++) {
     let fireNoc = {};
@@ -171,4 +187,17 @@ export const mergeSearchResults = async response => {
     }
   }
   return result;
+};
+
+const searchUser = async (requestInfo, uuid) => {
+  let userSearchReqCriteria = {};
+  let userSearchResponse = {};
+  userSearchReqCriteria.uuid = uuid;
+  userSearchResponse = await userService.searchUser(
+    requestInfo,
+    userSearchReqCriteria
+  );
+  if (!userSearchResponse.user || isEmpty(userSearchResponse.user))
+    throw "User Serach failed";
+  return userSearchResponse.user[0];
 };

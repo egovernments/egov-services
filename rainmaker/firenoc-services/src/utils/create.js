@@ -1,6 +1,8 @@
-import {addIDGenId,uuidv1} from '../utils';
+import { addIDGenId, uuidv1 } from "../utils";
 import envVariables from "../envVariables";
 import get from "lodash/get";
+import userService from "../services/userService";
+import isEmpty from "lodash/isEmpty";
 
 export const addUUIDAndAuditDetails = async request => {
   let { FireNOCs, RequestInfo } = request;
@@ -38,7 +40,6 @@ export const addUUIDAndAuditDetails = async request => {
     FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
       i
     ].fireNOCDetails.applicantDetails.owners.map(owner => {
-      //user integration create, search and update is pending
       owner.id = uuidv1();
       return owner;
     });
@@ -48,8 +49,77 @@ export const addUUIDAndAuditDetails = async request => {
       createdTime: new Date().getTime(),
       lastModifiedTime: 0
     };
+    if (
+      FireNOCs[i].applicantDetails.owners &&
+      !isEmpty(FireNOCs[i].applicantDetails.owners)
+    ) {
+      let owners = FireNOCs[i].applicantDetails.owners;
+      for (var owneriter = 0; owneriter < owners.length; owneriter++) {
+        let userCreateResponse = await createUser(
+          RequestInfo,
+          owners[owneriter],
+          FireNOCs[i].tenantId
+        );
+        owner = { ...owner, ...userCreateResponse.user[0] };
+      }
+    }
   }
   request.FireNOCs = FireNOCs;
   console.log(JSON.stringify(request));
   return request;
+};
+
+const createUser = async (requestInfo, owner, tenantId) => {
+  let userSearchReqCriteria = {};
+  let userSearchResponse = {};
+  let userCreateResponse = {};
+  if (!owner.uuid) {
+    //uuid of user not present
+    userSearchReqCriteria.userType = "CITIZEN";
+    (userSearchReqCriteria.tenantId = tenantId),
+      (userSearchReqCriteria.mobileNumber = owner.momobileNumber);
+    userSearchResponse = await userService.searchUser(
+      requestInfo,
+      userSearchReqCriteria
+    );
+    if (userSearchResponse.user && !isEmpty(userSearchResponse.user)) {
+      userCreateResponse = await userService.updateUser(requestInfo, {
+        ...userSearchResponse.user[0],
+        ...owner
+      });
+    } else {
+      owner = addDefaultUserDetails(tenantId, owner);
+      userCreateResponse = await userService.createUser(requestInfo, {
+        ...userSearchResponse.user[0],
+        ...owner
+      });
+    }
+  } else {
+    //uuid present
+    userSearchReqCriteria.uuid = [owner.uuid];
+    userSearchResponse = await userService.searchUser(
+      requestInfo,
+      userSearchReqCriteria
+    );
+    if (userSearchResponse.user && !isEmpty(userSearchResponse.user)) {
+      userCreateResponse = await userService.updateUser(requestInfo, {
+        ...userSearchResponse.user[0],
+        ...owner
+      });
+    } else {
+      throw "User not found";
+    }
+    return userCreateResponse;
+  }
+};
+
+const addDefaultUserDetails = (tenantId, owner) => {
+  if (!owner.userName || isEmpty(owner.userName))
+    owner.userName = owner.momobileNumber;
+  owner.tenantId = tenantId.split(".")[0];
+  owner.type = "CITIZEN";
+  owner.role = [
+    { code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }
+  ];
+  return owner;
 };

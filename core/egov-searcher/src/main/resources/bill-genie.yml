@@ -12,11 +12,20 @@ SearchDefinitions:
     condition: AND
     params:
     - name: b.tenantid
-      isMandatory: false
+      isMandatory: true
       jsonPath: $.searchCriteria.tenantId
     - name: bd.consumercode
-      isMandatory: true
+      isMandatory: false
       jsonPath: $.searchCriteria.consumercode
+    - name: bd.businessservice
+      isMandatory: false
+      jsonPath: $.searchCriteria.businessservice
+    - name: b.mobilenumber
+      isMandatory: false
+      jsonPath: $.searchCriteria.mobilenumber
+    - name: bd.billno
+      isMandatory: false
+      jsonPath: $.searchCriteria.billno
 
    output:
     jsonFormat: {"ResponseInfo": {},"Bills": []}

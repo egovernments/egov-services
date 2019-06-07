@@ -51,7 +51,6 @@ public class SearchController {
 			Map<String, Object> data = gson.fromJson(searchResult.toString(), type);
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch(Exception e){
-			logger.error("Exception while searching for result: ",e);
 			if(null != searchResult)
 				return new ResponseEntity<>(searchResult, HttpStatus.OK);
 			else

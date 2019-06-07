@@ -1,9 +1,9 @@
 SearchDefinitions:
- moduleName: dummy
+ moduleName: universal-collection
  summary: Testing new feature
  version: 1.0.0
  definitions:
- - name: test
+ - name: billswithaddranduser
    isCustomerRowMapEnabled: true
    rowMapperKey: billsearch
    query: 

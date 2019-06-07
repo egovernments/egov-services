@@ -63,7 +63,7 @@ const envVariables = {
   EGOV_USER_SEARCH_ENDPOINT:
     process.env.EGOV_USER_SEARCH_ENDPOINT || "/_search",
   EGOV_USER_UPDATE_ENDPOINT:
-    process.env.EGOV_USER_UPDATE_ENDPOINT || "/_updatenovalidate",
+    process.env.EGOV_USER_UPDATE_ENDPOINT || "/users/_updatenovalidate",
   EGOV_USER_USERNAME_PREFIX: process.env.EGOV_USER_USERNAME_PREFIX || "FN-",
 
   //idgen service configurations

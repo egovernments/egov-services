@@ -37,12 +37,12 @@ export const addUUIDAndAuditDetails = async request => {
     });
     FireNOCs[i].fireNOCDetails.propertyDetails.address.id = uuidv1();
     FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
-      i
-    ].fireNOCDetails.applicantDetails.owners.map(owner => {
-      owner.id = uuidv1();
-      return owner;
-    });
+    // FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
+    //   i
+    // ].fireNOCDetails.applicantDetails.owners.map(owner => {
+    //   owner.id = uuidv1();
+    //   return owner;
+    // });
     FireNOCs[i].auditDetails = {
       createdBy: get(RequestInfo, "userInfo.uuid", ""),
       lastModifiedBy: "",
@@ -50,17 +50,20 @@ export const addUUIDAndAuditDetails = async request => {
       lastModifiedTime: 0
     };
     if (
-      FireNOCs[i].applicantDetails.owners &&
-      !isEmpty(FireNOCs[i].applicantDetails.owners)
+      FireNOCs[i].fireNOCDetails.applicantDetails.owners &&
+      !isEmpty(FireNOCs[i].fireNOCDetails.applicantDetails.owners)
     ) {
-      let owners = FireNOCs[i].applicantDetails.owners;
+      let owners = FireNOCs[i].fireNOCDetails.applicantDetails.owners;
       for (var owneriter = 0; owneriter < owners.length; owneriter++) {
         let userCreateResponse = await createUser(
           RequestInfo,
           owners[owneriter],
           FireNOCs[i].tenantId
         );
-        owner = { ...owner, ...userCreateResponse.user[0] };
+        owners[owneriter] = {
+          ...owners[owneriter],
+          ...userCreateResponse.user[0]
+        };
       }
     }
   }
@@ -83,6 +86,7 @@ const createUser = async (requestInfo, owner, tenantId) => {
       userSearchReqCriteria
     );
     if (userSearchResponse.user && !isEmpty(userSearchResponse.user)) {
+      console.log("sudhanshu update");
       userCreateResponse = await userService.updateUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
@@ -109,6 +113,7 @@ const createUser = async (requestInfo, owner, tenantId) => {
     } else {
       throw "User not found";
     }
+    console.log("is", userCreateResponse);
     return userCreateResponse;
   }
 };

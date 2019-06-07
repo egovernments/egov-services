@@ -36,7 +36,6 @@
     "express": "^4.13.3",
     "express-async-handler": "^1.1.4",
     "kafka-node": "^3.0.1",
-    "moment": "^2.24.0",
     "morgan": "^1.8.0",
     "pg": "^7.6.1",
     "random-number": "0.0.9",

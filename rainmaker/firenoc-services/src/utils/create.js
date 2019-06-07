@@ -1,5 +1,6 @@
-import {addIDGenId,uuidv1} from './index';
+import {addIDGenId,uuidv1} from '../utils';
 import envVariables from "../envVariables";
+import get from "lodash/get";
 
 export const addUUIDAndAuditDetails = async request => {
   let { FireNOCs, RequestInfo } = request;
@@ -49,5 +50,6 @@ export const addUUIDAndAuditDetails = async request => {
     };
   }
   request.FireNOCs = FireNOCs;
+  console.log(JSON.stringify(request));
   return request;
 };

@@ -66,7 +66,7 @@ export const addIDGenId = async (requestInfo, idRequests) => {
     RequestInfo: requestInfo,
     idRequests
   };
-  // console.log(requestBody);
+  // console.log(JSON.stringify(requestBody));
   let idGenResponse = await httpRequest({
     hostURL: envVariables.EGOV_IDGEN_HOST,
     endPoint: `${envVariables.EGOV_IDGEN_CONTEXT_PATH}${

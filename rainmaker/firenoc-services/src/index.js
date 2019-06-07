@@ -72,6 +72,7 @@ app.use("/", api({ config, db }));
 
 //error handler middleware
 app.use((err, req, res, next) =>{
+  console.log(err);
   if (!err.errorType) {
     res.status(err.status).json(err.data);
   }

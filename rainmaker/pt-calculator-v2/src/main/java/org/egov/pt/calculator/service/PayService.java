@@ -408,6 +408,7 @@ public class PayService {
 	 * @return
 	 */
 	private BigDecimal getRemainingAmount(Receipt receipt){
+		
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal amountPaid = BigDecimal.ZERO;
 		List<BillDetail> billDetails = new LinkedList<>();
@@ -416,9 +417,10 @@ public class PayService {
 			billDetails.addAll(bill.getBillDetails());
 		});
 
-		for(BillDetail billDetail : billDetails){
-			totalAmount.add(billDetail.getTotalAmount());
-			amountPaid.add(billDetail.getAmountPaid());
+		for (BillDetail billDetail : billDetails) {
+
+			totalAmount = totalAmount.add(billDetail.getTotalAmount());
+			amountPaid = amountPaid.add(billDetail.getAmountPaid());
 		}
 		return totalAmount.subtract(amountPaid);
 	}

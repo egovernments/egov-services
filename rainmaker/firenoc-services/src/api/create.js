@@ -2,12 +2,13 @@ import { Router } from "express";
 import producer from "../kafka/producer";
 import {
   requestInfoToResponseInfo,
-  addUUIDAndAuditDetails,
   createWorkFlow
 } from "../utils";
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
+import {addUUIDAndAuditDetails} from '../utils/create';
 const asyncHandler = require("express-async-handler");
+
 
 export default ({ config, db }) => {
   let api = Router();

@@ -90,7 +90,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.isPrimaryOwner
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerType
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.ownerShipType
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerShipPercentage
 
@@ -426,7 +426,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.isPrimaryOwner
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerType
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.ownerShipType
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerShipPercentage
 

@@ -6,7 +6,7 @@ import isEmpty from "lodash/isEmpty";
 import { httpRequest } from "./api";
 import envVariables from "../envVariables";
 
-const uuidv1 = () => {
+export const uuidv1 = () => {
   return require("uuid/v4")();
 };
 
@@ -61,67 +61,6 @@ const getOwnerResponse = async uuids => {
   return transformById(response.user, "uuid");
 };
 
-
-
-// const getFinalResult = async (ownerIdArray, responseArray) => {
-//   let userIdArray = [];
-//   ownerIdArray &&
-//     ownerIdArray.length > 0 &&
-//     ownerIdArray.forEach((item, index) => {
-//       userIdArray.push(item.useruuid);
-//     });
-//   //get owner details
-//   let userResponse = await getOwnerResponse(uniq(userIdArray));
-//
-//   //set owner/user details in the Owner Array
-//   return (
-//     responseArray &&
-//     responseArray.length > 0 &&
-//     responseArray.map(obj => {
-//       const owners = get(obj, "fireNOCDetails.applicantDetails.owners", []);
-//       const ownerDetails = owners.map((item, index) => {
-//         if (
-//           userResponse &&
-//           Object.values(userResponse).some(elem => elem.uuid === item.useruuid)
-//         ) {
-//           return {
-//             ...item,
-//             password: "",
-//             salutation: "",
-//             name: userResponse[item.useruuid].name,
-//             gender: userResponse[item.useruuid].gender,
-//             mobileNumber: userResponse[item.useruuid].mobileNumber,
-//             emailId: userResponse[item.useruuid].emailId,
-//             altContactNumber: "",
-//             pan: "",
-//             dob: userResponse[item.useruuid].dob,
-//             aadhaarNumber: userResponse[item.useruuid].aadhaarNumber,
-//             permanentAddress: userResponse[item.useruuid].permanentAddress,
-//             permanentCity: userResponse[item.useruuid].permanentCity,
-//             permanentPincode: userResponse[item.useruuid].permanentPinCode,
-//             correspondenceCity: userResponse[item.useruuid].correspondenceCity,
-//             correspondencePincode:
-//               userResponse[item.useruuid].correspondencePincode,
-//             correspondenceAddress:
-//               userResponse[item.useruuid].correspondenceAddress
-//           };
-//         }
-//       });
-//       return {
-//         ...obj,
-//         fireNOCDetails: {
-//           ...obj.fireNOCDetails,
-//           applicantDetails: {
-//             ...obj.fireNOCDetails.applicantDetails,
-//             owners: ownerDetails
-//           }
-//         }
-//       };
-//     })
-//   );
-// };
-
-
 export const addIDGenId = async (requestInfo, idRequests) => {
   let requestBody = {
     RequestInfo: requestInfo,
@@ -137,57 +76,6 @@ export const addIDGenId = async (requestInfo, idRequests) => {
   });
   // console.log("idgenresponse",idGenResponse);
   return get(idGenResponse, "idResponses[0].id");
-};
-
-export const addUUIDAndAuditDetails = async request => {
-  let { FireNOCs, RequestInfo } = request;
-  //for loop should be replaced new alternative
-  for (var i = 0; i < FireNOCs.length; i++) {
-    FireNOCs[i].id = uuidv1();
-    FireNOCs[i].fireNOCDetails.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicationNumber = await addIDGenId(
-      RequestInfo,
-      [
-        {
-          tenantId: FireNOCs[i].tenantId,
-          format: envVariables.EGOV_APPLICATION_FORMATE
-        }
-      ]
-    );
-    FireNOCs[i].fireNOCDetails.buildings = FireNOCs[
-      i
-    ].fireNOCDetails.buildings.map(building => {
-      building.id = uuidv1();
-      building.applicationDocuments = building.applicationDocuments.map(
-        applicationDocument => {
-          applicationDocument.id = uuidv1();
-          return applicationDocument;
-        }
-      );
-      building.uoms = building.uoms.map(uom => {
-        uom.id = uuidv1();
-        return uom;
-      });
-      return building;
-    });
-    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
-      i
-    ].fireNOCDetails.applicantDetails.owners.map(owner => {
-      //user integration create, search and update is pending
-      owner.id = uuidv1();
-      return owner;
-    });
-    FireNOCs[i].auditDetails = {
-      createdBy: get(RequestInfo, "userInfo.uuid", ""),
-      lastModifiedBy: "",
-      createdTime: new Date().getTime(),
-      lastModifiedTime: 0
-    };
-  }
-  request.FireNOCs = FireNOCs;
-  return request;
 };
 
 export const createWorkFlow = async body => {

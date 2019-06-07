@@ -26,7 +26,7 @@ const fireNOCRowMapper = (row, mapper = {}) => {
   let fireNOCDetails = {
     id: row.firenocdetailsid,
     applicationNumber: row.applicationnumber,
-    applicationStatus: status[row.action],
+    status: status[row.action],
     fireNOCType: row.firenoctype,
     firestationId: row.firestationId,
     applicationDate: row.applicationdate,
@@ -41,13 +41,30 @@ const fireNOCRowMapper = (row, mapper = {}) => {
       row,
       get(fireNoc, "fireNOCDetails.buildings", [])
     ),
-    propertyDetails: {},
+    propertyDetails: {
+      id:row.puuid,
+      propertyId:row.propertyid,
+      address:{
+        tenantId:row.tenantid,
+        doorNo:row.pdoorno,
+        latitude:row.platitude,
+        longitude:row.plongitude,
+        addressNumber:row.paddressNumber,
+        buildingName:row.pbuildingname,
+        city:row.pcity,
+        locality:{
+          code:row.plocality
+        },
+        pincode:row.ppincode,
+        street:row.pstreet,
+      }
+    },
     applicantDetails: {
       ownerShipType: row.ownertype,
       owners: fireNocOwnersRowMapper(row,get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])),
       additionalDetail: {}
     },
-    additionalDetail: row.additionalDetail,
+    additionalDetail: row.additionaldetail,
     auditDetails
   };
   //building tranformation , it should refactor in future
@@ -85,13 +102,12 @@ const fireNocBuildingsRowMapper = (row, mapper = []) => {
     tenantId: row.tenantid,
     name: row.buildingname,
     usageType: row.usagetype,
-    uoms: fireNocUomsRowMapper(row, get(buildingObject, "uoms", [])),
-    applicationDocuments: fireNocApplicationDocumentsRowMapper(
-      row,
-      get(buildingObject, "applicationDocuments", [])
-    )
+    uoms:fireNocUomsRowMapper(row),
+    applicationDocuments: fireNocApplicationDocumentsRowMapper(row)
   };
   if (buildingIndex != -1) {
+    buildingObject.uoms= fireNocUomsRowMapper(row, get(mapper[buildingIndex], "uoms", []));
+    buildingObject.applicationDocuments=fireNocApplicationDocumentsRowMapper(row,get(mapper[buildingIndex], "applicationDocuments", []));
     mapper[buildingIndex] = buildingObject;
   } else {
     mapper.push(buildingObject);

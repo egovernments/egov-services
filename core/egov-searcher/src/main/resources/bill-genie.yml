@@ -1,6 +1,6 @@
 SearchDefinitions:
- moduleName: universal-collection
- summary: Testing new feature
+ moduleName: bill-genie
+ summary: Search configs for bill-genie
  version: 1.0.0
  definitions:
  - name: billswithaddranduser

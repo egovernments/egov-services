@@ -87,6 +87,8 @@ public class BillDetail   {
         private Object additionalDetails;
         
         private Address address;
+        
+        private User user;
 
         @JsonProperty("billAccountDetails")
         @Valid

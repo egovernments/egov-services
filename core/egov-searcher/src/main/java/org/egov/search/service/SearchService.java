@@ -2,6 +2,7 @@ package org.egov.search.service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,6 +60,11 @@ public class SearchService {
 				maps = searchRepository.searchData(searchRequest, searchDefinition);
 			}else {
 				data =  searchRepository.fetchWithCustomMapper(searchRequest, searchDefinition);
+				Map<String, Object> result = new HashMap<>();
+				result.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(searchRequest.getRequestInfo(), true));
+				String outputKey = searchDefinition.getOutput().getOutJsonPath().split("\\.")[1];
+				result.put(outputKey, data);
+				data = result;
 			}
 		}catch(CustomException e){
 			throw e;

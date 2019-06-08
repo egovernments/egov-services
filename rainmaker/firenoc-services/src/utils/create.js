@@ -68,7 +68,6 @@ export const addUUIDAndAuditDetails = async request => {
     }
   }
   request.FireNOCs = FireNOCs;
-  console.log(JSON.stringify(request));
   return request;
 };
 

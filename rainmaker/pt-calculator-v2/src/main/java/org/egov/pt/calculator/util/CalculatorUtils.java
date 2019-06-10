@@ -13,6 +13,8 @@ import org.egov.mdms.model.ModuleDetail;
 import org.egov.pt.calculator.web.models.Assessment;
 import org.egov.pt.calculator.web.models.DemandDetailAndCollection;
 import org.egov.pt.calculator.web.models.GetBillCriteria;
+import org.egov.pt.calculator.web.models.collections.Receipt;
+import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
@@ -383,6 +385,25 @@ public class CalculatorUtils {
 				.build();
 
 		}
+
+
+	/**
+	 * Returns the applicable total tax amount to be paid after the receipt
+	 *
+	 * @param receipt
+	 * @return
+	 */
+	public BigDecimal getTaxAmtFromReceiptForApplicablesGeneration(Receipt receipt) {
+		BigDecimal taxAmt = BigDecimal.ZERO;
+		BigDecimal amtPaid = BigDecimal.ZERO;
+		List<BillAccountDetail> billAccountDetails = receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails();
+		for (BillAccountDetail detail : billAccountDetails) {
+			if (CalculatorConstants.TAXES_TO_BE_CONSIDERD.contains(detail.getTaxHeadCode()))
+				taxAmt = taxAmt.add(detail.getAmount());
+		    	amtPaid = amtPaid.add(detail.getAdjustedAmount());
+		}
+		return taxAmt.subtract(amtPaid);
+	}
 
 
 

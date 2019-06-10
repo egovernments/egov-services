@@ -179,7 +179,7 @@ public class PayService {
 						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					} else if (i == numberOfPeriods - 1) {
 
-						applicableAmount = getRemainingAmount(receipt);
+						applicableAmount = utils.getTaxAmtFromReceiptForApplicablesGeneration(receipt);
 						numberOfDaysInMillies = current - detail.getReceiptDate();
 						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					} else {
@@ -187,7 +187,7 @@ public class PayService {
 						Receipt receiptPrev = receipts.get(i - 1);
 						Bill billPrev = receiptPrev.getBill().get(0);
 						BillDetail detailPrev = billPrev.getBillDetails().get(0);
-						applicableAmount = getRemainingAmount(receiptPrev);
+						applicableAmount = utils.getTaxAmtFromReceiptForApplicablesGeneration(receiptPrev);
 						numberOfDaysInMillies = detail.getReceiptDate() - detailPrev.getReceiptDate();
 						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					}
@@ -402,27 +402,6 @@ public class PayService {
 	}
 
 
-	/**
-	 * Returns the amount remaining for the given receipt
-	 * @param receipt
-	 * @return
-	 */
-	private BigDecimal getRemainingAmount(Receipt receipt){
-		
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal amountPaid = BigDecimal.ZERO;
-		List<BillDetail> billDetails = new LinkedList<>();
 
-		receipt.getBill().forEach(bill -> {
-			billDetails.addAll(bill.getBillDetails());
-		});
-
-		for (BillDetail billDetail : billDetails) {
-
-			totalAmount = totalAmount.add(billDetail.getTotalAmount());
-			amountPaid = amountPaid.add(billDetail.getAmountPaid());
-		}
-		return totalAmount.subtract(amountPaid);
-	}
 
 }

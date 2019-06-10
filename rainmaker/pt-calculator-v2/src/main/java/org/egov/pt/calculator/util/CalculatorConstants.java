@@ -53,7 +53,7 @@ public class CalculatorConstants {
 
 	public static final String PT_ROUNDOFF = "PT_ROUNDOFF";
 	
-	public static final String RECEIPT_STATUS_APPROVED = "APPROVED";
+	public static final String ALLOWED_RECEIPT_STATUS = "APPROVED,REMITTED";
 
 	public static final List<String> TAXES_TO_BE_CONSIDERD_WHEN_CALUCLATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
 			.asList(PT_TAX));

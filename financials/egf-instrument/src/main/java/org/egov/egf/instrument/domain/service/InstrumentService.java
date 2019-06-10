@@ -270,15 +270,15 @@ public class InstrumentService {
 //                                " Invalid financialStatus");
 //                    instrument.setFinancialStatus(financialStatus);
 //                }
-                if (instrument.getSurrenderReason() != null) {
-                    instrument.getSurrenderReason().setTenantId(instrument.getTenantId());
-                    SurrenderReason surrenderReason = surrenderReasonRepository
-                            .findById(instrument.getSurrenderReason());
-                    if (surrenderReason == null)
-                        throw new InvalidDataException("surrenderReason", "surrenderReason.invalid",
-                                " Invalid surrenderReason");
-                    instrument.setSurrenderReason(surrenderReason);
-                }
+//                if (instrument.getSurrenderReason() != null) {
+//                    instrument.getSurrenderReason().setTenantId(instrument.getTenantId());
+//                    SurrenderReason surrenderReason = surrenderReasonRepository
+//                            .findById(instrument.getSurrenderReason());
+//                    if (surrenderReason == null)
+//                        throw new InvalidDataException("surrenderReason", "surrenderReason.invalid",
+//                                " Invalid surrenderReason");
+//                    instrument.setSurrenderReason(surrenderReason);
+//                }
 
             }
 

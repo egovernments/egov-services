@@ -115,7 +115,7 @@ public class NotificationConsumer {
 			
 			content = content.replaceAll("<rcpt_link>", link.toString());
 			String taxName = fetchContentFromLocalization(requestInfo, billDetail.getTenantId(), BUSINESSSERVICE_LOCALIZATION_MODULE, 
-												BUSINESSSERVICELOCALIZATION_CODE_PREFIX + billDetail.getBusinessService());
+												BUSINESSSERVICELOCALIZATION_CODE_PREFIX + billDetail.getBusinessService().replaceAll("\\.", "_"));
 			if(StringUtils.isEmpty(taxName))
 				taxName = "Adhoc Tax";
 			content = content.replaceAll("<tax_name>", taxName);

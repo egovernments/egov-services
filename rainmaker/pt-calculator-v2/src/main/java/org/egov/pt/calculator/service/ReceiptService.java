@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.service;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class ReceiptService {
 		List<Receipt> receipts = new LinkedList<>();
 		if(!CollectionUtils.isEmpty(consumercodes))
 			receipts = getReceipts(demand.getTenantId(), consumercodes, requestInfoWrapper);
+		if(!CollectionUtils.isEmpty(receipts))
+			receipts.sort(Comparator.comparing(receipt -> receipt.getBill().get(0).getBillDetails().get(0).getReceiptDate()));
 		return receipts;
 	}
 

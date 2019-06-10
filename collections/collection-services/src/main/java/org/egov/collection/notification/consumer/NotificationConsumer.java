@@ -91,13 +91,15 @@ public class NotificationConsumer {
 			for(BillDetail detail: bill.getBillDetails()) {
 				String phNo = bill.getMobileNumber();
 				String message = buildSmsBody(receipt.getInstrument(), bill, detail, receiptReq.getRequestInfo());
-				Map<String, Object> request = new HashMap<>();
-				Map<String, Object> body = new HashMap<>();
-			    body.put("mobileNumber", phNo);
-			    body.put("message", message);
-				request.put("SMSRequest", body);
-				
-				producer.producer(smsTopic, null, request);
+				if(!StringUtils.isEmpty(message)) {
+					Map<String, Object> request = new HashMap<>();
+					request.put("mobileNumber", phNo);
+					request.put("message", message);
+					
+					producer.producer(smsTopic, smsTopickey, request);
+				}else {
+					log.error("No message configured!");
+				}
 			}
 		}
 		
@@ -150,8 +152,6 @@ public class NotificationConsumer {
 			for (int i = 0; i < codes.size(); i++) {
 				if(codes.get(i).equals(code)) message = messages.get(i);
 			}
-		}else {
-			log.error("No message configured!");
 		}
 		return message;
 	}

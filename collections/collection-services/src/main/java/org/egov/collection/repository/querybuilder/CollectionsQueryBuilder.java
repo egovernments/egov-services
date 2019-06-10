@@ -431,11 +431,6 @@ public class CollectionsQueryBuilder {
         if (searchCriteria.getToDate() != null) {
             addClauseIfRequired(preparedStatementValues, selectQuery);
             selectQuery.append(" rh.receiptDate <= :toDate");
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date(searchCriteria.getToDate()));
-            c.add(Calendar.DATE, 1);
-            searchCriteria.setToDate(c.getTime().getTime());
-
             preparedStatementValues.put("toDate", searchCriteria.getToDate());
         }
 

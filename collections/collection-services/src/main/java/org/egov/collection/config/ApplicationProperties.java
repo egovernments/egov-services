@@ -123,6 +123,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.bankaccountservicemapping.create.name}")
     private String createBankAccountServiceMappingTopicName;
     
+    @Value("${kafka.topics.payment.receiptlink.name}")
+    private String paymentReceiptLinkTopic;
+    
+    @Value("${kafka.topics.payment.receiptlink.key}")
+    private String paymentReceiptLinkTopicKey;
+    
     @Value("${receiptnumber.idname}")
     private String receiptNumberIdName;
 

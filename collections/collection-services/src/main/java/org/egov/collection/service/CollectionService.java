@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.notification.consumer.NotificationConsumer;
 import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.CollectionRepository;
@@ -44,6 +45,9 @@ public class CollectionService {
     private ApportionerService apportionerService;
     
     @Autowired
+    private NotificationConsumer notifConsumer;
+    
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -59,6 +63,8 @@ public class CollectionService {
         this.collectionProducer = collectionProducer;
         this.applicationProperties = applicationProperties;
     }
+    
+    
 
     /**
      * Fetch all receipts matching the given criteria, enrich receipts with instruments
@@ -121,6 +127,10 @@ public class CollectionService {
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties
                 .getCreateReceiptTopicKey(), receiptReq);
+        
+        //Pushing for notification to the user on payment
+        collectionProducer.producer(applicationProperties.getPaymentReceiptLinkTopic(), applicationProperties
+                .getPaymentReceiptLinkTopicKey(), receiptReq);
 
         return receipt;
     }

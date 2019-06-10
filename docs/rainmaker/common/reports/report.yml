@@ -5,7 +5,7 @@ ReportDefinitions:
     moduleName: rainmaker-common
     sourceColumns:
       - name: service
-        label: reports.common.CollectionRegister.service
+        label: reports.common.CollectionRegister.serviceResult
         type: string
         source: common
         total: false

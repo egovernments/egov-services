@@ -37,59 +37,53 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.receipt.consumer.model;
+package org.egov;
 
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
+import java.util.TimeZone;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import javax.annotation.PostConstruct;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-@Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-@JsonPropertyOrder({ "id", "name", "code", "identifier", "level", "parentId", "isParent", "active" })
-public class FundContract extends AuditableContract {
-
-	private Long id;
-
-	@Length(max = 50, min = 2)
-	@NotNull
-	private String name;
-
-	@Length(max = 50, min = 2)
-	@NotNull
-	private String code;
-	@NotNull
-	private Character identifier;
-
-	@NotNull
-	private Long level;
-
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private FundContract parentId;
-
-	private Boolean isParent;
-	@NotNull
-	private Boolean active;
-
-	public Long getId() {
-		return this.id;
+@SpringBootApplication
+public class FinanceCollectionsVoucherConsumerApplication{
+	@Value("${app.timezone}")
+	private String timeZone;
+	
+	@PostConstruct
+	public void initialize() {
+		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
+	}
+	
+	@Bean
+	public ObjectMapper getObjectMapper() {
+		final ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+		return objectMapper;
 	}
 
-	public FundContract(final String id) {
-		super();
-		this.id = Long.valueOf(id);
+	public static void main(String[] args) {
+		SpringApplication.run(FinanceCollectionsVoucherConsumerApplication.class, args);
 	}
+	
+    
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        converter.setObjectMapper(objectMapper);
+        return converter;
+    }
 
 }

@@ -50,7 +50,7 @@ export const updateUser = async (requestInfo, user) => {
       requestBody
     });
   } catch (error) {
-    throw `Update User error ${error}`;
+    throw `Update User error ${error.toString()}`;
   }
   var dobFormat = "yyyy-MM-dd";
   userUpdateResponse = parseResponse(userUpdateResponse, dobFormat);
@@ -66,7 +66,7 @@ const parseResponse = (userResponse, dobFormat) => {
         user.createdDate && dateToLong(user.createdDate, format1);
       user.lastModifiedDate =
         user.lastModifiedDate && dateToLong(user.lastModifiedDate, format1);
-      user.dob = user.dob && Number(dateToLong(user.dob, dobFormat));
+      user.dob = user.dob && dateToLong(user.dob, dobFormat);
       user.pwdExpiryDate =
         user.pwdExpiryDate && dateToLong(user.pwdExpiryDate, format1);
     });

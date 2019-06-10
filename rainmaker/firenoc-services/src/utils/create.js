@@ -86,7 +86,6 @@ const createUser = async (requestInfo, owner, tenantId) => {
       userSearchReqCriteria
     );
     if (userSearchResponse.user && !isEmpty(userSearchResponse.user)) {
-      console.log("sudhanshu update");
       userCreateResponse = await userService.updateUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
@@ -113,7 +112,6 @@ const createUser = async (requestInfo, owner, tenantId) => {
     } else {
       throw "User not found";
     }
-    console.log("is", userCreateResponse);
     return userCreateResponse;
   }
 };

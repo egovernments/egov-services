@@ -98,7 +98,6 @@ const fireNocOwnersRowMapper = async (row, mapper = []) => {
   } else {
     let user = {};
     if (row.useruuid) user = searchUser(requestInfo, row.useruuid);
-
     mapper.push({ ...user, ...ownerObject });
   }
   return mapper;

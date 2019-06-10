@@ -66,8 +66,8 @@ public class NotificationConsumer {
 	private static final String COLLECTION_LOCALIZATION_MODULE = "collection-services";
 	public static final String PAYMENT_MSG_LOCALIZATION_CODE = "coll.notif.payment.receipt.link";
 
-	private static final String BUSINESSSERVICE_LOCALIZATION_MODULE = "businessservice";
-	public static final String BUSINESSSERVICELOCALIZATION_CODE = "coll.notif.payment.receipt.link";
+	private static final String BUSINESSSERVICE_LOCALIZATION_MODULE = "rainmaker-uc";
+	public static final String BUSINESSSERVICELOCALIZATION_CODE_PREFIX = "BILLINGSERVICE_BUSINESSSERVICE_";
 
 	
 	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";
@@ -112,7 +112,8 @@ public class NotificationConsumer {
 					.append(uiRedirectUrl).append("&params=").append(billDetail.getTenantId() + "," + billDetail.getReceiptNumber());
 			
 			content = content.replaceAll("<rcpt_link>", link.toString());
-			String taxName = fetchContentFromLocalization(requestInfo, billDetail.getTenantId(), BUSINESSSERVICE_LOCALIZATION_MODULE, BUSINESSSERVICELOCALIZATION_CODE);
+			String taxName = fetchContentFromLocalization(requestInfo, billDetail.getTenantId(), BUSINESSSERVICE_LOCALIZATION_MODULE, 
+												BUSINESSSERVICELOCALIZATION_CODE_PREFIX + billDetail.getBusinessService());
 			if(StringUtils.isEmpty(taxName))
 				taxName = "Adhoc Tax";
 			content = content.replaceAll("<tax_name>", taxName);

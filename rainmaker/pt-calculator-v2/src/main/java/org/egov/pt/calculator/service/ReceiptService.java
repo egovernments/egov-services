@@ -67,7 +67,7 @@ public class ReceiptService {
 	 * @param requestInfoWrapper
 	 * @return latestCollectedTime
 	 */
-	public Long getInterestLatestCollectedTime(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
+/*	public Long getInterestLatestCollectedTime(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
 
 		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, demand.getConsumerCode().split(":")[0]);
 		List<Receipt> receipts = getReceipts(demand.getTenantId(), consumercodes, requestInfoWrapper);
@@ -78,12 +78,12 @@ public class ReceiptService {
 		for (Receipt receipt : receipts) {
 			
 			BillDetail detail = receipt.getBill().get(0).getBillDetails().get(0);
-			if (detail.getStatus().equalsIgnoreCase(CalculatorConstants.RECEIPT_STATUS_APPROVED)
+			if (CalculatorConstants.ALLOWED_RECEIPT_STATUS.contains(detail.getStatus())
 					&& detail.getReceiptDate().compareTo(latestCollectedDate) > 0)
 				latestCollectedDate = detail.getReceiptDate();
 		}
 		return latestCollectedDate;
-	}
+	}*/
 
 	private List<String> getCosumerCodesForDemandFromCurrentFinancialYear(String assessmentYear, String propertyId) {
 

@@ -133,7 +133,7 @@ public class NotificationConsumer {
 		List<String> codes = new ArrayList<>();
 		List<String> messages = new ArrayList<>();
 		Object result = null;
-		String locale = requestInfo.getMsgId().split("|")[1]; // Conventionally locale is sent in the first index of msgid split by |
+		String locale = requestInfo.getMsgId().split("[|]")[1]; // Conventionally locale is sent in the first index of msgid split by |
 		if(StringUtils.isEmpty(locale))
 			locale = fallBackLocale;
 		StringBuilder uri = new StringBuilder();
@@ -160,10 +160,11 @@ public class NotificationConsumer {
 	private String fetchFinYear(Long fromPeriod, Long toPeriod) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(fromPeriod);
-		int fromYear = Calendar.YEAR;
+		int fromYear = calendar.get(Calendar.YEAR);
 		calendar.setTimeInMillis(toPeriod);
-		int toYear = Calendar.YEAR;
-		
+		int toYear = calendar.get(Calendar.YEAR);
+		if((toYear - fromYear) == 0)
+			return toYear + "";
 		return fromYear + "-" + (toYear % 1000);
 
 	}

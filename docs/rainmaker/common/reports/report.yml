@@ -14,32 +14,52 @@ ReportDefinitions:
         type: string
         source: common
         total: false
-      - name: noofreceipts
-        label: reports.common.CollectionRegister.noofreceipts
-        type: string
+      - name: cash_count
+        label: reports.common.CollectionRegister.transactions
+        type: number
         source: common
-        total: true
-      - name: cash
+        total: false
+      - name: cash_sum
         label: reports.common.CollectionRegister.cash
         type: number
         source: common
         total: true
-      - name: cheque
+      - name: cheque_count
+        label: reports.common.CollectionRegister.transactions
+        type: number
+        source: common
+        total: false
+      - name: cheque_sum
         label: reports.common.CollectionRegister.cheque
         type: number
         source: common
         total: true
-      - name: dd
+      - name: dd_count
+        label: reports.common.CollectionRegister.transactions
+        type: number
+        source: common
+        total: false
+      - name: dd_sum
         label: reports.common.CollectionRegister.dd
         type: number
         source: common
         total: true
-      - name: online
+      - name: online_count
+        label: reports.common.CollectionRegister.transactions
+        type: number
+        source: common
+        total: false
+      - name: online_sum
         label: reports.common.CollectionRegister.online
         type: number
         source: common
         total: true
-      - name: card
+      - name: card_count
+        label: reports.common.CollectionRegister.transactions
+        type: number
+        source: common
+        total: false
+      - name: card_sum
         label: reports.common.CollectionRegister.card
         type: number
         source: common
@@ -51,6 +71,37 @@ ReportDefinitions:
         total: true
 
     searchParams:
+      - name: ulb
+        label: reports.common.CollectionRegister.ulb
+        type: singlevaluelist
+        pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
+        source: common
+        wrapper: true
+        isMandatory: false
+        searchClause: AND rt.tenantId = $ulb
+      - name: service
+        label: reports.common.CollectionRegister.service
+        type: multivaluelist
+        pattern: http://egov-common-masters:8080/egov-common-masters/businessDetails/_search?tenantId=$tenantid&active=true|$.BusinessDetails[*].code|$.BusinessDetails[*].name
+        source: common
+        wrapper: true
+        state: true
+        isMandatory: true
+        searchClause: AND rt.businessdetails IN ($service)
+      - name: paymentMode
+        label: reports.common.CollectionRegister.mode
+        type: singlevaluelist
+        pattern: 'list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque'
+        source: common
+        isMandatory: false
+        searchClause: AND instrumenttype = $paymentMode
+      - name: channel
+        label: reports.common.CollectionRegister.channel
+        type: singlevaluelist
+        pattern: 'list://COUNTER:COUNTER,FIELD:FIELD'
+        source: common
+        isMandatory: false
+        searchClause: AND collectiontype = $channel
       - name: fromDate
         label: reports.common.CollectionRegister.fromdate
         type: epoch
@@ -63,36 +114,6 @@ ReportDefinitions:
         source: common
         isMandatory: true
         searchClause: AND receiptdate <= $toDate
-      - name: channel
-        label: reports.common.CollectionRegister.channel
-        type: singlevaluelist
-        pattern: 'list://COUNTER:COUNTER,ONLINE:ONLINE,FIELD:FIELD'
-        source: common
-        isMandatory: false
-        searchClause: AND collectiontype = $channel
-      - name: paymentMode
-        label: reports.common.CollectionRegister.mode
-        type: singlevaluelist
-        pattern: 'list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque'
-        source: common
-        isMandatory: false
-        searchClause: AND instrumenttype = $paymentMode
-      - name: service
-        label: reports.common.CollectionRegister.service
-        type: multivaluelist
-        pattern: https://egov-common-masters:8080/egov-common-masters/businessDetails/_search?tenantId=$tenantid&active=true|$.BusinessDetails[*].code|$.BusinessDetails[*].name
-        source: common
-        wrapper: true
-        state: true
-        isMandatory: true
-        searchClause: AND rt.businessdetails IN ($service)
-      - name: ulb
-        label: reports.common.CollectionRegister.ulb
-        type: singlevaluelist
-        pattern: https://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
-        source: common
-        wrapper: true
-        isMandatory: false
-        searchClause: AND rt.tenantId = $ulb
-    query: select bd.name service,collectiontype channel,count(*) noofreceipts,sum(case when instrumenttype='Cash' then ins.amount end) as cash, sum(case when instrumenttype='Cheque' then ins.amount end) as cheque, sum(case when instrumenttype='DD' then ins.amount end) as DD, sum(case when instrumenttype='Online' then ins.amount end) as online, sum(case when instrumenttype='Card' then amount end) as card,sum(amount) total from egcl_receiptheader_v1 rt inner join egcl_receiptinstrument ihead on rt.id=receiptheader inner join egcl_instrumentheader_v1 ins on instrumentheader=ins.id inner join eg_businessdetails bd on rt.tenantid = bd.tenantid and rt.businessdetails = bd.code
+
+    query: select bd.name service,collectiontype channel,sum(case when instrumenttype='Cash' then 1 else 0 end) as cash_count, sum(case when instrumenttype='Cash' then ins.amount else 0 end) as cash_sum, sum(case when instrumenttype='Cheque' then 1 else 0 end) as cheque_count, sum(case when instrumenttype='Cheque' then ins.amount else 0 end) as cheque_sum, sum(case when instrumenttype='DD' then 1 else 0 end) as dd_count, sum(case when instrumenttype='DD' then ins.amount else 0 end) as dd_sum, sum(case when instrumenttype='Online' then 1 else 0 end) as online_count, sum(case when instrumenttype='Online' then ins.amount else 0 end) as online_sum, sum(case when instrumenttype='Card' then 1 else 0 end) as card_count, sum(case when instrumenttype='Card' then amount else 0 end) as card_sum,sum(amount) total from egcl_receiptheader_v1 rt inner join egcl_receiptinstrument ihead on rt.id=receiptheader inner join egcl_instrumentheader_v1 ins on instrumentheader=ins.id inner join eg_businessdetails bd on rt.tenantid = bd.tenantid and rt.businessdetails = bd.code
     groupby: group by service,collectiontype

@@ -270,7 +270,10 @@ public class InstrumentService {
 //                                " Invalid financialStatus");
 //                    instrument.setFinancialStatus(financialStatus);
 //                }
-                if (instrument.getSurrenderReason() != null) {
+                
+                //Reason for instrument surrender is not initiated by collection service so that for now we are commenting out the validation from this service.
+                
+                /* if (instrument.getSurrenderReason() != null) {
                     instrument.getSurrenderReason().setTenantId(instrument.getTenantId());
                     SurrenderReason surrenderReason = surrenderReasonRepository
                             .findById(instrument.getSurrenderReason());
@@ -278,7 +281,7 @@ public class InstrumentService {
                         throw new InvalidDataException("surrenderReason", "surrenderReason.invalid",
                                 " Invalid surrenderReason");
                     instrument.setSurrenderReason(surrenderReason);
-                }
+                } */
 
             }
 

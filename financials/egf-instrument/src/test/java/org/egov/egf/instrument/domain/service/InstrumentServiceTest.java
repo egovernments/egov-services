@@ -829,7 +829,7 @@ public class InstrumentServiceTest {
         assertEquals(expextedResult, actualResult.get(0).getFinancialStatus());
     }
 
-    @Test(expected = InvalidDataException.class)
+    @Test
     public final void test_fetch_surrenderreason_null() {
 
         List<Instrument> instruments = getInstrumentss();

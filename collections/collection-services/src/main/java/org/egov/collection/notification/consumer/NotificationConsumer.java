@@ -236,7 +236,6 @@ public class NotificationConsumer {
 		}catch(Exception e) {
 			log.error("Exception while fetching business service codes: ",e);
 		}
-		
 		return masterData;
 	}
 	

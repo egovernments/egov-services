@@ -92,6 +92,7 @@ import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -132,6 +133,9 @@ public class BillService {
 	
 	@Autowired
 	private ServiceRequestRepository restRepository;
+	
+	@Value("${default.bill.expiry.time}")
+	private Long defaultBillExpiryTime;
 
 	/**
 	 * Fetches the bill for given parameters
@@ -427,7 +431,7 @@ public class BillService {
 			collectedAmountForDemand = collectedAmountForDemand.add(demandDetail.getCollectionAmount());
 		}
 		
-		long billexpiryTime = null == demand.getBillExpiryTime() ? 0l : demand.getBillExpiryTime();
+		long billexpiryTime = null == demand.getBillExpiryTime() ? defaultBillExpiryTime : demand.getBillExpiryTime();
 		return BillDetail.builder()
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())

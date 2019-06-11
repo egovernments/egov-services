@@ -117,13 +117,21 @@ public class ReceiptValidator {
 		// Loop through all bill details [one for each service], and perform various
 		// validations
 		for (BillDetail billDetails : receipt.getBill().get(0).getBillDetails()) {
+			
 			ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder().tenantId(billDetails.getTenantId())
 					.billIds(singletonList(billDetails.getBillNumber())).build();
 			List<Receipt> receipts = collectionRepository.fetchReceipts(criteria);
+			
 			log.info("receipts: "+receipts);
+			
 			if (!receipts.isEmpty()) {
 				validateIfReceiptForBillPresent(errorMap, receipts, billDetails);
 			}
+
+			if (isNull(billDetails.getExpiryDate()) || System.currentTimeMillis() >= billDetails.getExpiryDate()) {
+				errorMap.put("BILL_EXPIRED", "Bill expired or invalid, regenerate bill!");
+			}
+			
 			if (org.apache.commons.lang3.StringUtils.isEmpty(billDetails.getBusinessService())) {
 				errorMap.put("INVALID_BUSINESS_DETAILS", "Business details code cannot be empty");
 			}
@@ -509,38 +517,3 @@ public class ReceiptValidator {
 				&& (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0);
 	}
 }
-
-// private void validateWorkFlowDetails(final ReceiptReq receiptRequest,
-// List<ErrorField> errorFields) {
-// String tenantId = receiptRequest.getReceipt().get(0).getTenantId();
-// CollectionConfigGetRequest collectionConfigGetRequest = new
-// CollectionConfigGetRequest();
-// collectionConfigGetRequest.setTenantId(tenantId);
-// collectionConfigGetRequest
-// .setName(RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
-//
-// Map<String, List<String>> workFlowConfigValues = collectionConfigService
-// .getCollectionConfiguration(collectionConfigGetRequest);
-// if (!workFlowConfigValues.isEmpty()
-// && workFlowConfigValues
-// .get(RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
-// .get(0)
-// .equalsIgnoreCase(
-// PREAPPROVED_CONFIG_VALUE)) {
-// List<Employee> employees = employeeRepository
-// .getPositionsForEmployee(receiptRequest.getRequestInfo(),
-// receiptRequest.getRequestInfo().getUserInfo()
-// .getId(), tenantId);
-// if (employees.isEmpty()) {
-// final ErrorField errorField = ErrorField
-// .builder()
-// .code(RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
-// .message(
-// RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
-// .field(RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
-// .build();
-// errorFields.add(errorField);
-// }
-// }
-//
-// }

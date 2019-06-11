@@ -17,7 +17,8 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT,
+  ssl: process.env.DB_SSL
 });
 
 const options = {
@@ -47,7 +48,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, middleware => {
   app.use(middleware.swaggerMetadata());
 
   // Validate Swagger requests
-  app.use(middleware.swaggerValidator());
+  // app.use(middleware.swaggerValidator());
 
   // Route validated requests to appropriate controller
   // app.use(middleware.swaggerRouter(options));
@@ -60,4 +61,16 @@ swaggerTools.initializeMiddleware(swaggerDoc, middleware => {
   });
 });
 app.use("/", api(pool));
+
+//error handler middleware
+app.use((err, req, res, next) => {
+  console.log(err);
+  if (!err.errorType) {
+    res.status(err.status).json(err.data);
+  } else {
+    res.status(500);
+    res.send("Oops, something went wrong.");
+  }
+});
+
 export default app;

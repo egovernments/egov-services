@@ -464,7 +464,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "SB",
+              "text": "$value9",
               "border": [
                 false,
                 true,
@@ -483,87 +483,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "9611046140",
-              "border": [
-                false,
-                true,
-                true,
-                true
-              ]
-            }
-          ],
-          [
-            {
-              "text": "Owner Name",
-              "border": [
-                true,
-                true,
-                false,
-                true
-              ],
-              "style": "receipt-table-key"
-            },
-            {
-              "text": "SB",
-              "border": [
-                false,
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "text": "Mobile No.",
-              "border": [
-                true,
-                true,
-                false,
-                true
-              ],
-              "style": "receipt-table-key"
-            },
-            {
-              "text": "9611046140",
-              "border": [
-                false,
-                true,
-                true,
-                true
-              ]
-            }
-          ],
-          [
-            {
-              "text": "Owner Name",
-              "border": [
-                true,
-                true,
-                false,
-                true
-              ],
-              "style": "receipt-table-key"
-            },
-            {
-              "text": "SB",
-              "border": [
-                false,
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "text": "Mobile No.",
-              "border": [
-                true,
-                true,
-                false,
-                true
-              ],
-              "style": "receipt-table-key"
-            },
-            {
-              "text": "9611046140",
+              "text": "$value10",
               "border": [
                 false,
                 true,

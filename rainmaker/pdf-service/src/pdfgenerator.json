@@ -57,27 +57,27 @@
                      
                       {
                          
-                         "path": "https://egov-micro-dev.egovernments.org/billing-service/demand/_search",
-                         "queryParam": "tenantId=$.tenantId,businessService=PT",
+                         "path": "https://egov-micro-dev.egovernments.org/user/_search",
+                         "queryParam": "tenantId=pb.amritsar",
                          "apiRequest": {
-                            
                            "RequestInfo": {
-                              "apiId": "string",
-                              "ver": "string",
-                              "ts": 0,
-                              "action": "string",
-                              "did": "string",
-                              "key": "string",
-                              "msgId": "string",
-                              "requesterId": "string",
-                              "authToken": "4ca5973c-4d1a-4afa-b461-2549c8ab6231"
-                            }
-                         },
+                               "apiId": "Rainmaker",
+                               "ver": ".01",
+                               "ts": "",
+                               "action": "search",
+                               "did": "1",
+                               "key": "",
+                               "msgId": "20170310130900|en_IN",
+                               "authToken": "aced27fc-b97f-4cbf-8d56-b9f3fa4ceeb6"
+                           },
+                           "userName": "amr001",
+                           "tenantId": "pb.amritsar"
+                       },
 
                          "responseMapping":[
                            {
                               "variable":"content[2].columns[0].text[1].text",
-                              "value":"$.TenantBoundary[0].boundary[0].name"
+                              "value":"user[0].id"
                            }
                         ]  
                       }

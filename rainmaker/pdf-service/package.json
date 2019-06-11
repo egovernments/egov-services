@@ -37,6 +37,7 @@
     "compression": "^1.5.2",
     "cors": "^2.7.1",
     "express": "^4.13.3",
+    "express-async-handler": "^1.1.4",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "morgan": "^1.8.0",

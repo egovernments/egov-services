@@ -13,8 +13,11 @@ import api from "./api";
 import config from "./config.json";
 import { PROPERTY } from "./endpoint";
 import { httpRequest } from "./api/api";
-import receipt_data from './receipt_data.json';
+import receipt_data from "./receipt_data.json";
 import dataconfig from "./pdfgenerator.json";
+import asyncHandler from 'express-async-handler';
+
+
 
 import * as pdfmake from "pdfmake/build/pdfmake";
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
@@ -22,18 +25,18 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { strict } from "assert";
 import { Recoverable } from "repl";
-//create binary 
+//create binary
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var pdfMakePrinter = require("pdfmake/src/printer");
 
 let app = express();
 app.use(express.static(path.join(__dirname, "public")));
- app.use(bodyParser.json());
- app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-function createPdfBinary(docDefinition, successCallback, errorCallback) {
-  try {
+ function createPdfBinary(docDefinition, successCallback, errorCallback) {
+   try {
     var fontDescriptors = {
       Roboto: {
         normal: "fonts/Roboto-Regular.ttf",
@@ -42,7 +45,7 @@ function createPdfBinary(docDefinition, successCallback, errorCallback) {
         bolditalics: "fonts/Roboto-MediumItalic.ttf"
       }
     };
-    const printer = new pdfMakePrinter(fontDescriptors);
+    const printer =  new pdfMakePrinter(fontDescriptors);
     const doc = printer.createPdfKitDocument(docDefinition);
 
     //reference link
@@ -64,7 +67,7 @@ function createPdfBinary(docDefinition, successCallback, errorCallback) {
       "https://egov-micro-dev.egovernments.org/filestore/v1/files?tenantId=default&module=pgr&tag=00040-2017-QR";
     var req = request.post(url, function(err, _resp, body) {
       if (err) {
-        console.log("Error!");
+        console.log("Error!"+err);
       } else {
         console.log("URL: " + body);
       }
@@ -79,155 +82,157 @@ function createPdfBinary(docDefinition, successCallback, errorCallback) {
   }
 }
 
-app.post("/pdf", function(req, res) {
+app.post("/pdf",  asyncHandler(async function(req, res) {
   //direct mapping service
-  var directArr=[];         
-  var obj={
-     jPath:"",
-     val:"",
-      type:"",
-      format:""
-      
+  var directArr = [];
+  var obj = {
+    jPath: "",
+    val: "",
+    type: "",
+    format: ""
   };
-  var o={};
-  o=get(dataconfig,'DataConfigs.mappings[0].mappings[0].direct',[]);
-  
-  directArr=o.map((item)=>{   
+  var o = {};
+  o = get(dataconfig, "DataConfigs.mappings[0].mappings[0].direct", []);
+
+  directArr = o.map(item => {
     return {
-      jPath:item.variable,
-      val:get(req.body,item.value.path,''),
-      valJsonPath:item.value.path,
-      type:item.type,
-      format:item.format      
-    }
+      jPath: item.variable,
+      val: get(req.body, item.value.path, ""),
+      valJsonPath: item.value.path,
+      type: item.type,
+      format: item.format
+    };
   });
-  
-  
-  for(var i=0;i<directArr.length;i++)
-  {
+
+  for (var i = 0; i < directArr.length; i++) {
     //for array type direct mapping
-    if(directArr[i].type=="array")
-    {
-      var arrayOfItems=[];
-       var ownerObject={};
-       var arrayOfOwnerObject=[];
-       ownerObject=get(receipt_data,directArr[i].jPath+"[0]",[]);      
-     
-      //  console.log(get(receipt_data,directArr[i].jPath,[]));     
-      let {format={},val=[],variable}=directArr[i];
-      let {scema=[]}=format;
-      
+    if (directArr[i].type == "array") {
+      var arrayOfItems = [];
+      var ownerObject = {};
+      var arrayOfOwnerObject = [];
+      ownerObject = get(receipt_data, directArr[i].jPath + "[0]", []);
+
+      //  console.log(get(receipt_data,directArr[i].jPath,[]));
+      let { format = {}, val = [], variable } = directArr[i];
+      let { scema = [] } = format;
+
       //taking values about owner from req body
-      for(var j=0;j<val.length;j++)
-      {
-        var x=1; 
-        for(var k=0;k<scema.length;k++)
-        {           
-          set(ownerObject[x],"text",get(val[j],scema[k],""));
-          x+=2;
+      for (var j = 0; j < val.length; j++) {
+        var x = 1;
+        for (var k = 0; k < scema.length; k++) {
+          set(ownerObject[x], "text", get(val[j], scema[k], ""));
+          x += 2;
         }
-        arrayOfOwnerObject.push(ownerObject);        
+        arrayOfOwnerObject.push(ownerObject);
       }
-      set(receipt_data,directArr[i].jPath,arrayOfOwnerObject);          
-    }
-    else  //setting value in pdf for no type direct mapping
-    {
-      set(receipt_data,directArr[i].jPath,directArr[i].val);
+      set(receipt_data, directArr[i].jPath, arrayOfOwnerObject);
+    } //setting value in pdf for no type direct mapping
+    else {
+      set(receipt_data, directArr[i].jPath, directArr[i].val);
     }
   }
 
   // var util = require('util');
   // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(receipt_data)) , 'utf-8');
   // console.log(JSON.stringify(receipt_data));
-   
+
   //external API mapping
-  var externalAPIArray=[];
-  var oEA={};
-  oEA=get(dataconfig,'DataConfigs.mappings[0].mappings[2].externalAPI',[]);
-  externalAPIArray=oEA.map((item)=>{   
+  var externalAPIArray = [];
+  var oEA = {};
+  oEA = get(dataconfig, "DataConfigs.mappings[0].mappings[2].externalAPI", []);
+  externalAPIArray = oEA.map(item => {
     return {
-      uri:item.path,
-      queryParams:item.queryParam,
-      jPath:item.responseMapping,
-      body:item.apiRequest,
-      variable:"",
-      val:""      
-    }
+      uri: item.path,
+      queryParams: item.queryParam,
+      jPath: item.responseMapping,
+      body: item.apiRequest,
+      variable: "",
+      val: ""
+    };
   });
-  
-  for(var i=0;i<externalAPIArray.length;i++)
-  {
-    for(var j=0;j<externalAPIArray[i].jPath.length;j++)
-    {
-      externalAPIArray[i].variable=externalAPIArray[i].jPath[j].variable;
-      externalAPIArray[i].val=externalAPIArray[i].jPath[j].value;
+
+  for (let i = 0; i < externalAPIArray.length; i++) {
+    //console.log(JSON.stringify(externalAPIArray[i].body));
+    for (let j = 0; j < externalAPIArray[i].jPath.length; j++) {
+      externalAPIArray[i].variable = externalAPIArray[i].jPath[j].variable;
+      externalAPIArray[i].val = externalAPIArray[i].jPath[j].value;
     }
   }
-  
-  for(var i=0;i<externalAPIArray.length;i++)
-  { 
-    var point=0;
-    var temp1="";
-    var temp2="";
-    var flag=0;
-    
-    for(var j=0;j<externalAPIArray[i].queryParams.length;j++)
-    {      
-      if(externalAPIArray[i].queryParams[j]=="$")
-      {
-        flag=1;  
-      }      
-      if(externalAPIArray[i].queryParams[j]==",")
-      {
-        if(flag==1)
-        {
-          temp2=temp1;
-          temp1=temp1.replace("$.","");          
-          var temp3=get(req.body,temp1,'vikas');          
-          externalAPIArray[i].queryParams=externalAPIArray[i].queryParams.replace(temp2,temp3);
-          
-          j=0;
-          flag=0;
-          temp1="";
-          temp2="";            
-        }                   
+  // console.log(externalAPIArray);
+  for (let i = 0; i < externalAPIArray.length; i++) {
+    var point = 0;
+    var temp1 = "";
+    var temp2 = "";
+    var flag = 0;
+//to convert queryparam and uri in properURI
+    for (let j = 0; j < externalAPIArray[i].queryParams.length; j++) {
+      if (externalAPIArray[i].queryParams[j] == "$") {
+        flag = 1;
       }
-      if(flag==1)
-      {
-        temp1+=externalAPIArray[i].queryParams[j];        
+      if (externalAPIArray[i].queryParams[j] == ",") {
+        if (flag == 1) {
+          temp2 = temp1;
+          temp1 = temp1.replace("$.", "");
+          var temp3 = get(req.body, temp1, "vikas");
+          externalAPIArray[i].queryParams = externalAPIArray[
+            i
+          ].queryParams.replace(temp2, temp3);
+
+          j = 0;
+          flag = 0;
+          temp1 = "";
+          temp2 = "";
+        }
       }
-      if(j==externalAPIArray[i].queryParams.length-1 && flag==1)
-      {           
-          temp2=temp1;
-          temp1=temp1.replace("$.","");   
-          var temp3=get(req.body,temp1,'vikas');
-          
-          externalAPIArray[i].queryParams=externalAPIArray[i].queryParams.replace(temp2,temp3);
-          
-          flag=0;
-          temp1="";
-          temp2="";  
+      if (flag == 1) {
+        temp1 += externalAPIArray[i].queryParams[j];
+      }
+      if (j == externalAPIArray[i].queryParams.length - 1 && flag == 1) {
+        temp2 = temp1;
+        temp1 = temp1.replace("$.", "");
+        var temp3 = get(req.body, temp1, "vikas");
+
+        externalAPIArray[i].queryParams = externalAPIArray[
+          i
+        ].queryParams.replace(temp2, temp3);
+
+        flag = 0;
+        temp1 = "";
+        temp2 = "";
       }
     }
-    externalAPIArray[i].queryParams=externalAPIArray[i].queryParams.replace(/,/g,"&");        
+    externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(
+      /,/g,
+      "&"
+    );
+
+    let requestBody = JSON.stringify(externalAPIArray[i].body);
+    let headers={
+      "content-type": "application/json;charset=UTF-8",
+      "accept":"application/json, text/plain, */*" 
+     }  
+    let req = await httpRequest(
+        externalAPIArray[i].uri + "?" + externalAPIArray[i].queryParams,
+        requestBody,
+        headers
+      );
+      // console.log(req);   
     
-    var req = request.post({          
-      url:externalAPIArray[i].uri+"?"+externalAPIArray[i].queryParams,      
-      body:JSON.stringify(externalAPIArray[i].body)}, function(err, _resp, body) {
-      if (err) {
-        console.log("Error!"+err);
-      } else {
-        console.log("Response: " + _resp.body);
-      }
-      res.end();      
-    });
+        console.log(externalAPIArray[i].variable);
+        console.log(get(receipt_data, externalAPIArray[i].variable, "vikas"));
+        set(
+          receipt_data,
+          externalAPIArray[i].variable,
+          get(req, externalAPIArray[i].val, "vikas")
+        );
+        console.log(get(receipt_data, externalAPIArray[i].variable, "vikas"));       
+      
   }
-  
- 
   //function to download pdf automatically
-  // console.log(req.body);
-  createPdfBinary(
-    receipt_data,(response) => {
+  // await console.log("vikas");
+   createPdfBinary(
+    receipt_data,
+    response => {
       // doc successfully created
       res.json({
         status: 200,
@@ -242,8 +247,6 @@ app.post("/pdf", function(req, res) {
       });
     }
   );
-  
-
 
   // function to open PDF
   //  createPdfBinary(receipt_data, (response) => {
@@ -263,7 +266,10 @@ app.post("/pdf", function(req, res) {
 	}, function(error) {
 	  res.send('ERROR:' + error);
 	});*/
-});
+  
+}));
+
+
 
 app.post("/create-receipt", (req, res) => {
   console.log(req.body);

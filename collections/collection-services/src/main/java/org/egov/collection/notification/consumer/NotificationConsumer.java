@@ -114,8 +114,8 @@ public class NotificationConsumer {
 					.append(uiRedirectUrl).append("&params=").append(billDetail.getTenantId() + "," + billDetail.getReceiptNumber());
 			
 			content = content.replaceAll("<rcpt_link>", link.toString());
-			String taxName = fetchContentFromLocalization(requestInfo, billDetail.getTenantId(), BUSINESSSERVICE_LOCALIZATION_MODULE, 
-												BUSINESSSERVICELOCALIZATION_CODE_PREFIX + billDetail.getBusinessService().replaceAll("\\.", "_"));
+			String code = BUSINESSSERVICELOCALIZATION_CODE_PREFIX + formatCodes(billDetail.getBusinessService());
+			String taxName = fetchContentFromLocalization(requestInfo, billDetail.getTenantId(), BUSINESSSERVICE_LOCALIZATION_MODULE, code);
 			if(StringUtils.isEmpty(taxName))
 				taxName = "Adhoc Tax";
 			content = content.replaceAll("<tax_name>", taxName);
@@ -167,6 +167,14 @@ public class NotificationConsumer {
 			return toYear + "";
 		return fromYear + "-" + (toYear % 1000);
 
+	}
+	
+	private String formatCodes(String code) {
+		String regexForSpecialCharacters = "[$&+,:;=?@#|'<>.-^*()%!]";
+		code = code.replaceAll(regexForSpecialCharacters, "_");
+		code = code.replaceAll(" ", "_");
+		
+		return code.toUpperCase();
 	}
 	
 

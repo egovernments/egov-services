@@ -128,10 +128,6 @@ public class ReceiptValidator {
 				validateIfReceiptForBillPresent(errorMap, receipts, billDetails);
 			}
 
-			if (isNull(billDetails.getExpiryDate()) || System.currentTimeMillis() >= billDetails.getExpiryDate()) {
-				errorMap.put("BILL_EXPIRED", "Bill expired or invalid, regenerate bill!");
-			}
-			
 			if (org.apache.commons.lang3.StringUtils.isEmpty(billDetails.getBusinessService())) {
 				errorMap.put("INVALID_BUSINESS_DETAILS", "Business details code cannot be empty");
 			}

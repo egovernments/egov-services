@@ -76,6 +76,7 @@ public class ReceiptEnricher {
      * @param receiptReq Receipt to be enriched
      */
     public void enrichReceiptPreValidate(ReceiptReq receiptReq) {
+    	
         Receipt receipt = receiptReq.getReceipt().get(0);
         Bill billFromRequest = receipt.getBill().get(0);
 
@@ -100,7 +101,12 @@ public class ReceiptEnricher {
             throw new CustomException("INVALID_BILL_DETAILS", "Mismatch in bill detail records provided in request " +
                     "and actual bill");
 
-        }
+		}
+
+		Long expiryDate = validatedBills.get(0).getBillDetails().get(0).getExpiryDate();
+		if (isNull(expiryDate) || System.currentTimeMillis() >= expiryDate) {
+			throw new CustomException("BILL_EXPIRED", "Bill expired or invalid, regenerate bill!");
+		}
 
         Bill validatedBill = validatedBills.get(0);
         validatedBill.setPaidBy(billFromRequest.getPaidBy());

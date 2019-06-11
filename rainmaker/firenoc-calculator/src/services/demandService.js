@@ -125,7 +125,7 @@ const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
   let uri = generateDemandSearchURL();
   uri = uri.replace("{1}", tenantId);
   uri = uri.replace("{2}", process.env.BUSINESSSERVICE);
-  uri = uri.replace("{3}", consumercodeList.join());
+  uri = uri.replace("{3}", consumercodeList.join(","));
   let requestBody = { RequestInfo: requestInfo };
   var demandsSearch = null;
   demandsSearch = await httpRequest({
@@ -137,7 +137,7 @@ const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
 };
 
 export const generateBill = async (requestInfo, billCriteria) => {
-  const consumerCode = billCriteria.consumerCode;
+  const consumerCode = billCriteria.consumerCode.split(",");
   const tenantId = billCriteria.tenantId;
   let demandsSearch = await searchDemand(requestInfo, tenantId, consumerCode);
 

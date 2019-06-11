@@ -1,5 +1,6 @@
 import { generateDemandSearchURL, generateGetBillURL } from "../utils";
 import { httpRequest } from "../utils/api";
+import get from "lodash/get";
 
 export const generateDemand = async (
   requestInfo,
@@ -26,10 +27,17 @@ export const generateDemand = async (
       updatecalculations.push(calculation);
     else createcalculations.push(calculation);
   });
-  if (createcalculations > 0)
-    createDemand(requestInfo, createcalculations, config);
-  if (updatecalculations > 0)
-    updateDemand(requestInfo, updatecalculations, config, demandsSearch);
+  if (createcalculations.length > 0) {
+    let cr = await createDemand(requestInfo, createcalculations, config);
+  }
+  if (updatecalculations.length > 0) {
+    let ud = await updateDemand(
+      requestInfo,
+      updatecalculations,
+      config,
+      demandsSearch
+    );
+  }
   return "uri";
 };
 
@@ -44,6 +52,8 @@ const createDemand = async (requestInfo, calculations, config) => {
       consumerCode,
       consumerType: "FIRENOC",
       businessService: process.env.BUSINESSSERVICE,
+      taxPeriodFrom: 1554076799000,
+      taxPeriodTo: 1585679399000,
       demandDetails: []
     };
     calculation.taxHeadEstimates.map(taxHeadEstimate => {
@@ -59,7 +69,7 @@ const createDemand = async (requestInfo, calculations, config) => {
   });
 
   let DemandRequest = {
-    RequestInfo,
+    RequestInfo: requestInfo,
     Demands: demands
   };
   var demandCreateResponse = await httpRequest({
@@ -76,7 +86,8 @@ const updateDemand = async (
   demandsSearch
 ) => {
   let demandMap = {};
-  demandsSearch.map(demand => {
+  demandsSearch.Demands.map(demand => {
+    if (get(demand, "payer") && !demand.payer.uuid) demand.payer = null; // demand search is sending payer object in case of null
     demandMap = { ...demandMap, [demand.consumerCode]: demand };
   });
   let demands = [];
@@ -100,7 +111,7 @@ const updateDemand = async (
   });
 
   let DemandRequest = {
-    RequestInfo,
+    RequestInfo: requestInfo,
     Demands: demands
   };
   var demandUpdateResponse = await httpRequest({
@@ -113,16 +124,15 @@ const updateDemand = async (
 const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
   let uri = generateDemandSearchURL();
   uri = uri.replace("{1}", tenantId);
-  uri = uri.replace("{2", process.env.BUSINESSSERVICE);
+  uri = uri.replace("{2}", process.env.BUSINESSSERVICE);
   uri = uri.replace("{3}", consumercodeList.join());
   let requestBody = { RequestInfo: requestInfo };
-  var demandsSearch = await httpRequest({
+  var demandsSearch = null;
+  demandsSearch = await httpRequest({
     hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
     endPoint: uri,
     requestBody
   });
-
-  // console.log("error from api utils:", errorReponse);
   return demandsSearch;
 };
 

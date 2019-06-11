@@ -22,7 +22,7 @@ export default pool => {
   );
   api.post(
     "/firenoc-calculator/v1/_calculate",
-    asyncHandler(async (req, res) => calculate(req, res, pool))
+    asyncHandler(async (req, res) => await calculate(req, res, pool))
   );
   api.post(
     "/firenoc-calculator/v1/_getbill",

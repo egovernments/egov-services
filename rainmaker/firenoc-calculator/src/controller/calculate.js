@@ -5,7 +5,6 @@ const calculalte = async (req, res, pool) => {
   console.log("calculalte");
   let calculalteResponse = {};
   calculalteResponse = await calculateService(req, pool);
-  // console.log("calculalteResponse", calculalteResponse);
   res.send(calculalteResponse);
 };
 

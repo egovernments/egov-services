@@ -19,7 +19,6 @@ export const calculateService = async (req, pool) => {
   calculalteResponse.Calculation = calculations;
 
   let a = await generateDemand(requestInfo, tenantId, calculations, config);
-  console.log(a);
 
   return calculalteResponse;
 };
@@ -29,9 +28,13 @@ const getCalculation = async (req, pool, config) => {
   const requestInfo = req.body.RequestInfo;
   for (let i = 0; i < req.body.CalulationCriteria.length; i++) {
     let calculateCriteria = req.body.CalulationCriteria[i];
+    if (calculateCriteria.fireNOC) {
+      calculateCriteria.applicationNumber =
+        calculateCriteria.fireNOC.fireNOCDetails.applicationNumber;
+    }
     if (!calculateCriteria.fireNOC || isEmpty(calculateCriteria.fireNOC)) {
       const applicationNumber = calculateCriteria.applicationNumber;
-      const tenantId = applicationNumber.tenantId;
+      const tenantId = calculateCriteria.tenantId;
       let firefireNocSearchResponseNOC = getFireNoc(
         requestInfo,
         applicationNumber,
@@ -53,7 +56,6 @@ const getCalculation = async (req, pool, config) => {
       pool
     );
 
-    // console.log("calculation", calculation);
     calculations.push(calculation);
   }
 
@@ -132,11 +134,10 @@ const calculateNOCFee = async (
         console.log("No Billing slabs found");
         throw new Error("No billing slab found");
       }
-      console.log("billingslabs", billingslabs);
       if (config.CALCULATON_TYPE === "FLAT") {
-        buidingnocfee += billingslabs[0].rate;
+        buidingnocfee += Number(billingslabs[0].rate);
       } else {
-        buidingnocfee += billingslabs[0].rate * searchReqParam.value;
+        buidingnocfee += Number(billingslabs[0].rate * searchReqParam.value);
       }
     }
     if (config.CALCULATON_TYPE !== "FLAT") {
@@ -147,7 +148,6 @@ const calculateNOCFee = async (
       buidingnocfee = max(buidingnocfee, minimumFee);
     }
 
-    //calculation logic for multiple buildings --currently sum
     buidingnocfees.push(buidingnocfee);
   }
   switch (config.MULTI_BUILDING_CALC_METHOD) {

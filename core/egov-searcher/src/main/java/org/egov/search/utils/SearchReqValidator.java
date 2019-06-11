@@ -69,9 +69,10 @@ public class SearchReqValidator {
 			}
 		});
 		
-		if(searchDefinition.getIsCustomerRowMapEnabled() && StringUtils.isEmpty(searchDefinition.getRowMapperKey()))
-			errorMap.put("INAVLID_DEFINITION", "rowMapperKey is mandatory when custom mapping is to be used. ");
-
+		if(null != searchDefinition.getIsCustomerRowMapEnabled()) {
+			if(searchDefinition.getIsCustomerRowMapEnabled() && StringUtils.isEmpty(searchDefinition.getRowMapperKey()))
+				errorMap.put("INAVLID_DEFINITION", "rowMapperKey is mandatory when custom mapping is to be used. ");
+		}
 		
 		if(!errorMap.isEmpty())
 			throw new CustomException(errorMap);

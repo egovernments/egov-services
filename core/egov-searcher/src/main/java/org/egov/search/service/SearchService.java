@@ -59,6 +59,7 @@ public class SearchService {
 			if(!searchDefinition.getIsCustomerRowMapEnabled()) {
 				maps = searchRepository.searchData(searchRequest, searchDefinition);
 			}else {
+				//This is a custom logic for bill-genie, we'll need to write code seperately to support custom rowmap logic for any search.
 				data =  searchRepository.fetchWithCustomMapper(searchRequest, searchDefinition);
 				Map<String, Object> result = new HashMap<>();
 				result.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(searchRequest.getRequestInfo(), true));

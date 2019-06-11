@@ -460,19 +460,10 @@ public class DemandService {
 		List<DemandDetail> details = demand.getDemandDetails();
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
-		
-		/*
-		 * isDecimalMatching 
-		 * 
-		 * This boolean variable will be set to true in case of the decimal tax-heads already being present in the demand
-		 * 
-		 * given that only debit or credit can exist at a time with value greater than zero
-		 */
-		boolean isDecimalMathcing = false;
 
 		BigDecimal taxAmount = BigDecimal.ZERO;
 
-		// Collecting the taxHead master codes with the isDebit field in a Map 
+		// Collecting the taxHead master codes with the isDebit field in a Map
 		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService.getTaxHeadMasterMap(requestInfoWrapper.getRequestInfo(), tenantId).stream()
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
 
@@ -496,41 +487,11 @@ public class DemandService {
 				? roundOffEstimate.getEstimateAmount() : BigDecimal.ZERO;
 
 		if(decimalRoundOff.compareTo(BigDecimal.ZERO)!=0){
-			DemandDetailAndCollection latestRoundOffDetail = utils.getLatestDemandDetailByTaxHead(PT_ROUNDOFF,demand.getDemandDetails());
-            if(latestRoundOffDetail==null || latestRoundOffDetail.getCollectionAmountForTaxHead().compareTo(BigDecimal.ZERO)!=0){
 				details.add(DemandDetail.builder().taxAmount(roundOffEstimate.getEstimateAmount())
 						.taxHeadMasterCode(roundOffEstimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());
-			}
-			else{
-            	updateTaxAmount(decimalRoundOff,latestRoundOffDetail);
-			}
-
 		}
 
-		/*
-		 *  Looping the demandDetails to update the tax Amount for the decimal demandDetails if they present
-		 *  
-		 *  If any decimal Detail found the isDecimalMatching will be set to true  
-		 */
-						
-		/*
-		for (DemandDetail detail : demand.getDemandDetails()) {
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_ROUNDOFF)) {
-				if (detail.getCollectionAmount().compareTo(BigDecimal.ZERO) == 0)
-					detail.setTaxAmount(decimalRoundOff);
-				if (null != roundOffEstimate)
-					isDecimalMathcing = true;
-			}
-		}
 
-		*//*
-		 *  If isDecimalMatching set to false (meaning no decimal Detail is found already)
-		 *  
-		 *   then a new demandDetail will be created and added to the Demand. 
-		 *//*
-		if (!isDecimalMathcing && null != roundOffEstimate)
-			details.add(DemandDetail.builder().taxAmount(roundOffEstimate.getEstimateAmount())
-					.taxHeadMasterCode(roundOffEstimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());*/
 	}
 
 

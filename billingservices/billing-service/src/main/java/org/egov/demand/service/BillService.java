@@ -52,6 +52,7 @@ import static org.egov.demand.util.Constants.URL_PARAMS_FOR_SERVICE_BASED_DEMAND
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -134,9 +135,6 @@ public class BillService {
 	@Autowired
 	private ServiceRequestRepository restRepository;
 	
-	@Value("${default.bill.expiry.time}")
-	private Long defaultBillExpiryTime;
-
 	/**
 	 * Fetches the bill for given parameters
 	 * 
@@ -431,11 +429,17 @@ public class BillService {
 			collectedAmountForDemand = collectedAmountForDemand.add(demandDetail.getCollectionAmount());
 		}
 		
-		long billexpiryTime = null == demand.getBillExpiryTime() ? defaultBillExpiryTime : demand.getBillExpiryTime();
+		
+		Long billexpiryTime = demand.getBillExpiryTime();
+		if (null == billexpiryTime || 0 == billexpiryTime) {
+
+			Calendar cal = Calendar.getInstance();
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
+			billexpiryTime = cal.getTimeInMillis();
+		}
 		return BillDetail.builder()
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())
-				.expiryDate(System.currentTimeMillis() + billexpiryTime)
 				.partPaymentAllowed(business.getPartPaymentAllowed())
 				.isAdvanceAllowed(business.getIsAdvanceAllowed())
 				.minimumAmount(demand.getMinimumAmountPayable())
@@ -445,6 +449,7 @@ public class BillService {
 				.billDate(System.currentTimeMillis())
 				.businessService(business.getCode())
 				.totalAmount(totalAmountForDemand)
+				.expiryDate(billexpiryTime)
 				.demandId(demand.getId())
 				.fromPeriod(startPeriod)
 				.toPeriod(endPeriod)

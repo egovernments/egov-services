@@ -56,17 +56,22 @@ public class SearchService {
 		}
 		List<String> maps = new ArrayList<>();
 		try{
-			if(!searchDefinition.getIsCustomerRowMapEnabled()) {
-				maps = searchRepository.searchData(searchRequest, searchDefinition);
+			if(null != searchDefinition.getIsCustomerRowMapEnabled()) {
+				if(!searchDefinition.getIsCustomerRowMapEnabled()) {
+					maps = searchRepository.searchData(searchRequest, searchDefinition);
+				}else {
+					//This is a custom logic for bill-genie, we'll need to write code seperately to support custom rowmap logic for any search.
+					data =  searchRepository.fetchWithCustomMapper(searchRequest, searchDefinition);
+					Map<String, Object> result = new HashMap<>();
+					result.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(searchRequest.getRequestInfo(), true));
+					String outputKey = searchDefinition.getOutput().getOutJsonPath().split("\\.")[1];
+					result.put(outputKey, data);
+					data = result;
+				}
 			}else {
-				//This is a custom logic for bill-genie, we'll need to write code seperately to support custom rowmap logic for any search.
-				data =  searchRepository.fetchWithCustomMapper(searchRequest, searchDefinition);
-				Map<String, Object> result = new HashMap<>();
-				result.put("ResponseInfo", responseInfoFactory.createResponseInfoFromRequestInfo(searchRequest.getRequestInfo(), true));
-				String outputKey = searchDefinition.getOutput().getOutJsonPath().split("\\.")[1];
-				result.put(outputKey, data);
-				data = result;
+				maps = searchRepository.searchData(searchRequest, searchDefinition);
 			}
+				
 		}catch(CustomException e){
 			throw e;
 		}catch(Exception e){

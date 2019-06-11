@@ -31,7 +31,6 @@ import org.egov.egf.master.web.repository.BankAccountContractRepository;
 import org.egov.egf.master.web.repository.BankContractRepository;
 import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -75,7 +74,7 @@ public class InstrumentServiceTest {
 
     @Before
     public void setup() {
-        instrumentService = new InstrumentService(validator, instrumentRepository, surrenderReasonRepository,
+        instrumentService = new InstrumentService(validator, instrumentRepository,
                 bankContractRepository, financialStatusContractRepository, bankAccountContractRepository,
                 instrumentTypeRepository);
     }

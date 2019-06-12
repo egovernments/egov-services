@@ -266,4 +266,7 @@ public class CalculatorConstants {
 	
 	public static final String EG_PT_INVALID_DEMAND_ERROR = "EG_PT_INVALID_DEMAND_ERROR";
 	public static final String EG_PT_INVALID_DEMAND_ERROR_MSG = " Bill cannot be generated for previous assessments in a year, please use the latest assesmment to pay";
+
+    public static final Long TIMEZONE_OFFSET = 19800000l;
+
 }

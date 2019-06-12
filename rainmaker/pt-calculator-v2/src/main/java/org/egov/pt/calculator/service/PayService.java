@@ -1,13 +1,7 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.egov.pt.calculator.util.CalculatorConstants;
@@ -24,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import net.minidev.json.JSONArray;
+
+import static org.egov.pt.calculator.util.CalculatorConstants.TIMEZONE_OFFSET;
+import static org.egov.pt.calculator.util.CalculatorUtils.getEODEpoch;
 
 /**
  * Deals with the functionality that are performed 
@@ -119,8 +116,9 @@ public class PayService {
 		String[] time = getStartTime(assessmentYear,penalty);
 		Calendar cal = Calendar.getInstance();
 		setDateToCalendar(time, cal);
+		Long currentIST = System.currentTimeMillis()+TIMEZONE_OFFSET;
 
-		if (cal.getTimeInMillis() < System.currentTimeMillis()) 
+		if (cal.getTimeInMillis() < currentIST)
 			penaltyAmt = mDService.calculateApplicables(taxAmt, penalty);
 
 		return penaltyAmt;
@@ -145,14 +143,15 @@ public class PayService {
 
 		Calendar cal = Calendar.getInstance();
 		setDateToCalendar(time, cal);
-		long current = System.currentTimeMillis();
+		long currentUTC = System.currentTimeMillis();
+		long currentIST= System.currentTimeMillis()+TIMEZONE_OFFSET;
 		long interestStart = cal.getTimeInMillis();
 
-		if(interestStart < current){
+		if(interestStart < currentIST){
 
 			if (CollectionUtils.isEmpty(receipts)) {
 				
-				long numberOfDaysInMillies = current - interestStart;
+				long numberOfDaysInMillies = getEODEpoch(currentUTC) - interestStart;
 				return calculateInterest(numberOfDaysInMillies, taxAmt, interestMap);
 			}
 			else{
@@ -175,12 +174,12 @@ public class PayService {
 					if (i == 0) {
 
 						applicableAmount = taxAmt;
-						numberOfDaysInMillies = detail.getReceiptDate() - interestStart;
+						numberOfDaysInMillies = getEODEpoch(detail.getReceiptDate()) - interestStart;
 						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					} else if (i == numberOfPeriods - 1) {
 
 						applicableAmount = utils.getTaxAmtFromReceiptForApplicablesGeneration(receipt);
-						numberOfDaysInMillies = current - detail.getReceiptDate();
+						numberOfDaysInMillies = getEODEpoch(currentUTC) - getEODEpoch(detail.getReceiptDate());
 						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					} else {
 
@@ -188,7 +187,7 @@ public class PayService {
 						Bill billPrev = receiptPrev.getBill().get(0);
 						BillDetail detailPrev = billPrev.getBillDetails().get(0);
 						applicableAmount = utils.getTaxAmtFromReceiptForApplicablesGeneration(receiptPrev);
-						numberOfDaysInMillies = detail.getReceiptDate() - detailPrev.getReceiptDate();
+						numberOfDaysInMillies = getEODEpoch(detail.getReceiptDate()) - getEODEpoch(detailPrev.getReceiptDate());
 						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					}
 					interestAmt = interestAmt.add(interestCalculated);
@@ -300,6 +299,8 @@ public class PayService {
 	private void setDateToCalendar(String[] time, Calendar cal) {
 
 		cal.clear();
+		TimeZone timeZone = TimeZone.getTimeZone("Asia/Kolkata");
+		cal.setTimeZone(timeZone);
 		Integer day = Integer.valueOf(time[0]);
 		Integer month = Integer.valueOf(time[1])-1;
 		// One is subtracted because calender reads january as 0

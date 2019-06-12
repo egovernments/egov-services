@@ -1,6 +1,7 @@
 package org.egov.pt.calculator.util;
 
 import java.math.BigDecimal;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -403,6 +404,20 @@ public class CalculatorUtils {
 		    	amtPaid = amtPaid.add(detail.getAdjustedAmount());
 		}
 		return taxAmt.subtract(amtPaid);
+	}
+
+
+	/**
+	 * Returns the current end of the day epoch time for the given epoch time
+	 * @param epoch The epoch time for which end of day time is required
+	 * @return End of day epoch time for the given time
+	 */
+	public static Long getEODEpoch(Long epoch){
+		LocalDate date =
+				Instant.ofEpochMilli(epoch).atZone(ZoneId.of(ZoneId.SHORT_IDS.get("IST"))).toLocalDate();
+		LocalDateTime endOfDay = LocalDateTime.of(date, LocalTime.MAX);
+		Long eodEpoch = endOfDay.atZone(ZoneId.of(ZoneId.SHORT_IDS.get("IST"))).toInstant().toEpochMilli();
+		return eodEpoch;
 	}
 
 

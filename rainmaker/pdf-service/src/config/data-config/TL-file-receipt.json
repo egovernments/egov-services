@@ -1,0 +1,122 @@
+{
+    "DataConfigs": {
+       "serviceName": "PGR - rainmaker",
+       "version": "1.0.0",
+       "mappings": [
+          {
+             "topic": "pgr-pdf-generation",
+             "staticConfigPath": "https://raw.githubusercontent.com/egovernments/egov-services/vishal-feature-filestore/core/egov-indexer/src/main/resources/rainmaker-pgr-indexer.yml",
+             "mappings": [
+                {
+                   "direct": [
+                      {
+                         "variable": "content[0].table.body[0].[1].stack[0].text",
+                         "value": {
+                              "path":"propertyDetails.tenantId"                              
+                         }
+                      },
+                      {
+                         "variable":"content[0].table.body[0].[1].stack[1].text",
+                         "value":{
+                            "path":"propertyDetails.units[0].usageCategoryMajor"                            
+                         }  
+                      },
+                      {
+                         "variable": "content[1].columns[0].text[1].text",
+                         "value":{
+                              "path":"propertyDetails.units[0].usageCategoryMinor"                           
+                          } 
+                      },
+                      {
+                        "variable": "content[10].table.body",                        
+                        "value":{
+                             "path":"propertyDetails.owners"                          
+                         },
+                         "type":"array",
+                         "format":{                            
+                            "type":"string",
+                            "scema":["name","mobileNumber"]
+                        } 
+                     } 
+                   ]
+                },
+                {
+                   "derived": [
+                      {
+                         "variable": "$variable",
+                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                      },
+                      {
+                         "variable": "$variable",
+                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                      }
+                   ]
+                },
+                {
+                   "externalAPI": [
+                     
+                      {
+                         
+                         "path": "https://egov-micro-dev.egovernments.org/user/_search",
+                         "queryParam": "tenantId=pb.amritsar",
+                         "apiRequest": {
+                           "RequestInfo": {
+                               "apiId": "Rainmaker",
+                               "ver": ".01",
+                               "ts": "",
+                               "action": "search",
+                               "did": "1",
+                               "key": "",
+                               "msgId": "20170310130900|en_IN",
+                               "authToken": "5844cd24-dd45-447f-bc72-b1684537ebc7"
+                           },
+                           "userName": "amr001",
+                           "tenantId": "pb.amritsar"
+                       },
+
+                         "responseMapping":[
+                           {
+                              "variable":"content[2].columns[0].text[1].text",
+                              "value":"user[0].id"
+                           }
+                        ]  
+                      }
+                   ]
+                },
+                {
+                   "mdmsDenormalization": [
+                      {
+                         "variable": "$variable",
+                         "moduleName": "common-masters",
+                         "masterName": "Department",
+                         "tenantId": "pb",
+                         "filter": "[?(@.code == $department)]",
+                         "filterMapping": [
+                            {
+                               "variable": "$department",
+                               "valueJsonpath": "$.department"
+                            }
+                         ],
+                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                      },
+                      {
+                         "variable": "$variable",
+                         "moduleName": "common-masters",
+                         "masterName": "Department",
+                         "tenantId": "pb",
+                         "filter": "[?(@.code == $department)]",
+                         "filterMapping": [
+                            {
+                               "variable": "$department",
+                               "valueJsonpath": "$.department"
+                            }
+                         ],
+                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                      }
+                   ]
+                }
+             ]
+          }
+       ]
+    }
+ }

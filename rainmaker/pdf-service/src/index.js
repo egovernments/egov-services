@@ -13,8 +13,9 @@ import api from "./api";
 import config from "./config.json";
 import { PROPERTY } from "./endpoint";
 import { httpRequest } from "./api/api";
-import receipt_data from "./receipt_data.json";
-import dataconfig from "./pdfgenerator.json";
+
+// import dataconfig from "./config/data-config/pdfgenerator.json";
+// import receipt_data from "./config/format-config/receipt_data.json";
 import asyncHandler from 'express-async-handler';
 
 
@@ -35,6 +36,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var key;
+var userId;
  function createPdfBinary(docDefinition, successCallback, errorCallback) {
    try {
     var fontDescriptors = {
@@ -53,7 +56,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
     //storing file on local computer/server
     doc.pipe(
-      fs.createWriteStream("src/pdfs/filename.pdf").on("error", err => {
+      fs.createWriteStream("src/pdfs/"+key+" "+userId+".pdf").on("error", err => {
         errorCallback(err.message);
       })
     );
@@ -74,7 +77,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
     });
     //attaching file with API
     var form = req.form();
-    form.append("file", fs.createReadStream("src/pdfs/filename.pdf"));
+    form.append("file", fs.createReadStream("src/pdfs/"+key+" "+userId+".pdf"));
 
     doc.end();
   } catch (err) {
@@ -82,7 +85,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
   }
 }
 
-app.post("/pdf",  asyncHandler(async function(req, res) {
+app.post("/pdf",  asyncHandler(async function(req, res) { 
+   key=req.query.key;
+  var receipt_data=require("./config/format-config/"+key);
+  var dataconfig=require("./config/data-config/"+key);  
+  
   //direct mapping service
   var directArr = [];
   var obj = {
@@ -215,21 +222,16 @@ app.post("/pdf",  asyncHandler(async function(req, res) {
         externalAPIArray[i].uri + "?" + externalAPIArray[i].queryParams,
         requestBody,
         headers
-      );
-      // console.log(req);   
-    
-        console.log(externalAPIArray[i].variable);
-        console.log(get(receipt_data, externalAPIArray[i].variable, "vikas"));
+      );       
+      userId=req.user[0].userName;        
         set(
-          receipt_data,
+          receipt_data,  
           externalAPIArray[i].variable,
           get(req, externalAPIArray[i].val, "vikas")
-        );
-        console.log(get(receipt_data, externalAPIArray[i].variable, "vikas"));       
-      
+        );        
   }
   //function to download pdf automatically
-  // await console.log("vikas");
+  
    createPdfBinary(
     receipt_data,
     response => {

@@ -9,4 +9,5 @@ ServiceMaps:
       type: test
       id: $.id, $.tenantId
       isBulk: false
+      jsonPath: $.Properties.*
       timeStampField: $.createdTime

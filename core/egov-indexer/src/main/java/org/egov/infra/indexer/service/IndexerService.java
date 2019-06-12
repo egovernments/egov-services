@@ -100,7 +100,7 @@ public class IndexerService {
 		Long startTime = null;
 		log.debug("index: " + index.getCustomJsonMapping());
 		StringBuilder url = new StringBuilder();
-		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_bulk");
+		url.append(esHostUrl).append("/").append(index.getName()).append("/").append(index.getType()).append("/").append("_bulk");
 		startTime = new Date().getTime();
 		String jsonToBeIndexed = new String();
 		if (null != index.getCustomJsonMapping()) {

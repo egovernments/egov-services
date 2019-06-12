@@ -61,7 +61,7 @@ public class IndexerController {
 	 * @param indexJson
 	 * @return
 	 */
-	@PostMapping("/(key)/_index")
+	@PostMapping("/{key}/_index")
 	@ResponseBody
 	private ResponseEntity<?> produceIndexJson(@PathVariable("key") String topic,
 			@RequestBody Object indexJson) {

@@ -41,6 +41,7 @@
 package org.egov.receipt.consumer.service;
 
 import java.util.Collections;
+import java.util.Date;
 
 import org.egov.mdms.service.MicroServiceUtil;
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
@@ -133,6 +134,9 @@ public class InstrumentService {
 		FinancialStatus status  = microServiceUtil.getFinancialStatusByCode(receipt.getTenantId(), requestInfo , finSerMdms, FINANCE_STATUS_CANCELLED);
 		Instrument instrument = receipt.getInstrument();
 		InstrumentContract instrumentContract = instrument.toContract();
+		if(instrument.getTransactionDateInput() != null){
+			instrumentContract.setTransactionDate(new Date(instrument.getTransactionDateInput()));
+		}
 		instrumentContract.setFinancialStatus(status);
 		prepareInstrumentVoucher(instrumentContract, receipt.getBill().get(0).getBillDetails().get(0).getVoucherHeader(), receipt.getReceiptNumber());
 		StringBuilder url = new StringBuilder(propertiesManager.getInstrumentHostUrl() + propertiesManager.getInstrumentCancel());
@@ -141,5 +145,4 @@ public class InstrumentService {
 		request.setRequestInfo(requestInfo);
 		mapper.convertValue(serviceRequestRepository.fetchResult(url, request, receipt.getTenantId()), InstrumentResponse.class);
 	}
-
 }

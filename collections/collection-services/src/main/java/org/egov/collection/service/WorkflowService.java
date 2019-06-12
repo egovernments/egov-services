@@ -83,12 +83,6 @@ public class WorkflowService {
                 break;
         }
 
-        // persist to db
-
-        collectionRepository.updateStatus(processedReceipts);
-        
-        log.info("processedReceipts: "+processedReceipts);
-
         return processedReceipts;
 
 
@@ -120,13 +114,9 @@ public class WorkflowService {
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
         receipts.sort(reverseOrder(Comparator.comparingLong(Receipt::getReceiptDate)));
         
-        log.info("receipts: "+receipts);
-
         List<Receipt> validatedReceipts = workflowValidator.validateForCancel(new ArrayList<>
                         (workflowRequestByReceiptNumber.values()), receipts);
         
-        log.info("validatedReceipts: "+validatedReceipts);
-
 
         for(Receipt receipt : validatedReceipts) {
             BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
@@ -141,8 +131,6 @@ public class WorkflowService {
 
         collectionRepository.updateStatus(validatedReceipts);
         
-        log.info("validatedReceipts2: "+validatedReceipts);
-
         collectionProducer.producer(applicationProperties.getCancelReceiptTopicName(), applicationProperties
                 .getCancelReceiptTopicKey(), new ReceiptReq(requestInfo, validatedReceipts));
 
@@ -198,6 +186,7 @@ public class WorkflowService {
         }
 
         collectionRepository.updateStatus(validatedReceipts);
+        
         collectionProducer.producer(applicationProperties.getCancelReceiptTopicName(), applicationProperties
                 .getCancelReceiptTopicKey(), new ReceiptReq(requestInfo, validatedReceipts));
         return validatedReceipts;
@@ -256,6 +245,7 @@ public class WorkflowService {
         }
 
         collectionRepository.updateStatus(validatedReceipts);
+        
         collectionProducer.producer(applicationProperties.getUpdateReceiptTopicName(), applicationProperties
                 .getUpdateReceiptTopicKey(), new ReceiptReq(requestInfo, validatedReceipts));
         return validatedReceipts;

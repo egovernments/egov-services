@@ -42,7 +42,7 @@ app.use(
 
 app.use(tracer());
 
-let swaggerDoc = require("../config/docs/contract/swagger.json");
+let swaggerDoc = require("./swagger.json");
 
 swaggerTools.initializeMiddleware(swaggerDoc, middleware => {
   app.use(middleware.swaggerMetadata());

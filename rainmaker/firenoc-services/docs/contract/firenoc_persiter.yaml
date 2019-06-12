@@ -90,7 +90,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.isPrimaryOwner
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerType
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.ownerShipType
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerShipPercentage
 
@@ -384,7 +384,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.code
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.activeUOM
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.isActiveUom
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.active
 
@@ -404,7 +404,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.code
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.activeuom
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.isActiveUom
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.buildings.*.uoms.*.value
 
@@ -426,7 +426,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.isPrimaryOwner
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerType
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.ownerShipType
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerShipPercentage
 
@@ -448,7 +448,7 @@ serviceMaps:
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.isPrimaryOwner
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerType
+          - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].fireNOCDetails.applicantDetails.ownerShipType
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerShipPercentage
 
@@ -576,3 +576,4 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.id
+                     

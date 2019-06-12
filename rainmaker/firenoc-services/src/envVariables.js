@@ -39,7 +39,8 @@ const envVariables = {
 
   //workflow service configurations
   EGOV_WORKFLOW_HOST:
-    process.env.EGOV_WORKFLOW_HOST || "https://egov-micro-dev.egovernments.org",
+    process.env.EGOV_WORKFLOW_HOST || "http://localhost:8089",
+    // "https://egov-micro-dev.egovernments.org",
   EGOV_WORKFLOW_TRANSITION_ENDPOINT:
     process.env.EGOV_WORKFLOW_TRANSITION_PATH ||
     "/egov-workflow-v2/egov-wf/process/_transition",
@@ -56,7 +57,8 @@ const envVariables = {
 
   //user service configurations
   EGOV_USER_HOST:
-    process.env.EGOV_USER_HOST || "https://egov-micro-dev.egovernments.org",
+    process.env.EGOV_USER_HOST || "http://localhost:8088",
+    //"https://egov-micro-dev.egovernments.org",
   EGOV_USER_CONTEXT_PATH: process.env.EGOV_USER_CONTEXT_PATH || "/user",
   EGOV_USER_CREATE_ENDPOINT:
     process.env.EGOV_USER_CREATE_ENDPOINT || "/users/_createnovalidate",

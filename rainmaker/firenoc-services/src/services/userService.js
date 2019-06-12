@@ -4,35 +4,29 @@ import { httpRequest } from "../utils/api";
 export const searchUser = async (requestInfo, userSearchReqCriteria) => {
   let requestBody = { RequestInfo: requestInfo, ...userSearchReqCriteria };
 
-  try {
-    var userSearchResponse = await httpRequest({
-      hostURL: envVariables.EGOV_USER_HOST,
-      endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
-        envVariables.EGOV_USER_SEARCH_ENDPOINT
-      }`,
-      requestBody
-    });
-  } catch (error) {
-    throw `Search User error ${error}`;
-  }
+  var userSearchResponse = await httpRequest({
+    hostURL: envVariables.EGOV_USER_HOST,
+    endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
+      envVariables.EGOV_USER_SEARCH_ENDPOINT
+    }`,
+    requestBody
+  });
+
   var dobFormat = "yyyy-MM-dd";
   userSearchResponse = parseResponse(userSearchResponse, dobFormat);
   return userSearchResponse;
 };
 
 export const createUser = async (requestInfo, user) => {
-  try {
-    let requestBody = { RequestInfo: requestInfo, user: user };
-    var userCreateResponse = await httpRequest({
-      hostURL: envVariables.EGOV_USER_HOST,
-      endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
-        envVariables.EGOV_USER_CREATE_ENDPOINT
-      }`,
-      requestBody
-    });
-  } catch (error) {
-    throw `Create User error ${error}`;
-  }
+  let requestBody = { RequestInfo: requestInfo, user: user };
+  var userCreateResponse = await httpRequest({
+    hostURL: envVariables.EGOV_USER_HOST,
+    endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
+      envVariables.EGOV_USER_CREATE_ENDPOINT
+    }`,
+    requestBody
+  });
+
   var dobFormat = "dd/MM/yyyy";
   userCreateResponse = parseResponse(userCreateResponse, dobFormat);
 
@@ -40,18 +34,16 @@ export const createUser = async (requestInfo, user) => {
 };
 
 export const updateUser = async (requestInfo, user) => {
-  try {
-    let requestBody = { RequestInfo: requestInfo, user: user };
-    var userUpdateResponse = await httpRequest({
-      hostURL: envVariables.EGOV_USER_HOST,
-      endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
-        envVariables.EGOV_USER_UPDATE_ENDPOINT
-      }`,
-      requestBody
-    });
-  } catch (error) {
-    throw `Update User error ${error.toString()}`;
-  }
+  // console.log(user);
+  let requestBody = { RequestInfo: requestInfo, user: user };
+  var userUpdateResponse = await httpRequest({
+    hostURL: envVariables.EGOV_USER_HOST,
+    endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
+      envVariables.EGOV_USER_UPDATE_ENDPOINT
+    }`,
+    requestBody
+  });
+
   var dobFormat = "yyyy-MM-dd";
   userUpdateResponse = parseResponse(userUpdateResponse, dobFormat);
 

@@ -6,9 +6,9 @@ import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails } from "../utils/create";
 const asyncHandler = require("express-async-handler");
 // var ajv = require("ajv")({ removeAdditional: true });
-var swagger=require("../swagger.json");
-var Validator = require('swagger-model-validator');
-var validator = new Validator(swagger);
+// var swagger=require("../swagger.json");
+// var Validator = require('swagger-model-validator');
+// var validator = new Validator(swagger);
 
 export default ({ config, db }) => {
   let api = Router();
@@ -20,8 +20,8 @@ export default ({ config, db }) => {
       //   { $ref: "swagger.json#/definitions/FireNOCs" },
       //   body
       // );
-      var validation = swagger.validateModel("FireNOCs", body);
-      console.log("test",JSON.stringify(validation));
+      // var validation = swagger.validateModel("FireNOCs", body);
+      // console.log("test",JSON.stringify(validation));
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);

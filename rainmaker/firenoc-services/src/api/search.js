@@ -12,7 +12,13 @@ export default ({ config, db }) => {
     };
     const actions = {
       INITIATED: "INITIATE",
-      APPROVED: "APPROVE"
+      APPROVED: "APPROVE",
+      SUBMIT:"APPLIED",
+      DOCUMENTVERIFY:"PAY",
+      FIELDINSPECTION:"FORWARD",
+      REJECTED:"REJECT",
+      APPROVED:"APPROVE",
+      CANCELED:"CANCEL"
     };
 
     const queryObj = JSON.parse(JSON.stringify(request.query));
@@ -32,7 +38,8 @@ export default ({ config, db }) => {
             item != "fromDate" &&
             item != "toDate" &&
             item != "tenantId" &&
-            item != "status"
+            item != "status" &&
+            item !="ids"
           ) {
             sqlQuery = `${sqlQuery} ${item}='${queryObj[item]}' AND`;
           }
@@ -60,7 +67,9 @@ export default ({ config, db }) => {
       )} ORDER BY FN.uuid`;
     }
 
-    console.log(text);
+    //ids support should be done here
+
+    // console.log(text);
 
     db.query(sqlQuery, async (err, res) => {
       if (err) {

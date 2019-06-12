@@ -7,11 +7,17 @@ import userService from "../services/userService";
 
 let requestInfo = {};
 const status = {
-  INITIATE: "INITIATED",
-  APPROVE: "APPROVED"
+  "INITIATE":"INITIATED",
+  "APPROVE":"APPROVED",
+  "APPLIED":"SUBMIT",
+  "PAY":"DOCUMENTVERIFY",
+  "FORWARD":"FIELDINSPECTION",
+  "REJECT":"REJECTED",
+  "APPROVE":"APPROVED",
+  "CANCEL":"CANCELED"
 };
 
-const fireNOCRowMapper = (row, mapper = {}) => {
+const fireNOCRowMapper =async (row, mapper = {}) => {
   let fireNoc = isEmpty(mapper) ? {} : mapper;
   fireNoc.id = row.fid;
   fireNoc.tenantId = row.tenantid;
@@ -63,12 +69,11 @@ const fireNOCRowMapper = (row, mapper = {}) => {
     },
     applicantDetails: {
       ownerShipType: row.ownertype,
-      owners: fireNocOwnersRowMapper(
+      owners:await fireNocOwnersRowMapper(
         row,
         get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])
       ),
-      //TODO handle additioanldetails in rowmapper
-      additionalDetail: {}
+      additionalDetail: get(row,'additionaldetail.ownerAuditionalDetail',{})
     },
     additionalDetail: row.additionaldetail,
     auditDetails
@@ -97,7 +102,7 @@ const fireNocOwnersRowMapper = async (row, mapper = []) => {
     mapper[ownerIndex] = ownerObject;
   } else {
     let user = {};
-    if (row.useruuid) user = searchUser(requestInfo, row.useruuid);
+    if (row.useruuid) user =await searchUser(requestInfo, row.useruuid);
     mapper.push({ ...user, ...ownerObject });
   }
   return mapper;
@@ -153,18 +158,12 @@ const fireNocApplicationDocumentsRowMapper = (row, mapper = []) => {
     tenantId: row.tenantid,
     documentType: row.documenttype,
     fileStoreId: row.fileStoreid,
-    documentUid: row.documentuid,
-    auditDetails: {
-      createdby: row.documentCreatedBy,
-      lastmodifiedby: row.documentLastModifiedBy,
-      createdtime: row.documentCreatedTime,
-      lastmodifiedtime: row.documentLastModifiedTime
-    }
+    documentUid: row.documentuid
   };
   if (applicationDocumentIndex != -1) {
     mapper[applicationDocumentIndex] = applicationDocumentObject;
   } else {
-    if (applicationDocumentObject.id) {
+    if (row.documentuuid) {
       mapper.push(applicationDocumentObject);
     }
   }
@@ -178,10 +177,10 @@ export const mergeSearchResults = async (response, query = {}, reqInfo) => {
     let fireNoc = {};
     let index = findIndex(result, { id: response[i].fid });
     if (index != -1) {
-      fireNoc = fireNOCRowMapper(response[i], result[index]);
+      fireNoc =await fireNOCRowMapper(response[i], result[index]);
       result[index] = fireNoc;
     } else {
-      fireNoc = fireNOCRowMapper(response[i]);
+      fireNoc =await fireNOCRowMapper(response[i]);
       result.push(fireNoc);
     }
   }

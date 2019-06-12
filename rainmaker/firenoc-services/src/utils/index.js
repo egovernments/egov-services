@@ -35,10 +35,7 @@ const transformById = (payload, id) => {
   return (
     payload &&
     payload.reduce((result, item) => {
-      result[item[id]] = {
-        ...item
-      };
-
+      result[item[id]] = item;
       return result;
     }, {})
   );
@@ -48,6 +45,7 @@ const getOwnerResponse = async uuids => {
   let requestBody = {
     uuid: uuids
   };
+
   const response = await httpRequest({
     hostURL: envVariables.EGOV_USER_HOST,
     endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
@@ -79,14 +77,16 @@ export const addIDGenId = async (requestInfo, idRequests) => {
 };
 
 export const createWorkFlow = async body => {
+  //wfDocuments and comment should rework after that
   let processInstances = body.FireNOCs.map(fireNOC => {
     return {
       tenantId: fireNOC.tenantId,
       businessService: envVariables.BUSINESS_SERVICE,
       businessId: fireNOC.fireNOCDetails.applicationNumber,
       action: fireNOC.fireNOCDetails.action,
-      comment: fireNOC.fireNOCDetails.comment,
+      comment: get(fireNOC, "comment",null),
       assignee: fireNOC.fireNOCDetails.assignee,
+      douments: get(fireNOC, "wfDocuments",null),
       sla: 0,
       previousStatus: null,
       moduleName: envVariables.BUSINESS_SERVICE

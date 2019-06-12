@@ -8,9 +8,12 @@ export const addUUIDAndAuditDetails = async request => {
   let { FireNOCs, RequestInfo } = request;
   //for loop should be replaced new alternative
   for (var i = 0; i < FireNOCs.length; i++) {
-    FireNOCs[i].id = uuidv1();
-    FireNOCs[i].fireNOCDetails.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicationNumber = await addIDGenId(
+    let id=get(FireNOCs[i],'id');
+    FireNOCs[i].id = id?id:uuidv1();
+    let fireNOCDetailID=get(FireNOCs[i],'fireNOCDetails.id');
+    FireNOCs[i].fireNOCDetails.id =fireNOCDetailID?fireNOCDetailID: uuidv1();
+    let fireNOCApplication=get(FireNOCs[i],'fireNOCDetails.applicationNumber');
+    FireNOCs[i].fireNOCDetails.applicationNumber = fireNOCApplication?fireNOCApplication:await addIDGenId(
       RequestInfo,
       [
         {
@@ -22,32 +25,39 @@ export const addUUIDAndAuditDetails = async request => {
     FireNOCs[i].fireNOCDetails.buildings = FireNOCs[
       i
     ].fireNOCDetails.buildings.map(building => {
-      building.id = uuidv1();
+      let buildingId=building.id;
+      building.id = buildingId?buildingId:uuidv1();
       building.applicationDocuments = building.applicationDocuments.map(
         applicationDocument => {
-          applicationDocument.id = uuidv1();
+          let applicationId=applicationDocument.id;
+          applicationDocument.id =applicationId?applicationId: uuidv1();
           return applicationDocument;
         }
       );
       building.uoms = building.uoms.map(uom => {
-        uom.id = uuidv1();
+        let uomId=uom.id;
+        uom.id = uomId?uomId:uuidv1();
         return uom;
       });
       return building;
     });
-    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = uuidv1();
-    FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = uuidv1();
+    let addressId=get(FireNOCs[i],'fireNOCDetails.propertyDetails.address.id');
+    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = addressId?addressId:uuidv1();
+    let applicationDetailsId=get(FireNOCs[i],'fireNOCDetails.applicantDetails.additionalDetail.id');
+    FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = applicationDetailsId?applicationDetailsId:uuidv1();
     // FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
     //   i
     // ].fireNOCDetails.applicantDetails.owners.map(owner => {
     //   owner.id = uuidv1();
     //   return owner;
     // });
+    let createdBy=get(FireNOCs[i],'auditDetails.createdBy');
+    let createdTime=get(FireNOCs[i],'auditDetails.createdTime');
     FireNOCs[i].auditDetails = {
-      createdBy: get(RequestInfo, "userInfo.uuid", ""),
-      lastModifiedBy: "",
-      createdTime: new Date().getTime(),
-      lastModifiedTime: 0
+      createdBy: createdBy?createdBy:get(RequestInfo, "userInfo.uuid", ""),
+      lastModifiedBy: createdBy?get(RequestInfo, "userInfo.uuid", ""):"",
+      createdTime: createdTime?createdTime:new Date().getTime(),
+      lastModifiedTime: createdTime?new Date().getTime():0
     };
     if (
       FireNOCs[i].fireNOCDetails.applicantDetails.owners &&
@@ -66,6 +76,12 @@ export const addUUIDAndAuditDetails = async request => {
         };
       }
     }
+    FireNOCs[i].dateOfApplied=FireNOCs[i].dateOfApplied?FireNOCs[i].dateOfApplied:new Date().getTime();
+    FireNOCs[i].fireNOCDetails.applicationDate=FireNOCs[i].fireNOCDetails.applicationDate?FireNOCs[i].fireNOCDetails.applicationDate:new Date().getTime();
+    FireNOCs[i].fireNOCDetails.additionalDetail={
+      ...FireNOCs[i].fireNOCDetails.additionalDetail,
+      ownerAuditionalDetail:FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail
+    }
   }
   request.FireNOCs = FireNOCs;
   return request;
@@ -78,8 +94,8 @@ const createUser = async (requestInfo, owner, tenantId) => {
   if (!owner.uuid) {
     //uuid of user not present
     userSearchReqCriteria.userType = "CITIZEN";
-    (userSearchReqCriteria.tenantId = tenantId),
-      (userSearchReqCriteria.mobileNumber = owner.momobileNumber);
+    userSearchReqCriteria.tenantId = tenantId;
+    userSearchReqCriteria.mobileNumber = owner.mobileNumber;
     userSearchResponse = await userService.searchUser(
       requestInfo,
       userSearchReqCriteria
@@ -108,9 +124,10 @@ const createUser = async (requestInfo, owner, tenantId) => {
         ...userSearchResponse.user[0],
         ...owner
       });
-    } else {
-      throw "User not found";
     }
+    // else {
+    //   throw "User not found";
+    // }
     return userCreateResponse;
   }
 };

@@ -83,6 +83,7 @@ import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.repository.ServiceRequestRepository;
+import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -93,7 +94,6 @@ import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -134,6 +134,9 @@ public class BillService {
 	
 	@Autowired
 	private ServiceRequestRepository restRepository;
+	
+	@Autowired
+	private SequenceGenService seqGenerator;
 	
 	/**
 	 * Fetches the bill for given parameters
@@ -314,7 +317,7 @@ public class BillService {
 		
 		Map<String, TaxHeadMaster> taxHeadMap = getTaxHeadMaster(taxHeadCodes, tenantId, requestInfo);
 		Map<String, BusinessServiceDetail> businessMap = getBusinessService(businessCodes, tenantId, requestInfo);
-
+		List<String> billNumbers  = seqGenerator.getIds(demands.size(), appProps.getBillNumSeqName());
 		/*
 		 * looping demand to create bill-detail and account-details object
 		 * 
@@ -331,6 +334,7 @@ public class BillService {
 			String billDetailId = UUID.randomUUID().toString();
 			billDetail.setId(billDetailId);
 			billDetail.setBill(billId);
+			billDetail.setBillNumber(billNumbers.get(demands.indexOf(demand)));
 
 			for (BillAccountDetail accDetail : billDetail.getBillAccountDetails()) {
 

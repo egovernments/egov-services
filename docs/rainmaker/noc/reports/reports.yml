@@ -83,13 +83,13 @@ ReportDefinitions:
         type: epoch
         source: noc
         isMandatory: false
-        searchClause: AND applicationtdate >= $fromDate
+        searchClause: AND applicationdate >= $fromDate
       - name: toDate
         label: reports.noc.toDate
         type: epoch
         source: noc
         isMandatory: false
-        searchClause: AND applicationtdate <= $toDate
+        searchClause: AND applicationdate <= $toDate
       - name: ulb
         label: reports.noc.applicationstatusreport.ulb
         type: multivaluelist
@@ -127,13 +127,13 @@ ReportDefinitions:
         type: epoch
         source: noc
         isMandatory: false
-        searchClause: AND applicationtdate >= $fromDate
+        searchClause: AND applicationdate >= $fromDate
       - name: toDate
         label: reports.noc.channelsreport.toDate
         type: epoch
         source: noc
         isMandatory: false
-        searchClause: AND applicationtdate <= $toDate
+        searchClause: AND applicationdate <= $toDate
       - name: ulb
         label: reports.noc.channelsreport.ulb
         type: multivaluelist

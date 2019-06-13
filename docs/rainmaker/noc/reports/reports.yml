@@ -40,7 +40,7 @@ ReportDefinitions:
       - name: channel
         label: reports.noc.collectionreport.channel
         type: multivaluelist
-        pattern: 'list://COUNTER:COUNTER,ONLINE:ONLINE'
+        pattern: 'list://COUNTER:ULB Counter,ONLINE:Online by Citizen'
         source: common
         isMandatory: false
         searchClause: AND collectiontype = $channel
@@ -92,7 +92,7 @@ ReportDefinitions:
         searchClause: AND receiptdate <= $toDate
       - name: ulb
         label: reports.noc.applicationstatusreport.ulb
-        type: singlevaluelist
+        type: multivaluelist
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
         source: noc
         wrapper: true
@@ -136,7 +136,7 @@ ReportDefinitions:
         searchClause: AND receiptdate <= $toDate
       - name: ulb
         label: reports.noc.channelsreport.ulb
-        type: singlevaluelist
+        type: multivaluelist
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
         source: noc
         wrapper: true

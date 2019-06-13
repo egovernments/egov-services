@@ -376,6 +376,11 @@ public class BillService {
 
 		String businessCode = billDetail.getBusinessService();
 		BigDecimal amountFromBillDetail = billDetail.getTotalAmount();
+		BigDecimal collectedAmt = BigDecimal.ZERO;
+		
+		for (BillAccountDetail accDeatil : billDetail.getBillAccountDetails()) {
+			collectedAmt = collectedAmt.add(accDeatil.getAdjustedAmount());
+		}
 
 		/* if business code already exists then add the amounts */
 		if (serviceCodeAndTaxAmountMap.containsKey(businessCode)) {

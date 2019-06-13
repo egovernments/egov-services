@@ -10,9 +10,9 @@ export const calculate = async (firenoc, requestInfo) => {
     CalulationCriteria
   };
   var calculateResponse = await httpRequest({
-    hostURL: envVariables.EGOV_FN_CALCULATORE_HOST,
-    endPoint: `${envVariables.EGOV_FN_CALCULATORE_CONTEXT_PATH}${
-      envVariables.EGOV_FN_CALCULATORE_CALCULATOR_ENPOINT
+    hostURL: envVariables.EGOV_FN_CALCULATOR_HOST,
+    endPoint: `${envVariables.EGOV_FN_CALCULATOR_CONTEXT_PATH}${
+      envVariables.EGOV_FN_CALCULATOR_CALCULATOR_ENPOINT
     }`,
     requestBody
   });

@@ -28,7 +28,7 @@ export default ({ config, db }) => {
       let workflowResponse = await createWorkFlow(body);
       //need to implement notification
       //calculate call
-      let { FireNOCs, RequestInfo } = body;
+      // let { FireNOCs, RequestInfo } = body;
       // for (var i = 0; i < FireNOCs.length; i++) {
       //   let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       // }

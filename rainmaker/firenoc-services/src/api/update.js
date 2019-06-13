@@ -17,7 +17,7 @@ export default ({ config, db }) => {
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);
       //calculate call
-      let { FireNOCs, RequestInfo } = body;
+      // let { FireNOCs, RequestInfo } = body;
       // for (var i = 0; i < FireNOCs.length; i++) {
       //   let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       // }

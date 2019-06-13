@@ -29,9 +29,9 @@ export default ({ config, db }) => {
       //need to implement notification
       //calculate call
       let { FireNOCs, RequestInfo } = body;
-      for (var i = 0; i < FireNOCs.length; i++) {
-        let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
-      }
+      // for (var i = 0; i < FireNOCs.length; i++) {
+      //   let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
+      // }
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
         messages: JSON.stringify(body)

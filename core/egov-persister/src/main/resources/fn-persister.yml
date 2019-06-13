@@ -77,10 +77,10 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.propertyDetails.propertyid
 
    
-       - query: INSERT INTO eg_fn_owner(uuid, tenantid, firenocdetailsuuid, isactive, isprimaryowner, ownertype, ownershippercentage, relationship, active, institutionid, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_fn_owner(uuid, tenantid, firenocdetailsuuid, isactive, isprimaryowner, ownertype, ownershippercentage, relationship, active, institutionid, createdby, createdtime, lastmodifiedby, lastmodifiedtime,useruuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
          basePath: FireNOCs.*.fireNOCDetails.applicantDetails.owners.*
          jsonMaps:
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.id
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerUUID
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.tenantId
 
@@ -107,6 +107,8 @@ serviceMaps:
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedBy
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedTime
+          
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.uuid
        
        - query: INSERT INTO public.eg_fn_address(uuid, tenantid, doorno, latitude, longitude, buildingname, addressid, addressnumber, type, addressline1, addressline2, landmark, street, city, locality, pincode, detail, firenocdetailsuuid, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
          basePath: FireNOCs.*.fireNOCDetails.propertyDetails.address
@@ -413,10 +415,10 @@ serviceMaps:
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.buildings.*.uoms[*].id)].auditDetails.lastModifiedTime
        
 
-       - query: INSERT INTO eg_fn_owner(uuid, tenantid, firenocdetailsuuid, isactive, isprimaryowner, ownertype, ownershippercentage, relationship, active, institutionid, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT ON CONSTRAINT pk_eg_fn_owner DO UPDATE SET active = ?, isprimaryowner = ?, ownertype = ?, ownershippercentage = ?, relationship = ?, lastmodifiedby = ?,  lastmodifiedtime = ?;
+       - query: INSERT INTO eg_fn_owner(uuid, tenantid, firenocdetailsuuid, isactive, isprimaryowner, ownertype, ownershippercentage, relationship, active, institutionid, createdby, createdtime, lastmodifiedby, lastmodifiedtime,useruuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT ON CONSTRAINT pk_eg_fn_owner DO UPDATE SET active = ?, isprimaryowner = ?, ownertype = ?, ownershippercentage = ?, relationship = ?,useruuid=?, lastmodifiedby = ?,  lastmodifiedtime = ?;
          basePath: FireNOCs.*.fireNOCDetails.applicantDetails.owners.*
          jsonMaps:
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.id
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerUUID
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.tenantId
 
@@ -443,6 +445,8 @@ serviceMaps:
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedBy
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedTime
+          
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.uuid
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.userActive
 
@@ -453,6 +457,8 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.ownerShipPercentage
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.relationship
+          
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicantDetails.owners.*.uuid
 
           - jsonPath: $.FireNOCs[*][?({id} in @.fireNOCDetails.applicantDetails.owners[*].id)].auditDetails.lastModifiedBy
 

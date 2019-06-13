@@ -8,56 +8,66 @@ export const addUUIDAndAuditDetails = async request => {
   let { FireNOCs, RequestInfo } = request;
   //for loop should be replaced new alternative
   for (var i = 0; i < FireNOCs.length; i++) {
-    let id=get(FireNOCs[i],'id');
-    FireNOCs[i].id = id?id:uuidv1();
-    let fireNOCDetailID=get(FireNOCs[i],'fireNOCDetails.id');
-    FireNOCs[i].fireNOCDetails.id =fireNOCDetailID?fireNOCDetailID: uuidv1();
-    let fireNOCApplication=get(FireNOCs[i],'fireNOCDetails.applicationNumber');
-    FireNOCs[i].fireNOCDetails.applicationNumber = fireNOCApplication?fireNOCApplication:await addIDGenId(
-      RequestInfo,
-      [
-        {
-          tenantId: FireNOCs[i].tenantId,
-          format: envVariables.EGOV_APPLICATION_FORMATE
-        }
-      ]
+    let id = get(FireNOCs[i], "id");
+    FireNOCs[i].id = id ? id : uuidv1();
+    let fireNOCDetailID = get(FireNOCs[i], "fireNOCDetails.id");
+    FireNOCs[i].fireNOCDetails.id = fireNOCDetailID
+      ? fireNOCDetailID
+      : uuidv1();
+    let fireNOCApplication = get(
+      FireNOCs[i],
+      "fireNOCDetails.applicationNumber"
     );
+    FireNOCs[i].fireNOCDetails.applicationNumber = fireNOCApplication
+      ? fireNOCApplication
+      : await addIDGenId(RequestInfo, [
+          {
+            tenantId: FireNOCs[i].tenantId,
+            format: envVariables.EGOV_APPLICATION_FORMATE
+          }
+        ]);
     FireNOCs[i].fireNOCDetails.buildings = FireNOCs[
       i
     ].fireNOCDetails.buildings.map(building => {
-      let buildingId=building.id;
-      building.id = buildingId?buildingId:uuidv1();
+      let buildingId = building.id;
+      building.id = buildingId ? buildingId : uuidv1();
       building.applicationDocuments = building.applicationDocuments.map(
         applicationDocument => {
-          let applicationId=applicationDocument.id;
-          applicationDocument.id =applicationId?applicationId: uuidv1();
+          let applicationId = applicationDocument.id;
+          applicationDocument.id = applicationId ? applicationId : uuidv1();
           return applicationDocument;
         }
       );
       building.uoms = building.uoms.map(uom => {
-        let uomId=uom.id;
-        uom.id = uomId?uomId:uuidv1();
+        let uomId = uom.id;
+        uom.id = uomId ? uomId : uuidv1();
         return uom;
       });
       return building;
     });
-    let addressId=get(FireNOCs[i],'fireNOCDetails.propertyDetails.address.id');
-    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = addressId?addressId:uuidv1();
-    let applicationDetailsId=get(FireNOCs[i],'fireNOCDetails.applicantDetails.additionalDetail.id');
-    FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id = applicationDetailsId?applicationDetailsId:uuidv1();
-    // FireNOCs[i].fireNOCDetails.applicantDetails.owners = FireNOCs[
-    //   i
-    // ].fireNOCDetails.applicantDetails.owners.map(owner => {
-    //   owner.id = uuidv1();
-    //   return owner;
-    // });
-    let createdBy=get(FireNOCs[i],'auditDetails.createdBy');
-    let createdTime=get(FireNOCs[i],'auditDetails.createdTime');
+    let addressId = get(
+      FireNOCs[i],
+      "fireNOCDetails.propertyDetails.address.id"
+    );
+    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = addressId
+      ? addressId
+      : uuidv1();
+    let applicationDetailsId = get(
+      FireNOCs[i],
+      "fireNOCDetails.applicantDetails.additionalDetail.id"
+    );
+    FireNOCs[
+      i
+    ].fireNOCDetails.applicantDetails.additionalDetail.id = applicationDetailsId
+      ? applicationDetailsId
+      : uuidv1();
+    let createdBy = get(FireNOCs[i], "auditDetails.createdBy");
+    let createdTime = get(FireNOCs[i], "auditDetails.createdTime");
     FireNOCs[i].auditDetails = {
-      createdBy: createdBy?createdBy:get(RequestInfo, "userInfo.uuid", ""),
-      lastModifiedBy: createdBy?get(RequestInfo, "userInfo.uuid", ""):"",
-      createdTime: createdTime?createdTime:new Date().getTime(),
-      lastModifiedTime: createdTime?new Date().getTime():0
+      createdBy: createdBy ? createdBy : get(RequestInfo, "userInfo.uuid", ""),
+      lastModifiedBy: createdBy ? get(RequestInfo, "userInfo.uuid", "") : "",
+      createdTime: createdTime ? createdTime : new Date().getTime(),
+      lastModifiedTime: createdTime ? new Date().getTime() : 0
     };
     if (
       FireNOCs[i].fireNOCDetails.applicantDetails.owners &&
@@ -70,18 +80,26 @@ export const addUUIDAndAuditDetails = async request => {
           owners[owneriter],
           FireNOCs[i].tenantId
         );
+        let ownerUUID=get(owners[owneriter],'ownerUUID');
         owners[owneriter] = {
           ...owners[owneriter],
-          ...userCreateResponse.user[0]
+          ...userCreateResponse.user[0],
+          ownerUUID:ownerUUID?ownerUUID:uuidv1()
         };
       }
     }
-    FireNOCs[i].dateOfApplied=FireNOCs[i].dateOfApplied?FireNOCs[i].dateOfApplied:new Date().getTime();
-    FireNOCs[i].fireNOCDetails.applicationDate=FireNOCs[i].fireNOCDetails.applicationDate?FireNOCs[i].fireNOCDetails.applicationDate:new Date().getTime();
-    FireNOCs[i].fireNOCDetails.additionalDetail={
+    FireNOCs[i].dateOfApplied = FireNOCs[i].dateOfApplied
+      ? FireNOCs[i].dateOfApplied
+      : new Date().getTime();
+    FireNOCs[i].fireNOCDetails.applicationDate = FireNOCs[i].fireNOCDetails
+      .applicationDate
+      ? FireNOCs[i].fireNOCDetails.applicationDate
+      : new Date().getTime();
+    FireNOCs[i].fireNOCDetails.additionalDetail = {
       ...FireNOCs[i].fireNOCDetails.additionalDetail,
-      ownerAuditionalDetail:FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail
-    }
+      ownerAuditionalDetail:
+        FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail
+    };
   }
   request.FireNOCs = FireNOCs;
   return request;
@@ -100,7 +118,8 @@ const createUser = async (requestInfo, owner, tenantId) => {
       requestInfo,
       userSearchReqCriteria
     );
-    if (userSearchResponse.user && !isEmpty(userSearchResponse.user)) {
+    // console.log("Search passed");
+    if (get(userSearchResponse,"user",[]).length>0) {
       userCreateResponse = await userService.updateUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
@@ -111,6 +130,7 @@ const createUser = async (requestInfo, owner, tenantId) => {
         ...userSearchResponse.user[0],
         ...owner
       });
+      // console.log("Create passed");
     }
   } else {
     //uuid present
@@ -119,26 +139,22 @@ const createUser = async (requestInfo, owner, tenantId) => {
       requestInfo,
       userSearchReqCriteria
     );
-    if (userSearchResponse.user && !isEmpty(userSearchResponse.user)) {
+    if (get(userSearchResponse,"user",[]).length>0) {
       userCreateResponse = await userService.updateUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
       });
+      // console.log("Update passed");
     }
-    // else {
-    //   throw "User not found";
-    // }
     return userCreateResponse;
   }
 };
 
 const addDefaultUserDetails = (tenantId, owner) => {
   if (!owner.userName || isEmpty(owner.userName))
-    owner.userName = owner.momobileNumber;
+  owner.userName = owner.mobileNumber;
   owner.tenantId = tenantId.split(".")[0];
   owner.type = "CITIZEN";
-  owner.role = [
-    { code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }
-  ];
+  owner.role = [{ code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }];
   return owner;
 };

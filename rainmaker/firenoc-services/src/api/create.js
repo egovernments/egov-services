@@ -25,6 +25,7 @@ export default ({ config, db }) => {
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);
+      //need to implement notification
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
         messages: JSON.stringify(body)

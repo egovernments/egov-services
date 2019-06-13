@@ -31,6 +31,10 @@ const fireNOCRowMapper =async (row, mapper = {}) => {
     createdTime: row.createdtime,
     lastModifiedTime: row.lastmodifiedtime
   };
+  let owners=await fireNocOwnersRowMapper(
+    row,
+    get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])
+  );
   let fireNOCDetails = {
     id: row.firenocdetailsid,
     applicationNumber: row.applicationnumber,
@@ -69,10 +73,7 @@ const fireNOCRowMapper =async (row, mapper = {}) => {
     },
     applicantDetails: {
       ownerShipType: row.ownertype,
-      owners:await fireNocOwnersRowMapper(
-        row,
-        get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])
-      ),
+      owners,
       additionalDetail: get(row,'additionaldetail.ownerAuditionalDetail',{})
     },
     additionalDetail: row.additionaldetail,
@@ -190,12 +191,11 @@ export const mergeSearchResults = async (response, query = {}, reqInfo) => {
 const searchUser = async (requestInfo, uuid) => {
   let userSearchReqCriteria = {};
   let userSearchResponse = {};
-  userSearchReqCriteria.uuid = uuid;
+  userSearchReqCriteria.uuid = [uuid];
   userSearchResponse = await userService.searchUser(
     requestInfo,
     userSearchReqCriteria
   );
-  if (!userSearchResponse.user || isEmpty(userSearchResponse.user))
-    throw "User Serach failed";
+  if (get(userSearchResponse,"user",[]).length>0)
   return userSearchResponse.user[0];
 };

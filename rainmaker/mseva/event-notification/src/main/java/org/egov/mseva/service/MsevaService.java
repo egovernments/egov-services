@@ -40,6 +40,10 @@
 
 package org.egov.mseva.service;
 
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +63,7 @@ import org.egov.mseva.web.contract.EventSearchCriteria;
 import org.egov.mseva.web.validator.MsevaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -144,7 +149,33 @@ public class MsevaService {
 	
 	
 	private void enrichSearchCriteria(RequestInfo requestInfo, EventSearchCriteria criteria ) {
-		
+		if(requestInfo.getUserInfo().getType().equals("CITIZEN")) {
+			if(!CollectionUtils.isEmpty(criteria.getUserids()))
+				criteria.getUserids().clear();
+			if(!CollectionUtils.isEmpty(criteria.getRoles()))
+				criteria.getRoles().clear();
+
+			List<String> userIds = new ArrayList<>();
+			List<String> roles = new ArrayList<>();
+			userIds.add(requestInfo.getUserInfo().getUuid());
+			roles.add("CITIZEN");
+			criteria.setUserids(userIds); criteria.setRoles(roles); 
+			criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+		}
+		buildRecepientList(criteria);
+	}
+	
+	
+	private void buildRecepientList(EventSearchCriteria criteria) {
+		List<String> recepients = new ArrayList<>();
+		criteria.getUserids().forEach( user -> recepients.add(user));
+		criteria.getRoles().forEach(role -> {
+			String recepient = role + "." + criteria.getTenantId();
+			recepients.add(role + ".*");
+			recepients.add(recepient);
+		});
+		recepients.add("*."+criteria.getTenantId());
+		recepients.add("All");
 	}
 	
 	

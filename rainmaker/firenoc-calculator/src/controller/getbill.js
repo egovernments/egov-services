@@ -8,7 +8,6 @@ const getbill = async (req, res) => {
   let billCriteria = req.query;
   getbillResponse = await generateBill(requestInfo, billCriteria);
   getbillResponse.ResponseInfo = requestInfoToResponseInfo(requestInfo, true);
-  // console.log("calculalteResponse", calculalteResponse);
   res.send(getbillResponse);
 };
 

@@ -19,7 +19,6 @@ const create = (req, res) => {
   ];
 
   producer.send(payloads, function(err, data) {});
-  console.log("createResponse", createResponse);
   res.send(createResponse);
 };
 

@@ -26,6 +26,7 @@ import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
 import static org.egov.pt.calculator.util.CalculatorConstants.ALLOWED_RECEIPT_STATUS;
+import static org.egov.pt.calculator.util.CalculatorConstants.SERVICE_FIELD_VALUE_PT;
 import static org.egov.pt.calculator.util.CalculatorConstants.STATUS_FIELD_FOR_SEARCH_URL;
 
 @Component
@@ -61,6 +62,27 @@ public class CalculatorUtils {
 
 		MasterDetail mstrDetail = MasterDetail.builder().name(CalculatorConstants.FINANCIAL_YEAR_MASTER)
 				.filter("[?(@." + CalculatorConstants.FINANCIAL_YEAR_RANGE_FEILD_NAME + " IN [" + assesmentYear + "])]")
+				.build();
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(CalculatorConstants.FINANCIAL_MODULE)
+				.masterDetails(Arrays.asList(mstrDetail)).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(moduleDetail)).tenantId(tenantId)
+				.build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+
+	/**
+	 * Prepares and returns Mdms search request with financial master criteria
+	 *
+	 * @param requestInfo
+	 * @param assesmentYears
+	 * @return
+	 */
+	public MdmsCriteriaReq getFinancialYearRequest(RequestInfo requestInfo, Set<String> assesmentYears, String tenantId) {
+
+		String assessmentYearStr = StringUtils.join(assesmentYears,",");
+		MasterDetail mstrDetail = MasterDetail.builder().name(CalculatorConstants.FINANCIAL_YEAR_MASTER)
+				.filter("[?(@." + CalculatorConstants.FINANCIAL_YEAR_RANGE_FEILD_NAME + " IN [" + assessmentYearStr + "]" +
+						" && @.module== '"+SERVICE_FIELD_VALUE_PT+"')]")
 				.build();
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(CalculatorConstants.FINANCIAL_MODULE)
 				.masterDetails(Arrays.asList(mstrDetail)).build();
@@ -179,7 +201,7 @@ public class CalculatorUtils {
 	/**
 	 * method to create demandsearch url with demand criteria
 	 *
-	 * @param criteria
+	 * @param assessment
 	 * @return
 	 */
 	public StringBuilder getDemandSearchUrl(Assessment assessment) {

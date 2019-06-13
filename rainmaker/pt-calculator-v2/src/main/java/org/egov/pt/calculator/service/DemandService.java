@@ -215,6 +215,10 @@ public class DemandService {
 
 		List<Demand> demandsToBeUpdated = new LinkedList<>();
 
+		String tenantId = getBillCriteria.getTenantId();
+
+		List<TaxPeriod> taxPeriods = mstrDataService.getTaxPeriodList(requestInfoWrapper.getRequestInfo(), tenantId);
+
 		for (String consumerCode : getBillCriteria.getConsumerCodes()) {
 			Demand demand = consumerCodeToDemandMap.get(consumerCode);
 			if (demand == null)
@@ -226,7 +230,7 @@ public class DemandService {
 				throw new CustomException(CalculatorConstants.EG_PT_INVALID_DEMAND_ERROR,
 						CalculatorConstants.EG_PT_INVALID_DEMAND_ERROR_MSG);
 
-			applytimeBasedApplicables(demand, requestInfoWrapper, timeBasedExmeptionMasterMap);
+			applytimeBasedApplicables(demand, requestInfoWrapper, timeBasedExmeptionMasterMap,taxPeriods);
 
 			roundOffDecimalForDemand(demand, requestInfoWrapper);
 
@@ -359,13 +363,13 @@ public class DemandService {
 	 * @return
 	 */
 	private boolean applytimeBasedApplicables(Demand demand,RequestInfoWrapper requestInfoWrapper,
-			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+			Map<String, JSONArray> timeBasedExmeptionMasterMap,List<TaxPeriod> taxPeriods) {
 
 		boolean isCurrentDemand = false;
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
 		
-		TaxPeriod taxPeriod = mstrDataService.getTaxPeriodList(requestInfoWrapper, tenantId).stream()
+		TaxPeriod taxPeriod = taxPeriods.stream()
 				.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0
 				&& demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
 		.findAny().orElse(null);

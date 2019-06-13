@@ -65,13 +65,14 @@ public class EstimationService {
 
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<CalculationCriteria> criteriaList = request.getCalculationCriteria();
+		Map<String,Object> masterMap = mDataService.getMasterMap(request);
 		Map<String, Calculation> calculationPropertyMap = new HashMap<>();
 		for (CalculationCriteria criteria : criteriaList) {
 			Property property = criteria.getProperty();
 			PropertyDetail detail = property.getPropertyDetails().get(0);
 			calcValidator.validatePropertyForCalculation(detail);
 			String assessmentNumber = detail.getAssessmentNumber();
-			Calculation calculation = getCalculation(requestInfo, criteria, getEstimationMap(criteria, requestInfo));
+			Calculation calculation = getCalculation(requestInfo, criteria, getEstimationMap(criteria, requestInfo),masterMap);
 			calculation.setServiceNumber(assessmentNumber);
 			calculationPropertyMap.put(assessmentNumber, calculation);
 		}
@@ -91,8 +92,9 @@ public class EstimationService {
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
         calcValidator.validatePropertyForCalculation(detail);
+        Map<String,Object> masterMap = mDataService.getMasterMap(request);
         return new CalculationRes(new ResponseInfo(), Collections.singletonList(getCalculation(request.getRequestInfo(), criteria,
-                getEstimationMap(criteria, request.getRequestInfo()))));
+                getEstimationMap(criteria, request.getRequestInfo()),masterMap)));
     }
 
 	/**
@@ -349,7 +351,7 @@ public class EstimationService {
 	 * @return Calculation object constructed based on the resulting tax amount and other applicables(rebate/penalty)
 	 */
     private Calculation getCalculation(RequestInfo requestInfo, CalculationCriteria criteria,
-									   Map<String,List> estimatesAndBillingSlabs) {
+									   Map<String,List> estimatesAndBillingSlabs,Map<String,Object> masterMap) {
 
 		List<TaxHeadEstimate> estimates = estimatesAndBillingSlabs.get("estimates");
 		List<String> billingSlabIds = estimatesAndBillingSlabs.get("billingSlabIds");
@@ -360,10 +362,12 @@ public class EstimationService {
         String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssesmentNumber();
         String tenantId = null != property.getTenantId() ? property.getTenantId() : criteria.getTenantId();
 
-		Map<String, Object> finYearMap = mDataService.getFinancialYear(requestInfo, assessmentYear, tenantId);
+		Map<String,Map<String, Object>> financialYearMaster = (Map<String,Map<String, Object>>)masterMap.get(FINANCIALYEAR_MASTER_KEY);
+
+		Map<String, Object> finYearMap = financialYearMaster.get(assessmentYear);
 		Long fromDate = (Long) finYearMap.get(FINANCIAL_YEAR_STARTING_DATE);
 		Long toDate = (Long) finYearMap.get(FINANCIAL_YEAR_ENDING_DATE);
-		Map<String, Category> taxHeadCategoryMap = mDataService.getTaxHeadMasterMap(requestInfo, tenantId).stream()
+		Map<String, Category> taxHeadCategoryMap = ((List<TaxHeadMaster>)masterMap.get(TAXHEADMASTER_MASTER_KEY)).stream()
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getCategory));
 
 		BigDecimal taxAmt = BigDecimal.ZERO;

@@ -5,54 +5,54 @@ ReportDefinitions:
     moduleName: rainmaker-noc
     sourceColumns:
       - name: usagetype
-        label: reports.noc.usagetype
+        label: reports.noc.collectionreport.usagetype
         type: string
         source: rainmaker-noc
         total: false
       - name: transactionNumber
-        label: reports.noc.transactionNumber
+        label: reports.noc.collectionreport.transactionNumber
         type: number
         source: rainmaker-noc
         total: false
       - name: fees_counter
-        label: reports.noc.fees_counter
+        label: reports.noc.collectionreport.fees_counter
         type: number
         source: rainmaker-noc
         total: false
       - name: fees_online
-        label: reports.noc.fees_online
+        label: reports.noc.collectionreport.fees_online
         type: number
         source: rainmaker-noc
         total: false
     searchParams:
       - name: fromDate
-        label: reports.noc.fromDate
+        label: reports.noc.collectionreport.fromDate
         type: epoch
         source: pt
         isMandatory: false
         searchClause: AND receiptdate >= $fromDate
       - name: toDate
-        label: reports.noc.toDate
+        label: reports.noc.collectionreport.toDate
         type: epoch
         source: pt
         isMandatory: false
         searchClause: AND receiptdate <= $toDate
       - name: channel
-        label: reports.noc.channel
+        label: reports.noc.collectionreport.channel
         type: multivaluelist
         pattern: 'list://COUNTER:COUNTER,ONLINE:ONLINE'
         source: common
         isMandatory: false
         searchClause: AND collectiontype = $channel
       - name: paymentMode
-        label: reports.noc.paymentMode
+        label: reports.noc.collectionreport.paymentMode
         type: singlevaluelist
         pattern: 'list://Cash:Cash,Online:Online,Card:Card,DD:DD,Cheque:Cheque'
         source: common
         isMandatory: false
         searchClause: AND instrumenttype = $paymentMode
       - name: ulb
-        label: reports.noc.ulb
+        label: reports.noc.collectionreport.ulb
         type: multivaluelist
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
         source: noc
@@ -68,18 +68,18 @@ ReportDefinitions:
     moduleName: rainmaker-noc
     sourceColumns:
       - name: application_status
-        label: reports.noc.appStatus
+        label: reports.noc.applicationstatusreport.appStatus
         type: string
         source: rainmaker-noc
         total: false
       - name: number_of_application
-        label: Number of application
+        label: reports.noc.applicationstatusreport.noofapplications
         type: string
         source: rainmaker-noc
         total: false
     searchParams:
       - name: fromDate
-        label: reports.noc.fromDate
+        label: reports.noc.applicationstatusreport.fromDate
         type: epoch
         source: noc
         isMandatory: false
@@ -91,7 +91,7 @@ ReportDefinitions:
         isMandatory: false
         searchClause: AND receiptdate <= $toDate
       - name: ulb
-        label: reports.noc.ulb
+        label: reports.noc.applicationstatusreport.ulb
         type: singlevaluelist
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
         source: noc
@@ -107,35 +107,35 @@ ReportDefinitions:
     moduleName: rainmaker-noc
     sourceColumns:
       - name: channel
-        label: reports.noc.channel
+        label: reports.noc.channelsreport.channel
         type: string
         source: rainmaker-noc
         total: false
       - name: number_of_applications
-        label: reports.noc.applicationNo
+        label: reports.noc.channelsreport.applicationNo
         type: number
         source: rainmaker-noc
         total: false
       - name: percentage
-        label: reports.noc.percentage
+        label: reports.noc.channelsreport.percentage
         type: number
         source: rainmaker-noc
         total: false
     searchParams:
       - name: fromDate
-        label: reports.noc.fromDate
+        label: reports.noc.channelsreport.fromDate
         type: epoch
         source: noc
         isMandatory: false
         searchClause: AND receiptdate >= $fromDate
       - name: toDate
-        label: reports.noc.toDate
+        label: reports.noc.channelsreport.toDate
         type: epoch
         source: noc
         isMandatory: false
         searchClause: AND receiptdate <= $toDate
       - name: ulb
-        label: reports.noc.ulb
+        label: reports.noc.channelsreport.ulb
         type: singlevaluelist
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
         source: noc

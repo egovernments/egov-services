@@ -33,6 +33,8 @@ serviceMaps:
 
             - jsonPath: $.BillingSlabs.*.toDate
 
+            - jsonPath: $.BillingSlabs.*.rate
+
             - jsonPath: $.BillingSlabs.*.auditDetails.createdBy
 
             - jsonPath: $.BillingSlabs.*.auditDetails.createdDate
@@ -78,6 +80,8 @@ serviceMaps:
             - jsonPath: $.BillingSlabs.*.fromDate
 
             - jsonPath: $.BillingSlabs.*.toDate
+
+            - jsonPath: $.BillingSlabs.*.rate
 
             - jsonPath: $.BillingSlabs.*.auditDetails.createdBy
 

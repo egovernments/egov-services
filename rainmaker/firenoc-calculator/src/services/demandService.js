@@ -1,6 +1,7 @@
 import { generateDemandSearchURL, generateGetBillURL } from "../utils";
 import { httpRequest } from "../utils/api";
 import get from "lodash/get";
+import envVariables from "../envVariables";
 
 export const generateDemand = async (
   requestInfo,
@@ -51,7 +52,7 @@ const createDemand = async (requestInfo, calculations, config) => {
       tenantId,
       consumerCode,
       consumerType: "FIRENOC",
-      businessService: process.env.BUSINESSSERVICE,
+      businessService: envVariables.BUSINESSSERVICE,
       taxPeriodFrom: 1554076799000,
       taxPeriodTo: 1585679399000,
       demandDetails: []
@@ -73,8 +74,8 @@ const createDemand = async (requestInfo, calculations, config) => {
     Demands: demands
   };
   var demandCreateResponse = await httpRequest({
-    hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
-    endPoint: process.env.EGOV_DEMAND_CREATE_ENDPOINT,
+    hostURL: envVariables.EGOV_BILLINGSERVICE_HOST,
+    endPoint: envVariables.EGOV_DEMAND_CREATE_ENDPOINT,
     requestBody: DemandRequest
   });
 };
@@ -115,22 +116,21 @@ const updateDemand = async (
     Demands: demands
   };
   var demandUpdateResponse = await httpRequest({
-    hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
-    endPoint: process.env.EGOV_DEMAND_UPDATE_ENDPOINT,
+    hostURL: envVariables.EGOV_BILLINGSERVICE_HOST,
+    endPoint: envVariables.EGOV_DEMAND_UPDATE_ENDPOINT,
     requestBody: DemandRequest
   });
 };
 
 const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
-  console.log("process.env", process.env.BUSINESSSERVICE);
   let uri = generateDemandSearchURL();
   uri = uri.replace("{1}", tenantId);
-  uri = uri.replace("{2}", process.env.BUSINESSSERVICE);
+  uri = uri.replace("{2}", envVariables.BUSINESSSERVICE);
   uri = uri.replace("{3}", consumercodeList.join(","));
   let requestBody = { RequestInfo: requestInfo };
   var demandsSearch = null;
   demandsSearch = await httpRequest({
-    hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
+    hostURL: envVariables.EGOV_BILLINGSERVICE_HOST,
     endPoint: uri,
     requestBody
   });
@@ -146,7 +146,7 @@ export const generateBill = async (requestInfo, billCriteria) => {
     let uri = generateGetBillURL(tenantId, consumerCode);
     let requestBody = { RequestInfo: requestInfo };
     var billResponse = await httpRequest({
-      hostURL: process.env.EGOV_BILLINGSERVICE_HOST,
+      hostURL: envVariables.EGOV_BILLINGSERVICE_HOST,
       endPoint: uri,
       requestBody
     });

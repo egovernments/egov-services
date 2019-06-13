@@ -1,6 +1,7 @@
 import producer from "../kafka/producer";
 import { requestInfoToResponseInfo, upadteForAuditDetails } from "../utils";
 import uuid4 from "uuid/v4";
+import envVariables from "../envVariables";
 
 const create = (req, res) => {
   console.log("create");
@@ -13,7 +14,7 @@ const create = (req, res) => {
 
   const payloads = [
     {
-      topic: process.env.KAFKA_TOPICS_SAVE_SERVICE,
+      topic: envVariables.KAFKA_TOPICS_SAVE_SERVICE,
       messages: JSON.stringify(createResponse)
     }
   ];

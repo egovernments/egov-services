@@ -1,3 +1,5 @@
+import envVariables from "../envVariables";
+
 export const requestInfoToResponseInfo = (requestinfo, success) => {
   let ResponseInfo = {
     apiId: "",
@@ -53,17 +55,17 @@ export const addQueryArg = (url, queries = []) => {
 
 export const generateDemandSearchURL = () => {
   let url = "";
-  url = url + process.env.EGOV_DEMAND_SEARCH_ENDPOINT;
+  url = url + envVariables.EGOV_DEMAND_SEARCH_ENDPOINT;
   url = `${url}?tenantId={1}&businessService={2}&consumerCode={3}`;
   return url;
 };
 
 export const generateGetBillURL = (tenantId, consumerCode) => {
   let url = "";
-  url = url + process.env.EGOV_BILL_GEN_ENDPOINT;
+  url = url + envVariables.EGOV_BILL_GEN_ENDPOINT;
   url = `${url}?tenantId={1}&businessService={2}&consumerCode={3}`;
   url = url.replace("{1}", tenantId);
-  url = url.replace("{2}", process.env.BUSINESSSERVICE);
+  url = url.replace("{2}", envVariables.BUSINESSSERVICE);
   url = url.replace("{3}", consumerCode);
 
   return url;
@@ -71,7 +73,7 @@ export const generateGetBillURL = (tenantId, consumerCode) => {
 
 export const generateFireNOCSearchURL = (tenantId, applicationNumber) => {
   let url = "";
-  url = url + process.env.EGOV_FIRENOC_SEARCH_ENDPOINT;
+  url = url + envVariables.EGOV_FIRENOC_SEARCH_ENDPOINT;
   url = `${url}?tenantId={1}&businessService={2}`;
   url = url.replace("{1}", tenantId);
   url = url.replace("{2}", applicationNumber);

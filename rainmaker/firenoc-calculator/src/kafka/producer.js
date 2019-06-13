@@ -1,10 +1,11 @@
 var kafka = require("kafka-node");
+import envVariables from "../envVariables";
 
 const Producer = kafka.Producer;
 let client;
 
 if (process.env.NODE_ENV === "development") {
-  client = new kafka.Client(process.env.KAFKA_BOOTSTRAP_SERVER);
+  client = new kafka.Client(envVariables.KAFKA_BOOTSTRAP_SERVER);
   console.log("local - ");
 } else {
   client = new kafka.KafkaClient({ kafkaHost: "kafka-0.kafka.backbone:9092" });

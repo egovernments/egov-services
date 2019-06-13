@@ -1,5 +1,6 @@
 import axios from "axios";
 import logger from "./logger";
+import envVariables from "../envVariables";
 
 const createAxiosInstance = hostURL => {
   console.log(hostURL);
@@ -40,7 +41,7 @@ const createAxiosInstance = hostURL => {
 };
 function logRequest(config) {
   const { url, method, data } = config;
-  if (process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED) {
+  if (envVariables.HTTP_CLIENT_DETAILED_LOGGING_ENABLED) {
     logger.info(
       `Sending request to ${url} with verb ${method} with body ${JSON.stringify(
         data
@@ -54,7 +55,7 @@ function logRequest(config) {
 function logResponse(res) {
   const { status, headers, data, config } = res;
   if (
-    process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED &&
+    envVariables.HTTP_CLIENT_DETAILED_LOGGING_ENABLED &&
     headers["content-type"] &&
     headers["content-type"].includes("application/json")
   ) {

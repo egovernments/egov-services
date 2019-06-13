@@ -1,9 +1,10 @@
 import logger from "../config/logger";
+import envVariables from "../envVariables";
 
 module.exports = function(options) {
   return function(req, res, next) {
     const TRACER_ENABLE_REQUEST_LOGGING =
-      process.env.TRACER_ENABLE_REQUEST_LOGGING === "true";
+      envVariables.TRACER_ENABLE_REQUEST_LOGGING === "true";
 
     logger.info(`Received request URI: ${req.originalUrl}`);
 

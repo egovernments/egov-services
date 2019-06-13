@@ -1,13 +1,12 @@
-'use strict';
+"use strict";
+import envVariables from "../envVariables";
 
-const { createLogger, format, transports } = require('winston');
-
+const { createLogger, format, transports } = require("winston");
 
 const logger = createLogger({
-  level: process.env.LOG_LEVEL,
-  format: 
-  format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSSZZ' }),
+  level: envVariables.LOG_LEVEL,
+  format: format.combine(
+    format.timestamp({ format: "YYYY-MM-DD HH:mm:ss.SSSZZ" }),
     format.json()
   ),
   transports: [new transports.Console()]

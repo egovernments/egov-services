@@ -8,17 +8,15 @@ import bodyParser from "body-parser";
 import api from "./controller";
 const { Pool } = require("pg");
 import tracer from "./middleware/tracer";
-
-//loading env property
-require("dotenv").config();
+import envVariables from "./envVariables";
 
 const pool = new Pool({
-  user: process.env.DB_USERNAME,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  ssl: process.env.DB_SSL
+  user: envVariables.DB_USERNAME,
+  host: envVariables.DB_HOST,
+  database: envVariables.DB_NAME,
+  password: envVariables.DB_PASSWORD,
+  port: envVariables.DB_PORT,
+  ssl: envVariables.DB_SSL
 });
 
 const options = {
@@ -55,7 +53,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, middleware => {
 
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
-  let serverPort = process.env.SERVER_PORT;
+  let serverPort = envVariables.SERVER_PORT;
   app.server.listen(serverPort, () => {
     console.log("port is ", serverPort);
   });

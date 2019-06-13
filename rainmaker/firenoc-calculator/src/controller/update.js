@@ -1,5 +1,6 @@
 import producer from "../kafka/producer";
 import { requestInfoToResponseInfo, upadteForAuditDetails } from "../utils";
+import envVariables from "../envVariables";
 
 const update = (req, res) => {
   console.log("update");
@@ -12,7 +13,7 @@ const update = (req, res) => {
 
   const payloads = [
     {
-      topic: process.env.KAFKA_TOPICS_UPDATE_SERVICE,
+      topic: envVariables.KAFKA_TOPICS_UPDATE_SERVICE,
       messages: JSON.stringify(updateResponse)
     }
   ];

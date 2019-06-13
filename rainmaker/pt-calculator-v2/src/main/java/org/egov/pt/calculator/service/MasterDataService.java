@@ -79,7 +79,8 @@ public class MasterDataService {
 	public Map<String,Map<String, Object>> getFinancialYear(CalculationReq req) {
 		String tenantId = req.getCalculationCriteria().get(0).getTenantId();
 		RequestInfo requestInfo = req.getRequestInfo();
-		Set<String> assessmentYears = req.getCalculationCriteria().stream().map(CalculationCriteria::getAssessmentYear).collect(Collectors.toSet());
+		Set<String> assessmentYears = req.getCalculationCriteria().stream().map(cal -> cal.getProperty().getPropertyDetails().get(0).getFinancialYear())
+				.collect(Collectors.toSet());
 		MdmsCriteriaReq mdmsCriteriaReq = calculatorUtils.getFinancialYearRequest(requestInfo, assessmentYears, tenantId);
 		StringBuilder url = calculatorUtils.getMdmsSearchUrl();
 		Object res = repository.fetchResult(url, mdmsCriteriaReq);

@@ -163,7 +163,7 @@ public class NotificationConsumer {
 		String message = null;
 		if(!StringUtils.isEmpty(content)) {
 			StringBuilder link = new StringBuilder();
-			link.append(uiHost).append("/otpLogin?mobileNo=").append(bill.getMobileNumber()).append("&redirectTo=")
+			link.append(uiHost + "/citizen").append("/otpLogin?mobileNo=").append(bill.getMobileNumber()).append("&redirectTo=")
 					.append(uiRedirectUrl).append("&params=").append(billDetail.getTenantId() + "," + billDetail.getReceiptNumber());
 			
 			content = content.replaceAll("<rcpt_link>", link.toString());

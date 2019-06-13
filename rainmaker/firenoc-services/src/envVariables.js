@@ -90,7 +90,7 @@ const envVariables = {
   EGOV_MDMS_SEARCH_ENPOINT: process.env.EGOV_MDMS_SEARCH_ENPOINT || "/_search",
 
   //mdms service configurations
-  EGOV_FN_CALCULATORE_HOST:
+  EGOV_FN_CALCULATOR_HOST:
     process.env.EGOV_FN_CALCULATORE_HOST || "http://localhost:8083",
   EGOV_FN_CALCULATORE_CONTEXT_PATH:
     process.env.EGOV_FN_CALCULATORE_CONTEXT_PATH || "/firenoc-calculator/v1",

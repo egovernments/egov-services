@@ -122,6 +122,7 @@ const updateDemand = async (
 };
 
 const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
+  console.log("process.env", process.env);
   let uri = generateDemandSearchURL();
   uri = uri.replace("{1}", tenantId);
   uri = uri.replace("{2}", process.env.BUSINESSSERVICE);

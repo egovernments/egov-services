@@ -39,8 +39,8 @@ const envVariables = {
 
   //workflow service configurations
   EGOV_WORKFLOW_HOST:
-    process.env.EGOV_WORKFLOW_HOST || "http://localhost:8089",
-    // "https://egov-micro-dev.egovernments.org",
+    process.env.EGOV_WORKFLOW_HOST || "https://egov-micro-dev.egovernments.org",
+  // "https://egov-micro-dev.egovernments.org",
   EGOV_WORKFLOW_TRANSITION_ENDPOINT:
     process.env.EGOV_WORKFLOW_TRANSITION_PATH ||
     "/egov-workflow-v2/egov-wf/process/_transition",
@@ -56,9 +56,8 @@ const envVariables = {
   EGOV_LOCATION_HIERARCHY_TYPE_CODE: process.env.EGOV_LOCATION || "REVENUE",
 
   //user service configurations
-  EGOV_USER_HOST:
-    process.env.EGOV_USER_HOST || "http://localhost:8088",
-    //"https://egov-micro-dev.egovernments.org",
+  EGOV_USER_HOST: process.env.EGOV_USER_HOST || "http://localhost:8087",
+  //"https://egov-micro-dev.egovernments.org",
   EGOV_USER_CONTEXT_PATH: process.env.EGOV_USER_CONTEXT_PATH || "/user",
   EGOV_USER_CREATE_ENDPOINT:
     process.env.EGOV_USER_CREATE_ENDPOINT || "/users/_createnovalidate",
@@ -92,10 +91,9 @@ const envVariables = {
 
   //mdms service configurations
   EGOV_FN_CALCULATORE_HOST:
-    process.env.EGOV_FN_CALCULATORE_HOST ||
-    "https://egov-micro-dev.egovernments.org",
+    process.env.EGOV_FN_CALCULATORE_HOST || "http://localhost:8083",
   EGOV_FN_CALCULATORE_CONTEXT_PATH:
-    process.env.EGOV_FN_CALCULATORE_CONTEXT_PATH || "/fn-calculator/v1",
+    process.env.EGOV_FN_CALCULATORE_CONTEXT_PATH || "/firenoc-calculator/v1",
   EGOV_FN_CALCULATORE_CALCULATOR_ENPOINT:
     process.env.EGOV_FN_CALCULATORE_CALCULATOR_ENPOINT || "/_calculate",
   EGOV_FN_CALCULATORE_GETBILL_ENPOINT:

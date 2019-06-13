@@ -1,6 +1,5 @@
 package org.egov.mseva.web.validator;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +58,8 @@ public class MsevaValidator {
 	}
 	
 	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
-		if(CollectionUtils.isEmpty(event.getToUsers()) && CollectionUtils.isEmpty(event.getToRoles())) {
+		if(CollectionUtils.isEmpty(event.getRecepient().getToUsers()) 
+				&& CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
 			errorMap.put(ErrorConstants.EMPTY_RECEPIENT_CODE, ErrorConstants.EMPTY_RECEPIENT_MSG);
 		}
 		if(null != event.getEventDetails()) {

@@ -43,12 +43,15 @@ package org.egov.mseva.web.controller;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.egov.mseva.model.RequestInfoWrapper;
 import org.egov.mseva.service.MsevaService;
 import org.egov.mseva.web.contract.EventRequest;
 import org.egov.mseva.web.contract.EventResponse;
+import org.egov.mseva.web.contract.EventSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,8 +108,9 @@ public class EventsController {
 	 */
 	@PostMapping("/_search")
 	@ResponseBody
-	private ResponseEntity<?> search(@RequestBody @Valid EventRequest request) {
-		return new ResponseEntity<>(request, HttpStatus.OK);
+	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid EventSearchCriteria eventSearchCriteria) {
+		return new ResponseEntity<>(null, HttpStatus.OK);
 
 	}
 	

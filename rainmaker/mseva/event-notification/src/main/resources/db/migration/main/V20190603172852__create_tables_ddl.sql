@@ -6,6 +6,7 @@ CREATE TABLE eg_men_events(
   eventtype character varying(256),
   description character varying(256),
   status character varying(256),
+  recepient jsonb,
   eventdetails jsonb,
   actions jsonb,
   createdby character varying(256) NOT NULL,

@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.egov.mseva.model.AuditDetails;
+import org.egov.mseva.model.RecepientEvent;
 import org.egov.mseva.model.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -45,20 +46,18 @@ public class Event {
 	private Status status;
 	
 	@NotNull
-	private List<String> toRoles;
-	
+	private String source;
+
 	@NotNull
-	private List<String> toUsers;
+	private Recepient recepient;
 	
 	private Action actions;
 	
 	private EventDetails eventDetails;
-	
-	private String source;
-	
+		
 	private AuditDetails auditDetails;
 	
 	@JsonIgnore
-	private Map<String, String> recepientEventMap;
+	private List<RecepientEvent> recepientEventMap;
 
 }

@@ -1,0 +1,130 @@
+serviceMaps:
+  serviceName: mSeva Event Notification
+  mappings:
+  - version: 1.0
+    name: mSeva 
+    description: Persists events into the table
+    fromTopic: save-mseva-events
+    isTransaction: true
+    queryMaps:
+    - query: INSERT INTO eg_men_events(tenantid, id, source, eventtype, description, status, eventdetails, actions, recepient, createdby, createddate, lastmodifiedby, lastModifiedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: events.*
+      jsonMaps:
+
+
+      - jsonPath: $.events.*.tenantId
+
+      - jsonPath: $.events.*.id
+
+      - jsonPath: $.events.*.source
+
+      - jsonPath: $.events.*.eventtype
+
+      - jsonPath: $.events.*.description
+
+      - jsonPath: $.events.*.status
+
+      - jsonPath: $.events.*.eventdetails
+
+      - jsonPath: $.events.*.actions
+      
+      - jsonPath: $.events.*.recepient
+
+      - jsonPath: $.events.*.auditDetails.createdBy
+
+      - jsonPath: $.events.*.auditDetails.createdDate
+
+      - jsonPath: $.events.*.auditDetails.lastModifiedBy
+
+      - jsonPath: $.events.*.auditDetails.lastModifiedDate
+      
+      
+      
+    - query: INSERT INTO eg_men_recepnt_event_registry(recepient, eventid) VALUES (?, ?);
+
+      basePath: events.*.recepientEventMap.*
+      jsonMaps:
+
+
+      - jsonPath: $.events.*.recepientEventMap.*.recepient
+
+      - jsonPath: $.events.*.recepientEventMap.*.eventid
+      
+      
+      
+
+
+  - version: 1.0
+    name: mSeva
+    description: Updates event details in the table
+    fromTopic: update-mseva-events
+    isTransaction: true
+    queryMaps:
+    - query: UPDATE eg_men_events SET description = ?, status = ?, eventdetails = ?, actions = ?, recepient = ? , lastmodifiedby = ?, lastModifiedDate = ? WHERE id = ?;
+
+      basePath: events.*
+      jsonMaps:
+
+      - jsonPath: $.events.*.description
+
+      - jsonPath: $.events.*.status
+
+      - jsonPath: $.events.*.eventdetails
+
+      - jsonPath: $.events.*.actions
+      
+      - jsonPath: $.events.*.recepient
+
+      - jsonPath: $.events.*.auditDetails.lastModifiedBy
+
+      - jsonPath: $.events.*.auditDetails.lastModifiedDate
+      
+      - jsonPath: $.events.*.id
+      
+      
+
+    - query: DELETE FROM eg_men_recepnt_event_registry WHERE eventid = ?;
+
+      basePath: events.*
+      jsonMaps:
+      
+      - jsonPath: $.events.*.id
+      
+      
+      
+    - query: INSERT INTO eg_men_recepnt_event_registry(recepient, eventid) VALUES (?, ?);
+
+      basePath: events.*.recepientEventMap.*
+      jsonMaps:
+
+
+      - jsonPath: $.events.*.recepientEventMap.*.recepient
+
+      - jsonPath: $.events.*.recepientEventMap.*.eventid  
+      
+      
+      
+
+
+  - version: 1.0
+    name: mSeva 
+    description: Persists user last login details
+    fromTopic: mseva-events-llt
+    isTransaction: true
+    queryMaps:      
+    - query: INSERT INTO eg_men_user_llt(userid, lastlogintime) VALUES (?, ?) ON CONFLICT (userid) DO UPDATE SET lastlogintime = ?;
+
+      basePath: lltDetails
+      jsonMaps:
+
+
+      - jsonPath: $.lltDetails.userid
+
+      - jsonPath: $.lltDetails.lastlogintime   
+      
+      - jsonPath: $.lltDetails.lastlogintime   
+
+
+
+

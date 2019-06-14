@@ -16,7 +16,7 @@ export default ({ config, db }) => {
     asyncHandler(async ({ body }, res, next) => {
       let payloads = [];
       //model validator
-      let errors=validateFireNOCModel(body.FireNOCs);
+      // let errors=validateFireNOCModel(body.FireNOCs);
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);

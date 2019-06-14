@@ -93,7 +93,7 @@ public class NotificationConsumer {
 	
 	private static final String BUSINESSSERVICE_MDMS_MODULE = "BillingService";
 	public static final String BUSINESSSERVICE_MDMS_MASTER = "BusinessService";
-	public static final String BUSINESSSERVICE_CODES_FILTER = "$.*.code";
+	public static final String BUSINESSSERVICE_CODES_FILTER = "$.[?(@.type=='Adhoc')].code";
 	public static final String BUSINESSSERVICE_CODES_JSONPATH = "$.MdmsRes.BillingService.BusinessService";
 	
 	

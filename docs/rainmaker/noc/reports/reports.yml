@@ -98,7 +98,7 @@ ReportDefinitions:
         wrapper: true
         isMandatory: false
         searchClause: AND fnoc.tenantId IN ($ulb)
-    query: select action application_status,count(*) number_of_application from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid where action is not null
+    query: select action application_status,count(*) number_of_application from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid
     groupby: GROUP BY action
 
   - reportName: ChannelsReport
@@ -142,5 +142,5 @@ ReportDefinitions:
         wrapper: true
         isMandatory: false
         searchClause: AND fnoc.tenantId IN ($ulb)
-    query: select channel, count (*) number_of_applications,(count (*)/(select count(*) from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid))*100 percentage from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid 
+    query: select channel, count (*) number_of_applications,round((count (*)::decimal/(select count(*) from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid))*100,2) percentage from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid
     groupby: GROUP BY channel

@@ -1,4 +1,6 @@
 package org.egov.custom.mapper.billing.impl;
+
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,14 +13,14 @@ import java.util.Map;
 import org.egov.custom.mapper.billing.impl.BillAccountDetail.PurposeEnum;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
 public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
-	
-	
+
 	@Override
 	public List<Bill> extractData(ResultSet rs) throws SQLException {
 		Map<String, Bill> billMap = new LinkedHashMap<>();
@@ -48,14 +50,16 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 				auditDetails.setLastModifiedTime((Long) rs.getObject("b_lastmodifieddate"));
 
 				bill.setAuditDetails(auditDetails);
-				
+				bill.setTaxAndPayments(new ArrayList<>());
+
 				billMap.put(bill.getId(), bill);
 			}
 
 			String detailId = rs.getString("bd_id");
 			BillDetail billDetail = billDetailMap.get(detailId);
-				
+
 			if (billDetail == null) {
+
 				billDetail = new BillDetail();
 				billDetail.setId(detailId);
 				billDetail.setTenantId(rs.getString("bd_tenantid"));
@@ -63,19 +67,23 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 				billDetail.setBusinessService(rs.getString("bd_businessservice"));
 				billDetail.setBillNumber(rs.getString("bd_billno"));
 				billDetail.setBillDate(rs.getLong("bd_billdate"));
-					 
+
 				billDetail.setDemandId(rs.getString("demandid"));
 				billDetail.setFromPeriod(rs.getLong("fromperiod"));
 				billDetail.setToPeriod(rs.getLong("toperiod"));
 
+				billDetail.setTotalAmount(rs.getBigDecimal("bd_totalamount"));
+				billDetail.setCollectedAmount(rs.getBigDecimal("bd_collectedamount"));
+				setTaxAndPayments(bill.getTaxAndPayments(), billDetail.getBusinessService(),
+						billDetail.getTotalAmount());
 				billDetail.setConsumerCode(rs.getString("bd_consumercode"));
 				billDetail.setConsumerType(rs.getString("bd_consumertype"));
 				billDetail.setMinimumAmount(rs.getBigDecimal("bd_minimumamount"));
-				billDetail.setTotalAmount(rs.getBigDecimal("bd_totalamount"));
 				billDetail.setPartPaymentAllowed(rs.getBoolean("bd_partpaymentallowed"));
 				billDetail.setIsAdvanceAllowed(rs.getBoolean("bd_isadvanceallowed"));
 				billDetail.setExpiryDate(rs.getLong("bd_expirydate"));
-				billDetail.setCollectionModesNotAllowed(Arrays.asList(rs.getString("bd_collectionmodesnotallowed").split(",")));
+				billDetail.setCollectionModesNotAllowed(
+						Arrays.asList(rs.getString("bd_collectionmodesnotallowed").split(",")));
 
 				Address address = new Address();
 				address.setDoorNo(rs.getString("ptadd_doorno"));
@@ -86,19 +94,18 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 				address.setPincode(rs.getString("ptadd_pincode"));
 				address.setLocality(rs.getString("ptadd_locality"));
 				billDetail.setAddress(address);
-				
+
 				User user = new User();
 				user.setId(rs.getString("ptown_userid"));
 				user.setName(rs.getString("ptown_userid"));
-				
+
 				billDetail.setUser(user);
 
-				
 				billDetailMap.put(billDetail.getId(), billDetail);
 
 				if (bill.getId().equals(billDetail.getBill()))
 					bill.addBillDetailsItem(billDetail);
-				
+
 			}
 
 			BillAccountDetail billAccDetail = new BillAccountDetail();
@@ -117,9 +124,32 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 
 			if (billDetail.getId().equals(billAccDetail.getBillDetail()))
 				billDetail.addBillAccountDetailsItem(billAccDetail);
-			
+
 		}
 		log.debug("converting map to list object ::: " + billMap.values());
 		return new ArrayList<>(billMap.values());
+	}
+
+	private void setTaxAndPayments(List<TaxAndPayment> taxAndPayments, String businessService, BigDecimal totalAmount) {
+
+		if (CollectionUtils.isEmpty(taxAndPayments)) {
+
+			taxAndPayments.add(TaxAndPayment.builder().businessService(businessService).taxAmount(totalAmount).build());
+		} else {
+
+			boolean isServiceNotFound = true;
+
+			for (TaxAndPayment taxPayment : taxAndPayments) {
+
+				if (taxPayment.getBusinessService().equalsIgnoreCase(businessService)) {
+
+					isServiceNotFound = false;
+					taxPayment.setTaxAmount(taxPayment.getTaxAmount().add(totalAmount));
+				}
+			}
+			if (isServiceNotFound)
+				taxAndPayments
+						.add(TaxAndPayment.builder().businessService(businessService).taxAmount(totalAmount).build());
+		}
 	}
 }

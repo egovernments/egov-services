@@ -4,7 +4,7 @@ ReportDefinitions:
     version: 1.0.0
     moduleName: rainmaker-noc
     sourceColumns:
-      - name: usagetype
+      - name: message
         label: reports.noc.collectionreport.usagetype
         type: string
         source: rainmaker-noc
@@ -59,8 +59,8 @@ ReportDefinitions:
         wrapper: true
         isMandatory: false
         searchClause: AND fnoc.tenantId IN ($ulb)
-    query: select usagetype, COUNT(*) as transactionNumber, sum(case when collectiontype='COUNTER' then ins.amount else 0 end) fees_counter, sum(case when collectiontype='ONLINE' then ins.amount else 0 end) fees_online from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid inner join egcl_receiptheader_v1 rhead on rhead.consumercode=fdet.applicationnumber inner join eg_fn_buidlings build on build.firenocdetailsuuid=fdet.uuid inner join egcl_receiptinstrument_v1 recins on recins.receiptheader=rhead.id inner join egcl_instrumentheader_v1 ins on recins.instrumentheader=ins.id
-    groupby: GROUP BY usagetype
+    query: select usagetype, COUNT(*) as transactionNumber, sum(case when collectiontype='COUNTER' then ins.amount else 0 end) fees_counter, sum(case when collectiontype='ONLINE' then ins.amount else 0 end) fees_online from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid inner join egcl_receiptheader_v1 rhead on rhead.consumercode=fdet.applicationnumber inner join eg_fn_buidlings build on build.firenocdetailsuuid=fdet.uuid inner join egcl_receiptinstrument_v1 recins on recins.receiptheader=rhead.id inner join egcl_instrumentheader_v1 ins on recins.instrumentheader=ins.id inner join message on code=concat('FIRENOC_BUILDINGTYPE_',REPLACE(REPLACE(usagetype,'.','_'),'-','_')) and module='rainmaker-noc'
+    groupby: GROUP BY message
 
   - reportName: ApplicationStatusReport
     summary: Application Status Report

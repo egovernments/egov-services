@@ -13,7 +13,7 @@ export default ({ config, db }) => {
     const actions = {
       INITIATED: "INITIATE",
       APPROVED: "APPROVE",
-      SUBMIT:"APPLIED",
+      PENDINGPAYMENT:"APPLY",
       DOCUMENTVERIFY:"PAY",
       FIELDINSPECTION:"FORWARD",
       REJECTED:"REJECT",

@@ -1,15 +1,13 @@
 import { Router } from "express";
 import producer from "../kafka/producer";
-import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
+import { requestInfoToResponseInfo, createWorkFlow} from "../utils";
+import {validateFireNOCModel} from "../model/fireNOC";
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails } from "../utils/create";
 import { calculate } from "../services/firenocCalculatorService";
 const asyncHandler = require("express-async-handler");
-// var ajv = require("ajv")({ removeAdditional: true });
-// var swagger=require("../swagger.json");
-// var Validator = require('swagger-model-validator');
-// var validator = new Validator(swagger);
+
 
 export default ({ config, db }) => {
   let api = Router();
@@ -17,15 +15,12 @@ export default ({ config, db }) => {
     "/_create",
     asyncHandler(async ({ body }, res, next) => {
       let payloads = [];
-      // var isValid = ajv.validate(
-      //   { $ref: "swagger.json#/definitions/FireNOCs" },
-      //   body
-      // );
-      // var validation = swagger.validateModel("FireNOCs", body);
-      // console.log("test",JSON.stringify(validation));
+      //model validator
+      let errors=validateFireNOCModel(body.FireNOCs);
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);
+
       //need to implement notification
       //calculate call
       let { FireNOCs, RequestInfo } = body;

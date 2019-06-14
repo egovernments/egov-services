@@ -31,34 +31,6 @@ export const requestInfoToResponseInfo = (requestinfo, success) => {
   return ResponseInfo;
 };
 
-const transformById = (payload, id) => {
-  return (
-    payload &&
-    payload.reduce((result, item) => {
-      result[item[id]] = item;
-      return result;
-    }, {})
-  );
-};
-
-const getOwnerResponse = async uuids => {
-  let requestBody = {
-    uuid: uuids
-  };
-
-  const response = await httpRequest({
-    hostURL: envVariables.EGOV_USER_HOST,
-    endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
-      envVariables.EGOV_USER_SEARCH_ENDPOINT
-    }`,
-    queryObject: [],
-    requestBody,
-    headers: []
-  });
-
-  return transformById(response.user, "uuid");
-};
-
 export const addIDGenId = async (requestInfo, idRequests) => {
   let requestBody = {
     RequestInfo: requestInfo,

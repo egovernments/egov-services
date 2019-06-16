@@ -6,7 +6,7 @@ import envVariables from "../envVariables";
 import userService from "../services/userService";
 
 let requestInfo = {};
-const status = {
+export const status = {
   "INITIATE":"INITIATED",
   "APPROVE":"APPROVED",
   "APPLY":"PENDINGPAYMENT",
@@ -16,6 +16,18 @@ const status = {
   "REJECT":"REJECTED",
   "APPROVE":"APPROVED",
   "CANCEL":"CANCELED"
+};
+
+
+export const actions = {
+  INITIATED: "INITIATE",
+  APPROVED: "APPROVE",
+  PENDINGPAYMENT: "APPLY",
+  DOCUMENTVERIFY: "PAY",
+  FIELDINSPECTION: "FORWARD",
+  REJECTED: "REJECT",
+  APPROVED: "APPROVE",
+  CANCELED: "CANCEL"
 };
 
 const fireNOCRowMapper =async (row, mapper = {}) => {
@@ -105,7 +117,8 @@ const fireNocOwnersRowMapper = async (row, mapper = []) => {
   } else {
     let user = {};
     if (row.useruuid) user =await searchUser(requestInfo, row.useruuid);
-    mapper.push({ ...user, ...ownerObject });
+    console.info("user",user);
+    mapper.push({ ...ownerObject, ...user });
   }
   return mapper;
 };
@@ -197,6 +210,6 @@ const searchUser = async (requestInfo, uuid) => {
     requestInfo,
     userSearchReqCriteria
   );
-  if (get(userSearchResponse,"user",[]).length>0)
-  return userSearchResponse.user[0];
+  let users=get(userSearchResponse,"user",[]);
+  return users.length?users[0]:{};
 };

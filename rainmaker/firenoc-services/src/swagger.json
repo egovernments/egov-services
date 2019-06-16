@@ -514,7 +514,11 @@
             "$ref": "#/definitions/FireNOC"
           }
         }
-      }
+      },
+      "required": [
+        "RequestInfo",
+        "FireNOCs"
+      ]
     },
     "FireNOCResponse": {
       "description": "Contract class to send response. Array of Fire NOC items are used in case of search results or response for create, whereas single Fire NOC item is used for update",

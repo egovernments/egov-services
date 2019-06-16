@@ -1,0 +1,213 @@
+{
+    "RequestInfo": {
+        "apiId": "Mihy",
+        "ver": ".01",
+        "action": "",
+        "did": "1",
+        "key": "",
+        "msgId": "20170310130900|en_IN",
+        "requesterId": "",
+        "authToken": "93214a80-3e66-4f17-a206-85627cd80802",
+        "userInfo": {
+            "id": 26351,
+            "userName": "NOCCEMP1",
+            "salutation": null,
+            "name": "Dharma",
+            "gender": "MALE",
+            "mobileNumber": "8887776660",
+            "emailId": "asd@123.com",
+            "altContactNumber": null,
+            "pan": null,
+            "aadhaarNumber": null,
+            "permanentAddress": null,
+            "permanentCity": null,
+            "permanentPinCode": null,
+            "correspondenceAddress": "corres add",
+            "correspondenceCity": null,
+            "correspondencePinCode": null,
+            "addresses": [
+                {
+                    "pinCode": null,
+                    "city": null,
+                    "address": "corres add",
+                    "type": "CORRESPONDENCE",
+                    "id": 52494,
+                    "tenantId": "pb.amritsar",
+                    "userId": 26351,
+                    "addressType": "CORRESPONDENCE",
+                    "lastModifiedBy": null,
+                    "lastModifiedDate": null
+                }
+            ],
+            "active": true,
+            "locale": null,
+            "type": "EMPLOYEE",
+            "accountLocked": false,
+            "accountLockedDate": 0,
+            "fatherOrHusbandName": "K",
+            "signature": null,
+            "bloodGroup": null,
+            "photo": null,
+            "identificationMark": null,
+            "createdBy": 24226,
+            "lastModifiedBy": 1,
+            "tenantId": "pb.amritsar",
+            "roles": [
+                {
+                    "code": "EMPLOYEE",
+                    "name": "Employee",
+                    "tenantId": "pb.amritsar"
+                },
+                {
+                    "code": "NOC_CEMP",
+                    "name": "NoC counter employee",
+                    "tenantId": "pb.amritsar"
+                }
+            ],
+            "uuid": "d5cf91f7-27fa-4e9f-b3a5-cd81edc28eed",
+            "createdDate": "06-05-2019 12:09:59",
+            "lastModifiedDate": "06-05-2019 12:30:28",
+            "dob": "28/10/1991",
+            "pwdExpiryDate": "04-08-2019 12:09:59"
+        }
+    },
+    "FireNOCs": [
+        {
+            "fireNOCDetails": {
+                "propertyDetails": {
+                    "address": {
+                        "city": "pb.amritsar",
+                        "locality": {
+                            "code": "SUN04"
+                        }
+                    }
+                },
+                "noOfBuildings": "SINGLE",
+                "fireNOCType": "NEW",
+                "buildings": [
+                    {
+                        "name": "Dsrrh",
+                        "usageTypeMajor": "GROUP_A_RESIDENTIAL",
+                        "usageType": "GROUP_A_RESIDENTIAL.SUBDIVISIONA-1",
+                        "uoms": [
+                            {
+                                "code": "HEIGHT_OF_BUILDING",
+                                "value": 5000,
+                                "isActiveUom": true,
+                                "active": true
+                            },
+                            {
+                                "code": "NO_OF_FLOORS",
+                                "value": 8,
+                                "isActiveUom": false,
+                                "active": true
+                            },
+                            {
+                                "code": "NO_OF_BASEMENTS",
+                                "value": 1,
+                                "isActiveUom": false,
+                                "active": true
+                            },
+                            {
+                                "code": "PLOT_SIZE",
+                                "value": 2000,
+                                "isActiveUom": false,
+                                "active": true
+                            },
+                            {
+                                "code": "BUILTUP_AREA",
+                                "value": 1000,
+                                "isActiveUom": false,
+                                "active": true
+                            }
+                        ],
+                        "applicationDocuments": []
+                    }
+                ],
+                "applicantDetails": {
+                    "ownerShipMajorType": "INDIVIDUAL",
+                    "ownerShipType": "INDIVIDUAL.SINGLEOWNER",
+                    "owners": [
+                        {
+                            "id": 23442,
+                            "userName": "9167765477",
+                            "salutation": null,
+                            "name": "Avijeet",
+                            "gender": "MALE",
+                            "mobileNumber": "9167765477",
+                            "emailId": "avi7@gm.com",
+                            "altContactNumber": null,
+                            "pan": "bnhpp5432k",
+                            "aadhaarNumber": null,
+                            "permanentAddress": "Some correspondance address",
+                            "permanentCity": null,
+                            "permanentPinCode": null,
+                            "correspondenceAddress": "Corresponding address",
+                            "correspondenceCity": null,
+                            "correspondencePinCode": null,
+                            "addresses": [
+                                {
+                                    "pinCode": null,
+                                    "city": null,
+                                    "address": "Corresponding address",
+                                    "type": "CORRESPONDENCE",
+                                    "id": 52741,
+                                    "tenantId": "pb",
+                                    "userId": 23442,
+                                    "addressType": "CORRESPONDENCE",
+                                    "lastModifiedDate": null,
+                                    "lastModifiedBy": null
+                                },
+                                {
+                                    "pinCode": null,
+                                    "city": null,
+                                    "address": "Some correspondance address",
+                                    "type": "PERMANENT",
+                                    "id": 48685,
+                                    "tenantId": "pb",
+                                    "userId": 23442,
+                                    "addressType": "PERMANENT",
+                                    "lastModifiedDate": null,
+                                    "lastModifiedBy": null
+                                }
+                            ],
+                            "active": true,
+                            "locale": null,
+                            "type": "CITIZEN",
+                            "accountLocked": false,
+                            "accountLockedDate": 0,
+                            "fatherOrHusbandName": "A",
+                            "signature": null,
+                            "bloodGroup": null,
+                            "photo": null,
+                            "identificationMark": null,
+                            "createdBy": 0,
+                            "lastModifiedBy": 1,
+                            "tenantId": "pb",
+                            "roles": [
+                                {
+                                    "code": "CITIZEN",
+                                    "name": "Citizen",
+                                    "tenantId": "pb"
+                                }
+                            ],
+                            "uuid": "d9fb76e8-3c65-4e11-9f5f-2998c0f8b8a6",
+                            "createdDate": 1532962200000,
+                            "lastModifiedDate": 1560525480000,
+                            "dob": "1991-06-28",
+                            "pwdExpiryDate": 1541470800000
+                        }
+                    ],
+                    "additionalDetail": {
+                        "documents": []
+                    }
+                },
+                "action": "INITIATE",
+                "additionalDetail": {
+                    "documents": []
+                }
+            },
+            "tenantId": "pb.amritsar"
+        }
+    ]
+}

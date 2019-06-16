@@ -3,6 +3,7 @@ import envVariables from "../envVariables";
 import get from "lodash/get";
 import userService from "../services/userService";
 import isEmpty from "lodash/isEmpty";
+import {status} from "./search";
 
 export const addUUIDAndAuditDetails = async request => {
   let { FireNOCs, RequestInfo } = request;
@@ -83,7 +84,7 @@ export const addUUIDAndAuditDetails = async request => {
         let ownerUUID=get(owners[owneriter],'ownerUUID');
         owners[owneriter] = {
           ...owners[owneriter],
-          ...userCreateResponse.user[0],
+          ...get(userCreateResponse,"user.0",[]),
           ownerUUID:ownerUUID?ownerUUID:uuidv1()
         };
       }
@@ -100,6 +101,7 @@ export const addUUIDAndAuditDetails = async request => {
       ownerAuditionalDetail:
         FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail
     };
+    FireNOCs[i].fireNOCDetails.status=status[FireNOCs[i].fireNOCDetails.action];
   }
   request.FireNOCs = FireNOCs;
   return request;

@@ -39,7 +39,7 @@ const envVariables = {
 
   //workflow service configurations
   EGOV_WORKFLOW_HOST:
-    process.env.EGOV_WORKFLOW_HOST || "https://egov-micro-dev.egovernments.org",
+    process.env.EGOV_WORKFLOW_HOST || "http://localhost:8089",
   // "https://egov-micro-dev.egovernments.org",
   EGOV_WORKFLOW_TRANSITION_ENDPOINT:
     process.env.EGOV_WORKFLOW_TRANSITION_PATH ||
@@ -56,7 +56,7 @@ const envVariables = {
   EGOV_LOCATION_HIERARCHY_TYPE_CODE: process.env.EGOV_LOCATION || "REVENUE",
 
   //user service configurations
-  EGOV_USER_HOST: process.env.EGOV_USER_HOST || "http://localhost:8087",
+  EGOV_USER_HOST: process.env.EGOV_USER_HOST || "http://localhost:8088",
   //"https://egov-micro-dev.egovernments.org",
   EGOV_USER_CONTEXT_PATH: process.env.EGOV_USER_CONTEXT_PATH || "/user",
   EGOV_USER_CREATE_ENDPOINT:

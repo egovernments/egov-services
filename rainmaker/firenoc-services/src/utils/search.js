@@ -101,7 +101,7 @@ const fireNOCRowMapper =async (row, mapper = {}) => {
 };
 
 const fireNocOwnersRowMapper = async (row, mapper = []) => {
-  let ownerIndex = findIndex(mapper, { id: row.ownerid });
+  let ownerIndex = findIndex(mapper, { uuid: row.useruuid });
   let ownerObject = {
     id: row.ownerid,
     userName: row.username,
@@ -117,7 +117,7 @@ const fireNocOwnersRowMapper = async (row, mapper = []) => {
   } else {
     let user = {};
     if (row.useruuid) user =await searchUser(requestInfo, row.useruuid);
-    console.info("user",user);
+    // console.info("user",user);
     mapper.push({ ...ownerObject, ...user });
   }
   return mapper;

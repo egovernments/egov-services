@@ -16,16 +16,22 @@ SearchDefinitions:
       jsonPath: $.searchCriteria.tenantId
     - name: bd.consumercode
       isMandatory: false
-      jsonPath: $.searchCriteria.consumercode
+      jsonPath: $.searchCriteria.consumerCode
     - name: bd.businessservice
       isMandatory: false
-      jsonPath: $.searchCriteria.businessservice
+      jsonPath: $.searchCriteria.businesService
     - name: b.mobilenumber
       isMandatory: false
-      jsonPath: $.searchCriteria.mobilenumber
+      jsonPath: $.searchCriteria.mobileNumber
     - name: bd.billno
       isMandatory: false
-      jsonPath: $.searchCriteria.billno
+      jsonPath: $.searchCriteria.billNo
+    - name: ptadd.locality
+      isMandatory: false
+      jsonPath: $.searchCriteria.locality
+    - name: ptdet.financialyear
+      isMandatory: true
+      jsonPath: $.searchCriteria.financialYear
 
    output:
     jsonFormat: {"ResponseInfo": {},"Bills": []}

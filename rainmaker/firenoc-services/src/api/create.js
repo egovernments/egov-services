@@ -6,6 +6,7 @@ import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails } from "../utils/create";
 import { calculate } from "../services/firenocCalculatorService";
+import {validateModel} from "../utils/modelValidation";
 const asyncHandler = require("express-async-handler");
 
 
@@ -16,7 +17,15 @@ export default ({ config, db }) => {
     asyncHandler(async ({ body }, res, next) => {
       let payloads = [];
       //model validator
-      // let errors=validateFireNOCModel(body.FireNOCs);
+      let errors=validateModel(body);
+      if (errors.length>0) {
+        next({errorType:"custom",errorReponse:{
+          ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
+          Errors: errors
+        }})
+      }
+
+      //getting mdms data
       let mdms = await mdmsData(body.RequestInfo);
       // console.log(JSON.stringify(mdms));
       body = await addUUIDAndAuditDetails(body);

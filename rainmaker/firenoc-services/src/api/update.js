@@ -8,13 +8,23 @@ import { getApprovedList } from "../utils/update";
 import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import { calculate } from "../services/firenocCalculatorService";
 import cloneDeep from "lodash/cloneDeep";
+import {validateModel} from "../utils/modelValidation";
+
 
 export default ({ config, db }) => {
   let api = Router();
   api.post(
     "/_update",
-    asyncHandler(async ({ body }, res) => {
+    asyncHandler(async ({ body }, res,next) => {
       let payloads = [];
+      //model validator
+      let errors=validateModel(body);
+      if (errors.length>0) {
+        next({errorType:"custom",errorReponse:{
+          ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
+          Errors: errors
+        }})
+      }
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);

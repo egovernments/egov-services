@@ -1,12 +1,13 @@
 const Ajv = require("Ajv");
 const ajv = new Ajv({ allErrors:true });
-const schema = require("../src/model/fireNOC");
-console.log(schema);
+const schema = require("../src/model/fireNOC.js");
+// console.log(schema);
 // const axios = require("axios");
 
 const data = require("./fireNOCRequest.json");
+// console.log(data);
 
-ajv.addSchema(schema, "swagger.json");
+// ajv.addSchema(schema, "swagger.json");
 
 // ajv
 //   .compileAsync({ $ref: "swagger.json#/definitions/FireNOCRequest" })
@@ -29,7 +30,9 @@ ajv.addSchema(schema, "swagger.json");
 
 let validate=ajv.compile(schema);
 
-if (validate(data)) console.log(validate.errors);
+var valid = validate(data);
+
+if (!valid) console.log(validate.errors);
 
 
-console.log('test');
+// console.log('test');

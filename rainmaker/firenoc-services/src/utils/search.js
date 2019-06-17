@@ -18,7 +18,6 @@ export const status = {
   "CANCEL":"CANCELED"
 };
 
-
 export const actions = {
   INITIATED: "INITIATE",
   APPROVED: "APPROVE",
@@ -115,7 +114,7 @@ const fireNocOwnersRowMapper = async (row, mapper = []) => {
   if (ownerIndex != -1) {
     mapper[ownerIndex] = {
       ...ownerObject,
-      ...mapper[ownerIndex]  
+      ...mapper[ownerIndex]
     };
   } else {
     let user = {};

@@ -73,17 +73,12 @@ app.use("/", api({ config, db }));
 //error handler middleware
 app.use((err, req, res, next) =>{
 
-  // "Errors": [
-  //       {
-  //           "code": "NotNull.processInstanceRequest.processInstances[0].tenantId",
-  //           "message": "may not be null",
-  //           "description": null,
-  //           "params": null
-  //       }
-  //   ]
   console.log(err);
   if (!err.errorType) {
     res.status(err.status).json(err.data);
+  }
+  else if (err.errorType=="custom") {
+    res.status(400).json(err.errorReponse);
   }
   else {
     res.status(500);

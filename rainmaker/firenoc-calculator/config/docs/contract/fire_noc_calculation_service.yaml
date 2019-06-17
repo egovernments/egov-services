@@ -181,26 +181,18 @@ definitions:
       applicationNumber:
         type: string
         description: Fire NOC application number.
-      totalAmount:
-        type: number
-        format: double
-        description: Total payable tax amount.
-      penalty:
-        type: number
-        format: double
-        description: Total Penality if applicable.
-      exemption:
-        type: number
-        format: double
-        description: Total Exemption amount if applicable.
-      rebate:
-        type: number
-        format: double
-        description: Total Rebate amount if applicable.
+      fireNoc:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/noc/rainmaker/firenoc-services/docs/contract/fire_noc_contract.yaml#/definitions/FireNOC"
       tenantId:
         type: string
         minLength: 2
         maxLength: 256
+      taxHeadEstimates:
+        type: array
+        items:
+          $ref: "#/definitions/taxHeadEstimate"
+
+        description: Total Exemption amount if applicable.
   BillingSlab:
     type: object
     properties:
@@ -332,3 +324,16 @@ definitions:
         type: integer
         format: int64
         description: Epoch Date on which the user master data was last modified.
+  taxHeadEstimate:
+    type: object
+    properties:
+      category:
+        type: string
+        description: Category of taxhead
+      taxHeadCode:
+        type: string
+        description: Taxhead code from billing service for estimate
+      setimateAmount:
+        type: number
+        format: double
+        description: Calculated amount for taxhead

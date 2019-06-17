@@ -59,6 +59,7 @@ const envVariables = {
   // KAFKA SERVER CONFIGURATIONS
   KAFKA_BOOTSTRAP_SERVER:
     process.env.KAFKA_BOOTSTRAP_SERVER || "localhost:9092",
+  KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092",
 
   // KAFKA TOPIC CONFIGURATIONS
   KAFKA_TOPICS_SAVE_SERVICE:
@@ -71,7 +72,7 @@ const envVariables = {
   TRACER_ENABLE_REQUEST_LOGGING:
     process.env.TRACER_ENABLE_REQUEST_LOGGING || false,
   HTTP_CLIENT_DETAILED_LOGGING_ENABLED:
-    process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED || false
+    process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED || true
 };
 
 export default envVariables;

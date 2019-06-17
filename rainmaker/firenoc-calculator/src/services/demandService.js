@@ -97,17 +97,32 @@ const updateDemand = async (
     let consumerCode = calculation.applicationNumber;
     let fireNOC = calculation.fireNOC;
     let demand = demandMap[consumerCode];
-    demand.demandDetails = [];
+    let demandDetailsMap = {};
+    demand.demandDetails.map(demandDetail => {
+      demandDetailsMap = {
+        ...demandDetailsMap,
+        [demandDetail.taxHeadMasterCode]: demandDetail
+      };
+    });
 
     calculation.taxHeadEstimates.map(taxHeadEstimate => {
-      let demandDetail = {
-        taxHeadMasterCode: taxHeadEstimate.taxHeadCode,
-        taxAmount: taxHeadEstimate.estimateAmount,
-        collectionAmount: 0,
-        tenantId
-      };
-      demand.demandDetails.push(demandDetail);
+      if (demandDetailsMap.hasOwnProperty(taxHeadEstimate.taxHeadCode)) {
+        demandDetailsMap[[taxHeadEstimate.taxHeadCode]].taxAmount =
+          taxHeadEstimate.estimateAmount;
+      } else {
+        let demandDetail = {
+          taxHeadMasterCode: taxHeadEstimate.taxHeadCode,
+          taxAmount: taxHeadEstimate.estimateAmount,
+          collectionAmount: 0,
+          tenantId
+        };
+        demandDetailsMap = {
+          ...demandDetailsMap,
+          [demandDetail.taxHeadMasterCode]: demandDetail
+        };
+      }
     });
+    demand.demandDetails = Object.values(demandDetailsMap);
     demands.push(demand);
   });
 

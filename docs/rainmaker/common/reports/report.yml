@@ -87,7 +87,7 @@ ReportDefinitions:
       - name: service
         label: reports.common.CollectionRegister.service
         type: multivaluelist
-        pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=BillingService&masterName=BusinessService|$.MdmsRes.BillingService.BusinessService.*.code|$.MdmsRes.BillingService.BusinessService.*.businessService&filter=[?(@.type=='Adhoc')]
+        pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=BillingService&masterName=BusinessService&filter=[?(@.type=='Adhoc')]|$.MdmsRes.BillingService.BusinessService.*.code|$.MdmsRes.BillingService.BusinessService.*.businessService
         source: common
         wrapper: true
         state: true

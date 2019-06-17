@@ -104,7 +104,6 @@ const updateDemand = async (
         [demandDetail.taxHeadMasterCode]: demandDetail
       };
     });
-
     calculation.taxHeadEstimates.map(taxHeadEstimate => {
       if (demandDetailsMap.hasOwnProperty(taxHeadEstimate.taxHeadCode)) {
         demandDetailsMap[[taxHeadEstimate.taxHeadCode]].taxAmount =

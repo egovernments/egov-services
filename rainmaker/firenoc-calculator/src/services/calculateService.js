@@ -4,6 +4,7 @@ import { searchService } from "../controller/search";
 import { generateDemand } from "./demandService";
 import { getFireNoc } from "./firenocService";
 import isEmpty from "lodash/isEmpty";
+import envVariables from "../envVariables";
 
 export const calculateService = async (req, pool) => {
   let calculalteResponse = {};
@@ -90,12 +91,8 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
     const adhocRebateEstimate = calculateAdhocRebate(calculateCriteria);
     calculation.taxHeadEstimates.push(adhocRebateEstimate);
   }
-  //   const taxEstimate = await calculateTaxes(
-  //     calculateCriteria,
-  //     config,
-  //     calculation
-  //   );
-  //   calculation.taxHeadEstimates.push(taxEstimate);
+  const taxEstimate = calculateTaxes(config, calculation);
+  calculation.taxHeadEstimates.push(taxEstimate);
 
   return calculation;
 };
@@ -193,4 +190,18 @@ const calculateAdhocRebate = calculateCriteria => {
   return adhocRebateEstimate;
 };
 
-const calculateTaxes = (calculateCriteria, config, calculations) => {};
+const calculateTaxes = (config, calculation) => {
+  let taxableAmount = 0;
+  calculation.taxHeadEstimates.map(taxHeadEstimate => {
+    if (envVariables.TAXABLE_TAXHEADS.includes(taxHeadEstimate.taxHeadCode)) {
+      taxableAmount += taxHeadEstimate.estimateAmount;
+    }
+  });
+  let taxAmount = (taxableAmount * config.TAX_PERCENTAGE) / 100;
+  const taxEstimate = {
+    category: "TAX",
+    taxHeadCode: "FIRENOC_TAXES",
+    estimateAmount: taxAmount
+  };
+  return taxEstimate;
+};

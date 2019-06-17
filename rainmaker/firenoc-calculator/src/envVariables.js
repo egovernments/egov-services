@@ -49,6 +49,7 @@ const envVariables = {
     "/billing-service/demand/_search",
   EGOV_BILL_GEN_ENDPOINT:
     process.env.EGOV_BILL_GEN_ENDPOINT || "/billing-service/bill/_generate",
+  TAXABLE_TAXHEADS: process.env.TAXABLE_TAXHEADS || ["FIRENOC_FEES"],
 
   EGOV_DEMAND_MINIMUM_PAY_AMOUNT:
     process.env.EGOV_DEMAND_MINIMUM_PAY_AMOUNT || 100,

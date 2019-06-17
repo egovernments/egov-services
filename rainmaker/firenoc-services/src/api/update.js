@@ -4,8 +4,10 @@ import envVariables from "../envVariables";
 const asyncHandler = require("express-async-handler");
 import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails } from "../utils/create";
+import { getApprovedList } from "../utils/update";
 import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import { calculate } from "../services/firenocCalculatorService";
+import cloneDeep from "lodash/cloneDeep";
 
 export default ({ config, db }) => {
   let api = Router();
@@ -16,16 +18,29 @@ export default ({ config, db }) => {
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);
+      //Check records for approved
+      let approvedList=await getApprovedList(cloneDeep(body));
+
       //calculate call
       let { FireNOCs, RequestInfo } = body;
       for (var i = 0; i < FireNOCs.length; i++) {
         let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       }
 
+
+
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_UPDATE,
         messages: JSON.stringify(body)
       });
+
+      //check approved list
+      if (approvedList.FireNOCs.length>0) {
+        payloads.push({
+          topic: envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW,
+          messages: JSON.stringify(approvedList)
+        });
+      }
       // console.log(JSON.stringify(body));
       producer.send(payloads, function(err, data) {
         let response = {

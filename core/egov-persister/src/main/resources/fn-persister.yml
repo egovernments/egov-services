@@ -559,7 +559,7 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.id
 
 
-       - query: UPDATE eg_fn_fireNOCDetails SET validFrom=?,validTo=?,issueddate = ?, action = ?, status = ?,  additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
+       - query: UPDATE eg_fn_firenocdetail SET validFrom=?,validTo=?,issueddate = ?, action = ?,   additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
 
@@ -570,8 +570,6 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.issuedDate
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.action
-
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.status
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.additionalDetail
             type: JSON

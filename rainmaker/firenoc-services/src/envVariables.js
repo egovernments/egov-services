@@ -74,7 +74,7 @@ const envVariables = {
   EGOV_IDGEN_GENERATE_ENPOINT:
     process.env.EGOV_IDGEN_GENERATE_ENPOINT || "/id/_generate",
   EGOV_IDGEN_FN_APPLICATION_NO_NAME:
-    process.env.EGOV_IDGEN_FN_APPLICATION_NO_NAME || "fn.applicationNumber",
+    process.env.EGOV_IDGEN_FN_APPLICATION_NO_NAME || "fn.fireNOCDetails.applicationNumber",
   EGOV_IDGEN_FN_CERTIFICATE_NO_NAME:
     process.env.EGOV_IDGEN_FN_CERTIFICATE_NO_NAME || "fn.fireNOCNumber",
   EGOV_APPLICATION_FORMATE:

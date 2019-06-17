@@ -18,7 +18,7 @@ export default ({ config, db }) => {
       //model validator
       // let errors=validateFireNOCModel(body.FireNOCs);
       let mdms = await mdmsData(body.RequestInfo);
-      console.log(JSON.stringify(mdms));
+      // console.log(JSON.stringify(mdms));
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);
 

@@ -3,6 +3,11 @@ ReportDefinitions:
     summary: Collection Register
     version: 1.0.0
     moduleName: rainmaker-common
+    externalService:
+    - entity: $.MdmsRes.BillingService.BusinessService[*] 
+      apiURL: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?tenantId=pb&moduleName=BillingService&masterName=BusinessService
+      keyOrder: code,businessService
+      tableName: tbl_businessserviceList
     sourceColumns:
       - name: service
         label: reports.common.CollectionRegister.serviceResult
@@ -115,5 +120,5 @@ ReportDefinitions:
         isMandatory: true
         searchClause: AND receiptdate <= $toDate
 
-    query: select message service,collectiontype channel,sum(case when instrumenttype='Cash' then 1 else 0 end) as cash_count, sum(case when instrumenttype='Cash' then ins.amount else 0 end) as cash_sum, sum(case when instrumenttype='Cheque' then 1 else 0 end) as cheque_count, sum(case when instrumenttype='Cheque' then ins.amount else 0 end) as cheque_sum, sum(case when instrumenttype='DD' then 1 else 0 end) as dd_count, sum(case when instrumenttype='DD' then ins.amount else 0 end) as dd_sum, sum(case when instrumenttype='Online' then 1 else 0 end) as online_count, sum(case when instrumenttype='Online' then ins.amount else 0 end) as online_sum, sum(case when instrumenttype='Card' then 1 else 0 end) as card_count, sum(case when instrumenttype='Card' then amount else 0 end) as card_sum,sum(amount) total from egcl_receiptheader_v1 rt inner join egcl_receiptinstrument_v1 ihead on rt.id=receiptheader inner join egcl_instrumentheader_v1 ins on instrumentheader=ins.id inner join message on LOWER(businessdetails)= LOWER(regexp_replace(SUBSTRING(code,concat(SPLIT_PART(code, '_', 3),'.*')),'_','.')) and code like 'BILLINGSERVICE_BUSINESSSERVICE%' and module='rainmaker-uc'
-    groupby: group by message,collectiontype
+    query: select servicename service,collectiontype channel,sum(case when instrumenttype='Cash' then 1 else 0 end) as cash_count, sum(case when instrumenttype='Cash' then ins.amount else 0 end) as cash_sum, sum(case when instrumenttype='Cheque' then 1 else 0 end) as cheque_count, sum(case when instrumenttype='Cheque' then ins.amount else 0 end) as cheque_sum, sum(case when instrumenttype='DD' then 1 else 0 end) as dd_count, sum(case when instrumenttype='DD' then ins.amount else 0 end) as dd_sum, sum(case when instrumenttype='Online' then 1 else 0 end) as online_count, sum(case when instrumenttype='Online' then ins.amount else 0 end) as online_sum, sum(case when instrumenttype='Card' then 1 else 0 end) as card_count, sum(case when instrumenttype='Card' then amount else 0 end) as card_sum,sum(amount) total from egcl_receiptheader_v1 rt inner join egcl_receiptinstrument_v1 ihead on rt.id=receiptheader inner join egcl_instrumentheader_v1 ins on instrumentheader=ins.id inner join (VALUES tbl_businessserviceList) AS serv_list(code,servicename) on serv_list.code=businessdetails
+    groupby: group by service,collectiontype

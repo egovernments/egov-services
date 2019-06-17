@@ -4,13 +4,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mseva.service.MDMSService;
+import org.egov.mseva.service.MsevaService;
 import org.egov.mseva.utils.ErrorConstants;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventRequest;
+import org.egov.mseva.web.contract.EventSearchCriteria;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class MsevaValidator {
 	
 	@Autowired
 	private MDMSService mdmsService;
+	
+	@Autowired
+	private MsevaService service;
 	
 	public void validateCreateEvent(EventRequest request) {
 		log.info("Validating the request......");
@@ -39,9 +45,41 @@ public class MsevaValidator {
 	}
 	
 	public void validateUpdateEvent(EventRequest request) {
+		Map<String, String> errorMap = new HashMap<>();
+		checkIfEventsExist(request, errorMap);
 		validateCreateEvent(request);
 	}
 	
+	public void validateSearch(RequestInfo requestInfo, EventSearchCriteria criteria) {
+		Map<String, String> errorMap = new HashMap<>();
+		validateRI(requestInfo, errorMap);
+		if(null != criteria) {
+			if(criteria.isEmpty(criteria)) {
+				errorMap.put(ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_CODE, ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_MSG);
+			}
+		}else {
+			errorMap.put(ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_CODE, ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_MSG);
+		}
+		
+		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+			throw new CustomException(errorMap);
+		}
+	}
+	
+	
+	private void checkIfEventsExist(EventRequest request, Map<String, String> errorMap) {
+		EventSearchCriteria criteria = new EventSearchCriteria();
+		List<String> ids = request.getEvents().stream().map(Event :: getId).collect(Collectors.toList());
+		criteria.setIds(ids);
+		List<Event> responseFromDB = service.searchEvents(request.getRequestInfo(), criteria).getEvents();
+		if(responseFromDB.size() != request.getEvents().size()) {
+			errorMap.put(ErrorConstants.MEN_UPDATE_MISSING_EVENTS_CODE, ErrorConstants.MEN_UPDATE_MISSING_EVENTS_MSG);
+		}
+		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
+			throw new CustomException(errorMap);
+		}
+		
+	}
 	private void validateRI(RequestInfo requestInfo, Map<String, String> errorMap) {
 		if(null != requestInfo) {
 			if ((null == requestInfo.getUserInfo().getId()) || 

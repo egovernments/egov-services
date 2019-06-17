@@ -1,4 +1,4 @@
-package org.egov.mseva.repository;
+package org.egov.mseva.repository.querybuilder;
 
 import java.util.Map;
 
@@ -14,9 +14,28 @@ public class MsevaEventsQueryBuilder {
 	
 	public static final String EVENT_INNER_SEARCH_QUERY = "id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE ";
 	
+	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT COUNT(*) FROM eg_men_events WHERE id IN "
+			+ "(SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepients IN (:recepients)) AND "
+			+ "lastmodifiedtime > (SELECT lastlogintime FROM eg_men_user_llt WHERE userid IN (:userid))";
+	
 	public String getSearchQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
 		String query = EVENT_SEARCH_QUERY;
 		return addWhereClause(query, criteria, preparedStatementValues);
+	}
+	
+	public String getCountQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
+		String query = COUNT_OF_NOTIFICATION_QUERY;
+		return addWhereClauseForCountQuery(query, criteria, preparedStatementValues);
+	}
+	
+	private String addWhereClauseForCountQuery(String query, EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append(query);
+		preparedStatementValues.put("recepients", criteria.getRecepients());
+		preparedStatementValues.put("userid", criteria.getUserids());
+		
+		return queryBuilder.toString();
+
 	}
 	
 	private String addWhereClause(String query, EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {

@@ -1,4 +1,4 @@
-package org.egov.mseva.repository;
+package org.egov.mseva.repository.rowmappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

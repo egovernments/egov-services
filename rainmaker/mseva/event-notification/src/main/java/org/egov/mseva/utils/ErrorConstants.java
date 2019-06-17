@@ -29,4 +29,10 @@ public class ErrorConstants {
 	public static final String MEN_INVALID_EVENTTYPE_CODE = "MEN_INVALID_EVENTTYPE";
 	public static final String MEN_INVALID_EVENTTYPE_MSG = "The provided eventType is not valid.";
 	
+	public static final String MEN_UPDATE_MISSING_EVENTS_CODE = "MEN_UPDATE_MISSING_EVENTS";
+	public static final String MEN_UPDATE_MISSING_EVENTS_MSG = "The events you're trying update are missing in the system.";
+	
+	public static final String MEN_INVALID_SEARCH_CRITERIA_CODE = "MEN_INVALID_SEARCH_CRITERIA";
+	public static final String MEN_INVALID_SEARCH_CRITERIA_MSG = "Atleast one of the parameters is mandatory for searching events.";
+	
 }

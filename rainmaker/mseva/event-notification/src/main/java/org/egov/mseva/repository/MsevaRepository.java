@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.mseva.repository.querybuilder.MsevaEventsQueryBuilder;
+import org.egov.mseva.repository.rowmappers.MsevaEventRowMapper;
+import org.egov.mseva.repository.rowmappers.NotificationCountRowMapper;
+import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import org.egov.mseva.web.contract.Event;
-
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +25,9 @@ public class MsevaRepository {
 	
 	@Autowired
 	private MsevaEventRowMapper rowMapper;
+	
+	@Autowired
+	private NotificationCountRowMapper countRowMapper;
 	
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -41,5 +45,19 @@ public class MsevaRepository {
 		
 		return events;
 	}
+	
+	public Long fetchCount(EventSearchCriteria criteria){
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = queryBuilder.getCountQuery(criteria, preparedStatementValues);
+		Long count = 0L;
+		try {
+			count = namedParameterJdbcTemplate.query(query, preparedStatementValues, countRowMapper);
+		}catch(Exception e) {
+			log.error("Error while fetching count from db: ", e);
+		}
+		return count;
+	}
+	
+	
 
 }

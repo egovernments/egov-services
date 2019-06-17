@@ -60,6 +60,7 @@ import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventRequest;
 import org.egov.mseva.web.contract.EventResponse;
 import org.egov.mseva.web.contract.EventSearchCriteria;
+import org.egov.mseva.web.contract.NotificationCountResponse;
 import org.egov.mseva.web.validator.MsevaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +102,7 @@ public class MsevaService {
 	
 	public EventResponse updateEvents(EventRequest request) {
 		validator.validateUpdateEvent(request);
-		log.info("enriching and storing the event......");
+		log.info("enriching and updating the event......");
 		enrichUpdateEvent(request);
 		producer.push(properties.getUpdateEventsTopic(), request);
 		
@@ -111,12 +112,24 @@ public class MsevaService {
 	}
 	
 	public EventResponse searchEvents(RequestInfo requestInfo, EventSearchCriteria criteria) {
+		validator.validateSearch(requestInfo, criteria);
+		log.info("Searching events......");
 		enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
 		
 		return EventResponse.builder()
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();
+	}
+	
+	public NotificationCountResponse fetchCount(RequestInfo requestInfo, EventSearchCriteria criteria) {
+		validator.validateSearch(requestInfo, criteria);
+		enrichSearchCriteria(requestInfo, criteria);
+		Long count = repository.fetchCount(criteria);
+		
+		return NotificationCountResponse.builder()
+				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
+				.count(count).build();
 	}
 	
 	private void enrichCreateEvent(EventRequest request) {
@@ -127,7 +140,10 @@ public class MsevaService {
 			event.getActions().setEventId(event.getId());
 			manageRecepients(event, recepientEventMap);
 			AuditDetails auditDetails = AuditDetails.builder().createdBy(request.getRequestInfo().getUserInfo().getUuid())
-					.createdTime(new Date().getTime()).build();
+					.createdTime(new Date().getTime())
+					.lastModifiedBy(request.getRequestInfo().getUserInfo().getUuid())
+					.lastModifiedTime(new Date().getTime())
+					.build();
 			
 			event.setAuditDetails(auditDetails);
 
@@ -170,9 +186,8 @@ public class MsevaService {
 		List<String> recepients = new ArrayList<>();
 		criteria.getUserids().forEach( user -> recepients.add(user));
 		criteria.getRoles().forEach(role -> {
-			String recepient = role + "." + criteria.getTenantId();
 			recepients.add(role + ".*");
-			recepients.add(recepient);
+			recepients.add(role + "." + criteria.getTenantId());
 		});
 		recepients.add("*."+criteria.getTenantId());
 		recepients.add("All");

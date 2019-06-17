@@ -48,6 +48,7 @@ import org.egov.mseva.service.MsevaService;
 import org.egov.mseva.web.contract.EventRequest;
 import org.egov.mseva.web.contract.EventResponse;
 import org.egov.mseva.web.contract.EventSearchCriteria;
+import org.egov.mseva.web.contract.NotificationCountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,7 +111,24 @@ public class EventsController {
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid EventSearchCriteria eventSearchCriteria) {
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		EventResponse response = service.searchEvents(requestInfoWrapper.getRequestInfo(), eventSearchCriteria);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+	
+	/**
+	 * Endpoint to get count of notifications for a user in the system.
+	 * 
+	 * @param topic
+	 * @param indexJson
+	 * @return
+	 */
+	@PostMapping("/notifications/_count")
+	@ResponseBody
+	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid EventSearchCriteria eventSearchCriteria) {
+		NotificationCountResponse response = service.fetchCount(requestInfoWrapper.getRequestInfo(), eventSearchCriteria);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
 	

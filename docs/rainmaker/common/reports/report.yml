@@ -5,7 +5,7 @@ ReportDefinitions:
     moduleName: rainmaker-common
     externalService:
     - entity: $.MdmsRes.BillingService.BusinessService[*] 
-      apiURL: https://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?tenantId=pb&moduleName=BillingService&masterName=BusinessService
+      apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=pb&moduleName=BillingService&masterName=BusinessService
       keyOrder: code,businessService
       tableName: tbl_businessserviceList
     sourceColumns:

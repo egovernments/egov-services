@@ -41,7 +41,7 @@ const popolateSearchResponse = result => {
     billingSlab.fireNOCType = rowData.firenoctype;
     billingSlab.buildingUsageType = rowData.buildingusagetype;
     billingSlab.calculationType = rowData.calculationtype;
-    billingSlab.rate = rowData.rate;
+    billingSlab.rate = Number(rowData.rate);
     billingSlab.uom = rowData.uom;
     billingSlab.fromUom = rowData.fromuom;
     billingSlab.toUom = rowData.touom;
@@ -49,9 +49,11 @@ const popolateSearchResponse = result => {
     billingSlab.toDate = rowData.todate;
     billingSlab.auditDetails = {};
     billingSlab.auditDetails.createdBy = rowData.createdby;
-    billingSlab.auditDetails.createdDate = rowData.createddate;
+    billingSlab.auditDetails.createdDate = Number(rowData.createddate);
     billingSlab.auditDetails.lastModifiedBy = rowData.lastmodifiedby;
-    billingSlab.auditDetails.lastModifiedDate = rowData.lastmodifieddate;
+    billingSlab.auditDetails.lastModifiedDate = Number(
+      rowData.lastmodifieddate
+    );
     BillingSlabs.push(billingSlab);
   });
   return BillingSlabs;

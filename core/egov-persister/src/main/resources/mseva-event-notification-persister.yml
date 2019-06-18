@@ -55,7 +55,7 @@ serviceMaps:
 
       - jsonPath: $.events.*.recepientEventMap.*.recepient
 
-      - jsonPath: $.events.*.recepientEventMap.*.eventid
+      - jsonPath: $.events.*.recepientEventMap.*.eventId
       
       
       

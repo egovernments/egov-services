@@ -36,6 +36,7 @@ public class MsevaRepository {
 	public List<Event> fetchEvents(EventSearchCriteria criteria){
 		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String query = queryBuilder.getSearchQuery(criteria, preparedStatementValues);
+		log.info("Query: "+query);
 		List<Event> events = new ArrayList<>();
 		try {
 			events = namedParameterJdbcTemplate.query(query, preparedStatementValues, rowMapper);
@@ -49,6 +50,7 @@ public class MsevaRepository {
 	public Long fetchCount(EventSearchCriteria criteria){
 		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String query = queryBuilder.getCountQuery(criteria, preparedStatementValues);
+		log.info("Query: "+query);
 		Long count = 0L;
 		try {
 			count = namedParameterJdbcTemplate.query(query, preparedStatementValues, countRowMapper);

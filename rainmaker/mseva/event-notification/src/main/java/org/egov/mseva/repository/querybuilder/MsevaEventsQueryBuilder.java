@@ -15,7 +15,7 @@ public class MsevaEventsQueryBuilder {
 	public static final String EVENT_INNER_SEARCH_QUERY = "id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE ";
 	
 	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT COUNT(*) FROM eg_men_events WHERE id IN "
-			+ "(SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepients IN (:recepients)) AND "
+			+ "(SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
 			+ "lastmodifiedtime > (SELECT lastlogintime FROM eg_men_user_llt WHERE userid IN (:userid))";
 	
 	public String getSearchQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {

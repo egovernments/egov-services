@@ -60,7 +60,6 @@ public class Event {
 		
 	private AuditDetails auditDetails;
 	
-	@JsonIgnore
 	private List<RecepientEvent> recepientEventMap;
 
 }

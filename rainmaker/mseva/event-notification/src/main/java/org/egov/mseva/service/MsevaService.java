@@ -215,6 +215,8 @@ public class MsevaService {
 		}
 		if(!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles()))
 			buildRecepientListForSearch(criteria);
+		
+		log.info("recepeients: "+criteria.getRecepients());
 	}
 	
 	
@@ -231,6 +233,8 @@ public class MsevaService {
 			recepients.add("*|"+criteria.getTenantId());
 			recepients.add("All");
 		}
+		
+		criteria.setRecepients(recepients);
 	}
 	
 	

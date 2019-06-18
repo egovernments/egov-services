@@ -1,4 +1,4 @@
-const Ajv = require("Ajv");
+const Ajv = require("ajv");
 const ajv = new Ajv({ allErrors: true });
 const schema = require("../model/fireNOC.js");
 

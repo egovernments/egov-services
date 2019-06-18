@@ -50,9 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mseva.config.PropertiesManager;
 import org.egov.mseva.model.AuditDetails;
+import org.egov.mseva.model.LastLoginDetails;
+import org.egov.mseva.model.RecepientEvent;
+import org.egov.mseva.model.lltWrapper;
 import org.egov.mseva.producer.MsevaEventsProducer;
 import org.egov.mseva.repository.MsevaRepository;
 import org.egov.mseva.utils.ResponseInfoFactory;
@@ -117,6 +121,12 @@ public class MsevaService {
 		enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
 		
+		LastLoginDetails loginDetails = LastLoginDetails.builder()
+				.userId(requestInfo.getUserInfo().getUuid()).lastLoginTime(new Date().getTime()).build();
+		lltWrapper wrapper = lltWrapper.builder().lastLoginDetails(loginDetails).build();
+		producer.push(properties.getLltDetailsTopic(), wrapper);
+		
+		
 		return EventResponse.builder()
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();
@@ -133,12 +143,21 @@ public class MsevaService {
 	}
 	
 	private void enrichCreateEvent(EventRequest request) {
-		Map<String, String> recepientEventMap = new HashMap<>();
 		request.getEvents().forEach(event -> {
-			event.setId(UUID.randomUUID().toString());
-			event.getActions().setId(UUID.randomUUID().toString());
-			event.getActions().setEventId(event.getId());
-			manageRecepients(event, recepientEventMap);
+			if(null != event.getActions()) {
+				event.setId(UUID.randomUUID().toString());
+				event.getActions().setId(UUID.randomUUID().toString());
+				event.getActions().setEventId(event.getId());
+				event.getActions().setTenantId(event.getTenantId());
+			}
+			if(null != event.getEventDetails()) {
+				event.getEventDetails().setId(UUID.randomUUID().toString());
+				event.getEventDetails().setEventId(event.getId());
+			}
+			List<RecepientEvent> recepientEventList = new ArrayList<>();
+			manageRecepients(event, recepientEventList);
+			event.setRecepientEventMap(recepientEventList);
+			
 			AuditDetails auditDetails = AuditDetails.builder().createdBy(request.getRequestInfo().getUserInfo().getUuid())
 					.createdTime(new Date().getTime())
 					.lastModifiedBy(request.getRequestInfo().getUserInfo().getUuid())
@@ -151,9 +170,25 @@ public class MsevaService {
 	}
 	
 	private void enrichUpdateEvent(EventRequest request) {
-		Map<String, String> recepientEventMap = new HashMap<>();
-		request.getEvents().forEach(event -> {			
-			manageRecepients(event, recepientEventMap);
+		request.getEvents().forEach(event -> {	
+			if(null != event.getActions()) {
+				if(StringUtils.isEmpty(event.getActions().getId())) {
+					event.setId(UUID.randomUUID().toString());
+					event.getActions().setId(UUID.randomUUID().toString());
+					event.getActions().setEventId(event.getId());
+					event.getActions().setTenantId(event.getTenantId());
+				}
+			}
+			if(null != event.getEventDetails()) {
+				if(StringUtils.isEmpty(event.getEventDetails().getId())) {
+					event.getEventDetails().setId(UUID.randomUUID().toString());
+					event.getEventDetails().setEventId(event.getId());
+				}
+			}
+			List<RecepientEvent> recepientEventList = new ArrayList<>();
+			manageRecepients(event, recepientEventList);
+			event.setRecepientEventMap(recepientEventList);
+			
 			AuditDetails auditDetails = event.getAuditDetails();
 			auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
 			auditDetails.setLastModifiedTime(new Date().getTime());
@@ -178,33 +213,44 @@ public class MsevaService {
 			criteria.setUserids(userIds); criteria.setRoles(roles); 
 			criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 		}
-		buildRecepientList(criteria);
+		if(!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles()))
+			buildRecepientListForSearch(criteria);
 	}
 	
 	
-	private void buildRecepientList(EventSearchCriteria criteria) {
+	private void buildRecepientListForSearch(EventSearchCriteria criteria) {
 		List<String> recepients = new ArrayList<>();
-		criteria.getUserids().forEach( user -> recepients.add(user));
-		criteria.getRoles().forEach(role -> {
-			recepients.add(role + ".*");
-			recepients.add(role + "." + criteria.getTenantId());
-		});
-		recepients.add("*."+criteria.getTenantId());
-		recepients.add("All");
+		if(!CollectionUtils.isEmpty(criteria.getUserids()))
+			criteria.getUserids().forEach( user -> recepients.add(user));
+		
+		if(!CollectionUtils.isEmpty(criteria.getRoles())) {
+			criteria.getRoles().forEach(role -> {
+				recepients.add(role + "|*");
+				recepients.add(role + "|" + criteria.getTenantId());
+			});
+			recepients.add("*|"+criteria.getTenantId());
+			recepients.add("All");
+		}
 	}
 	
 	
-	private void manageRecepients(Event event, Map<String, String> recepientEventMap) {
+	private void manageRecepients(Event event, List<RecepientEvent> recepientEventList) {
 		
-		if(!event.getRecepient().getToUsers().isEmpty()) {
+		if(!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
 			event.getRecepient().getToRoles().clear();
 		} //toUsers will take precedence over toRoles.
 		
-		if(!event.getRecepient().getToUsers().isEmpty()) {
-			event.getRecepient().getToUsers().forEach(user -> recepientEventMap.put(user, event.getId()));
+		if(!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
+			event.getRecepient().getToUsers().forEach(user -> {
+				RecepientEvent rcpntevent = RecepientEvent.builder().recepient(user).eventId(event.getId()).build();
+				recepientEventList.add(rcpntevent);
+			});
 		}
-		if(!event.getRecepient().getToRoles().isEmpty()) {
-			event.getRecepient().getToRoles().forEach(role -> recepientEventMap.put(role, event.getId()));
+		if(!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
+			event.getRecepient().getToRoles().forEach(role -> {
+				RecepientEvent rcpntevent = RecepientEvent.builder().recepient(role).eventId(event.getId()).build();
+				recepientEventList.add(rcpntevent);
+			});
 		}
 	}
 	

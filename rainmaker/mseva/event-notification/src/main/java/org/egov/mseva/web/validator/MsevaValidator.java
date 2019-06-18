@@ -82,7 +82,7 @@ public class MsevaValidator {
 	}
 	private void validateRI(RequestInfo requestInfo, Map<String, String> errorMap) {
 		if(null != requestInfo) {
-			if ((null == requestInfo.getUserInfo().getId()) || 
+			if ((StringUtils.isEmpty(requestInfo.getUserInfo().getUuid())) || 
 					(CollectionUtils.isEmpty(requestInfo.getUserInfo().getRoles())) || (StringUtils.isEmpty(requestInfo.getUserInfo().getTenantId()))) {
 				errorMap.put(ErrorConstants.MISSING_ROLE_USERID_CODE, ErrorConstants.MISSING_ROLE_USERID_MSG);
 			}
@@ -110,7 +110,7 @@ public class MsevaValidator {
 			}
 			
 		}
-		validateMDMSData(requestInfo, event, errorMap);
+		//validateMDMSData(requestInfo, event, errorMap);
 	}
 	
 	private void validateMDMSData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {

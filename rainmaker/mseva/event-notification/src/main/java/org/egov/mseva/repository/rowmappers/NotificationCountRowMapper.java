@@ -5,7 +5,9 @@ import java.sql.SQLException;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NotificationCountRowMapper implements ResultSetExtractor <Long>  {
 
 	@Override

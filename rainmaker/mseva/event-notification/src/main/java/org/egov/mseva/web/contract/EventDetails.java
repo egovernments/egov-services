@@ -22,6 +22,10 @@ import lombok.ToString;
 @Builder
 public class EventDetails {
 	
+	private String id;
+	
+	private String eventId;
+
 	private Long fromDate;
 	
 	private Long toDate;

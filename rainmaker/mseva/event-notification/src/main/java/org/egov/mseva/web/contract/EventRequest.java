@@ -42,6 +42,7 @@ package org.egov.mseva.web.contract;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -65,6 +66,9 @@ public class EventRequest {
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 	
+	@NotNull
+	@Valid
+	@JsonProperty("events")
 	private List<Event> events;
 
 

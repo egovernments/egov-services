@@ -1,12 +1,6 @@
-package org.egov.mseva.web.contract;
-
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
+package org.egov.mseva.model;
 
 import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +18,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Recepient {
+public class lltWrapper {
 	
-	private List<String> toRoles;
-	
-	private List<String> toUsers;
+	private LastLoginDetails lastLoginDetails;
 
 }

@@ -23,7 +23,7 @@ CREATE TABLE eg_men_events(
 CREATE TABLE eg_men_recepnt_event_registry(
 
   recepient character varying(500) NOT NULL,
-  eventid character varying(500) NOT NULL,
+  eventid character varying(500) NOT NULL
    
 );
 

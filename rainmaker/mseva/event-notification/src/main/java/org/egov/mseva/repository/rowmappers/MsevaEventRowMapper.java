@@ -1,5 +1,6 @@
 package org.egov.mseva.repository.rowmappers;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,11 +12,13 @@ import org.egov.mseva.web.contract.Action;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventDetails;
 import org.egov.mseva.web.contract.Recepient;
+import org.postgresql.util.PGobject;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +29,6 @@ public class MsevaEventRowMapper implements ResultSetExtractor <List<Event>> {
 	@Override
 	public List<Event> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
 		List<Event> events = new ArrayList<>();
-		ObjectMapper mapper = new ObjectMapper();
 		while(resultSet.next()) {
 			Event event = Event.builder()
 					.id(resultSet.getString("id"))
@@ -36,9 +38,36 @@ public class MsevaEventRowMapper implements ResultSetExtractor <List<Event>> {
 					.description(resultSet.getString("description"))
 					.status(Status.valueOf(resultSet.getString("status"))).build();
 			try {
-				event.setEventDetails(mapper.convertValue(resultSet.getObject("eventdetails"), EventDetails.class));
-				event.setActions(mapper.convertValue(resultSet.getObject("actions"), Action.class));
-				event.setRecepient(mapper.convertValue(resultSet.getObject("recepient"), Recepient.class));
+				PGobject obj = (PGobject) resultSet.getObject("eventdetails");
+				if(null != obj) {
+					if(!obj.getValue().equalsIgnoreCase("null")) {
+					    Type type = new TypeToken<EventDetails>() {}.getType();
+						Gson gson = new Gson();
+						EventDetails data = gson.fromJson(obj.getValue(), type);			
+						event.setEventDetails(data);
+					}
+				}
+					
+				obj = (PGobject) resultSet.getObject("actions");
+				if(null != obj) {
+					if(!obj.getValue().equalsIgnoreCase("null")) {
+					    Type type = new TypeToken<Action>() {}.getType();
+						Gson gson = new Gson();
+						Action data = gson.fromJson(obj.getValue(), type);
+						event.setActions(data);
+					}
+				}
+				
+				obj = (PGobject) resultSet.getObject("recepient");
+				if(null != obj) {
+					if(!obj.getValue().equalsIgnoreCase("null")) {
+					    Type type = new TypeToken<Recepient>() {}.getType();
+						Gson gson = new Gson();
+						Recepient data = gson.fromJson(obj.getValue(), type);
+						event.setRecepient(data);
+					}
+				}
+				
 			}catch(Exception e) {
 				log.error("Error while adding jsonb fields: ", e);
 				continue;

@@ -2,8 +2,11 @@ package org.egov.mseva.web.contract;
 
 import java.util.List;
 
-import org.egov.mseva.model.AuditDetails;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +32,7 @@ public class Action {
 	
 	private String eventId;
 	
+	@NotNull
 	private List<ActionItem> actionUrls;
 	
-	private AuditDetails auditDteails;
 }

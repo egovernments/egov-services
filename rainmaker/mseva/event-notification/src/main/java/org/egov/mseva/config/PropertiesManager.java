@@ -68,6 +68,9 @@ public class PropertiesManager {
 	@Value("${kafka.topics.update.events}")
 	public String updateEventsTopic;
 	
+	@Value("${kafka.topics.llt.details}")
+	public String lltDetailsTopic;
+	
 	
 	//Variables
 	

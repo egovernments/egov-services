@@ -49,14 +49,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "org.egov.hrms", "org.egov.hrms.web.controllers" , "org.egov.hrms.config"})
 @Import(TracerConfiguration.class)
 public class MsevaEventNotifApp {
 
@@ -69,12 +69,14 @@ public class MsevaEventNotifApp {
     }
 
     @Bean
-    public ObjectMapper getObjectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-        return objectMapper;
-    }
+	public ObjectMapper getObjectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+		return mapper;
+	}
 
     public static void main(String[] args) {
         SpringApplication.run(MsevaEventNotifApp.class, args);

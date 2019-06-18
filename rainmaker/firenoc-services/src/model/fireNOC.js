@@ -333,7 +333,7 @@ const Buildings = {
     uoms: {
       type: "array",
       items: BuildingUOM,
-      minItems:1
+      minItems: 1
     },
     applicationDocuments: {
       description:
@@ -422,7 +422,7 @@ const FireNOCDetails = {
     buildings: {
       type: "array",
       items: Buildings,
-      minItems:1
+      minItems: 1
     },
     propertyDetails: PropertyDetails,
     applicantDetails: {
@@ -438,7 +438,7 @@ const FireNOCDetails = {
             "Fire NOC owners, these will be citizen users in system.",
           type: "array",
           items: OwnerInfo,
-          minItems:1
+          minItems: 1
         },
         additionalDetail: {
           type: "object",
@@ -446,7 +446,7 @@ const FireNOCDetails = {
             "Json object to store additional details about license, this will be used when ownership is intitution or others"
         }
       },
-      required: ["ownerShipType","owners"]
+      required: ["ownerShipType", "owners"]
     },
     additionalDetail: {
       type: "object",
@@ -577,7 +577,7 @@ const RequestInfo = {
       readOnly: true
     }
   },
-  required: ["apiId", "ver", "ts", "msgId", "action"]
+  required: ["apiId", "ver", "msgId", "action"]
 };
 
 const FireNOCRequest = {

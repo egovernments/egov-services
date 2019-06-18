@@ -4,10 +4,12 @@ import org.egov.pt.calculator.service.MasterDataService;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.Unit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.*;
 
+@Component
 public class PBFirecessUtils {
 
     @Autowired
@@ -31,21 +33,21 @@ public class PBFirecessUtils {
             // There is no category major firecess applicable as it i
             firecess_category_major = BigDecimal.ZERO;
         } else {
-            firecess_category_major =(BigDecimal)((HashMap)applicableMaster.get("dynamicRates")).get("firecess_category_major");
+            firecess_category_major =new BigDecimal ((Integer) ((HashMap)applicableMaster.get("dynamicRates")).get("firecess_category_major"));
         }
 
         if (propertyAttributes!=null &&
                 propertyAttributes.get("heightAbove36Feet")!=null &&
                 (Boolean) propertyAttributes.get("heightAbove36Feet")) {
             // height is above 36 feet
-            firecess_building_height = (BigDecimal)((HashMap)applicableMaster.get("dynamicRates")).get("firecess_building_height");
+            firecess_building_height = new BigDecimal ((Integer) ((HashMap)applicableMaster.get("dynamicRates")).get("firecess_building_height"));
         }
 
         if (propertyAttributes!=null &&
                 propertyAttributes.get("inflammable")!=null &&
                 (Boolean)propertyAttributes.get("inflammable")) {
             // height is above 36 feet
-            firecess_inflammable = (BigDecimal)((HashMap)applicableMaster.get("dynamicRates")).get("firecess_inflammable");
+            firecess_inflammable = new BigDecimal ((Integer) ((HashMap)applicableMaster.get("dynamicRates")).get("firecess_inflammable"));
         }
 
         return firecess_category_major.add(firecess_building_height).add(firecess_inflammable);
@@ -74,7 +76,7 @@ public class PBFirecessUtils {
         {
             firecessRate = calculateFireCess(propertyDetail, CessMap);
         } else {
-            firecessRate = (BigDecimal) CessMap.get("Rate");
+            firecessRate = new BigDecimal ((Integer) CessMap.get("Rate"));
         }
 
         return  firecessRate.multiply(payableTax).divide(new BigDecimal(100));

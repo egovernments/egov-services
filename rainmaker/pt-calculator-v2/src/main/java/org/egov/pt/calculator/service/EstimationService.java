@@ -53,6 +53,9 @@ public class EstimationService {
 	private DemandService demandService;
 
 	@Autowired
+	private PBFirecessUtils firecessUtils;
+
+	@Autowired
 	CalculationValidator calcValidator;
 
 	@Value("${customization.pbfirecesslogic:false}")
@@ -310,7 +313,6 @@ public class EstimationService {
 		BigDecimal fireCess;
 
 		if (usePBFirecessLogic) {
-			PBFirecessUtils firecessUtils = new PBFirecessUtils();
 			fireCess = firecessUtils.getPBFireCess(payableTax, assessmentYear, fireCessMasterList, detail);
 			estimates.add(
 					TaxHeadEstimate.builder().taxHeadCode(PT_FIRE_CESS).estimateAmount(fireCess.setScale(2, 2)).build());

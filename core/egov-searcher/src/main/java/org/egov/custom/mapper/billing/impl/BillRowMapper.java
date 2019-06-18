@@ -98,8 +98,7 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 				User user = new User();
 				user.setId(rs.getString("ptown_userid"));
 				user.setName(rs.getString("ptown_userid"));
-
-				billDetail.setUser(user);
+				billDetail.addUserItem(user);
 
 				billDetailMap.put(billDetail.getId(), billDetail);
 
@@ -107,6 +106,8 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 					bill.addBillDetailsItem(billDetail);
 
 			}
+			
+			
 
 			BillAccountDetail billAccDetail = new BillAccountDetail();
 			billAccDetail.setId(rs.getString("ad_id"));

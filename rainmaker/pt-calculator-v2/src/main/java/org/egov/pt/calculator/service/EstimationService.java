@@ -8,6 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.Configurations;
+import org.egov.pt.calculator.util.PBFirecessUtils;
 import org.egov.pt.calculator.validator.CalculationValidator;
 import org.egov.pt.calculator.web.models.BillingSlab;
 import org.egov.pt.calculator.web.models.BillingSlabSearchCriteria;
@@ -24,6 +25,7 @@ import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.Unit;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,10 @@ public class EstimationService {
 
 	@Autowired
 	CalculationValidator calcValidator;
+
+	@Value("${customization.pbfirecesslogic:false}")
+	Boolean usePBFirecessLogic;
+
 
 	/**
 	 * Generates a map with assessment-number of property as key and estimation
@@ -301,9 +307,19 @@ public class EstimationService {
 
 		// Fire cess
 		List<Object> fireCessMasterList = timeBasedExemeptionMasterMap.get(CalculatorConstants.FIRE_CESS_MASTER);
-		BigDecimal fireCess = mDataService.getCess(payableTax, assessmentYear, fireCessMasterList);
-		estimates.add(
-				TaxHeadEstimate.builder().taxHeadCode(PT_FIRE_CESS).estimateAmount(fireCess.setScale(2, 2)).build());
+		BigDecimal fireCess;
+
+		if (usePBFirecessLogic) {
+			PBFirecessUtils firecessUtils = new PBFirecessUtils();
+			fireCess = firecessUtils.getPBFireCess(payableTax, assessmentYear, fireCessMasterList, detail);
+			estimates.add(
+					TaxHeadEstimate.builder().taxHeadCode(PT_FIRE_CESS).estimateAmount(fireCess.setScale(2, 2)).build());
+		} else {
+			fireCess = mDataService.getCess(payableTax, assessmentYear, fireCessMasterList);
+			estimates.add(
+					TaxHeadEstimate.builder().taxHeadCode(PT_FIRE_CESS).estimateAmount(fireCess.setScale(2, 2)).build());
+
+		}
 
 		// Cancer cess
 		List<Object> cancerCessMasterList = timeBasedExemeptionMasterMap.get(CalculatorConstants.CANCER_CESS_MASTER);

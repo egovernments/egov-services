@@ -51,7 +51,7 @@ public class BulkIndexer {
 			}
 			if (url.contains("_bulk")) {
 				if (JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)) {
-					indexerUtils.postToErrorQueue(indexJson, new Exception());
+					indexerUtils.postToErrorQueue(indexJson, new Exception(response.toString()));
 					log.info("Indexing FAILED!!!!");
 					log.info("Response from ES: " + response);
 				}

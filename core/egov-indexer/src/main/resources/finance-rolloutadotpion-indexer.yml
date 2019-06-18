@@ -5,7 +5,7 @@ ServiceMaps:
   - topic: finance-adoption-topic
     configKey: INDEX
     indexes:
-    - name: finance
+    - name: financeindex-v1
       type: rolloutadoption
       id: $.id
       isBulk: false

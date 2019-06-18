@@ -1,12 +1,11 @@
 import { Router } from "express";
 import producer from "../kafka/producer";
 import { requestInfoToResponseInfo, createWorkFlow} from "../utils";
-import {validateFireNOCModel} from "../model/fireNOC";
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails } from "../utils/create";
 import { calculate } from "../services/firenocCalculatorService";
-import {validateModel} from "../utils/modelValidation";
+import {validateFireNOCModel} from "../utils/modelValidation";
 const asyncHandler = require("express-async-handler");
 
 
@@ -17,7 +16,7 @@ export default ({ config, db }) => {
     asyncHandler(async ({ body }, res, next) => {
       let payloads = [];
       //model validator
-      let errors=validateModel(body);
+      let errors=validateFireNOCModel(body);
       if (errors.length>0) {
         next({errorType:"custom",errorReponse:{
           ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),

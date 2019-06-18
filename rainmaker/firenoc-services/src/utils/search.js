@@ -4,6 +4,8 @@ import isEmpty from "lodash/isEmpty";
 import { httpRequest } from "./api";
 import envVariables from "../envVariables";
 import userService from "../services/userService";
+import omitBy from "lodash/omitBy";
+import isNil from "lodash/isNil";
 
 let requestInfo = {};
 export const status = {
@@ -14,6 +16,7 @@ export const status = {
   "PAY":"DOCUMENTVERIFY",
   "FORWARD":"FIELDINSPECTION",
   "REJECT":"REJECTED",
+  "REFER":"REFERED",
   "APPROVE":"APPROVED",
   "CANCEL":"CANCELED"
 };
@@ -26,8 +29,13 @@ export const actions = {
   FIELDINSPECTION: "FORWARD",
   REJECTED: "REJECT",
   APPROVED: "APPROVE",
-  CANCELED: "CANCEL"
+  CANCELED: "CANCEL",
+  REFERED:"REFER"
 };
+
+const intConversion=(string)=>{
+  return string?parseInt(string):null
+}
 
 const fireNOCRowMapper =async (row, mapper = {}) => {
   let fireNoc = isEmpty(mapper) ? {} : mapper;
@@ -40,8 +48,8 @@ const fireNOCRowMapper =async (row, mapper = {}) => {
   let auditDetails = {
     createdBy: row.createdby,
     lastModifiedBy: row.lastmodifiedby,
-    createdTime: row.createdtime,
-    lastModifiedTime: row.lastmodifiedtime
+    createdTime: intConversion(row.createdtime),
+    lastModifiedTime: intConversion(row.lastmodifiedtime)
   };
   let owners=await fireNocOwnersRowMapper(
     row,
@@ -52,12 +60,12 @@ const fireNOCRowMapper =async (row, mapper = {}) => {
     applicationNumber: row.applicationnumber,
     status: status[row.action],
     fireNOCType: row.firenoctype,
-    firestationId: row.firestationId,
-    applicationDate: row.applicationdate,
+    firestationId: row.firestationid,
+    applicationDate: intConversion(row.applicationdate),
     financialYear: row.financialyear,
-    issuedDate: row.issueddate,
-    validFrom: row.validfrom,
-    validTo: row.validto,
+    issuedDate: intConversion(row.issueddate),
+    validFrom: intConversion(row.validfrom),
+    validTo: intConversion(row.validto),
     action: row.action,
     channel: row.channel,
     noOfBuildings: row.noofbuildings,
@@ -162,7 +170,7 @@ const fireNocUomsRowMapper = (row, mapper = []) => {
   let uomObject = {
     id: row.uomuuid,
     code: row.code,
-    value: row.value,
+    value: intConversion(row.value),
     isActiveUom: row.activeuom,
     active: row.active
   };
@@ -207,7 +215,15 @@ export const mergeSearchResults = async (response, query = {}, reqInfo) => {
       result.push(fireNoc);
     }
   }
+  removeEmpty(result);
   return result;
+};
+
+const  removeEmpty=(obj)=> {
+  Object.keys(obj).forEach(function(key) {
+    if (obj[key] && typeof obj[key] === 'object') removeEmpty(obj[key])
+    else if (obj[key] == null) delete obj[key]
+  });
 };
 
 const searchUser = async (requestInfo, uuid) => {

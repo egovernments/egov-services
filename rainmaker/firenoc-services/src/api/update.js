@@ -8,7 +8,7 @@ import { getApprovedList } from "../utils/update";
 import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import { calculate } from "../services/firenocCalculatorService";
 import cloneDeep from "lodash/cloneDeep";
-import {validateModel} from "../utils/modelValidation";
+import {validateFireNOCModel} from "../utils/modelValidation";
 
 
 export default ({ config, db }) => {
@@ -18,7 +18,7 @@ export default ({ config, db }) => {
     asyncHandler(async ({ body }, res,next) => {
       let payloads = [];
       //model validator
-      let errors=validateModel(body);
+      let errors=validateFireNOCModel(body);
       if (errors.length>0) {
         next({errorType:"custom",errorReponse:{
           ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
@@ -27,9 +27,12 @@ export default ({ config, db }) => {
       }
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
-      let workflowResponse = await createWorkFlow(body);
       //Check records for approved
       let approvedList=await getApprovedList(cloneDeep(body));
+
+      //applay workflow
+      let workflowResponse = await createWorkFlow(body);
+
 
       //calculate call
       let { FireNOCs, RequestInfo } = body;

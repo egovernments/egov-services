@@ -22,6 +22,7 @@ export default ({ config, db }) => {
           ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
           Errors: errors
         }})
+        return;
       }
 
       //getting mdms data

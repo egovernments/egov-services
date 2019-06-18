@@ -24,6 +24,7 @@ export default ({ config, db }) => {
           ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
           Errors: errors
         }})
+        return;
       }
       let mdms = await mdmsData(body.RequestInfo);
       body = await addUUIDAndAuditDetails(body);
@@ -32,7 +33,6 @@ export default ({ config, db }) => {
 
       //applay workflow
       let workflowResponse = await createWorkFlow(body);
-
 
       //calculate call
       let { FireNOCs, RequestInfo } = body;

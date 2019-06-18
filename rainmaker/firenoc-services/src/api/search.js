@@ -29,6 +29,7 @@ export default ({ config, db }) => {
             Errors: errors
           }
         });
+        return;
       }
       // console.log(queryObj);
       queryObj.action = actions[queryObj.status];

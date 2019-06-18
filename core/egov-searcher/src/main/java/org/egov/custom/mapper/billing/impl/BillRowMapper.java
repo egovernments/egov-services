@@ -151,9 +151,8 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 	private void setUserValuesToBill(Collection<BillDetail> details, Set<String> userIds) {
 
 		UserSearchCriteria userCriteria = UserSearchCriteria.builder().uuid(userIds).build();
-		Map<String, String> usersMap = rest
-				.postForObject(userContext.concat(userSearchPath), userCriteria, UserResponse.class).getUsers().stream()
-				.collect(Collectors.toMap(User::getId, User::getName));
+		UserResponse res = rest.postForObject(userContext.concat(userSearchPath), userCriteria, UserResponse.class);
+		Map<String, String> usersMap = res.getUsers().stream().collect(Collectors.toMap(User::getId, User::getName));
 		details.forEach(detail -> detail.getUsers().forEach(user -> user.setName(usersMap.get(user.getId()))));
 	}
 

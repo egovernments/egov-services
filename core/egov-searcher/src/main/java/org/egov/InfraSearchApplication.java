@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -36,11 +34,6 @@ public class InfraSearchApplication
 		SpringApplication.run(InfraSearchApplication.class, args);
 	}    
 
-	@Bean
-	public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
-	
 	private static ObjectMapper getMapperConfig() {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

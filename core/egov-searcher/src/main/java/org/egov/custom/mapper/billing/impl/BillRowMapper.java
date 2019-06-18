@@ -5,15 +5,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.egov.custom.mapper.billing.impl.BillAccountDetail.PurposeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,10 +28,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 
+	@Autowired
+	private RestTemplate rest;
+	
+	@Value("${egov.user.contextpath}")
+	private String userContext;
+	
+	@Value("${egov.user.searchpath}")
+	private String userSearchPath;
+		
+
 	@Override
 	public List<Bill> extractData(ResultSet rs) throws SQLException {
 		Map<String, Bill> billMap = new LinkedHashMap<>();
 		Map<String, BillDetail> billDetailMap = new HashMap<>();
+		Set<String> userIds = new HashSet<>();
 
 		while (rs.next()) {
 
@@ -97,8 +115,8 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 
 				User user = new User();
 				user.setId(rs.getString("ptown_userid"));
-				user.setName(rs.getString("username"));
 				billDetail.addUserItem(user);
+				userIds.add(user.getId());
 
 				billDetailMap.put(billDetail.getId(), billDetail);
 
@@ -106,8 +124,6 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 					bill.addBillDetailsItem(billDetail);
 
 			}
-			
-			
 
 			BillAccountDetail billAccDetail = new BillAccountDetail();
 			billAccDetail.setId(rs.getString("ad_id"));
@@ -128,7 +144,17 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 
 		}
 		log.debug("converting map to list object ::: " + billMap.values());
+		setUserValuesToBill(billDetailMap.values(), userIds);
 		return new ArrayList<>(billMap.values());
+	}
+
+	private void setUserValuesToBill(Collection<BillDetail> details, Set<String> userIds) {
+
+		UserSearchCriteria userCriteria = UserSearchCriteria.builder().uuid(userIds).build();
+		Map<String, String> usersMap = rest
+				.postForObject(userContext.concat(userSearchPath), userCriteria, UserResponse.class).getUsers().stream()
+				.collect(Collectors.toMap(User::getId, User::getName));
+		details.forEach(detail -> detail.getUsers().forEach(user -> user.setName(usersMap.get(user.getId()))));
 	}
 
 	private void setTaxAndPayments(List<TaxAndPayment> taxAndPayments, String businessService, BigDecimal totalAmount) {

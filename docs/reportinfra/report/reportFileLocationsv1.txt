@@ -10,5 +10,5 @@ rainmaker-pgr=https://raw.githubusercontent.com/egovernments/egov-services/maste
 rainmaker-pt=https://raw.githubusercontent.com/egovernments/egov-services/user_rep_enc_dev_test/docs/rainmaker/property-tax/reports/reports.yml
 finance=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/finance/report/report.yml
 rainmaker-tl=https://raw.githubusercontent.com/egovernments/egov-services/user_rep_enc_dev_test/docs/rainmaker/trade-license/reports/report.yml
-rainmaker-noc=https://raw.githubusercontent.com/egovernments/egov-services/noc_uc_reports/docs/rainmaker/noc/reports/reports.yml
+rainmaker-noc=https://raw.githubusercontent.com/egovernments/egov-services/noc_reports/docs/rainmaker/noc/reports/reports.yml
 rainmaker-common=https://raw.githubusercontent.com/egovernments/egov-services/noc_uc_reports/docs/rainmaker/common/reports/report.yml

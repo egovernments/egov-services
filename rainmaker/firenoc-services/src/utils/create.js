@@ -3,7 +3,7 @@ import envVariables from "../envVariables";
 import get from "lodash/get";
 import userService from "../services/userService";
 import isEmpty from "lodash/isEmpty";
-import {status} from "./search";
+import { status } from "./search";
 
 export const addUUIDAndAuditDetails = async request => {
   let { FireNOCs, RequestInfo } = request;
@@ -81,11 +81,11 @@ export const addUUIDAndAuditDetails = async request => {
           owners[owneriter],
           FireNOCs[i].tenantId
         );
-        let ownerUUID=get(owners[owneriter],'ownerUUID');
+        let ownerUUID = get(owners[owneriter], "ownerUUID");
         owners[owneriter] = {
           ...owners[owneriter],
-          ...get(userCreateResponse,"user.0",[]),
-          ownerUUID:ownerUUID?ownerUUID:uuidv1()
+          ...get(userCreateResponse, "user.0", []),
+          ownerUUID: ownerUUID ? ownerUUID : uuidv1()
         };
       }
     }
@@ -101,7 +101,8 @@ export const addUUIDAndAuditDetails = async request => {
       ownerAuditionalDetail:
         FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail
     };
-    FireNOCs[i].fireNOCDetails.status=status[FireNOCs[i].fireNOCDetails.action];
+    FireNOCs[i].fireNOCDetails.status =
+      status[FireNOCs[i].fireNOCDetails.action];
   }
   request.FireNOCs = FireNOCs;
   return request;
@@ -120,14 +121,19 @@ const createUser = async (requestInfo, owner, tenantId) => {
       requestInfo,
       userSearchReqCriteria
     );
-    // console.log("Search passed");
-    if (get(userSearchResponse,"user",[]).length>0) {
+    if (get(userSearchResponse, "user", []).length > 0) {
+      //assign to user
+
       userCreateResponse = await userService.updateUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
       });
     } else {
+      // console.log("user not found");
+
       owner = addDefaultUserDetails(tenantId, owner);
+      // console.log("userSearchResponse.user[0]", userSearchResponse.user[0]);
+      // console.log("owner", owner);
       userCreateResponse = await userService.createUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
@@ -141,22 +147,25 @@ const createUser = async (requestInfo, owner, tenantId) => {
       requestInfo,
       userSearchReqCriteria
     );
-    if (get(userSearchResponse,"user",[]).length>0) {
+    if (get(userSearchResponse, "user", []).length > 0) {
       userCreateResponse = await userService.updateUser(requestInfo, {
         ...userSearchResponse.user[0],
         ...owner
       });
       // console.log("Update passed");
     }
-    return userCreateResponse;
   }
+  return userCreateResponse;
 };
 
 const addDefaultUserDetails = (tenantId, owner) => {
   if (!owner.userName || isEmpty(owner.userName))
-  owner.userName = owner.mobileNumber;
+    owner.userName = owner.mobileNumber;
+  owner.active = true;
   owner.tenantId = tenantId.split(".")[0];
   owner.type = "CITIZEN";
-  owner.role = [{ code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }];
+  owner.role = [
+    { code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }
+  ];
   return owner;
 };

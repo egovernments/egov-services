@@ -60,7 +60,7 @@ public class MsevaEventsQueryBuilder {
 		if(!CollectionUtils.isEmpty(criteria.getRecepients())) {
             addClauseIfRequired(preparedStatementValues, queryBuilder);
             queryBuilder.append(EVENT_INNER_SEARCH_QUERY);
-    		queryBuilder.append("recepients IN (:recepients)");
+    		queryBuilder.append("recepient IN (:recepients)");
     		preparedStatementValues.put("recepients", criteria.getRecepients());
     		queryBuilder.append(" )");
 

@@ -213,7 +213,9 @@ public class MsevaService {
 			criteria.setUserids(userIds); criteria.setRoles(roles); 
 			criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 		}
-		if(!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles()))
+		
+		if(!CollectionUtils.isEmpty(criteria.getUserids()) 
+				|| !CollectionUtils.isEmpty(criteria.getRoles()) || !StringUtils.isEmpty(criteria.getTenantId()))
 			buildRecepientListForSearch(criteria);
 		
 		log.info("recepeients: "+criteria.getRecepients());
@@ -228,11 +230,14 @@ public class MsevaService {
 		if(!CollectionUtils.isEmpty(criteria.getRoles())) {
 			criteria.getRoles().forEach(role -> {
 				recepients.add(role + "|*");
-				recepients.add(role + "|" + criteria.getTenantId());
+				if(!StringUtils.isEmpty(criteria.getTenantId()))
+					recepients.add(role + "|" + criteria.getTenantId());
 			});
-			recepients.add("*|"+criteria.getTenantId());
-			recepients.add("All");
 		}
+		if(!StringUtils.isEmpty(criteria.getTenantId())) {
+			recepients.add("*|"+criteria.getTenantId());
+		}
+		recepients.add("All");
 		
 		criteria.setRecepients(recepients);
 	}

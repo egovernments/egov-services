@@ -36,4 +36,7 @@ public class ErrorConstants {
 	public static final String MEN_INVALID_SEARCH_CRITERIA_CODE = "MEN_INVALID_SEARCH_CRITERIA";
 	public static final String MEN_INVALID_SEARCH_CRITERIA_MSG = "Atleast one of the parameters is mandatory for searching events.";
 	
+	public static final String MEN_INVALID_COUNT_CRITERIA_CODE = "MEN_INVALID_COUNT_CRITERIA";
+	public static final String MEN_INVALID_COUNT_CRITERIA_MSG = "Atleast one of the parameters is mandatory for fetching count of unread notifications.";
+	
 }

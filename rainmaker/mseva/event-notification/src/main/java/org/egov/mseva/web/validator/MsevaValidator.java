@@ -53,19 +53,19 @@ public class MsevaValidator {
 	public void validateSearch(RequestInfo requestInfo, EventSearchCriteria criteria) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateRI(requestInfo, errorMap);
-		if(null != criteria) {
-			if(criteria.isEmpty(criteria)) {
-				errorMap.put(ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_CODE, ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_MSG);
+		if(!requestInfo.getUserInfo().getType().equals("CITIZEN")) {
+			if(null != criteria) {
+				if(criteria.isEmpty(criteria)) {
+					errorMap.put(ErrorConstants.MEN_INVALID_COUNT_CRITERIA_CODE, ErrorConstants.MEN_INVALID_COUNT_CRITERIA_MSG);
+				}
+			}else {
+				errorMap.put(ErrorConstants.MEN_INVALID_COUNT_CRITERIA_CODE, ErrorConstants.MEN_INVALID_COUNT_CRITERIA_MSG);
 			}
-		}else {
-			errorMap.put(ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_CODE, ErrorConstants.MEN_INVALID_SEARCH_CRITERIA_MSG);
 		}
-		
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
-	}
-	
+	}	
 	
 	private void checkIfEventsExist(EventRequest request, Map<String, String> errorMap) {
 		EventSearchCriteria criteria = new EventSearchCriteria();

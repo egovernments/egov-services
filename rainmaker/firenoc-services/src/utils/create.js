@@ -164,7 +164,7 @@ const addDefaultUserDetails = (tenantId, owner) => {
   owner.active = true;
   owner.tenantId = tenantId.split(".")[0];
   owner.type = "CITIZEN";
-  owner.role = [
+  owner.roles = [
     { code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }
   ];
   return owner;

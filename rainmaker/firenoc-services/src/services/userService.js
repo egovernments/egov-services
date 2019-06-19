@@ -20,6 +20,7 @@ export const searchUser = async (requestInfo, userSearchReqCriteria) => {
 
 export const createUser = async (requestInfo, user) => {
   let requestBody = { RequestInfo: requestInfo, user: user };
+  user.dob=dobConvetion(user.dob);
   var userCreateResponse = await httpRequest({
     hostURL: envVariables.EGOV_USER_HOST,
     endPoint: `${envVariables.EGOV_USER_CONTEXT_PATH}${
@@ -36,7 +37,7 @@ export const createUser = async (requestInfo, user) => {
 
 export const updateUser = async (requestInfo, user) => {
   // console.log(user);
-  user.dob=typeof(user.dob)=="string"?user.dob.split("-").reverse().join("/"):user.dob;
+  user.dob=dobConvetion(user.dob);
   // console.info(user.dob);
   let requestBody = { RequestInfo: requestInfo, user: user };
   var userUpdateResponse = await httpRequest({
@@ -105,5 +106,9 @@ const dateToLong = (date, format) => {
   }
   return epoch.getTime();
 };
+
+const dobConvetion=(date)=>{
+  return typeof(date)=="string"?date.split("-").reverse().join("/"):date;
+}
 
 export default { searchUser, createUser, updateUser };

@@ -2,9 +2,23 @@ import producer from "../kafka/producer";
 import { requestInfoToResponseInfo, upadteForAuditDetails } from "../utils";
 import uuid4 from "uuid/v4";
 import envVariables from "../envVariables";
+import { validateBillingSlabReq } from "../utils/modelValidation";
 
-const create = (req, res) => {
+const create = (req, res, next) => {
   console.log("create");
+
+  let errors = validateBillingSlabReq(req.body);
+  if (errors.length > 0) {
+    next({
+      errorType: "custom",
+      errorReponse: {
+        ResponseInfo: requestInfoToResponseInfo(req.body.RequestInfo, false),
+        Errors: errors
+      }
+    });
+    return;
+  }
+
   let createResponse = {};
   createResponse.ResponseInfo = requestInfoToResponseInfo(
     req.body.RequestInfo,
@@ -19,7 +33,9 @@ const create = (req, res) => {
     }
   ];
 
-  producer.send(payloads, function(err, data) {});
+  producer.send(payloads, function(err, data) {
+    if (err) console.log("err", err);
+  });
   res.send(createResponse);
 };
 

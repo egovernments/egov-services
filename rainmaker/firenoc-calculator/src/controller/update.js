@@ -1,9 +1,22 @@
 import producer from "../kafka/producer";
 import { requestInfoToResponseInfo, upadteForAuditDetails } from "../utils";
 import envVariables from "../envVariables";
+import { validateBillingSlabReq } from "../utils/modelValidation";
 
-const update = (req, res) => {
+const update = (req, res, next) => {
   console.log("update");
+  let errors = validateBillingSlabReq(req.body);
+  if (errors.length > 0) {
+    next({
+      errorType: "custom",
+      errorReponse: {
+        ResponseInfo: requestInfoToResponseInfo(req.body.RequestInfo, false),
+        Errors: errors
+      }
+    });
+    return;
+  }
+
   let updateResponse = {};
   updateResponse.ResponseInfo = requestInfoToResponseInfo(
     req.body.RequestInfo,

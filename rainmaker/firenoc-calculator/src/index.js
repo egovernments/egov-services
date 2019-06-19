@@ -65,6 +65,8 @@ app.use((err, req, res, next) => {
   console.log(err);
   if (!err.errorType) {
     res.status(err.status).json(err.data);
+  } else if (err.errorType == "custom") {
+    res.status(400).json(err.errorReponse);
   } else {
     res.status(500);
     res.send("Oops, something went wrong.");

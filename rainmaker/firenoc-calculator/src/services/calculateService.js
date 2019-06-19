@@ -94,6 +94,9 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
   const taxEstimate = calculateTaxes(config, calculation);
   calculation.taxHeadEstimates.push(taxEstimate);
 
+  const roundoffEstimate = calculateRoundOff(config, calculation);
+  calculation.taxHeadEstimates.push(roundoffEstimate);
+
   return calculation;
 };
 
@@ -204,4 +207,23 @@ const calculateTaxes = (config, calculation) => {
     estimateAmount: taxAmount
   };
   return taxEstimate;
+};
+
+const calculateRoundOff = (config, calculation) => {
+  let roundoffAmount = 0;
+  let totalAmount = 0;
+  calculation.taxHeadEstimates.map(taxHeadEstimate => {
+    if (envVariables.DEBIT_TAXHEADS.includes(taxHeadEstimate.taxHeadCode)) {
+      totalAmount -= taxHeadEstimate.estimateAmount;
+    } else {
+      totalAmount += taxHeadEstimate.estimateAmount;
+    }
+  });
+  roundoffAmount = Math.round(totalAmount) - totalAmount;
+  const roundoffEstimate = {
+    category: "TAX",
+    taxHeadCode: "FIRENOC_ROUNDOFF",
+    estimateAmount: roundoffAmount
+  };
+  return roundoffEstimate;
 };

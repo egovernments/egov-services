@@ -12,17 +12,19 @@ export default pool => {
 
   api.post(
     "/firenoc-calculator/billingslab/_create",
-    asyncHandler(async (req, res, next) => create(req, res))
+    asyncHandler(async (req, res, next) => create(req, res, next))
   );
   api.post("/firenoc-calculator/billingslab/_search", (req, res) =>
     search(req, res, pool)
   );
-  api.post("/firenoc-calculator/billingslab/_update", (req, res) =>
-    update(req, res)
+  api.post("/firenoc-calculator/billingslab/_update", (req, res, next) =>
+    update(req, res, next)
   );
   api.post(
     "/firenoc-calculator/v1/_calculate",
-    asyncHandler(async (req, res) => await calculate(req, res, pool))
+    asyncHandler(
+      async (req, res, next) => await calculate(req, res, pool, next)
+    )
   );
   api.post(
     "/firenoc-calculator/v1/_getbill",

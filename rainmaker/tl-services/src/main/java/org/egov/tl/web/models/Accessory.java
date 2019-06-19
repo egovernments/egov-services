@@ -49,6 +49,10 @@ public class Accessory   {
         @JsonProperty("uomValue")
         private String uomValue = null;
 
+        @Min(value = 1)
+        @JsonProperty("count")
+        private Integer count;
+
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;
 

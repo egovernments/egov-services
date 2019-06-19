@@ -724,6 +724,20 @@
         "$.billingservicecode",
          "$.taxhead"
       ]
+    },
+    "InstrumentGLcodeMapping": {
+      "masterName": "InstrumentGLcodeMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.instrumenttype"
+      ]
+    },
+    "FinanceInstrumentStatusMapping": {
+      "masterName": "FinanceInstrumentStatusMapping",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   }
 }

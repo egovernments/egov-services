@@ -1,5 +1,7 @@
 package org.egov.pg.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.constants.PgConstants;
@@ -16,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import static java.util.Collections.singletonMap;
 
@@ -25,11 +28,13 @@ public class EnrichmentService {
 
     private IdGenService idGenService;
     private BankAccountRepository bankAccountRepository;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    EnrichmentService(IdGenService idGenService, BankAccountRepository bankAccountRepository) {
+    EnrichmentService(IdGenService idGenService, BankAccountRepository bankAccountRepository, ObjectMapper objectMapper) {
         this.idGenService = idGenService;
         this.bankAccountRepository = bankAccountRepository;
+        this.objectMapper = objectMapper;
     }
 
     void enrichCreateTransaction(TransactionRequest transactionRequest) {
@@ -45,6 +50,12 @@ public class EnrichmentService {
         transaction.setUser(new User(requestInfo.getUserInfo()));
         transaction.setTxnStatus(Transaction.TxnStatusEnum.PENDING);
         transaction.setTxnStatusMsg(PgConstants.TXN_INITIATED);
+
+        if(Objects.isNull(transaction.getAdditionalDetails()))
+            transaction.setAdditionalDetails(objectMapper.createObjectNode());
+
+        ((ObjectNode) transaction.getAdditionalDetails()).set("taxAndPayments",
+                objectMapper.valueToTree(transaction.getTaxAndPayments()));
 
         String uri = UriComponentsBuilder
                 .fromHttpUrl(transaction.getCallbackUrl())
@@ -74,12 +85,13 @@ public class EnrichmentService {
 
         newTxn.setTxnId(currentTxnStatus.getTxnId());
         newTxn.setGateway(currentTxnStatus.getGateway());
-        newTxn.setModule(currentTxnStatus.getModule());
-        newTxn.setModuleId(currentTxnStatus.getModuleId());
         newTxn.setBillId(currentTxnStatus.getBillId());
         newTxn.setProductInfo(currentTxnStatus.getProductInfo());
         newTxn.setTenantId(currentTxnStatus.getTenantId());
         newTxn.setUser(currentTxnStatus.getUser());
+        newTxn.setAdditionalDetails(currentTxnStatus.getAdditionalDetails());
+        newTxn.setTaxAndPayments(currentTxnStatus.getTaxAndPayments());
+        newTxn.setConsumerCode(currentTxnStatus.getConsumerCode());
 
     }
 

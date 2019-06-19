@@ -2,10 +2,12 @@ package org.egov.tl.util;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.ServiceRequestRepository;
+import org.egov.tl.web.models.Difference;
 import org.egov.tl.web.models.RequestInfoWrapper;
 import org.egov.tl.web.models.SMSRequest;
 import org.egov.tl.web.models.TradeLicense;
@@ -115,7 +117,7 @@ public class NotificationUtil {
             message = ((ArrayList<String>)messageObj).get(0);
         }
         catch (Exception e){
-            throw new CustomException("PARSING ERROR","Failed to parse the response using jsonPath: "+path);
+            log.warn("Fetching from localization failed",e);
         }
         return message;
     }
@@ -126,15 +128,19 @@ public class NotificationUtil {
      * @param tenantId TenantId of the propertyRequest
      * @return The uri for localization search call
      */
-    public StringBuilder getUri(String tenantId){
+    public StringBuilder getUri(String tenantId,RequestInfo requestInfo){
 
         if(config.getIsLocalizationStateLevel())
             tenantId = tenantId.split("\\.")[0];
 
+        String locale = NOTIFICATION_LOCALE;
+        if(!StringUtils.isEmpty(requestInfo.getMsgId()) && requestInfo.getMsgId().split("|").length>=2)
+            locale = requestInfo.getMsgId().split("\\|")[1];
+
         StringBuilder uri = new StringBuilder();
         uri.append(config.getLocalizationHost()).append(config.getLocalizationContextPath())
                 .append(config.getLocalizationSearchEndpoint()).append("?")
-                .append("locale=").append(TLConstants.NOTIFICATION_LOCALE)
+                .append("locale=").append(locale)
                 .append("&tenantId=").append(tenantId)
                 .append("&module=").append(TLConstants.MODULE);
 
@@ -149,7 +155,7 @@ public class NotificationUtil {
      * @return Localization messages for the module
      */
     public String getLocalizationMessages(String tenantId, RequestInfo requestInfo){
-        LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(getUri(tenantId),requestInfo);
+        LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(getUri(tenantId,requestInfo),requestInfo);
         String jsonString = new JSONObject(responseMap).toString();
         return jsonString;
     }
@@ -341,6 +347,77 @@ public class NotificationUtil {
         builder.append(TRADE_LICENSE_MODULE_CODE);
         return builder;
     }
+
+
+    /**
+     * Creates sms request for the each owners
+     * @param message The message for the specific tradeLicense
+     * @param mobileNumberToOwnerName Map of mobileNumber to OwnerName
+     * @return List of SMSRequest
+     */
+    public List<SMSRequest> createSMSRequest(String message,Map<String,String> mobileNumberToOwnerName){
+        List<SMSRequest> smsRequest = new LinkedList<>();
+        for(Map.Entry<String,String> entryset : mobileNumberToOwnerName.entrySet()) {
+            String customizedMsg = message.replace("<1>",entryset.getValue());
+            smsRequest.add(new SMSRequest(entryset.getKey(),customizedMsg));
+        }
+        return smsRequest;
+    }
+
+
+    public String getCustomizedMsg(Difference diff, TradeLicense license, String localizationMessage){
+        String message = null,messageTemplate;
+      //  StringBuilder finalMessage = new StringBuilder();
+
+        /*if(!CollectionUtils.isEmpty(diff.getFieldsChanged())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_FIELD_CHANGED,localizationMessage);
+            message = getEditMsg(license,diff.getFieldsChanged(),messageTemplate);
+            finalMessage.append(message);
+        }
+
+        if(!CollectionUtils.isEmpty(diff.getClassesAdded())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_ADDED,localizationMessage);
+            message = getEditMsg(license,diff.getClassesAdded(),messageTemplate);
+            finalMessage.append(message);
+        }
+
+        if(!CollectionUtils.isEmpty(diff.getClassesRemoved())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_REMOVED,localizationMessage);
+            message = getEditMsg(license,diff.getClassesRemoved(),messageTemplate);
+            finalMessage.append(message);
+        }*/
+
+        if(!CollectionUtils.isEmpty(diff.getFieldsChanged()) ||
+                !CollectionUtils.isEmpty(diff.getClassesAdded())
+                || !CollectionUtils.isEmpty(diff.getClassesRemoved())){
+            messageTemplate = getMessageTemplate(TLConstants.NOTIFICATION_OBJECT_MODIFIED,localizationMessage);
+            if(messageTemplate==null)
+                messageTemplate = DEFAULT_OBJECT_MODIFIED_MSG;
+            message = getEditMsg(license,messageTemplate);
+        }
+
+        return message;
+    }
+
+
+    /**
+       Creates customized message for field chnaged
+     * @param message Message from localization for field change
+     * @return customized message for field change
+     */
+    private String getEditMsg(TradeLicense license,List<String> list,String message){
+        message = message.replace("<APPLICATION_NUMBER>",license.getApplicationNumber());
+        message = message.replace("<FIELDS>",StringUtils.join(list,","));
+        return message;
+    }
+
+
+    private String getEditMsg(TradeLicense license ,String message){
+        message = message.replace("<APPLICATION_NUMBER>",license.getApplicationNumber());
+        return message;
+    }
+
+
 
 
 

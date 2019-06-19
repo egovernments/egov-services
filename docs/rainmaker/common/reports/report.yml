@@ -92,6 +92,7 @@ ReportDefinitions:
         wrapper: true
         state: true
         isMandatory: true
+        isLocalisationRequired: true
         searchClause: AND rt.businessdetails IN ($service)
       - name: paymentMode
         label: reports.common.CollectionRegister.mode

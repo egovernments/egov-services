@@ -76,7 +76,7 @@ public class PBFirecessUtils {
         {
             firecessRate = calculateFireCess(propertyDetail, CessMap);
         } else {
-            firecessRate = new BigDecimal ((Integer) CessMap.get("Rate"));
+            firecessRate = new BigDecimal ((Integer) CessMap.get("rate"));
         }
 
         return  firecessRate.multiply(payableTax).divide(new BigDecimal(100));

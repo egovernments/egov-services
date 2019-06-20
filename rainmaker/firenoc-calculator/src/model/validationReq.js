@@ -209,7 +209,7 @@ const BuildingUOM = {
       description: "Code of the unit code"
     },
     value: {
-      type: "integer",
+      type: "number",
       description: "Value entered for the uom"
     },
     isActiveUom: {

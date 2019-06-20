@@ -99,9 +99,9 @@ const generateQuery = params => {
     queryString = `${queryString} and uom = '${params.uom}'`;
   }
   if (params.hasOwnProperty("uomValue")) {
-    queryString = `${queryString} and fromuom < '${
+    queryString = `${queryString} and fromuom < ${
       params.uomValue
-    }' and touom >= '${params.uomValue}'and uom = '${params.uomValue}' `;
+    } and touom >= ${params.uomValue} `;
   }
   return queryString;
 };

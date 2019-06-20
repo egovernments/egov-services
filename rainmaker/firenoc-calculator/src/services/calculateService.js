@@ -96,7 +96,6 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
 
   const roundoffEstimate = calculateRoundOff(config, calculation);
   calculation.taxHeadEstimates.push(roundoffEstimate);
-
   return calculation;
 };
 
@@ -130,14 +129,16 @@ const calculateNOCFee = async (
         console.log("More than 1 billingslabs");
         throw new Error("More than 1 billingslabs");
       }
-      if (billingslabs.length < 1) {
-        console.log("No Billing slabs found");
-        throw new Error("No billing slab found");
-      }
+      // if (billingslabs.length < 1) {
+      //   console.log("No Billing slabs found");
+      //   throw new Error("No billing slab found");
+      // }
       if (config.CALCULATON_TYPE === "FLAT") {
         buidingnocfee += Number(billingslabs[0].rate);
       } else {
-        buidingnocfee += Number(billingslabs[0].rate * searchReqParam.value);
+        buidingnocfee += Number(
+          billingslabs[0].rate * Number(searchReqParam.uomValue)
+        );
       }
     }
     if (config.CALCULATON_TYPE !== "FLAT") {
@@ -145,7 +146,7 @@ const calculateNOCFee = async (
         searchReqParam.fireNOCType === "NEW"
           ? config.MIN_NEW
           : config.MIN_PROVISIONAL;
-      buidingnocfee = max(buidingnocfee, minimumFee);
+      buidingnocfee = Math.max(buidingnocfee, minimumFee);
     }
 
     buidingnocfees.push(buidingnocfee);
@@ -201,6 +202,7 @@ const calculateTaxes = (config, calculation) => {
     }
   });
   let taxAmount = (taxableAmount * config.TAX_PERCENTAGE) / 100;
+  taxAmount = taxAmount.toFixed(2);
   const taxEstimate = {
     category: "TAX",
     taxHeadCode: "FIRENOC_TAXES",
@@ -220,6 +222,7 @@ const calculateRoundOff = (config, calculation) => {
     }
   });
   roundoffAmount = Math.round(totalAmount) - totalAmount;
+  roundoffAmount = roundoffAmount.toFixed(2);
   const roundoffEstimate = {
     category: "TAX",
     taxHeadCode: "FIRENOC_ROUNDOFF",

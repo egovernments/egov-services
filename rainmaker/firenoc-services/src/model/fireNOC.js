@@ -196,8 +196,18 @@ const Address = {
       description: "Street Name",
       maxLength: 64,
       minLength: 2
+    },
+    locality:{
+      type:"object",
+      properties: {
+        code: {
+          type: "string"
+        }
+      },
+      required:["code"]
     }
-  }
+  },
+  required:["locality"]
 };
 
 const BuildingUOM = {

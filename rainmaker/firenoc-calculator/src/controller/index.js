@@ -14,8 +14,8 @@ export default pool => {
     "/firenoc-calculator/billingslab/_create",
     asyncHandler(async (req, res, next) => create(req, res, next))
   );
-  api.post("/firenoc-calculator/billingslab/_search", (req, res) =>
-    search(req, res, pool)
+  api.post("/firenoc-calculator/billingslab/_search", (req, res, next) =>
+    search(req, res, pool, next)
   );
   api.post("/firenoc-calculator/billingslab/_update", (req, res, next) =>
     update(req, res, next)
@@ -28,7 +28,7 @@ export default pool => {
   );
   api.post(
     "/firenoc-calculator/v1/_getbill",
-    asyncHandler(async (req, res) => getbill(req, res))
+    asyncHandler(async (req, res, next) => getbill(req, res, next))
   );
 
   // perhaps expose some API metadata at the root

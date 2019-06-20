@@ -736,8 +736,7 @@ const BillingSlab = {
     "rate",
     "uom",
     "buildingUsageType",
-    "fireNOCType",
-    "fromDate"
+    "fireNOCType"
   ]
 };
 
@@ -765,4 +764,80 @@ export const BillingSlabReq = {
     }
   },
   required: ["RequestInfo", "BillingSlabs"]
+};
+
+export const BillingSlabSearch = {
+  summary:
+    "Get the list of bill slabs defined in the system for Fire NOC calculation.",
+  description: "Get the properties list based on the input parameters.\n",
+  tags: ["BillingSlab"],
+  properties: {
+    tenantId: {
+      name: "tenantId",
+      in: "query",
+      description: "Unique id for a tenant.",
+      type: "string"
+      // format: "varchar"
+    },
+    isActive: {
+      name: "isActive",
+      in: "query",
+      description:
+        "True will be set in cases where only active billslab entries are needed and False will be set when inactive billslab entries are needed .",
+      type: "boolean",
+      // format: "varchar",
+      allowEmptyValue: true
+    },
+    fireNOCType: {
+      name: "fireNOCType",
+      in: "query",
+      description: "Fire NOC type for bulling slab.",
+      type: "string",
+      // format: "varchar",
+      enum: ["NEW", "PROVISIONAL"]
+    },
+    buildingUsageType: {
+      name: "buildingUsageType",
+      in: "query",
+      description: "buildingUsageType of property.",
+      type: "string",
+      exclusiveMinimum: 4,
+      exclusiveMaximum: 128
+    },
+    calculationType: {
+      name: "calculationType",
+      in: "query",
+      description: "Enum for billing slab type.",
+      type: "string",
+      exclusiveMinimum: 4,
+      exclusiveMaximum: 128,
+      enum: ["SINGLESLAB", "MULTISLAB", "FLAT"]
+    }
+  },
+  required: ["tenantId"]
+};
+
+export const getBillReq = {
+  summary:
+    "Updates demand with time based penalty if applicable and Generates bill for the given criteria.",
+  description: "Generates bill for payment.",
+  tags: ["Fire NOC Bill"],
+  properties: {
+    tenantId: {
+      name: "tenantId",
+      in: "query",
+      description: "Unique id for a tenant.",
+      type: "string"
+      // format: "varchar"
+    },
+
+    applicationNumber: {
+      name: "applicationNumber",
+      in: "query",
+      description: "Unique Fire NOC application number.",
+      required: true,
+      type: "string"
+    }
+  },
+  required: ["tenantId", "applicationNumber"]
 };

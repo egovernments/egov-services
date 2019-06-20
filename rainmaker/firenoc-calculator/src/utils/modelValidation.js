@@ -1,8 +1,11 @@
 const Ajv = require("ajv");
 const ajv = new Ajv({ allErrors: true });
-import { BillingSlabReq, CalculationReq } from "../model/validationReq.js";
-// const fireNOCSchema = require("../model/validateReq.js");
-// const fireNOCSearchSchema = require("../model/fireNOCSearch.js");
+import {
+  BillingSlabReq,
+  CalculationReq,
+  BillingSlabSearch,
+  getBillReq
+} from "../model/validationReq.js";
 
 export const validateBillingSlabReq = data => {
   let validate = ajv.compile(BillingSlabReq);
@@ -16,6 +19,26 @@ export const validateBillingSlabReq = data => {
 
 export const validateCalculationReq = data => {
   let validate = ajv.compile(CalculationReq);
+  var valid = validate(data);
+  let errors = [];
+  if (!valid) {
+    errors = validate.errors;
+  }
+  return errors;
+};
+
+export const validateBillingSlabSearch = data => {
+  let validate = ajv.compile(BillingSlabSearch);
+  var valid = validate(data);
+  let errors = [];
+  if (!valid) {
+    errors = validate.errors;
+  }
+  return errors;
+};
+
+export const validateBillReq = data => {
+  let validate = ajv.compile(getBillReq);
   var valid = validate(data);
   let errors = [];
   if (!valid) {

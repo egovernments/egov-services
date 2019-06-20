@@ -1,7 +1,22 @@
 import { requestInfoToResponseInfo, upadteForAuditDetails } from "../utils";
+import { validateBillingSlabSearch } from "../utils/modelValidation";
 
-const search = async (req, res, pool) => {
+const search = async (req, res, pool, next) => {
   console.log("search");
+  const queryObj = JSON.parse(JSON.stringify(req.query));
+
+  let errors = validateBillingSlabSearch(queryObj);
+  if (errors.length > 0) {
+    next({
+      errorType: "custom",
+      errorReponse: {
+        ResponseInfo: requestInfoToResponseInfo(req.body.RequestInfo, false),
+        Errors: errors
+      }
+    });
+    return;
+  }
+
   let searchResponse = {};
   searchResponse.ResponseInfo = requestInfoToResponseInfo(
     req.body.RequestInfo,

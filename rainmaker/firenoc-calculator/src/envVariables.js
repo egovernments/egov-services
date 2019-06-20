@@ -31,7 +31,7 @@ const envVariables = {
 
   //billing sercice urls
   EGOV_BILLINGSERVICE_HOST:
-    process.env.EGOV_BILLINGSERVICE_HOST || "http://localhost:8088",
+    process.env.EGOV_BILLINGSERVICE_HOST || "http://localhost:8084",
   EGOV_TAXHEAD_SEARCH_ENDPOINT:
     process.env.EGOV_TAXHEAD_SEARCH_ENDPOINT ||
     "/billing-service/taxheads/_search",
@@ -50,6 +50,7 @@ const envVariables = {
   EGOV_BILL_GEN_ENDPOINT:
     process.env.EGOV_BILL_GEN_ENDPOINT || "/billing-service/bill/_generate",
   TAXABLE_TAXHEADS: process.env.TAXABLE_TAXHEADS || ["FIRENOC_FEES"],
+  DEBIT_TAXHEADS: process.env.DEBIT_TAXHEADS || ["FIRENOC_ADHOC_REBATE"],
 
   EGOV_DEMAND_MINIMUM_PAY_AMOUNT:
     process.env.EGOV_DEMAND_MINIMUM_PAY_AMOUNT || 100,
@@ -73,7 +74,7 @@ const envVariables = {
   TRACER_ENABLE_REQUEST_LOGGING:
     process.env.TRACER_ENABLE_REQUEST_LOGGING || false,
   HTTP_CLIENT_DETAILED_LOGGING_ENABLED:
-    process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED || true
+    process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED || false
 };
 
 export default envVariables;

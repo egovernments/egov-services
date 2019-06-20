@@ -107,7 +107,7 @@ public class EventsController {
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid EventSearchCriteria eventSearchCriteria) {
-		EventResponse response = service.searchEvents(requestInfoWrapper.getRequestInfo(), eventSearchCriteria);
+		EventResponse response = service.searchEvents(requestInfoWrapper.getRequestInfo(), eventSearchCriteria, false);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}

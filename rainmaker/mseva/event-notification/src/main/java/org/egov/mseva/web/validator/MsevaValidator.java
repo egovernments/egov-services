@@ -71,7 +71,7 @@ public class MsevaValidator {
 		EventSearchCriteria criteria = new EventSearchCriteria();
 		List<String> ids = request.getEvents().stream().map(Event :: getId).collect(Collectors.toList());
 		criteria.setIds(ids);
-		List<Event> responseFromDB = service.searchEvents(request.getRequestInfo(), criteria).getEvents();
+		List<Event> responseFromDB = service.searchEvents(request.getRequestInfo(), criteria, true).getEvents();
 		if(responseFromDB.size() != request.getEvents().size()) {
 			errorMap.put(ErrorConstants.MEN_UPDATE_MISSING_EVENTS_CODE, ErrorConstants.MEN_UPDATE_MISSING_EVENTS_MSG);
 		}

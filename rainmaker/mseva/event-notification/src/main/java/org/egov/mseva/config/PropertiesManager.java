@@ -73,5 +73,9 @@ public class PropertiesManager {
 	
 	
 	//Variables
+	@Value("${mseva.notif.search.offset}")
+	public Long defaultOffset;
 	
+	@Value("${mseva.notif.search.limit}")
+	public Long defaultLimit;
 }

@@ -2,12 +2,17 @@ package org.egov.mseva.repository.querybuilder;
 
 import java.util.Map;
 
+import org.egov.mseva.config.PropertiesManager;
 import org.egov.mseva.web.contract.EventSearchCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 @Component
 public class MsevaEventsQueryBuilder {
+	
+	@Autowired
+	private PropertiesManager properties;
 	
 	public static final String EVENT_SEARCH_QUERY = "SELECT id, tenantid, source, eventtype, description, status, eventdetails, actions, "
 			+ "recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime FROM eg_men_events ";
@@ -53,7 +58,7 @@ public class MsevaEventsQueryBuilder {
 		}
 		if(!CollectionUtils.isEmpty(criteria.getPostedBy())) {
             addClauseIfRequired(preparedStatementValues, queryBuilder);
-			queryBuilder.append("AND source IN (:source)");
+			queryBuilder.append("source IN (:source)");
 			preparedStatementValues.put("source", criteria.getPostedBy());
 		}
 
@@ -63,9 +68,14 @@ public class MsevaEventsQueryBuilder {
     		queryBuilder.append("recepient IN (:recepients)");
     		preparedStatementValues.put("recepients", criteria.getRecepients());
     		queryBuilder.append(" )");
-
 		}
-				
+		queryBuilder.append(" ORDER BY createdtime DESC");
+		queryBuilder.append(" OFFSET :offset");
+		preparedStatementValues.put("offset", null == criteria.getOffset() ? properties.getDefaultOffset() : criteria.getOffset());		
+		queryBuilder.append(" LIMIT :limit");
+		preparedStatementValues.put("limit", null == criteria.getLimit() ? properties.getDefaultLimit() : criteria.getLimit());
+		
+		
 		return queryBuilder.toString();
 		
 	}
@@ -74,7 +84,7 @@ public class MsevaEventsQueryBuilder {
         if (values.isEmpty())
             queryString.append(" WHERE ");
         else {
-            queryString.append(" AND");
+            queryString.append(" AND ");
         }
     }
 

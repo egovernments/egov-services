@@ -40,15 +40,12 @@
 
 package org.egov.mseva.service;
 
-import java.sql.Array;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+
+import javax.net.ssl.SSLEngineResult.Status;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -103,6 +100,7 @@ public class MsevaService {
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
 				.events(request.getEvents()).build();
 	}
+
 	
 	public EventResponse updateEvents(EventRequest request) {
 		validator.validateUpdateEvent(request);
@@ -115,10 +113,11 @@ public class MsevaService {
 				.events(request.getEvents()).build();
 	}
 	
-	public EventResponse searchEvents(RequestInfo requestInfo, EventSearchCriteria criteria) {
+	public EventResponse searchEvents(RequestInfo requestInfo, EventSearchCriteria criteria, Boolean isUpdate) {
 		validator.validateSearch(requestInfo, criteria);
 		log.info("Searching events......");
-		enrichSearchCriteria(requestInfo, criteria);
+		if(!isUpdate)
+			enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
 		
 		LastLoginDetails loginDetails = LastLoginDetails.builder()
@@ -212,6 +211,12 @@ public class MsevaService {
 			roles.add("CITIZEN");
 			criteria.setUserids(userIds); criteria.setRoles(roles); 
 			criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+		}
+		
+		if(CollectionUtils.isEmpty(criteria.getStatus())) {
+			List<String> statuses = new ArrayList<>();
+			statuses.add("ACTIVE");
+			criteria.setStatus(statuses);
 		}
 		
 		if(!CollectionUtils.isEmpty(criteria.getUserids()) 

@@ -32,6 +32,10 @@ public class EventSearchCriteria {
 	
 	private List<String> recepients;
 	
+	private Integer offset;
+	
+	private Integer limit;
+	
 	
 	public Boolean isEmpty(EventSearchCriteria eventSearchCriteria) {
 		if(CollectionUtils.isEmpty(eventSearchCriteria.getIds()) && CollectionUtils.isEmpty(eventSearchCriteria.getPostedBy())

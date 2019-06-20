@@ -188,7 +188,7 @@ const fireNocApplicationDocumentsRowMapper = (row, mapper = []) => {
     id: row.documentuuid,
     tenantId: row.tenantid,
     documentType: row.documenttype,
-    fileStoreId: row.fileStoreid,
+    fileStoreId: row.filestoreid,
     documentUid: row.documentuid
   };
   if (applicationDocumentIndex != -1) {
@@ -237,3 +237,15 @@ const searchUser = async (requestInfo, uuid) => {
   let users=get(userSearchResponse,"user",[]);
   return users.length?users[0]:{};
 };
+
+export const searchByMobileNumber=async (mobileNumber,tenantId)=>{
+  var userSearchReqCriteria={};
+  userSearchReqCriteria.userType = "CITIZEN";
+  userSearchReqCriteria.tenantId = tenantId;
+  userSearchReqCriteria.mobileNumber = mobileNumber;
+  var userSearchResponse = await userService.searchUser(
+    requestInfo,
+    userSearchReqCriteria
+  );
+  return userSearchResponse;
+}

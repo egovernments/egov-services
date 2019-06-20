@@ -32,8 +32,7 @@ paths:
         - name: ids
           type: array
           items:
-            type: integer
-            format: int64
+            type: string
           in: query
           maxItems: 50
           description: unique identifier of Fire NOC

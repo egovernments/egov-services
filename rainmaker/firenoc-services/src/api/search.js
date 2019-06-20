@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requestInfoToResponseInfo } from "../utils";
-import { mergeSearchResults } from "../utils/search";
+import { mergeSearchResults, searchByMobileNumber } from "../utils/search";
 import isEmpty from "lodash/isEmpty";
 import get from "lodash/get";
 import some from "lodash/some";
@@ -25,7 +25,10 @@ export default ({ config, db }) => {
         next({
           errorType: "custom",
           errorReponse: {
-            ResponseInfo: requestInfoToResponseInfo(request.body.RequestInfo, true),
+            ResponseInfo: requestInfoToResponseInfo(
+              request.body.RequestInfo,
+              true
+            ),
             Errors: errors
           }
         });
@@ -49,6 +52,28 @@ export default ({ config, db }) => {
       const queryKeys = Object.keys(queryObj);
       let sqlQuery = text;
 
+      // if (queryObj.hasOwnProperty("ids")) {
+      //   console.log(queryObj.ids.split(","));
+      //   let ids=queryObj.ids.split(",");
+      //   for (var i = 0; i < ids.length; i++) {
+      //     sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' OR`;
+      //   }
+      // }
+
+      if (queryObj.hasOwnProperty("mobileNumber")) {
+        // console.log("mobile number");
+        let userSearchResponse = await searchByMobileNumber(
+          queryObj.mobileNumber,
+          queryObj.tenantId
+        );
+        // console.log(userSearchResponse);
+        let searchUserUUID = get(userSearchResponse, "user.0.uuid");
+        // if (searchUserUUID) {
+        //   // console.log(searchUserUUID);
+          sqlQuery = `${sqlQuery} FO.useruuid='${searchUserUUID || queryObj.mobileNumber}' AND`;
+        // }
+      }
+
       if (queryKeys) {
         queryKeys.forEach(item => {
           if (queryObj[item]) {
@@ -57,7 +82,8 @@ export default ({ config, db }) => {
               item != "toDate" &&
               item != "tenantId" &&
               item != "status" &&
-              item != "ids"
+              item != "ids" &&
+              item != "mobileNumber"
             ) {
               sqlQuery = `${sqlQuery} ${item}='${queryObj[item]}' AND`;
             }
@@ -85,9 +111,7 @@ export default ({ config, db }) => {
         )} ORDER BY FN.uuid`;
       }
 
-      //ids support should be done here
-
-      // console.log(text);
+      console.log(sqlQuery);
 
       db.query(sqlQuery, async (err, dbRes) => {
         if (err) {

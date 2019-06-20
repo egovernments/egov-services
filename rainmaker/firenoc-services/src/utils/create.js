@@ -158,6 +158,8 @@ const createUser = async (requestInfo, owner, tenantId) => {
   return userCreateResponse;
 };
 
+
+
 const addDefaultUserDetails = (tenantId, owner) => {
   if (!owner.userName || isEmpty(owner.userName))
     owner.userName = owner.mobileNumber;

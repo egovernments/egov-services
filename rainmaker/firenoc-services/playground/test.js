@@ -1,13 +1,13 @@
-// const Ajv = require("Ajv");
-// const ajv = new Ajv({ allErrors:true });
-// const schema = require("../src/model/fireNOC.js");
-// console.log(schema);
+const Ajv = require("Ajv");
+const ajv = new Ajv({ allErrors:true });
+const schema = require("../src/model/fireNOC.js");
+console.log(schema);
 // const axios = require("axios");
 
-// const data = require("./fireNOCRequest.json");
+const data = require("./fireNOCRequest.json");
 // console.log(data);
 
-// ajv.addSchema(schema, "swagger.json");
+ajv.addSchema(schema, "swagger.json");
 
 // ajv
 //   .compileAsync({ $ref: "swagger.json#/definitions/FireNOCRequest" })
@@ -28,11 +28,11 @@
 // }
 //
 
-// let validate=ajv.compile(schema);
+let validate=ajv.compile(schema);
 //
-// var valid = validate(data);
-//
-// if (!valid) console.log(validate.errors);
+var valid = validate(data);
+
+if (!valid) console.log(validate.errors);
 
 
 // console.log('test');

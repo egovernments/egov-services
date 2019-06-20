@@ -52,13 +52,13 @@ export default ({ config, db }) => {
       const queryKeys = Object.keys(queryObj);
       let sqlQuery = text;
 
-      // if (queryObj.hasOwnProperty("ids")) {
-      //   console.log(queryObj.ids.split(","));
-      //   let ids=queryObj.ids.split(",");
-      //   for (var i = 0; i < ids.length; i++) {
-      //     sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' OR`;
-      //   }
-      // }
+      if (queryObj.hasOwnProperty("ids")) {
+        console.log(queryObj.ids.split(","));
+        let ids=queryObj.ids.split(",");
+        for (var i = 0; i < ids.length; i++) {
+          sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' OR`;
+        }
+      }
 
       if (queryObj.hasOwnProperty("mobileNumber")) {
         // console.log("mobile number");

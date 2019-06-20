@@ -3,6 +3,7 @@ package org.egov.pt.calculator.util;
 import org.egov.pt.calculator.service.MasterDataService;
 import org.egov.pt.calculator.web.models.property.PropertyDetail;
 import org.egov.pt.calculator.web.models.property.Unit;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -71,6 +72,9 @@ public class PBFirecessUtils {
         Map<String, Object> CessMap = mDataService.getApplicableMaster(assessmentYear,masterList);
 
         BigDecimal firecessRate;
+
+        if (CessMap == null)
+            throw new CustomException("MASTER_DATA_NOT_FOUND", "There is no master data for financial year - " + assessmentYear);
 
         if ((Boolean)CessMap.get("dynamicFirecess"))
         {

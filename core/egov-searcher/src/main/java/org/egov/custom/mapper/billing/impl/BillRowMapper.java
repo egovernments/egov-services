@@ -144,12 +144,13 @@ public class BillRowMapper implements ResultSetExtractor<List<Bill>> {
 
 		}
 		log.debug("converting map to list object ::: " + billMap.values());
-		setUserValuesToBill(billDetailMap.values(), userIds);
+		if (!CollectionUtils.isEmpty(userIds))
+			setUserValuesToBill(billDetailMap.values(), userIds);
 		return new ArrayList<>(billMap.values());
 	}
 
 	private void setUserValuesToBill(Collection<BillDetail> details, Set<String> userIds) {
-
+		
 		UserSearchCriteria userCriteria = UserSearchCriteria.builder().uuid(userIds).build();
 		UserResponse res = rest.postForObject(userContext.concat(userSearchPath), userCriteria, UserResponse.class);
 		Map<String, String> usersMap = res.getUsers().stream().collect(Collectors.toMap(User::getUuid, User::getName));

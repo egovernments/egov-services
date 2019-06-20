@@ -53,7 +53,7 @@ export default ({ config, db }) => {
       let sqlQuery = text;
 
       if (queryObj.hasOwnProperty("ids")) {
-        console.log(queryObj.ids.split(","));
+        // console.log(queryObj.ids.split(","));
         let ids=queryObj.ids.split(",");
         for (var i = 0; i < ids.length; i++) {
           sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' OR`;
@@ -111,7 +111,7 @@ export default ({ config, db }) => {
         )} ORDER BY FN.uuid`;
       }
 
-      console.log(sqlQuery);
+      // console.log(sqlQuery);
 
       db.query(sqlQuery, async (err, dbRes) => {
         if (err) {

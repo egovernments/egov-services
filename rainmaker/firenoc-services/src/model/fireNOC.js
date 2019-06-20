@@ -210,7 +210,8 @@ const BuildingUOM = {
     },
     value: {
       type: "integer",
-      description: "Value entered for the uom"
+      description: "Value entered for the uom",
+      minimum: 1
     },
     isActiveUom: {
       type: "boolean",

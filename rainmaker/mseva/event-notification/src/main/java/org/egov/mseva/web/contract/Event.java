@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.mseva.model.AuditDetails;
 import org.egov.mseva.model.RecepientEvent;
+import org.egov.mseva.model.enums.Source;
 import org.egov.mseva.model.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -38,8 +39,12 @@ public class Event {
 	
 	private String id;
 	
+	private String referenceId;
+	
 	@NotNull
 	private String eventType;
+	
+	private String name;
 	
 	@NotNull
 	private String description;
@@ -48,7 +53,9 @@ public class Event {
 	private Status status;
 	
 	@NotNull
-	private String source;
+	private Source source;
+	
+	private String postedBy;
 	
 	@Valid
 	@NotNull

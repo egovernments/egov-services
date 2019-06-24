@@ -1,7 +1,5 @@
 package org.egov.mseva.web.contract;
 
-import java.util.List;
-
 import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +32,12 @@ public class EventDetails {
 	
 	private Long longitude;
 	
-	private List<String> documents;
-
+	
+	public boolean isEmpty(EventDetails details) {
+		if(null == details.getFromDate() || null == details.getToDate() || null == details.getLatitude() || null == details.getLongitude()) {
+			return true;
+		}
+		return false;
+	}
+	
 }

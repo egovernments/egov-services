@@ -11,6 +11,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.mseva.service.MDMSService;
 import org.egov.mseva.service.MsevaService;
 import org.egov.mseva.utils.ErrorConstants;
+import org.egov.mseva.utils.MsevaConstants;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventRequest;
 import org.egov.mseva.web.contract.EventSearchCriteria;
@@ -75,6 +76,10 @@ public class MsevaValidator {
 		if(responseFromDB.size() != request.getEvents().size()) {
 			errorMap.put(ErrorConstants.MEN_UPDATE_MISSING_EVENTS_CODE, ErrorConstants.MEN_UPDATE_MISSING_EVENTS_MSG);
 		}
+		for(Event event: request.getEvents()) {
+			if(!StringUtils.isEmpty(event.getReferenceId())) 
+				errorMap.put(ErrorConstants.MEN_UPDATE_COUNTEREVENT_CODE, ErrorConstants.MEN_UPDATE_COUNTEREVENT_MSG);
+		}
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
@@ -96,10 +101,6 @@ public class MsevaValidator {
 	}
 	
 	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
-		if(CollectionUtils.isEmpty(event.getRecepient().getToUsers()) 
-				&& CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-			errorMap.put(ErrorConstants.EMPTY_RECEPIENT_CODE, ErrorConstants.EMPTY_RECEPIENT_MSG);
-		}
 		if(null != event.getEventDetails()) {
 			if(event.getEventDetails().getFromDate() > event.getEventDetails().getToDate()) {
 				errorMap.put(ErrorConstants.INVALID_EVENT_DATE_CODE, ErrorConstants.INVALID_EVENT_DATE_MSG);
@@ -117,7 +118,19 @@ public class MsevaValidator {
 		List<String> eventTypes = mdmsService.fetchEventTypes(requestInfo, event.getTenantId());
 		if(!CollectionUtils.isEmpty(eventTypes)) {
 			if(!eventTypes.contains(event.getEventType()))
-				throw new CustomException(ErrorConstants.MEN_INVALID_EVENTTYPE_CODE, ErrorConstants.MEN_INVALID_EVENTTYPE_MSG);
+				errorMap.put(ErrorConstants.MEN_INVALID_EVENTTYPE_CODE, ErrorConstants.MEN_INVALID_EVENTTYPE_MSG);
+			else {
+				if(event.getEventType().equals(MsevaConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
+					if(null == event.getEventDetails()) {
+						errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE, ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
+					}else if(event.getEventDetails().isEmpty(event.getEventDetails())) {
+						errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE, ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
+					}
+					if(StringUtils.isEmpty(event.getName())) {
+						errorMap.put(ErrorConstants.MEN_CREATE_NAMEMANDATORY_CODE, ErrorConstants.MEN_CREATE_NAMEMANDATOR_MSG);
+					}
+				}
+			}
 		}else {
 			throw new CustomException(ErrorConstants.MEN_NO_DATA_MDMS_CODE, ErrorConstants.MEN_NO_DATA_MDMS_MSG);
 		}

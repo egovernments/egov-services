@@ -7,7 +7,7 @@ serviceMaps:
     fromTopic: save-mseva-events
     isTransaction: true
     queryMaps:
-    - query: INSERT INTO eg_men_events(tenantid, id, source, eventtype, description, status, eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_men_events(tenantid, id, source, eventtype, name, postedby, referenceid, description, status, eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: events.*
       jsonMaps:
@@ -20,6 +20,12 @@ serviceMaps:
       - jsonPath: $.events.*.source
 
       - jsonPath: $.events.*.eventType
+      
+      - jsonPath: $.events.*.name
+      
+      - jsonPath: $.events.*.postedBy
+      
+      - jsonPath: $.events.*.referenceId
 
       - jsonPath: $.events.*.description
 
@@ -67,7 +73,7 @@ serviceMaps:
     fromTopic: update-mseva-events
     isTransaction: true
     queryMaps:
-    - query: UPDATE eg_men_events SET description = ?, status = ?, eventdetails = ?, actions = ?, recepient = ? , lastmodifiedby = ?, lastmodifiedtime = ? WHERE id = ?;
+    - query: UPDATE eg_men_events SET description = ?, status = ?, name = ?, postedby = ?, eventdetails = ?, actions = ?, recepient = ? , lastmodifiedby = ?, lastmodifiedtime = ? WHERE id = ?;
 
       basePath: events.*
       jsonMaps:
@@ -76,6 +82,10 @@ serviceMaps:
 
       - jsonPath: $.events.*.status
 
+      - jsonPath: $.events.*.name
+      
+      - jsonPath: $.events.*.postedBy
+      
       - jsonPath: $.events.*.eventDetails
         type: JSON
         dbType: JSONB

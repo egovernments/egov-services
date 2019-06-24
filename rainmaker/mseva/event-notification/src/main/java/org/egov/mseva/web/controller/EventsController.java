@@ -93,7 +93,6 @@ public class EventsController {
 	private ResponseEntity<?> update(@RequestBody @Valid EventRequest request) {
 		EventResponse response = service.updateEvents(request);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 	
 	/**

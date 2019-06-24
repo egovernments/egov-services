@@ -39,4 +39,13 @@ public class ErrorConstants {
 	public static final String MEN_INVALID_COUNT_CRITERIA_CODE = "MEN_INVALID_COUNT_CRITERIA";
 	public static final String MEN_INVALID_COUNT_CRITERIA_MSG = "Atleast one of the parameters is mandatory for fetching count of unread notifications.";
 	
+	public static final String MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE = "MEN_UPDATE_EVENTDETAILS_MANDATORY";
+	public static final String MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG = "EventDetails are mandatory for this type of event.";
+	
+	public static final String MEN_UPDATE_COUNTEREVENT_CODE = "MEN_UPDATE_COUNTEREVENT";
+	public static final String MEN_UPDATE_COUNTEREVENT_MSG = "You're trying to update a system generated counter event, which is not allowed.";
+	
+	public static final String MEN_CREATE_NAMEMANDATORY_CODE = "MEN_CREATE_NAMEMANDATORY";
+	public static final String MEN_CREATE_NAMEMANDATOR_MSG = "Name of the event is mandatory.";
+	
 }

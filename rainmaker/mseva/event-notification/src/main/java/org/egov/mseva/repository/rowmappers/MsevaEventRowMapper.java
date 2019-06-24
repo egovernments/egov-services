@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.mseva.model.AuditDetails;
+import org.egov.mseva.model.enums.Source;
 import org.egov.mseva.model.enums.Status;
 import org.egov.mseva.web.contract.Action;
 import org.egov.mseva.web.contract.Event;
@@ -34,7 +35,7 @@ public class MsevaEventRowMapper implements ResultSetExtractor <List<Event>> {
 					.id(resultSet.getString("id"))
 					.tenantId(resultSet.getString("tenantid"))
 					.eventType(resultSet.getString("eventtype"))
-					.source(resultSet.getString("source"))
+					.source(Source.valueOf(resultSet.getString("source")))
 					.description(resultSet.getString("description"))
 					.status(Status.valueOf(resultSet.getString("status"))).build();
 			try {

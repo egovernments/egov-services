@@ -52,9 +52,11 @@ import org.egov.receipt.consumer.model.MasterDetail;
 import org.egov.receipt.consumer.model.MdmsCriteria;
 import org.egov.receipt.consumer.model.MdmsCriteriaReq;
 import org.egov.receipt.consumer.model.ModuleDetail;
+import org.egov.receipt.consumer.model.OnlineGLCodeMapping;
 import org.egov.receipt.consumer.model.ProcessStatus;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.TaxHeadMaster;
+import org.egov.receipt.consumer.model.Tenant;
 import org.egov.receipt.consumer.repository.ServiceRequestRepository;
 import org.egov.receipt.custom.exception.VoucherCustomException;
 import org.egov.reciept.consumer.config.PropertiesManager;
@@ -70,6 +72,16 @@ import com.jayway.jsonpath.JsonPath;
 public class MicroServiceUtilImpl implements MicroServiceUtil{
 	private static final String FIN_MODULE_NAME = "FinanceModule";
 	private static final String BILLSERVICE_MODULE_NAME = "BillingService";
+	private static final String FINANCE_CODE = "Finance";
+	private static final Object ONLINE_INSTRUMENT_TYPE = "Online";
+	private static final String BUSINESS_SERVICE_MAPP_MASTER = "BusinessServiceMapping";
+	private static final String TAX_HEAD_MAPP_MASTER = "TaxHeadMasterGlCodeMapping";
+	private static final String INSTRUMENT_GLCODE_MAPP_MASTER = "InstrumentGLcodeMapping";
+	private static final String FIN_INSTRUMENT_STATUS_MAPP_MASTER = "FinanceInstrumentStatusMapping";
+	private static final String ONLINE_GLCODE_MAPP_MASTER = "OnlineGLCodeMapping";
+	private static final String BUSINESS_SERVICE_MASTER = "BusinessService";
+	private static final String CITY_MODULE_MASTER = "citymodule";
+	private static final String TENANT_MODULE_NAME = "tenant";
 	@Autowired
 	private PropertiesManager manager;
 	@Autowired
@@ -125,6 +137,7 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		this.addFinanceModule(moduleDetails, businessServiceCode);
 		this.addBillingServiceModule(moduleDetails, businessServiceCode);
+		this.addTenantModule(moduleDetails);
         mdmscriteria.setTenantId(tenantId);
         mdmscriteria.setModuleDetails(moduleDetails);
         mdmsrequest.setRequestInfo(requestInfo);
@@ -141,17 +154,24 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 	
 	private void addFinanceModule(List<ModuleDetail> moduleDetails,String businessServiceCode){
 		ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
-		masterDetailsList.add(new MasterDetail("BusinessServiceMapping","[?(@.code=='" + businessServiceCode + "')]"));
-		masterDetailsList.add(new MasterDetail("TaxHeadMasterGlCodeMapping","[?(@.billingservicecode=='" + businessServiceCode + "')]"));
-		masterDetailsList.add(new MasterDetail("InstrumentGLcodeMapping",null));
-		masterDetailsList.add(new MasterDetail("FinanceInstrumentStatusMapping",null));
+		masterDetailsList.add(new MasterDetail(BUSINESS_SERVICE_MAPP_MASTER,businessServiceCode != null ? "[?(@.code=='" + businessServiceCode + "')]" : null));
+		masterDetailsList.add(new MasterDetail(TAX_HEAD_MAPP_MASTER,businessServiceCode != null ? "[?(@.billingservicecode=='" + businessServiceCode + "')]":null));
+		masterDetailsList.add(new MasterDetail(INSTRUMENT_GLCODE_MAPP_MASTER,null));
+		masterDetailsList.add(new MasterDetail(FIN_INSTRUMENT_STATUS_MAPP_MASTER,null));
+		masterDetailsList.add(new MasterDetail(ONLINE_GLCODE_MAPP_MASTER,businessServiceCode != null ? "[?(@.servicecode=='" + businessServiceCode + "')]" : null));
 		moduleDetails.add(new ModuleDetail(FIN_MODULE_NAME, masterDetailsList));
 	}
 
 	private void addBillingServiceModule(List<ModuleDetail> moduleDetails,String businessServiceCode){
 		ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
-		masterDetailsList.add(new MasterDetail("BusinessService","[?(@.code=='" + businessServiceCode + "')]"));
+		masterDetailsList.add(new MasterDetail(BUSINESS_SERVICE_MASTER,businessServiceCode != null ? "[?(@.code=='" + businessServiceCode + "')]" : null));
 		moduleDetails.add(new ModuleDetail(BILLSERVICE_MODULE_NAME, masterDetailsList));
+	}
+	
+	private void addTenantModule(List<ModuleDetail> moduleDetails){
+		ArrayList<MasterDetail> masterDetailsList = new ArrayList<>();
+		masterDetailsList.add(new MasterDetail(CITY_MODULE_MASTER,"[?(@.code=='" + FINANCE_CODE + "')]"));
+		moduleDetails.add(new ModuleDetail(TENANT_MODULE_NAME, masterDetailsList));
 	}
 
 	@Override
@@ -175,16 +195,23 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		if(finSerMdms.getFinanceServiceMdmsData() == null){
 			this.getFinanceServiceMdmsData(tenantId, businessCode, requestInfo, finSerMdms);
 		}
-		List<InstrumentGlCodeMapping> list = new ArrayList<>();
 		try {
 			if(finSerMdms.getFinanceServiceMdmsData() != null){
-				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.InstrumentGLcodeMapping"),new TypeReference<List<InstrumentGlCodeMapping>>(){});
+				if(ONLINE_INSTRUMENT_TYPE.equals(instrumentType)){
+					/* Online instrument type mapped at ULB level*/
+					List<OnlineGLCodeMapping> list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.OnlineGLCodeMapping"),new TypeReference<List<OnlineGLCodeMapping>>(){});
+					List<OnlineGLCodeMapping> collect = list.stream().filter(inst -> inst.getServicecode().equals(businessCode)).collect(Collectors.toList());
+					return !collect.isEmpty() ? collect.get(0).getGlcode() : null;
+				}else{
+					List<InstrumentGlCodeMapping> list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.FinanceModule.InstrumentGLcodeMapping"),new TypeReference<List<InstrumentGlCodeMapping>>(){});
+					List<InstrumentGlCodeMapping> collect = list.stream().filter(inst -> inst.getInstrumenttype().equals(instrumentType)).collect(Collectors.toList());
+					return !collect.isEmpty() ? collect.get(0).getGlcode() : null;
+				}
 			}
 		} catch (Exception e) {
-			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for InstrumentGLcodeMapping master. Check the business/account head mapping json file.");
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for InstrumentGLcodeMapping/OnlineGLCodeMapping master. Check the business/account head mapping json file.");
 		}
-		List<InstrumentGlCodeMapping> collect = list.stream().filter(inst -> inst.getInstrumenttype().equals(instrumentType)).collect(Collectors.toList());
-		return !collect.isEmpty() ? collect.get(0).getGlcode() : null;
+		return null;
 	}
 	
 	@Override
@@ -202,6 +229,22 @@ public class MicroServiceUtilImpl implements MicroServiceUtil{
 		}
 		List<FinancialStatus> collect = list.stream().filter(fs -> fs.getCode().equals(statusCode)).collect(Collectors.toList());
 		return !collect.isEmpty() ? collect.get(0) : null;
+	}
+	
+	@Override
+	public List<Tenant> getFinanceTenantList(String tenantId, String businessCode,RequestInfo requestInfo, FinanceMdmsModel finSerMdms) throws VoucherCustomException{
+		if(finSerMdms.getFinanceServiceMdmsData() == null){
+			this.getFinanceServiceMdmsData(tenantId, businessCode, requestInfo, finSerMdms);
+		}
+		List<Tenant> list = null;
+		try {
+			if(finSerMdms.getFinanceServiceMdmsData() != null){
+				list = mapper.convertValue(JsonPath.read(finSerMdms.getFinanceServiceMdmsData(), "$.MdmsRes.tenant.citymodule[0].tenants"),new TypeReference<List<Tenant>>(){});
+			}
+		} catch (Exception e) {
+			throw new VoucherCustomException(ProcessStatus.FAILED,"Error while parsing mdms data for CityModule master. Check the CityModule.json file.");
+		}
+		return list;
 	}
 
 }

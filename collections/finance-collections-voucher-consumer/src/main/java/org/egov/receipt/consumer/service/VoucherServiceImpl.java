@@ -66,6 +66,7 @@ import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.Scheme;
 import org.egov.receipt.consumer.model.TaxHeadMaster;
+import org.egov.receipt.consumer.model.Tenant;
 import org.egov.receipt.consumer.model.Voucher;
 import org.egov.receipt.consumer.model.VoucherRequest;
 import org.egov.receipt.consumer.model.VoucherResponse;
@@ -389,5 +390,19 @@ public class VoucherServiceImpl implements VoucherService {
 						moduleName);
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean isTenantEnabledInFinanceModule(ReceiptReq req, FinanceMdmsModel finSerMdms) throws VoucherCustomException{
+		Receipt receipt = req.getReceipt().get(0);
+		String tenantId = receipt.getTenantId();
+		Bill bill = receipt.getBill().get(0);
+		String bsCode = bill.getBillDetails().get(0).getBusinessService();
+		List<Tenant> tenantList = microServiceUtil.getFinanceTenantList(tenantId, bsCode, req.getRequestInfo(), finSerMdms);
+		List<Tenant> collect = tenantList.stream().filter(tenant -> tenant.getCode().equals(tenantId)).collect(Collectors.toList());
+		if(collect.isEmpty()){
+			throw new VoucherCustomException(ProcessStatus.NA, "TenantId "+tenantId+" is not enabled in Finance module.");
+		}
+		return true;
 	}
 }

@@ -88,7 +88,7 @@ public class EgfKafkaListener {
         	request = objectMapper.readValue(record.value(), ReceiptReq.class);
         	LOGGER.info("topic : {} ,  request : {}", topic, request);
         	if(topic.equals(manager.getVoucherCreateTopic())){
-        		if (voucherService.isVoucherCreationEnabled(request, finSerMdms)) {
+        		if (voucherService.isTenantEnabledInFinanceModule(request, finSerMdms) && voucherService.isVoucherCreationEnabled(request, finSerMdms)) {
         			voucherResponse = voucherService.createReceiptVoucher(request, finSerMdms);
         			voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
         			receiptService.updateReceipt(request, voucherResponse);

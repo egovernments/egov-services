@@ -46,6 +46,7 @@ import org.egov.receipt.consumer.model.FinanceMdmsModel;
 import org.egov.receipt.consumer.model.FinancialStatus;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.TaxHeadMaster;
+import org.egov.receipt.consumer.model.Tenant;
 import org.egov.receipt.custom.exception.VoucherCustomException;
 
 public interface MicroServiceUtil {
@@ -57,4 +58,6 @@ public interface MicroServiceUtil {
 			FinanceMdmsModel finSerMdms, String instrumentType) throws VoucherCustomException;
 	FinancialStatus getFinancialStatusByCode(String tenantId, RequestInfo requestInfo, FinanceMdmsModel finSerMdms,
 			String statusCode) throws VoucherCustomException;
+	List<Tenant> getFinanceTenantList(String tenantId, String businessCode, RequestInfo requestInfo, FinanceMdmsModel finSerMdms)
+			throws VoucherCustomException;
 }

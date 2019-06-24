@@ -18,7 +18,7 @@ export const status = {
   "REJECT":"REJECTED",
   "REFER":"REFERED",
   "APPROVE":"APPROVED",
-  "CANCEL":"CANCELED"
+  "CANCEL":"CANCELLED"
 };
 
 export const actions = {
@@ -29,7 +29,7 @@ export const actions = {
   FIELDINSPECTION: "FORWARD",
   REJECTED: "REJECT",
   APPROVED: "APPROVE",
-  CANCELED: "CANCEL",
+  CANCELLED: "CANCEL",
   REFERED:"REFER"
 };
 

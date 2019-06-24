@@ -19,7 +19,7 @@ export default ({ config, db }) => {
       };
 
       const queryObj = JSON.parse(JSON.stringify(request.query));
-
+      // console.log(queryObj);
       let errors = validateFireNOCSearchModel(queryObj);
       if (errors.length > 0) {
         next({

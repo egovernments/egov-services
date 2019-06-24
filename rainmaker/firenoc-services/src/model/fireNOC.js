@@ -18,7 +18,7 @@
 //       description: "brief description of the role"
 //     }
 //   },
-//   required: ["name"]
+//   // required: ["name"]
 // };
 
 const AuditDetails = {
@@ -65,7 +65,7 @@ const AuditDetails = {
 //       items: Role
 //     }
 //   },
-//   required: ["tenantId", "roles"]
+//   // required: ["tenantId", "roles"]
 // };
 
 // const UserInfo = {
@@ -115,7 +115,7 @@ const AuditDetails = {
 //       items: TenantRole
 //     }
 //   },
-//   required: ["tenantId", "userName", "primaryrole"]
+//   // required: ["tenantId", "userName", "primaryrole"]
 // };
 
 const Address = {
@@ -197,17 +197,17 @@ const Address = {
       maxLength: 64,
       minLength: 2
     },
-    locality:{
-      type:"object",
+    locality: {
+      type: "object",
       properties: {
         code: {
           type: "string"
         }
       },
-      required:["code"]
+      required: ["code"]
     }
   },
-  required:["locality","city"]
+  required: ["locality", "city"]
 };
 
 const BuildingUOM = {
@@ -289,13 +289,32 @@ const OwnerInfo = {
     relationship: {
       type: "string",
       description: "Relationship with owner.",
-      enum: ["FATHER", "HUSBAND"]
+      enum: ["NOC_APPLICANT_RELATIONSHIP_FATHER_RADIOBUTTON", "NOC_APPLICANT_RELATIONSHIP_HUSBAND_RADIOBUTTON"]
     },
     documents: {
       description: "Document of the owner.",
       items: Document
+    },
+    mobileNumber: {
+      type: "string",
+      description: "mobile number of the autheticated user",
+      pattern:"^[6789][0-9]{9}$"
+    },
+    gender:{
+      type: "string",
+      enum: ["NOC_GENDER_MALE_RADIOBUTTON", "NOC_GENDER_FEMALE_RADIOBUTTON","NOC_GENDER_TRANSGENDER_RADIOBUTTON"]
+    },
+    name:{
+      type:"string"
+    },
+    dob:{
+      type:"integer"
+    },
+    fatherOrHusbandName:{
+      type:"string"
     }
-  }
+  },
+  required:["name","mobileNumber","gender","relationship","correspondenceCity","dob","fatherOrHusbandName"]
 };
 
 const PropertyDetails = {
@@ -417,7 +436,18 @@ const FireNOCDetails = {
       type: "string",
       description:
         "1. Perform action to change the state of the Fire NOC. 2. INITIATE, if application is getting submitted without required document. 3. APPLY, if application is getting submitted with application documents, in that case api will validate all the required application document. 4. APPROVE action is only applicable for specific role, that role has to be configurable at service level. Employee can approve a application only if application is in APPLIED state and Fire NOC fees is paid.",
-      enum: ["INITIATE", "APPLY", "APPROVE", "REJECT", "CANCEL","PAY","ADHOC","FORWARD","REFER","SENDBACK"]
+      enum: [
+        "INITIATE",
+        "APPLY",
+        "APPROVE",
+        "REJECT",
+        "CANCEL",
+        "PAY",
+        "ADHOC",
+        "FORWARD",
+        "REFER",
+        "SENDBACK"
+      ]
     },
     channel: {
       type: "string",
@@ -428,7 +458,11 @@ const FireNOCDetails = {
     },
     noOfBuildings: {
       type: "string",
-      description: "it might be single or multiple"
+      description: "it might be single or multiple",
+      enum: [
+        "NOC_NO_OF_BUILDINGS_SINGLE_RADIOBUTTON",
+        "NOC_NO_OF_BUILDINGS_MULTIPLE_RADIOBUTTON"
+      ]
     },
     buildings: {
       type: "array",
@@ -464,6 +498,21 @@ const FireNOCDetails = {
       description: "Json object to store additional details about license"
     },
     auditDetails: AuditDetails
+  },
+  if: {
+    properties: {
+      noOfBuildings: { enum: ["NOC_NO_OF_BUILDINGS_SINGLE_RADIOBUTTON"] }
+    }
+  },
+  then: {
+    properties: {
+      buildings: { maxItems:1 }
+    }
+  },
+  else: {
+    properties: {
+      buildings: { minItems:1 }
+    }
   },
   required: [
     // "tenantId",

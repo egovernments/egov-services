@@ -389,6 +389,14 @@
       "uniqueKeys": [
         "$.code"
       ]
+    },
+    "citymodule": {
+      "masterName": "citymodule",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   },
   "works": {

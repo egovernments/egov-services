@@ -692,6 +692,13 @@
       "uniqueKeys": [
         "$.code"
       ]
+    },
+    "FireNocStateConstats": {
+      "masterName": "FireNocStateConstats",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code"
+      ]
     }
   },
   "BillingService": {

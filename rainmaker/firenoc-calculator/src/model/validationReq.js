@@ -705,7 +705,7 @@ const BillingSlab = {
     uom: {
       type: "string",
       description: "unit of measurement of bill slab.",
-      maxLength: 32,
+      maxLength: 64,
       minLength: 2
     },
     fromUom: {

@@ -33,7 +33,7 @@ const FireNOCSearchRequest = {
       type: "string"
     }
   },
-  required: ["tenantId"]
+  // required: ["tenantId"]
 };
 
 module.exports = FireNOCSearchRequest;

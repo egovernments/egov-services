@@ -6,6 +6,7 @@ import get from "lodash/get";
 import some from "lodash/some";
 import { actions } from "../utils/search";
 import { validateFireNOCSearchModel } from "../utils/modelValidation";
+import envVariables from "../envVariables";
 const asyncHandler = require("express-async-handler");
 
 export default ({ config, db }) => {
@@ -35,18 +36,28 @@ export default ({ config, db }) => {
         return;
       }
       // console.log(queryObj);
-      queryObj.action = actions[queryObj.status];
+
 
       let text =
-        "SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.provisionfirenocnumber,FN.oldfirenocnumber,FN.dateofapplied,FN.createdBy,FN.createdTime,FN.lastModifiedBy,FN.lastModifiedTime,FD.uuid as firenocdetailsid,FD.action,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.firestationid,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FD.propertyid,FD.noofbuildings,FD.additionaldetail,FBA.uuid as puuid,FBA.doorno as pdoorno,FBA.latitude as platitude,FBA.longitude as plongitude,FBA.buildingName as pbuildingname,FBA.addressnumber as paddressnumber,FBA.pincode as ppincode,FBA.locality as plocality,FBA.city as pcity,FBA.street as pstreet,FB.uuid as buildingid ,FB.name as buildingname,FB.usagetype,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship,FUOM.uuid as uomuuid,FUOM.code,FUOM.value,FUOM.activeuom,FBD.uuid as documentuuid,FUOM.active,FBD.documentType,FBD.filestoreid,FBD.documentuid,FBD.createdby as documentCreatedBy,FBD.lastmodifiedby as documentLastModifiedBy,FBD.createdtime as documentCreatedTime,FBD.lastmodifiedtime as documentLastModifiedTime FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_address FBA ON (FD.uuid = FBA.firenocdetailsuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) JOIN eg_fn_buildinguoms FUOM ON (FB.uuid = FUOM.buildinguuid) LEFT OUTER JOIN eg_fn_buildingdocuments FBD on(FB.uuid = FBD.buildinguuid) where ";
+        "SELECT FN.uuid as FID,FN.tenantid,FN.fireNOCNumber,FN.provisionfirenocnumber,FN.oldfirenocnumber,FN.dateofapplied,FN.createdBy,FN.createdTime,FN.lastModifiedBy,FN.lastModifiedTime,FD.uuid as firenocdetailsid,FD.action,FD.applicationnumber,FD.fireNOCType,FD.applicationdate,FD.financialYear,FD.firestationid,FD.issuedDate,FD.validFrom,FD.validTo,FD.action,FD.channel,FD.propertyid,FD.noofbuildings,FD.additionaldetail,FBA.uuid as puuid,FBA.doorno as pdoorno,FBA.latitude as platitude,FBA.longitude as plongitude,FBA.buildingName as pbuildingname,FBA.addressnumber as paddressnumber,FBA.pincode as ppincode,FBA.locality as plocality,FBA.city as pcity,FBA.street as pstreet,FB.uuid as buildingid ,FB.name as buildingname,FB.usagetype,FO.uuid as ownerid,FO.ownertype,FO.useruuid,FO.relationship,FUOM.uuid as uomuuid,FUOM.code,FUOM.value,FUOM.activeuom,FBD.uuid as documentuuid,FUOM.active,FBD.documentType,FBD.filestoreid,FBD.documentuid,FBD.createdby as documentCreatedBy,FBD.lastmodifiedby as documentLastModifiedBy,FBD.createdtime as documentCreatedTime,FBD.lastmodifiedtime as documentLastModifiedTime FROM eg_fn_firenoc FN JOIN eg_fn_firenocdetail FD ON (FN.uuid = FD.firenocuuid) JOIN eg_fn_address FBA ON (FD.uuid = FBA.firenocdetailsuuid) JOIN eg_fn_owner FO ON (FD.uuid = FO.firenocdetailsuuid) JOIN eg_fn_buidlings FB ON (FD.uuid = FB.firenocdetailsuuid) JOIN eg_fn_buildinguoms FUOM ON (FB.uuid = FUOM.buildinguuid) LEFT OUTER JOIN eg_fn_buildingdocuments FBD on(FB.uuid = FBD.buildinguuid)";
       // FBD.active=true AND FO.active=true AND FUOM.active=true AND";
+      if (!isEmpty(queryObj)) {
+        text=text+" where "
+      }
+
+      if (queryObj.status) {
+        queryObj.action = actions[queryObj.status];
+      }
+
       //if citizen
       const roles = get(request.body, "RequestInfo.userInfo.roles");
       const userUUID = get(request.body, "RequestInfo.userInfo.uuid");
       if (some(roles, { code: "CITIZEN" }) && userUUID) {
         text = `${text} FN.createdby = '${userUUID}' AND`;
       } else {
-        text = `${text} FN.tenantid = '${queryObj.tenantId}' AND`;
+        if (queryObj.tenantId) {
+          text = `${text} FN.tenantid = '${queryObj.tenantId}' AND`;
+        }
       }
 
       const queryKeys = Object.keys(queryObj);
@@ -64,7 +75,7 @@ export default ({ config, db }) => {
         // console.log("mobile number");
         let userSearchResponse = await searchByMobileNumber(
           queryObj.mobileNumber,
-          queryObj.tenantId
+          queryObj.tenantId ||envVariables.EGOV_DEFAULT_STATE_ID
         );
         // console.log(userSearchResponse);
         let searchUserUUID = get(userSearchResponse, "user.0.uuid");
@@ -104,14 +115,17 @@ export default ({ config, db }) => {
         sqlQuery = `${sqlQuery} FN.createdtime >= ${
           queryObj.fromDate
         } ORDER BY FN.uuid`;
-      } else {
+      } else if(!isEmpty(queryObj)) {
         sqlQuery = `${sqlQuery.substring(
           0,
           sqlQuery.length - 3
         )} ORDER BY FN.uuid`;
       }
 
+
       // console.log(sqlQuery);
+
+
 
       db.query(sqlQuery, async (err, dbRes) => {
         if (err) {

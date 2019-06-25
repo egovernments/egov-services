@@ -17,7 +17,7 @@ export default ({ config, db }) => {
     "/_update",
     asyncHandler(async ({ body }, res,next) => {
       let payloads = [];
-      let mdms = await mdmsData(body.RequestInfo);
+      let mdms = await mdmsData(body.RequestInfo,body.FireNOCs[0].tenantId);
       //model validator
       let errors=validateFireNOCModel(body,mdms);
       if (errors.length>0) {

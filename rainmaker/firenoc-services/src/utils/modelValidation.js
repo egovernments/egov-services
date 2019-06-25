@@ -15,8 +15,9 @@ export const validateFireNOCModel = (data,mdmsData) => {
   const uoms=get(mdmsData,"MdmsRes.firenoc.UOMs",[]);
   const ownerShipCategory=get(mdmsData,"MdmsRes.common-masters.OwnerShipCategory",[]);
   const buildingType=get(mdmsData,"MdmsRes.firenoc.BuildingType",[]);
+  const financialYear=get(mdmsData,"MdmsRes.egf-master.FinancialYear",[]);
   const ajv=getAjvInstance();
-  // console.log(ownerShipCategory);
+  // console.log(financialYear);
   ajv.addKeyword('valid_firestation', {
     validate: function (schema, data) {
       return some(fireStations,{code:data});
@@ -41,6 +42,13 @@ export const validateFireNOCModel = (data,mdmsData) => {
   ajv.addKeyword('valid_buildingType', {
     validate: function (schema, data) {
       return some(buildingType,{code:data});
+    },
+    errors: false
+  });
+
+  ajv.addKeyword('valid_financialYear', {
+    validate: function (schema, data) {
+      return some(financialYear,{code:data});
     },
     errors: false
   });

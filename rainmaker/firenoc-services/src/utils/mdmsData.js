@@ -1,11 +1,11 @@
 import { httpRequest } from "./api";
 import envVariables from "../envVariables";
 
-export default async (requestInfo = {}) => {
+export default async (requestInfo = {},tenantId) => {
   var requestBody = {
     RequestInfo: requestInfo,
     MdmsCriteria: {
-      tenantId: "pb.amritsar",
+      tenantId,
       moduleDetails: [
         {
           moduleName: "common-masters",
@@ -13,11 +13,20 @@ export default async (requestInfo = {}) => {
         },
         {
           moduleName: "firenoc",
-          masterDetails: [{ name: "BuildingType" },{name: "Documents"}, { name: "FireStations" },{name:"UOMs"}]
+          masterDetails: [
+            { name: "BuildingType" },
+            { name: "Documents" },
+            { name: "FireStations" },
+            { name: "UOMs" }
+          ]
         },
         {
           moduleName: "egov-location",
           masterDetails: [{ name: "TenantBoundary" }]
+        },
+        {
+          moduleName: "egf-master",
+          masterDetails: [{ name: "FinancialYear" }]
         },
         { moduleName: "tenant", masterDetails: [{ name: "tenants" }] }
       ]

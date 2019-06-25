@@ -416,7 +416,8 @@ const FireNOCDetails = {
       type: "string",
       description: "Fire NOC applicable for financial year.",
       maxLength: 64,
-      minLength: 2
+      minLength: 2,
+      valid_financialYear:true
     },
     issuedDate: {
       type: "integer",

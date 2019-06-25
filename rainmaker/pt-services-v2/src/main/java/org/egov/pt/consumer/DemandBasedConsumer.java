@@ -1,20 +1,33 @@
 package org.egov.pt.consumer;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
+import org.egov.pt.service.CalculationService;
 import org.egov.pt.service.PropertyService;
-import org.egov.pt.web.models.*;
+import org.egov.pt.web.models.DemandBasedAssessment;
+import org.egov.pt.web.models.DemandBasedAssessmentRequest;
+import org.egov.pt.web.models.Property;
+import org.egov.pt.web.models.PropertyCriteria;
+import org.egov.pt.web.models.PropertyDetail;
+import org.egov.pt.web.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -32,6 +45,9 @@ public class DemandBasedConsumer {
 
     @Autowired
     private PropertyConfiguration config;
+    
+    @Autowired
+    private CalculationService calcService;
 
 
     /**
@@ -107,14 +123,22 @@ public class DemandBasedConsumer {
      * @param errorTopic             The topic on whcih failed request are pushed
      */
     private void createAssessment(RequestInfo requestInfo, List<DemandBasedAssessment> demandBasedAssessments, String errorTopic) {
+    	
         try {
+        	List<String> consumercodes = new ArrayList<>();
             String financialYear = demandBasedAssessments.get(0).getFinancialYear();
             PropertyCriteria criteria = getSearchCriteria(demandBasedAssessments);
             List<Property> properties = propertyService.getPropertiesWithOwnerInfo(criteria, requestInfo);
             setFields(properties, financialYear);
-            propertyService.updateProperty(new PropertyRequest(requestInfo, properties));
+            List<Property> updatedProps = propertyService.updateProperty(new PropertyRequest(requestInfo, properties));
             if(errorTopic.equalsIgnoreCase(config.getDeadLetterTopicBatch()))
                 log.info("Batch Processed Successfully: {}",demandBasedAssessments);
+            
+            // Generating bills for the demands created
+			for (Property property : updatedProps)
+				consumercodes.add(property.getPropertyId().concat(":")
+						.concat(property.getPropertyDetails().get(0).getAssessmentNumber()));
+			calcService.getBills(consumercodes, demandBasedAssessments.get(0).getTenantId(), requestInfo);
 
         } catch (Exception e) {
             DemandBasedAssessmentRequest request = DemandBasedAssessmentRequest.builder()
@@ -131,7 +155,7 @@ public class DemandBasedConsumer {
     }
 
 
-    /**
+	/**
      * Creates property search criteria based on DemandBasedAssessment
      *
      * @param demandBasedAssessments The list of demandBasedAssessment

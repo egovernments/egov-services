@@ -1,13 +1,17 @@
 package org.egov.pt.service;
 
+import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.web.models.Calculation;
 import org.egov.pt.web.models.CalculationCriteria;
 import org.egov.pt.web.models.CalculationReq;
 import org.egov.pt.web.models.PropertyRequest;
+import org.egov.pt.web.models.RequestInfoWrapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +37,9 @@ public class CalculationService {
 
     @Value("${egov.calculation.endpoint}")
    private String calculationEndpoint;
+    
+    @Value("${egov.calculation.getbill.endpoint}")
+   private String calculationGetBillEndpoint;
 
 
      public void calculateTax(PropertyRequest request){
@@ -70,7 +77,14 @@ public class CalculationService {
        return calculationReq;
      }
 
+	public Object getBills(List<String> consumercodes, String tenantId, RequestInfo requestInfo) {
 
+         StringBuilder uri = new StringBuilder();
+		uri.append(calculationHost).append(calculationContextPath).append(calculationGetBillEndpoint)
+				.append("?tenantId=").append(tenantId).append("&consumerCodes=")
+				.append(consumercodes.toString().replace("[", "").replace("]", ""));
+		return serviceRequestRepository.fetchResult(uri,RequestInfoWrapper.builder().requestInfo(requestInfo).build());
+ 	}
 
 
 

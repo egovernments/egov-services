@@ -25,6 +25,8 @@ public class NotificationCountResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 	
-	private Long count;
+	private Long totalCount;
+
+	private Long unreadCount;
 
 }

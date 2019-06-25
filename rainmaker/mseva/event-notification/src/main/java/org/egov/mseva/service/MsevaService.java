@@ -47,6 +47,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mseva.config.PropertiesManager;
 import org.egov.mseva.model.AuditDetails;
 import org.egov.mseva.model.LastLoginDetails;
@@ -55,6 +56,7 @@ import org.egov.mseva.model.lltWrapper;
 import org.egov.mseva.model.enums.Status;
 import org.egov.mseva.producer.MsevaEventsProducer;
 import org.egov.mseva.repository.MsevaRepository;
+import org.egov.mseva.utils.MsevaConstants;
 import org.egov.mseva.utils.ResponseInfoFactory;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventRequest;
@@ -94,8 +96,8 @@ public class MsevaService {
 		validator.validateCreateEvent(request);
 		log.info("enriching and storing the event......");
 		enrichCreateEvent(request);
-		producer.push(properties.getSaveEventsTopic(), request);
-
+		producer.push(properties.getSaveEventsPersisterTopic(), request);
+		request.getEvents().forEach(event -> event.setRecepientEventMap(null));
 		return EventResponse.builder()
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
 				.events(request.getEvents()).build();
@@ -107,7 +109,7 @@ public class MsevaService {
 		enrichUpdateEvent(request);
 		List<Event> counterEvents = new ArrayList<>();
 		request.getEvents().forEach(event -> {
-			if (null != event.getEventDetails()) {
+			if (null != event.getEventDetails() && event.getGenerateCounterEvent()) {
 				Event counterEvent = new Event();
 				counterEvent.setActions(event.getActions());
 				counterEvent.setEventDetails(event.getEventDetails());
@@ -137,8 +139,11 @@ public class MsevaService {
 					.build();
 			createEvents(req);
 		}
-		producer.push(properties.getUpdateEventsTopic(), request);
-
+		producer.push(properties.getUpdateEventsPersisterTopic(), request);
+		request.getEvents().forEach(event -> {
+			event.setRecepientEventMap(null); event.setGenerateCounterEvent(null);
+		});
+		
 		return EventResponse.builder()
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
 				.events(request.getEvents()).build();
@@ -150,12 +155,7 @@ public class MsevaService {
 		if (!isUpdate)
 			enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
-
-		LastLoginDetails loginDetails = LastLoginDetails.builder().userId(requestInfo.getUserInfo().getUuid())
-				.lastLoginTime(new Date().getTime()).build();
-		lltWrapper wrapper = lltWrapper.builder().lastLoginDetails(loginDetails).build();
-		producer.push(properties.getLltDetailsTopic(), wrapper);
-
+		
 		return EventResponse.builder().responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();
 	}
@@ -163,11 +163,22 @@ public class MsevaService {
 	public NotificationCountResponse fetchCount(RequestInfo requestInfo, EventSearchCriteria criteria) {
 		validator.validateSearch(requestInfo, criteria);
 		enrichSearchCriteria(requestInfo, criteria);
-		Long count = repository.fetchCount(criteria);
-
-		return NotificationCountResponse.builder()
-				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true)).count(count).build();
+		NotificationCountResponse response = repository.fetchCount(criteria);
+		response.setResponseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true));
+		return response;
 	}
+	
+	
+	public ResponseInfo persistLlt(RequestInfo requestInfo) {
+		LastLoginDetails loginDetails = LastLoginDetails.builder().userId(requestInfo.getUserInfo().getUuid())
+				.lastLoginTime(new Date().getTime()).build();
+		lltWrapper wrapper = lltWrapper.builder().lastLoginDetails(loginDetails).build();
+		producer.push(properties.getLltDetailsTopic(), wrapper);
+		
+		return responseInfo.createResponseInfoFromRequestInfo(requestInfo, true);
+		
+	}
+	
 
 	private void enrichCreateEvent(EventRequest request) {
 		request.getEvents().forEach(event -> {
@@ -181,7 +192,7 @@ public class MsevaService {
 				event.getEventDetails().setId(UUID.randomUUID().toString());
 				event.getEventDetails().setEventId(event.getId());
 			}
-			if (StringUtils.isEmpty(event.getStatus().toString()))
+			if (null == event.getStatus())
 				event.setStatus(Status.ACTIVE);
 
 			if (CollectionUtils.isEmpty(event.getRecepientEventMap())) {
@@ -241,7 +252,7 @@ public class MsevaService {
 			List<String> userIds = new ArrayList<>();
 			List<String> roles = new ArrayList<>();
 			userIds.add(requestInfo.getUserInfo().getUuid());
-			roles.add("CITIZEN|CITIZEN");
+			roles.add("CITIZEN.CITIZEN");
 			criteria.setUserids(userIds);
 			criteria.setRoles(roles);
 			criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
@@ -266,7 +277,8 @@ public class MsevaService {
 
 		if (!CollectionUtils.isEmpty(criteria.getRoles())) {
 			criteria.getRoles().forEach(role -> {
-				String[] typeAndRole = role.split("|");
+				role = role.replaceAll("\\.", "|");
+				String[] typeAndRole = role.split("[|]");
 				recepients.add(typeAndRole[0] + "|*|*");
 				recepients.add("*|" + typeAndRole[1] + "|*");
 				recepients.add(role + "|*");
@@ -281,7 +293,7 @@ public class MsevaService {
 		if (!StringUtils.isEmpty(criteria.getTenantId())) {
 			recepients.add("*|*|" + criteria.getTenantId());
 		}
-		recepients.add("All");
+		recepients.add(MsevaConstants.ALL_KEYWORD);
 
 		criteria.setRecepients(recepients);
 	}
@@ -294,7 +306,8 @@ public class MsevaService {
 			recepientEventList.add(rcpntevent);
 		} else {
 			if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-				event.getRecepient().getToRoles().clear();
+				if(!CollectionUtils.isEmpty(event.getRecepient().getToRoles()))
+					event.getRecepient().getToRoles().clear();
 				if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
 					event.getRecepient().getToUsers().forEach(user -> {
 						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(user).eventId(event.getId())
@@ -305,13 +318,20 @@ public class MsevaService {
 			} // toUsers will take precedence over toRoles.
 			else {
 				if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-					event.getRecepient().getToRoles().forEach(role -> {
-						role = role.replaceAll("\\.", "|");
-						role = role + "|" + event.getTenantId();
-						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(role).eventId(event.getId())
+					if(!event.getRecepient().getToRoles().contains(MsevaConstants.ALL_KEYWORD)) {
+						event.getRecepient().getToRoles().forEach(role -> {
+							role = role.replaceAll("\\.", "|");
+							role = role + "|" + event.getTenantId();
+							RecepientEvent rcpntevent = RecepientEvent.builder().recepient(role).eventId(event.getId())
+									.build();
+							recepientEventList.add(rcpntevent);
+						});
+					}else {
+						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(MsevaConstants.ALL_KEYWORD).eventId(event.getId())
 								.build();
 						recepientEventList.add(rcpntevent);
-					});
+					}
+
 				}
 			}
 

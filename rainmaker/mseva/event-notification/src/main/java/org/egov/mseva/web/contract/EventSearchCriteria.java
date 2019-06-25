@@ -26,6 +26,12 @@ public class EventSearchCriteria {
 	
 	private List<String> postedBy;
 	
+	private List<String> name;
+	
+	private List<String> referenceIds;
+	
+	private List<String> source;
+
 	private List<String> status;
 	
 	private String tenantId;

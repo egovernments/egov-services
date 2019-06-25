@@ -13,7 +13,7 @@ public class ErrorConstants {
 	
 	public static final String EMPTY_RECEPIENT_CODE = "MEN_EMPTY_RECEPIENT";
 	public static final String EMPTY_RECEPIENT_MSG = "toRoles and toUsers both cannot be empty, provide atleast one of them. "
-			+ "Incase the event is addressed to everyone, send 'All' in toUsers";
+			+ "Incase the event is addressed to everyone, send 'All' in toRoles";
 	
 	public static final String INVALID_EVENT_DATE_CODE = "MEN_INVALID_EVENT_DATE";
 	public static final String INVALID_EVENT_DATE_MSG = "Date invalid, fromDate cannot be greater than toDate";
@@ -47,5 +47,23 @@ public class ErrorConstants {
 	
 	public static final String MEN_CREATE_NAMEMANDATORY_CODE = "MEN_CREATE_NAMEMANDATORY";
 	public static final String MEN_CREATE_NAMEMANDATOR_MSG = "Name of the event is mandatory.";
+	
+	public static final String MEN_CREATE_BROADCAST_CODE = "MEN_CREATE_BROADCAST";
+	public static final String MEN_CREATE_BROADCAST_MSG = "Broadcast messages should not contain any event details";
+	
+	public static final String MEN_INVALID_TOROLE_CODE = "MEN_INVALID_TOROLE";
+	public static final String MEN_INVALID_TOROLE_MSG = "toRoles cannot contain special characters. format - USERTYPE.USERROLE";
+	
+	public static final String MEN_INVALID_TOROLE_ALL_CODE = "MEN_INVALID_TOROLE_ALL";
+	public static final String MEN_INVALID_TOROLE_ALL_MSG = "toRoles cannot contain other values alongwith 'All', toUsers should be empty";
+	
+	public static final String MEN_INVALID_TOUSER_CODE = "MEN_INVALID_TOUSER";
+	public static final String MEN_INVALID_TOUSER_MSG = "toUsers should only contain ids with the UUID type.";
+	
+	public static final String MEN_INVALID_ACTION_CANCEL_CODE = "MEN_INVALID_ACTION_CANCEL";
+	public static final String MEN_INVALID_ACTION_CANCEL_MSG = "Cancelled events cannot be made ACTIVE or INACTIVE.";
+	
+	public static final String MEN_UPDATE_STATUS_NOTNULL_CODE = "MEN_UPDATE_STATUS_NOTNULL";
+	public static final String MEN_UPDATE_STATUS_NOTNULL_MSG = "Status cannot be null while updating the event.";
 	
 }

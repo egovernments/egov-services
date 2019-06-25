@@ -42,6 +42,7 @@ package org.egov.mseva.web.controller;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mseva.model.RequestInfoWrapper;
 import org.egov.mseva.service.MsevaService;
 import org.egov.mseva.web.contract.EventRequest;
@@ -123,6 +124,22 @@ public class EventsController {
 	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid EventSearchCriteria eventSearchCriteria) {
 		NotificationCountResponse response = service.fetchCount(requestInfoWrapper.getRequestInfo(), eventSearchCriteria);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+	
+	
+	/**
+	 * Endpoint to update the lastlogintime of a user in the system. This required to fetch count of unread notifs through search.
+	 * 
+	 * @param topic
+	 * @param indexJson
+	 * @return
+	 */
+	@PostMapping("/llt/_update")
+	@ResponseBody
+	private ResponseEntity<?> updatellt(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper) {
+		ResponseInfo response = service.persistLlt(requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}

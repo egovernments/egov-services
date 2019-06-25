@@ -3,20 +3,23 @@ package org.egov.mseva.repository.rowmappers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.egov.mseva.web.contract.NotificationCountResponse;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
 @Service
-public class NotificationCountRowMapper implements ResultSetExtractor <Long>  {
+public class NotificationCountRowMapper implements ResultSetExtractor <NotificationCountResponse>  {
 
 	@Override
-	public Long extractData(ResultSet rs) throws SQLException, DataAccessException {
-		Long count = 0l;
+	public NotificationCountResponse extractData(ResultSet rs) throws SQLException, DataAccessException {
+		NotificationCountResponse response = null;
 		while(rs.next()) {
-			count = rs.getLong("count");
+			response = NotificationCountResponse.builder()
+					.totalCount(rs.getLong("total"))
+					.unreadCount(rs.getLong("unread")).build();
 		}
-		return count;
+		return response;
 	}
 	
 

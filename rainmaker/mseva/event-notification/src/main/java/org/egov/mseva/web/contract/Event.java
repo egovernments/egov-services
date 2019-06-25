@@ -49,7 +49,6 @@ public class Event {
 	@NotNull
 	private String description;
 	
-	@NotNull
 	private Status status;
 	
 	@NotNull
@@ -68,5 +67,7 @@ public class Event {
 	private AuditDetails auditDetails;
 	
 	private List<RecepientEvent> recepientEventMap;
+	
+	private Boolean generateCounterEvent;
 
 }

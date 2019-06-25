@@ -14,13 +14,13 @@ public class MsevaEventsQueryBuilder {
 	@Autowired
 	private PropertiesManager properties;
 	
-	public static final String EVENT_SEARCH_QUERY = "SELECT id, tenantid, source, eventtype, description, status, eventdetails, actions, "
-			+ "recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime FROM eg_men_events ";
+	public static final String EVENT_SEARCH_QUERY = "SELECT id, tenantid, source, eventtype, description, status, referenceid, name, postedby,"
+			+ " eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime FROM eg_men_events ";
 	
 	public static final String EVENT_INNER_SEARCH_QUERY = "id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE ";
 	
-	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT COUNT(*) FROM eg_men_events WHERE id IN "
-			+ "(SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
+	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT (SELECT COUNT(*) as total FROM eg_men_events WHERE id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients))), "
+			+ "COUNT(*) as unread FROM eg_men_events WHERE id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
 			+ "lastmodifiedtime > (SELECT lastlogintime FROM eg_men_user_llt WHERE userid IN (:userid))";
 	
 	public String getSearchQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
@@ -56,10 +56,28 @@ public class MsevaEventsQueryBuilder {
 			queryBuilder.append("status IN (:status)");
 			preparedStatementValues.put("status", criteria.getStatus());
 		}
-		if(!CollectionUtils.isEmpty(criteria.getPostedBy())) {
+		if(!CollectionUtils.isEmpty(criteria.getSource())) {
             addClauseIfRequired(preparedStatementValues, queryBuilder);
 			queryBuilder.append("source IN (:source)");
-			preparedStatementValues.put("source", criteria.getPostedBy());
+			preparedStatementValues.put("source", criteria.getSource());
+		}
+		
+		if(!CollectionUtils.isEmpty(criteria.getPostedBy())) {
+            addClauseIfRequired(preparedStatementValues, queryBuilder);
+			queryBuilder.append("postedby IN (:postedby)");
+			preparedStatementValues.put("postedby", criteria.getPostedBy());
+		}
+		
+		if(!CollectionUtils.isEmpty(criteria.getName())) {
+            addClauseIfRequired(preparedStatementValues, queryBuilder);
+			queryBuilder.append("name IN (:name)");
+			preparedStatementValues.put("name", criteria.getName());
+		}
+		
+		if(!CollectionUtils.isEmpty(criteria.getReferenceIds())) {
+            addClauseIfRequired(preparedStatementValues, queryBuilder);
+			queryBuilder.append("referenceid IN (:referenceid)");
+			preparedStatementValues.put("referenceid", criteria.getReferenceIds());
 		}
 
 		if(!CollectionUtils.isEmpty(criteria.getRecepients())) {
@@ -69,6 +87,7 @@ public class MsevaEventsQueryBuilder {
     		preparedStatementValues.put("recepients", criteria.getRecepients());
     		queryBuilder.append(" )");
 		}
+		
 		queryBuilder.append(" ORDER BY createdtime DESC");
 		queryBuilder.append(" OFFSET :offset");
 		preparedStatementValues.put("offset", null == criteria.getOffset() ? properties.getDefaultOffset() : criteria.getOffset());		

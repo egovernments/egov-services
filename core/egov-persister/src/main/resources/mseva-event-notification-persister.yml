@@ -7,7 +7,7 @@ serviceMaps:
     fromTopic: save-mseva-events
     isTransaction: true
     queryMaps:
-    - query: INSERT INTO eg_men_events(tenantid, id, source, eventtype, name, postedby, referenceid, description, status, eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO eg_men_events(tenantid, id, source, eventtype, name, postedby, referenceid, description, status, eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
       basePath: events.*
       jsonMaps:

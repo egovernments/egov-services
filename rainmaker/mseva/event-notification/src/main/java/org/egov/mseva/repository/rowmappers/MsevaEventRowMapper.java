@@ -37,6 +37,9 @@ public class MsevaEventRowMapper implements ResultSetExtractor <List<Event>> {
 					.eventType(resultSet.getString("eventtype"))
 					.source(Source.valueOf(resultSet.getString("source")))
 					.description(resultSet.getString("description"))
+					.name(resultSet.getString("name"))
+					.referenceId(resultSet.getString("referenceid"))
+					.postedBy(resultSet.getString("postedby"))
 					.status(Status.valueOf(resultSet.getString("status"))).build();
 			try {
 				PGobject obj = (PGobject) resultSet.getObject("eventdetails");

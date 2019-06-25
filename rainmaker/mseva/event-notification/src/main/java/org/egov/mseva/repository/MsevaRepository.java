@@ -10,6 +10,7 @@ import org.egov.mseva.repository.rowmappers.MsevaEventRowMapper;
 import org.egov.mseva.repository.rowmappers.NotificationCountRowMapper;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventSearchCriteria;
+import org.egov.mseva.web.contract.NotificationCountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -47,17 +48,17 @@ public class MsevaRepository {
 		return events;
 	}
 	
-	public Long fetchCount(EventSearchCriteria criteria){
+	public NotificationCountResponse fetchCount(EventSearchCriteria criteria){
 		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String query = queryBuilder.getCountQuery(criteria, preparedStatementValues);
 		log.info("Query: "+query);
-		Long count = 0L;
+		NotificationCountResponse response = null;
 		try {
-			count = namedParameterJdbcTemplate.query(query, preparedStatementValues, countRowMapper);
+			response = namedParameterJdbcTemplate.query(query, preparedStatementValues, countRowMapper);
 		}catch(Exception e) {
 			log.error("Error while fetching count from db: ", e);
 		}
-		return count;
+		return response;
 	}
 	
 	

@@ -217,7 +217,7 @@ const BuildingUOM = {
     code: {
       type: "string",
       description: "Code of the unit code",
-      valid_uom:true
+      // valid_uom:true
     },
     value: {
       type: "integer",

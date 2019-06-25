@@ -17,8 +17,9 @@ export default ({ config, db }) => {
     "/_update",
     asyncHandler(async ({ body }, res,next) => {
       let payloads = [];
+      let mdms = await mdmsData(body.RequestInfo);
       //model validator
-      let errors=validateFireNOCModel(body);
+      let errors=validateFireNOCModel(body,mdms);
       if (errors.length>0) {
         next({errorType:"custom",errorReponse:{
           ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
@@ -26,7 +27,7 @@ export default ({ config, db }) => {
         }})
         return;
       }
-      let mdms = await mdmsData(body.RequestInfo);
+
       body = await addUUIDAndAuditDetails(body);
       //Check records for approved
       let approvedList=await getApprovedList(cloneDeep(body));

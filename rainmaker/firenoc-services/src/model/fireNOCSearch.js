@@ -13,12 +13,7 @@ const FireNOCSearchRequest = {
       type: "string"
     },
     ids: {
-      type: "array",
-      items: {
-        type: "integer"
-        // format: "int64"
-      },
-      maxItems: 50
+      type: "string"
     },
     applicationNumber: {
       type: "string",

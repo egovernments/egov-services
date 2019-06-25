@@ -217,7 +217,7 @@ const BuildingUOM = {
     code: {
       type: "string",
       description: "Code of the unit code",
-      // enum:[]
+      valid_uom:true
     },
     value: {
       type: "integer",
@@ -231,22 +231,7 @@ const BuildingUOM = {
     active: {
       type: "boolean"
     }
-  },
-  // if: {
-  //   properties: {
-  //     code: { enum: ["NOC_NO_OF_BUILDINGS_SINGLE_RADIOBUTTON"] }
-  //   }
-  // },
-  // then: {
-  //   properties: {
-  //     value: {minimum: 0 }
-  //   }
-  // },
-  // else: {
-  //   properties: {
-  //     value: {minimum: 1 }
-  //   }
-  // },
+  }
 };
 
 const Document = {
@@ -374,7 +359,8 @@ const Buildings = {
     },
     usageType: {
       type: "string",
-      description: "building usage type"
+      description: "building usage type",
+      valid_buildingType:true
     },
     uoms: {
       type: "array",
@@ -416,7 +402,8 @@ const FireNOCDetails = {
     },
     firestationId: {
       type: "string",
-      description: "Fire station id where we are applying fire fireNOC."
+      description: "Fire station id where we are applying fire fireNOC.",
+      valid_firestation:true
     },
     applicationDate: {
       type: "integer",
@@ -492,7 +479,8 @@ const FireNOCDetails = {
       properties: {
         ownerShipType: {
           description: "type pf the owner ship",
-          type: "string"
+          type: "string",
+          valid_ownerShipCategory:true
         },
         owners: {
           description:

@@ -13,7 +13,7 @@ export default async (requestInfo = {}) => {
         },
         {
           moduleName: "firenoc",
-          masterDetails: [{ name: "BuildingType" }, { name: "FireStations" }]
+          masterDetails: [{ name: "BuildingType" },{name: "Documents"}, { name: "FireStations" },{name:"UOMs"}]
         },
         {
           moduleName: "egov-location",

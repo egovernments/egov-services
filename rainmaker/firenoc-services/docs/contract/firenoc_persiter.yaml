@@ -256,16 +256,12 @@ serviceMaps:
    isTransaction: true
    queryMaps:
 
-       - query: UPDATE eg_fn_firenoc SET provisionFireNOCNumber = ?,fireNOCNumber=?,oldFireNOCNumber = ?,dateOfApplied = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid=?;
+       - query: UPDATE eg_fn_firenoc SET provisionFireNOCNumber = ?,oldFireNOCNumber = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid=?;
          basePath: FireNOCs.*
          jsonMaps:
           - jsonPath: $.FireNOCs.*.provisionFireNOCNumber
 
-          - jsonPath: $.FireNOCs.*.fireNOCNumber
-
           - jsonPath: $.FireNOCs.*.oldFireNOCNumber
-
-          - jsonPath: $.FireNOCs.*.dateOfApplied
 
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedBy
 
@@ -274,10 +270,9 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.id
 
 
-       - query: UPDATE eg_fn_firenocdetail SET applicationNumber = ?, fireNOCType = ?, firestationId = ?, additionaldetail = ?,applicationDate = ?,financialYear = ?,validFrom = ?,validTo = ?,action = ?,channel = ?,noOfBuildings = ?,propertyId = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
+       - query: UPDATE eg_fn_firenocdetail SET fireNOCType = ?, firestationId = ?, additionaldetail = ?,financialYear = ?,action = ?,channel = ?,noOfBuildings = ?,propertyId = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicationNumber
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.fireNOCType
 
@@ -287,13 +282,7 @@ serviceMaps:
             type: JSON
             dbType: JSONB
 
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.applicationDate
-
           - jsonPath: $.FireNOCs.*.fireNOCDetails.financialYear
-
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.validFrom
-
-          - jsonPath: $.FireNOCs.*.fireNOCDetails.validTo
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.action
 

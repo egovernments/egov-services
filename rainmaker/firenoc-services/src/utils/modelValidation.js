@@ -1,12 +1,51 @@
-const Ajv = require("ajv");
-const ajv = new Ajv({ allErrors: true });
+import get from "lodash/get";
+import some from "lodash/some";
 const fireNOCSchema = require("../model/fireNOC.js");
 const fireNOCSearchSchema = require("../model/fireNOCSearch.js");
 
+const getAjvInstance=()=>{
+  const Ajv = require("ajv");
+  const ajv = new Ajv({ allErrors: true });
+  return ajv;
+}
 
 
+export const validateFireNOCModel = (data,mdmsData) => {
+  const fireStations=get(mdmsData,"MdmsRes.firenoc.FireStations",[]);
+  const uoms=get(mdmsData,"MdmsRes.firenoc.UOMs",[]);
+  const ownerShipCategory=get(mdmsData,"MdmsRes.common-masters.OwnerShipCategory",[]);
+  const buildingType=get(mdmsData,"MdmsRes.firenoc.BuildingType",[]);
+  const ajv=getAjvInstance();
+  // console.log(ownerShipCategory);
+  ajv.addKeyword('valid_firestation', {
+    validate: function (schema, data) {
+      return some(fireStations,{code:data});
+    },
+    errors: false
+  });
 
-export const validateFireNOCModel = (data) => {
+  ajv.addKeyword('valid_uom', {
+    validate: function (schema, data) {
+      return some(uoms,{code:data});
+    },
+    errors: false
+  });
+
+  ajv.addKeyword('valid_ownerShipCategory', {
+    validate: function (schema, data) {
+      return some(ownerShipCategory,{code:data});
+    },
+    errors: false
+  });
+
+  ajv.addKeyword('valid_buildingType', {
+    validate: function (schema, data) {
+      return some(buildingType,{code:data});
+    },
+    errors: false
+  });
+
+
   let validate = ajv.compile(fireNOCSchema);
   var valid = validate(data);
   let errors = [];
@@ -18,6 +57,7 @@ export const validateFireNOCModel = (data) => {
 
 
 export const validateFireNOCSearchModel = data => {
+  const ajv=getAjvInstance();
   let validate = ajv.compile(fireNOCSearchSchema);
   var valid = validate(data);
   let errors = [];
@@ -26,8 +66,3 @@ export const validateFireNOCSearchModel = data => {
   }
   return errors;
 };
-
-
-export const businessServiceValidation=(data,mdmsData)=>{
-  return {}
-}

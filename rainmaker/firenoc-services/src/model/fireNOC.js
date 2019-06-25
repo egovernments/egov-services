@@ -216,7 +216,8 @@ const BuildingUOM = {
   properties: {
     code: {
       type: "string",
-      description: "Code of the unit code"
+      description: "Code of the unit code",
+      // enum:[]
     },
     value: {
       type: "integer",
@@ -230,7 +231,22 @@ const BuildingUOM = {
     active: {
       type: "boolean"
     }
-  }
+  },
+  // if: {
+  //   properties: {
+  //     code: { enum: ["NOC_NO_OF_BUILDINGS_SINGLE_RADIOBUTTON"] }
+  //   }
+  // },
+  // then: {
+  //   properties: {
+  //     value: {minimum: 0 }
+  //   }
+  // },
+  // else: {
+  //   properties: {
+  //     value: {minimum: 1 }
+  //   }
+  // },
 };
 
 const Document = {
@@ -289,7 +305,7 @@ const OwnerInfo = {
     relationship: {
       type: "string",
       description: "Relationship with owner.",
-      enum: ["NOC_APPLICANT_RELATIONSHIP_FATHER_RADIOBUTTON", "NOC_APPLICANT_RELATIONSHIP_HUSBAND_RADIOBUTTON"]
+      enum: ["FATHER", "HUSBAND"]
     },
     documents: {
       description: "Document of the owner.",
@@ -302,7 +318,7 @@ const OwnerInfo = {
     },
     gender:{
       type: "string",
-      enum: ["NOC_GENDER_MALE_RADIOBUTTON", "NOC_GENDER_FEMALE_RADIOBUTTON","NOC_GENDER_TRANSGENDER_RADIOBUTTON"]
+      enum: ["MALE", "FEMALE","TRANSGENDER"]
     },
     name:{
       type:"string"
@@ -314,7 +330,7 @@ const OwnerInfo = {
       type:"string"
     }
   },
-  required:["name","mobileNumber","gender","relationship","correspondenceCity","dob","fatherOrHusbandName"]
+  required:["name","mobileNumber","gender","relationship","correspondenceAddress","dob","fatherOrHusbandName"]
 };
 
 const PropertyDetails = {
@@ -460,8 +476,8 @@ const FireNOCDetails = {
       type: "string",
       description: "it might be single or multiple",
       enum: [
-        "NOC_NO_OF_BUILDINGS_SINGLE_RADIOBUTTON",
-        "NOC_NO_OF_BUILDINGS_MULTIPLE_RADIOBUTTON"
+        "SINGLE",
+        "MULTIPLE"
       ]
     },
     buildings: {
@@ -501,7 +517,7 @@ const FireNOCDetails = {
   },
   if: {
     properties: {
-      noOfBuildings: { enum: ["NOC_NO_OF_BUILDINGS_SINGLE_RADIOBUTTON"] }
+      noOfBuildings: { enum: ["SINGLE"] }
     }
   },
   then: {

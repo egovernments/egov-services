@@ -6,7 +6,7 @@ const fireNOCSearchSchema = require("../model/fireNOCSearch.js");
 
 
 
-export const validateFireNOCModel = data => {
+export const validateFireNOCModel = (data) => {
   let validate = ajv.compile(fireNOCSchema);
   var valid = validate(data);
   let errors = [];
@@ -26,3 +26,8 @@ export const validateFireNOCSearchModel = data => {
   }
   return errors;
 };
+
+
+export const businessServiceValidation=(data,mdmsData)=>{
+  return {}
+}

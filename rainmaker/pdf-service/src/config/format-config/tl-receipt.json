@@ -25,11 +25,11 @@
               {
                 "stack": [
                   {
-                    "text": "$value1",
+                    "text": "AMRITSAR MUNCIPAL CORPORATION",
                     "style": "receipt-logo-header"
                   },
                   {
-                    "text": "$value2",
+                    "text": "Trade Licence Receipt",
                     "style": "receipt-logo-sub-header"
                   }
                 ],
@@ -44,7 +44,7 @@
               {
                 "text": [
                   {
-                    "text": "$value3",
+                    "text": "",
                     "bold": true,
                     "style": "receipt-no"
                   }

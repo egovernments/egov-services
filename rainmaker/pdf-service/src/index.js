@@ -3,7 +3,7 @@ import http from "http";
 import request from "request";
 import express from "express";
 import path from "path";
-import fs from "fs";
+import fs, { exists } from "fs";
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
@@ -13,31 +13,29 @@ import api from "./api";
 import config from "./config.json";
 import { PROPERTY } from "./endpoint";
 import { httpRequest } from "./api/api";
-
-// import dataconfig from "./config/data-config/pdfgenerator.json";
-// import receipt_data from "./config/format-config/receipt_data.json";
 import asyncHandler from 'express-async-handler';
-
-
-
 import * as pdfmake from "pdfmake/build/pdfmake";
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import get from "lodash/get";
 import set from "lodash/set";
 import { strict } from "assert";
 import { Recoverable } from "repl";
-//create binary
+import { fileStoreOnComputer } from "./utils/fileStoreOnComputer";
+import { fileStoreAPICall } from "./utils/fileStoreAPICall";
+import { directMapping } from "./utils/directMapping";
+import { externalAPIMapping } from "./utils/externalAPIMapping";
 
+//create binary
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var pdfMakePrinter = require("pdfmake/src/printer");
 
 let app = express();
 app.use(express.static(path.join(__dirname, "public")));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '10mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 var key;
-var userId;
+var fileNameAppend="randomNumber";
  function createPdfBinary(docDefinition, successCallback, errorCallback) {
    try {
     var fontDescriptors = {
@@ -56,184 +54,55 @@ var userId;
 
     //storing file on local computer/server
     doc.pipe(
-      fs.createWriteStream("src/pdfs/"+key+" "+userId+".pdf").on("error", err => {
+      fs.createWriteStream("src/pdfs/"+key+" "+fileNameAppend+".pdf").on("error", err => {
         errorCallback(err.message);
       })
     );
-
     doc.on("end", () => {
       successCallback("PDF successfully created and stored");
     });
-
-    //filestore API call to store file on S3
-    var url =
-      "https://egov-micro-dev.egovernments.org/filestore/v1/files?tenantId=default&module=pgr&tag=00040-2017-QR";
-    var req = request.post(url, function(err, _resp, body) {
-      if (err) {
-        console.log("Error!"+err);
-      } else {
-        console.log("URL: " + body);
-      }
-    });
-    //attaching file with API
-    var form = req.form();
-    form.append("file", fs.createReadStream("src/pdfs/"+key+" "+userId+".pdf"));
-
     doc.end();
+    //filestore API call to store file on S3    
+    var fun=fileStoreAPICall(key,fileNameAppend);    
+    
   } catch (err) {
     throw err;
   }
 }
 
-app.post("/pdf",  asyncHandler(async function(req, res) { 
+app.post("/pdf", asyncHandler(async (req, res)=> { 
    key=req.query.key;
-  var receipt_data=require("./config/format-config/"+key);
-  var dataconfig=require("./config/data-config/"+key);  
-  
-  //direct mapping service
-  var directArr = [];
-  var obj = {
-    jPath: "",
-    val: "",
-    type: "",
-    format: ""
-  };
-  var o = {};
-  o = get(dataconfig, "DataConfigs.mappings[0].mappings[0].direct", []);
-
-  directArr = o.map(item => {
-    return {
-      jPath: item.variable,
-      val: get(req.body, item.value.path, ""),
-      valJsonPath: item.value.path,
-      type: item.type,
-      format: item.format
-    };
-  });
-
-  for (var i = 0; i < directArr.length; i++) {
-    //for array type direct mapping
-    if (directArr[i].type == "array") {
-      var arrayOfItems = [];
-      var ownerObject = {};
-      var arrayOfOwnerObject = [];
-      ownerObject = get(receipt_data, directArr[i].jPath + "[0]", []);
-
-      //  console.log(get(receipt_data,directArr[i].jPath,[]));
-      let { format = {}, val = [], variable } = directArr[i];
-      let { scema = [] } = format;
-
-      //taking values about owner from req body
-      for (var j = 0; j < val.length; j++) {
-        var x = 1;
-        for (var k = 0; k < scema.length; k++) {
-          set(ownerObject[x], "text", get(val[j], scema[k], ""));
-          x += 2;
-        }
-        arrayOfOwnerObject.push(ownerObject);
-      }
-      set(receipt_data, directArr[i].jPath, arrayOfOwnerObject);
-    } //setting value in pdf for no type direct mapping
-    else {
-      set(receipt_data, directArr[i].jPath, directArr[i].val);
+      
+   var formatconfig=require("./config/format-config/"+key);
+   var dataconfig=require("./config/data-config/"+key);  
+   
+   if(key=="tl-receipt"){          
+          fileNameAppend=req.body.Licenses[0].applicationNumber;          
     }
-  }
+      else if(key=="firenoc-receipt"){        
+          fileNameAppend=req.body.FireNOCs[0].fireNOCDetails.applicationNumber;        
+    }
+      else if(key=="pt-receipt"){        
+        fileNameAppend=req.body.Properties[0].propertyId+":"+req.body.Properties[0].propertyDetails[0].assessmentNumber;        
+    }
+    else{
+      
+    }
 
-  // var util = require('util');
-  // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(receipt_data)) , 'utf-8');
-  // console.log(JSON.stringify(receipt_data));
+
+  //direct mapping service
+  formatconfig=directMapping(req,formatconfig,dataconfig);  
 
   //external API mapping
-  var externalAPIArray = [];
-  var oEA = {};
-  oEA = get(dataconfig, "DataConfigs.mappings[0].mappings[2].externalAPI", []);
-  externalAPIArray = oEA.map(item => {
-    return {
-      uri: item.path,
-      queryParams: item.queryParam,
-      jPath: item.responseMapping,
-      body: item.apiRequest,
-      variable: "",
-      val: ""
-    };
-  });
-
-  for (let i = 0; i < externalAPIArray.length; i++) {
-    //console.log(JSON.stringify(externalAPIArray[i].body));
-    for (let j = 0; j < externalAPIArray[i].jPath.length; j++) {
-      externalAPIArray[i].variable = externalAPIArray[i].jPath[j].variable;
-      externalAPIArray[i].val = externalAPIArray[i].jPath[j].value;
-    }
-  }
-  // console.log(externalAPIArray);
-  for (let i = 0; i < externalAPIArray.length; i++) {
-    var point = 0;
-    var temp1 = "";
-    var temp2 = "";
-    var flag = 0;
-//to convert queryparam and uri in properURI
-    for (let j = 0; j < externalAPIArray[i].queryParams.length; j++) {
-      if (externalAPIArray[i].queryParams[j] == "$") {
-        flag = 1;
-      }
-      if (externalAPIArray[i].queryParams[j] == ",") {
-        if (flag == 1) {
-          temp2 = temp1;
-          temp1 = temp1.replace("$.", "");
-          var temp3 = get(req.body, temp1, "vikas");
-          externalAPIArray[i].queryParams = externalAPIArray[
-            i
-          ].queryParams.replace(temp2, temp3);
-
-          j = 0;
-          flag = 0;
-          temp1 = "";
-          temp2 = "";
-        }
-      }
-      if (flag == 1) {
-        temp1 += externalAPIArray[i].queryParams[j];
-      }
-      if (j == externalAPIArray[i].queryParams.length - 1 && flag == 1) {
-        temp2 = temp1;
-        temp1 = temp1.replace("$.", "");
-        var temp3 = get(req.body, temp1, "vikas");
-
-        externalAPIArray[i].queryParams = externalAPIArray[
-          i
-        ].queryParams.replace(temp2, temp3);
-
-        flag = 0;
-        temp1 = "";
-        temp2 = "";
-      }
-    }
-    externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(
-      /,/g,
-      "&"
-    );
-
-    let requestBody = JSON.stringify(externalAPIArray[i].body);
-    let headers={
-      "content-type": "application/json;charset=UTF-8",
-      "accept":"application/json, text/plain, */*" 
-     }  
-    let req = await httpRequest(
-        externalAPIArray[i].uri + "?" + externalAPIArray[i].queryParams,
-        requestBody,
-        headers
-      );       
-      userId=req.user[0].userName;        
-        set(
-          receipt_data,  
-          externalAPIArray[i].variable,
-          get(req, externalAPIArray[i].val, "vikas")
-        );        
-  }
-  //function to download pdf automatically
+  formatconfig=await externalAPIMapping(key,req,formatconfig,dataconfig);
+        
+  //putting formatconfig in a file to check docdefinition on pdfmake playground online
+  var util = require('util');
+  fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
   
-   createPdfBinary(
-    receipt_data,
+  //function to download pdf automatically 
+  createPdfBinary(
+    JSON.parse(JSON.stringify(formatconfig)),
     response => {
       // doc successfully created
       res.json({
@@ -251,7 +120,7 @@ app.post("/pdf",  asyncHandler(async function(req, res) {
   );
 
   // function to open PDF
-  //  createPdfBinary(receipt_data, (response) => {
+  //  createPdfBinary(formatconfig, (response) => {
   //  	res.setHeader('Content-Type', 'application/pdf');
   //  	console.log(req.body);
   //  	res.send(response).download(); // Buffer data
@@ -271,16 +140,7 @@ app.post("/pdf",  asyncHandler(async function(req, res) {
   
 }));
 
-
-
-app.post("/create-receipt", (req, res) => {
-  console.log(req.body);
-  //const data=req.body;
-  res.send(httpRequest(PROPERTY.GET.URL));
-});
-
 const PORT = 5000;
-
 app.listen(PORT, () => {
   console.log(`Server running at http:${PORT}/`);
 });

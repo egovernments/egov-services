@@ -1,0 +1,171 @@
+{
+    "Licenses": [
+        {
+            "id": "2521cce0-3307-4eff-9ffc-9f5e8c46bb2b",
+            "tenantId": "pb.amritsar",
+            "licenseType": "PERMANENT",
+            "licenseNumber": "PB-TL-2019-05-30-000184",
+            "applicationNumber": "PB-TL-2019-05-30-001974",
+            "oldLicenseNumber": null,
+            "propertyId": null,
+            "oldPropertyId": null,
+            "accountId": null,
+            "tradeName": "Ghanshyam Rawat",
+            "applicationDate": 1559198184942,
+            "commencementDate": 1559240999000,
+            "issuedDate": 1559198368784,
+            "financialYear": "2019-20",
+            "validFrom": 1559198368784,
+            "validTo": 1585679399000,
+            "action": "PAY",
+            "assignee": null,
+            "wfDocuments": null,
+            "status": "APPROVED",
+            "tradeLicenseDetail": {
+                "id": "9b4c65e8-d4e1-4d2d-bbc8-9770a4ff35f6",
+                "surveyNo": null,
+                "subOwnerShipCategory": "INDIVIDUAL.SINGLEOWNER",
+                "structureType": "IMMOVABLE.PUCCA",
+                "operationalArea": null,
+                "noOfEmployees": null,
+                "adhocExemption": null,
+                "adhocPenalty": null,
+                "adhocExemptionReason": null,
+                "adhocPenaltyReason": null,
+                "owners": [
+                    {
+                        "isPrimaryOwner": null,
+                        "ownerShipPercentage": null,
+                        "ownerType": "NONE",
+                        "institutionId": null,
+                        "documents": null,
+                        "userActive": true,
+                        "relationship": "FATHER",
+                        "id": 26434,
+                        "uuid": "7120c113-9289-4cda-9f22-ea4c69de1e6f",
+                        "userName": "4326d382-ce1d-4978-9fba-b11b80446d6e",
+                        "password": null,
+                        "salutation": null,
+                        "name": "Ghanshyam Rawat",
+                        "gender": "MALE",
+                        "mobileNumber": "9739704466",
+                        "emailId": "bittu.aec@gmail.com",
+                        "altContactNumber": null,
+                        "pan": null,
+                        "aadhaarNumber": null,
+                        "permanentAddress": "Btm",
+                        "permanentCity": null,
+                        "permanentPinCode": null,
+                        "correspondenceCity": null,
+                        "correspondencePinCode": null,
+                        "correspondenceAddress": null,
+                        "active": true,
+                        "dob": 1559154600000,
+                        "pwdExpiryDate": 1566974186000,
+                        "locale": null,
+                        "type": "CITIZEN",
+                        "signature": null,
+                        "accountLocked": false,
+                        "roles": [
+                            {
+                                "id": null,
+                                "name": "Citizen",
+                                "code": "CITIZEN"
+                            }
+                        ],
+                        "fatherOrHusbandName": "Mahesh",
+                        "bloodGroup": null,
+                        "identificationMark": null,
+                        "photo": null,
+                        "createdBy": "24226",
+                        "createdDate": 1559198186000,
+                        "lastModifiedBy": "1",
+                        "lastModifiedDate": 1559198321000,
+                        "otpReference": null,
+                        "tenantId": "pb"
+                    }
+                ],
+                "channel": null,
+                "address": {
+                    "id": "e8e00020-3956-41b7-b27b-3150dc39bb33",
+                    "tenantId": "pb.amritsar",
+                    "doorNo": null,
+                    "latitude": null,
+                    "longitude": null,
+                    "addressId": null,
+                    "addressNumber": null,
+                    "type": null,
+                    "addressLine1": null,
+                    "addressLine2": null,
+                    "landmark": null,
+                    "city": "pb.amritsar",
+                    "pincode": "560076",
+                    "detail": null,
+                    "buildingName": null,
+                    "street": "Btm",
+                    "locality": {
+                        "code": "SUN04",
+                        "name": "Ajit Nagar - Area1",
+                        "label": "Locality",
+                        "latitude": null,
+                        "longitude": null,
+                        "children": [],
+                        "materializedPath": null
+                    }
+                },
+                "tradeUnits": [
+                    {
+                        "id": "84c461f8-f230-4454-953b-8a62baf706cd",
+                        "tenantId": "pb.amritsar",
+                        "active": true,
+                        "tradeType": "GOODS.WHOLESALE.TST-150",
+                        "uom": null,
+                        "uomValue": null,
+                        "auditDetails": null
+                    }
+                ],
+                "accessories": null,
+                "applicationDocuments": [
+                    {
+                        "id": "0b4d7746-2eae-4670-98f5-74fe152f5ef2",
+                        "active": true,
+                        "tenantId": "pb.amritsar",
+                        "documentType": "OWNERIDPROOF",
+                        "fileStoreId": "3ce32aa9-1479-44ae-b741-d50c6144b75f",
+                        "documentUid": null,
+                        "auditDetails": null
+                    },
+                    {
+                        "id": "ed9f5ab4-3194-40ca-a4b5-3bc10e26950a",
+                        "active": true,
+                        "tenantId": "pb.amritsar",
+                        "documentType": "OWNERSHIPPROOF",
+                        "fileStoreId": "56cf07e6-32c7-497f-8a71-8b7c74a9ecdf",
+                        "documentUid": null,
+                        "auditDetails": null
+                    }
+                ],
+                "verificationDocuments": null,
+                "additionalDetail": {
+                    "applicationType": "APPLICATIONTYPE.NEW",
+                    "electricityConnectionNo": "Bangalore"
+                },
+                "institution": null,
+                "auditDetails": {
+                    "createdBy": "11b0e02b-0145-4de2-bc42-c97b96264807",
+                    "lastModifiedBy": "11b0e02b-0145-4de2-bc42-c97b96264807",
+                    "createdTime": 1559198184942,
+                    "lastModifiedTime": 1559198184942
+                }
+            },
+            "calculation": null,
+            "auditDetails": {
+                "createdBy": "11b0e02b-0145-4de2-bc42-c97b96264807",
+                "lastModifiedBy": "11b0e02b-0145-4de2-bc42-c97b96264807",
+                "createdTime": 1559198184942,
+                "lastModifiedTime": 1559198321373
+            },
+            "comment": null
+        }
+    ]
+}

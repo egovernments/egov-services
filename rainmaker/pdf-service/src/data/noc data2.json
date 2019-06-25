@@ -1,0 +1,186 @@
+{
+    "FireNOCs": [
+        {
+            "id": "96a9a230-30de-4cbc-916a-20deb23f24d3",
+            "tenantId": "pb.amritsar",
+            "fireNOCNumber": "PB-FN-2019-06-17-000199",
+            "dateOfApplied": 1560789906075,
+            "fireNOCDetails": {
+                "id": "6f9db5e3-e378-4127-8765-d4ab317f92d7",
+                "applicationNumber": "PB-FN-2019-06-17-002349",
+                "status": "APPROVED",
+                "fireNOCType": "NEW",
+                "applicationDate": 1560789906075,
+                "issuedDate": 1560790497459,
+                "validFrom": 1560790497459,
+                "validTo": 1592412897459,
+                "action": "APPROVE",
+                "noOfBuildings": "SINGLE",
+                "buildings": [
+                    {
+                        "id": "cb41e93a-3017-4c8e-a99a-27b26459d755",
+                        "tenantId": "pb.amritsar",
+                        "name": "test",
+                        "usageType": "GROUP_A_RESIDENTIAL.SUBDIVISIONA-1",
+                        "uoms": [
+                            {
+                                "id": "7b8aca5b-1d23-4988-992f-8932e55a3fda",
+                                "code": "HEIGHT_OF_BUILDING",
+                                "value": 300,
+                                "isActiveUom": true,
+                                "active": true
+                            },
+                            {
+                                "id": "b58b8933-f0c0-481e-82d8-fe357b8e0803",
+                                "code": "NO_OF_FLOORS",
+                                "value": 4,
+                                "isActiveUom": false,
+                                "active": true
+                            },
+                            {
+                                "id": "3e93ca16-f2f0-44f0-853d-81162704358e",
+                                "code": "NO_OF_BASEMENTS",
+                                "value": 1,
+                                "isActiveUom": false,
+                                "active": true
+                            },
+                            {
+                                "id": "fcda59cc-e524-4ebd-93c2-e39d3d4fb3bc",
+                                "code": "HEIGHT_OF_BUILDING",
+                                "value": 300,
+                                "isActiveUom": true,
+                                "active": true
+                            },
+                            {
+                                "id": "13a29819-705f-4345-a198-3ef744a9572b",
+                                "code": "NO_OF_FLOORS",
+                                "value": 4,
+                                "isActiveUom": false,
+                                "active": true
+                            },
+                            {
+                                "id": "841a0641-dc03-44ce-a3d1-f9f7570c59c5",
+                                "code": "NO_OF_BASEMENTS",
+                                "value": 1,
+                                "isActiveUom": false,
+                                "active": true
+                            }
+                        ],
+                        "applicationDocuments": []
+                    }
+                ],
+                "propertyDetails": {
+                    "id": "24e0743a-e9b9-4226-ad14-f41fd5e04517",
+                    "address": {
+                        "tenantId": "pb.amritsar",
+                        "city": "pb.amritsar",
+                        "locality": {
+                            "code": "SUN04"
+                        }
+                    }
+                },
+                "applicantDetails": {
+                    "ownerShipType": "INDIVIDUAL.SINGLEOWNER",
+                    "owners": [
+                        {
+                            "id": 23442,
+                            "userName": "9167765477",
+                            "useruuid": "d9fb76e8-3c65-4e11-9f5f-2998c0f8b8a6",
+                            "active": true,
+                            "ownerType": "INDIVIDUAL.SINGLEOWNER",
+                            "tenantId": "pb",
+                            "fatherOrHusbandName": "A",
+                            "name": "Avijeet",
+                            "gender": "MALE",
+                            "mobileNumber": "9167765477",
+                            "emailId": "avi7@gm.com",
+                            "pan": "bnhpp5432k",
+                            "permanentAddress": "Some correspondance address",
+                            "correspondenceAddress": "Corresponding address",
+                            "addresses": [
+                                {
+                                    "address": "Corresponding address",
+                                    "type": "CORRESPONDENCE",
+                                    "id": 52741,
+                                    "tenantId": "pb",
+                                    "userId": 23442,
+                                    "addressType": "CORRESPONDENCE"
+                                },
+                                {
+                                    "address": "Some correspondance address",
+                                    "type": "PERMANENT",
+                                    "id": 48685,
+                                    "tenantId": "pb",
+                                    "userId": 23442,
+                                    "addressType": "PERMANENT"
+                                }
+                            ],
+                            "type": "CITIZEN",
+                            "accountLocked": false,
+                            "accountLockedDate": 0,
+                            "createdBy": 0,
+                            "lastModifiedBy": 1,
+                            "roles": [
+                                {
+                                    "code": "CITIZEN",
+                                    "name": "Citizen",
+                                    "tenantId": "pb"
+                                }
+                            ],
+                            "uuid": "d9fb76e8-3c65-4e11-9f5f-2998c0f8b8a6",
+                            "createdDate": 1532962247000,
+                            "lastModifiedDate": 1560966738000,
+                            "dob": 678067200000,
+                            "pwdExpiryDate": 1541728200000
+                        }
+                    ],
+                    "additionalDetail": {
+                        "id": "5da67c22-a753-45ac-8500-880fdd2cd692",
+                        "documents": [
+                            {
+                                "tenantId": "pb.amritsar",
+                                "fileStoreId": "ad780ab8-8a0f-4474-bc6b-36678ab33768",
+                                "documentType": "OWNER.IDENTITYPROOF"
+                            },
+                            {
+                                "tenantId": "pb.amritsar",
+                                "fileStoreId": "bad7d9b8-5910-4b6b-9da7-0e1e9c52b4cc",
+                                "documentType": "OWNER.ADDRESSPROOF"
+                            }
+                        ]
+                    }
+                },
+                "additionalDetail": {
+                    "documents": [],
+                    "ownerAuditionalDetail": {
+                        "id": "5da67c22-a753-45ac-8500-880fdd2cd692",
+                        "documents": [
+                            {
+                                "tenantId": "pb.amritsar",
+                                "fileStoreId": "ad780ab8-8a0f-4474-bc6b-36678ab33768",
+                                "documentType": "OWNER.IDENTITYPROOF"
+                            },
+                            {
+                                "tenantId": "pb.amritsar",
+                                "fileStoreId": "bad7d9b8-5910-4b6b-9da7-0e1e9c52b4cc",
+                                "documentType": "OWNER.ADDRESSPROOF"
+                            }
+                        ]
+                    }
+                },
+                "auditDetails": {
+                    "createdBy": "52bb4f29-922a-4ba1-b3f1-33cfff16cd7e",
+                    "lastModifiedBy": "52bb4f29-922a-4ba1-b3f1-33cfff16cd7e",
+                    "createdTime": 1560789906028,
+                    "lastModifiedTime": 1560790497303
+                }
+            },
+            "auditDetails": {
+                "createdBy": "52bb4f29-922a-4ba1-b3f1-33cfff16cd7e",
+                "lastModifiedBy": "52bb4f29-922a-4ba1-b3f1-33cfff16cd7e",
+                "createdTime": 1560789906028,
+                "lastModifiedTime": 1560790497303
+            }
+        }
+    ]
+}

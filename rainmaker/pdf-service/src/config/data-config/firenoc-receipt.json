@@ -10,34 +10,23 @@
                 {
                    "direct": [
                       {
-                         "variable": "content[0].table.body[0].[1].stack[0].text",
+                         "variable": "content[1].columns[0].text[1].text",
                          "value": {
-                              "path":"propertyDetails.tenantId"                              
+                              "path":"FireNOCs[0].fireNOCDetails.applicationNumber"                              
                          }
                       },
                       {
-                         "variable":"content[0].table.body[0].[1].stack[1].text",
-                         "value":{
-                            "path":"propertyDetails.units[0].usageCategoryMajor"                            
-                         }  
+                        "variable": "content[4].table.body[0][1].text",
+                        "value": {
+                             "path":"FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].name"                              
+                        }
                       },
                       {
-                         "variable": "content[1].columns[0].text[1].text",
-                         "value":{
-                              "path":"propertyDetails.units[0].usageCategoryMinor"                           
-                          } 
-                      },
-                      {
-                        "variable": "content[10].table.body",                        
-                        "value":{
-                             "path":"propertyDetails.owners"                          
-                         },
-                         "type":"array",
-                         "format":{                            
-                            "type":"string",
-                            "scema":["name","mobileNumber"]
-                        } 
-                     } 
+                       "variable": "content[4].table.body[0][3].text",
+                       "value": {
+                            "path":"FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].mobileNumber"                              
+                        }
+                      }
                    ]
                 },
                 {
@@ -57,28 +46,55 @@
                      
                       {
                          
-                         "path": "https://egov-micro-dev.egovernments.org/user/_search",
-                         "queryParam": "tenantId=pb.amritsar",
+                         "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
+                         "queryParam": "consumerCode=$.FireNOCs[0].fireNOCDetails.applicationNumber",
                          "apiRequest": {
                            "RequestInfo": {
+                               "action": "",
                                "apiId": "Rainmaker",
-                               "ver": ".01",
-                               "ts": "",
-                               "action": "search",
+                               "authToken": "c9409736-ac8d-48ba-9c68-bbfa3e7e7f81",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",
-                               "authToken": "5844cd24-dd45-447f-bc72-b1684537ebc7"
-                           },
-                           "userName": "amr001",
-                           "tenantId": "pb.amritsar"
+                               "requesterId": "",
+                               "ver": ".01"
+                           }
                        },
 
                          "responseMapping":[
                            {
+                              "variable":"content[1].columns[1].text[1].text",
+                              "value":"Receipt[0].instrument.transactionDateInput"
+                           },
+                           {
                               "variable":"content[2].columns[0].text[1].text",
-                              "value":"user[0].id"
+                              "value":"Receipt[0].receiptNumber"
+                           },
+                           {
+                              "variable":"content[6].table.body[1][0].text",
+                              "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
+                           },
+                           {
+                              "variable":"content[6].table.body[1][1].text",
+                              "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
+                           },
+                           {
+                              "variable":"content[6].table.body[1][3].text",
+                              "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
+                           },
+                           {
+                              "variable":"content[8].table.body[1][0].text",
+                              "value":"Receipt[0].instrument.transactionType"
+                           },
+                           {
+                              "variable":"content[8].table.body[1][1].text",
+                              "value":"Receipt[0].transactionId"
+                           },
+                           {
+                              "variable":"content[8].table.body[1][2].text",
+                              "value":"Receipt[0].instrument.bank.name"
                            }
+
                         ]  
                       }
                    ]

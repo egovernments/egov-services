@@ -1,22 +1,29 @@
 package org.egov.pt.web.controllers;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
-import org.egov.pt.web.models.*;
+import org.egov.pt.web.models.DemandBasedAssessment;
+import org.egov.pt.web.models.DemandBasedAssessmentRequest;
+import org.egov.pt.web.models.DemandBasedAssessmentResponse;
+import org.egov.pt.web.models.DemandGenerationRequest;
+import org.egov.pt.web.models.SearchCriteriaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/demandBased")
@@ -48,6 +55,10 @@ public class DemandBasedController {
 
         Object response = serviceRequestRepository.fetchResult(getSearcherUrl(), searchCriteriaRequest);
         DemandBasedAssessmentResponse demandBasedAssessmentResponse = mapper.convertValue(response,DemandBasedAssessmentResponse.class);
+        
+        if(CollectionUtils.isEmpty(demandBasedAssessmentResponse.getDemandBasedAssessments()))
+        	return new ResponseEntity<>(demandBasedAssessmentResponse, HttpStatus.OK);
+        
         enrichFinancialYear(demandBasedAssessmentResponse.getDemandBasedAssessments(), demandGenerationRequest.getFinancialYear());
 
         for(DemandBasedAssessment assessment : demandBasedAssessmentResponse.getDemandBasedAssessments()) {

@@ -85,7 +85,7 @@ ReportDefinitions:
         isMandatory: false
         searchClause: AND applicationdate >= $fromDate
       - name: toDate
-        label: reports.noc.toDate
+        label: reports.noc.applicationstatusreport.toDate
         type: epoch
         source: noc
         isMandatory: false

@@ -2,6 +2,8 @@ package org.egov.mseva.web.contract;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +36,7 @@ public class EventSearchCriteria {
 
 	private List<String> status;
 	
+	@NotNull
 	private String tenantId;
 	
 	private List<String> recepients;

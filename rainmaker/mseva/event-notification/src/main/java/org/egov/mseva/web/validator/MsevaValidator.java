@@ -90,10 +90,11 @@ public class MsevaValidator {
 				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE, ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
 			}
 		}
+		validateActions(request.getEvents(), responseFromDB, errorMap);
+		
 		if (!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
-		validateActions(request.getEvents(), responseFromDB, errorMap);
 
 	}
 	
@@ -134,12 +135,11 @@ public class MsevaValidator {
 
 	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
 		if (null != event.getEventDetails()) {
+			if(event.getEventDetails().isEmpty(event.getEventDetails())) {
+				errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE, ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
+			}
 			if (event.getEventDetails().getFromDate() > event.getEventDetails().getToDate()) {
 				errorMap.put(ErrorConstants.INVALID_EVENT_DATE_CODE, ErrorConstants.INVALID_EVENT_DATE_MSG);
-			}
-			if ((event.getEventDetails().getFromDate() > new Date().getTime())
-					|| (event.getEventDetails().getFromDate() > new Date().getTime())) {
-				errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
 			}
 
 		}

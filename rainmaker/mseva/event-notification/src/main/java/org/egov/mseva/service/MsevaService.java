@@ -109,29 +109,34 @@ public class MsevaService {
 		enrichUpdateEvent(request);
 		List<Event> counterEvents = new ArrayList<>();
 		request.getEvents().forEach(event -> {
-			if (null != event.getEventDetails() && event.getGenerateCounterEvent()) {
-				Event counterEvent = new Event();
-				counterEvent.setActions(event.getActions());
-				counterEvent.setEventDetails(event.getEventDetails());
-				counterEvent.setReferenceId(event.getId());
-				counterEvent.setName(event.getName());
-				counterEvent.setEventType(event.getEventType());
-				counterEvent.setRecepient(event.getRecepient());
-				counterEvent.setSource(event.getSource());
-				counterEvent.setTenantId(event.getTenantId());
-				counterEvent.setRecepientEventMap(event.getRecepientEventMap());
-
+			Boolean isCounterEventReq = true;
+			if (null != event.getEventDetails() && (null == event.getGenerateCounterEvent() || event.getGenerateCounterEvent())) {
 				String description = null;
 				if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.CANCELLED)) {
 					if (null != event.getEventDetails().getFromDate()
 							&& new Date().getTime() < event.getEventDetails().getFromDate()) {
 						description = event.getName() + " has been deleted. Please remove from your calendar.";
+					}else {
+						isCounterEventReq = false;
 					}
 				} else {
 					description = "Details of " + event.getName() + " have been updated.";
 				}
-				counterEvent.setDescription(description);
-				counterEvents.add(counterEvent);
+				if(isCounterEventReq) {
+					Event counterEvent = new Event();
+					counterEvent.setActions(event.getActions());
+					counterEvent.setEventDetails(event.getEventDetails());
+					counterEvent.setReferenceId(event.getId());
+					counterEvent.setName(event.getName());
+					counterEvent.setEventType(event.getEventType());
+					counterEvent.setRecepient(event.getRecepient());
+					counterEvent.setSource(event.getSource());
+					counterEvent.setTenantId(event.getTenantId());
+					counterEvent.setRecepientEventMap(event.getRecepientEventMap());
+					counterEvent.setDescription(description);
+					counterEvents.add(counterEvent);
+				}
+
 			}
 		});
 		if (!CollectionUtils.isEmpty(counterEvents)) {
@@ -194,13 +199,11 @@ public class MsevaService {
 			}
 			if (null == event.getStatus())
 				event.setStatus(Status.ACTIVE);
-
-			if (CollectionUtils.isEmpty(event.getRecepientEventMap())) {
-				List<RecepientEvent> recepientEventList = new ArrayList<>();
-				manageRecepients(event, recepientEventList);
-				event.setRecepientEventMap(recepientEventList);
-			}
-
+			
+			List<RecepientEvent> recepientEventList = new ArrayList<>();
+			manageRecepients(event, recepientEventList);
+			event.setRecepientEventMap(recepientEventList);
+			
 			event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
 
 			AuditDetails auditDetails = AuditDetails.builder()
@@ -255,7 +258,6 @@ public class MsevaService {
 			roles.add("CITIZEN.CITIZEN");
 			criteria.setUserids(userIds);
 			criteria.setRoles(roles);
-			criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 		}
 		if (CollectionUtils.isEmpty(criteria.getStatus())) {
 			List<String> statuses = new ArrayList<>();

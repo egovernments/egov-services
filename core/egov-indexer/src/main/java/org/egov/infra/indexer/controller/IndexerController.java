@@ -1,7 +1,6 @@
 package org.egov.infra.indexer.controller;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import org.egov.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.producer.IndexerProducer;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,9 +62,9 @@ public class IndexerController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(indexJson, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(indexJson, HttpStatus.OK);
-
+		return new ResponseEntity<>(indexJson, HttpStatus.OK);	
 	}
+	
 
     
     @PostMapping("/_reindex")

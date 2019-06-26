@@ -82,8 +82,8 @@ import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
+import org.egov.demand.repository.IdGenRepo;
 import org.egov.demand.repository.ServiceRequestRepository;
-import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.BillResponse;
@@ -136,7 +136,7 @@ public class BillService {
 	private ServiceRequestRepository restRepository;
 	
 	@Autowired
-	private SequenceGenService seqGenerator;
+	private IdGenRepo idGenRepo;
 	
 	/**
 	 * Fetches the bill for given parameters
@@ -317,7 +317,7 @@ public class BillService {
 		
 		Map<String, TaxHeadMaster> taxHeadMap = getTaxHeadMaster(taxHeadCodes, tenantId, requestInfo);
 		Map<String, BusinessServiceDetail> businessMap = getBusinessService(businessCodes, tenantId, requestInfo);
-		List<String> billNumbers  = seqGenerator.getIds(demands.size(), appProps.getBillNumSeqName());
+
 		/*
 		 * looping demand to create bill-detail and account-details object
 		 * 
@@ -334,7 +334,7 @@ public class BillService {
 			String billDetailId = UUID.randomUUID().toString();
 			billDetail.setId(billDetailId);
 			billDetail.setBill(billId);
-			billDetail.setBillNumber(billNumbers.get(demands.indexOf(demand)));
+			billDetail.setBillNumber(getBillNumbers(requestInfo, tenantId, demands.get(0).getBusinessService(), 1).get(0));
 
 			for (BillAccountDetail accDetail : billDetail.getBillAccountDetails()) {
 
@@ -363,6 +363,19 @@ public class BillService {
 		return Arrays.asList(bill);
 	}
 	
+	private List<String> getBillNumbers(RequestInfo requestInfo, String tenantId, String module, int count) {
+
+		String billNumberFormat = appProps.getBillNumberFormat();
+		billNumberFormat = billNumberFormat.replace(appProps.getModuleReplaceStirng(), module);
+
+		if (appProps.getIsTenantLevelBillNumberingEnabled())
+			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), tenantId.split("\\.")[1]);
+		else
+			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), "");
+
+		return idGenRepo.getId(requestInfo, tenantId, "billnumberid", billNumberFormat, count);
+	}
+
 	/**
 	 * updates the total amount to be paid for each business service code
 	 * 

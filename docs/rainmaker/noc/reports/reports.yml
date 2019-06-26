@@ -61,6 +61,7 @@ ReportDefinitions:
         searchClause: AND fnoc.tenantId IN ($ulb)
     query: select COALESCE(message,usagetype) localisedmessage, COUNT(*) as transactionNumber, sum(case when collectiontype='COUNTER' then ins.amount else 0 end) fees_counter, sum(case when collectiontype='ONLINE' then ins.amount else 0 end) fees_online from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid inner join egcl_receiptheader_v1 rhead on rhead.consumercode=fdet.applicationnumber inner join eg_fn_buidlings build on build.firenocdetailsuuid=fdet.uuid inner join egcl_receiptinstrument_v1 recins on recins.receiptheader=rhead.id inner join egcl_instrumentheader_v1 ins on recins.instrumentheader=ins.id left outer join message on code=concat('FIRENOC_BUILDINGTYPE_',UPPER(REGEXP_REPLACE(usagetype,'\..*',''))) and module='rainmaker-noc' where 1=1
     groupby: GROUP BY localisedmessage
+    orderby: ORDER BY localisedmessage
 
   - reportName: ApplicationStatusReport
     summary: Application Status Report
@@ -100,6 +101,7 @@ ReportDefinitions:
         searchClause: AND fnoc.tenantId IN ($ulb)
     query: select COALESCE(message,state) application_status,count(*) number_of_application from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid inner join (SELECT DISTINCT ON (businessid) * FROM eg_wf_processinstance_v2 ORDER BY businessid,createdtime desc) pinstance on pinstance.businessid=fdet.applicationnumber inner join eg_wf_state_v2 wfstate on pinstance.status=wfstate.uuid left outer join message on code=concat('WF_FIRENOC_',UPPER(state)) and module='rainmaker-noc'  where 1=1
     groupby: GROUP BY application_status
+    orderby: ORDER BY application_status
 
   - reportName: ChannelsReport
     summary: Channels Report
@@ -144,3 +146,4 @@ ReportDefinitions:
         searchClause: AND fnoc.tenantId IN ($ulb)
     query: select channel, count (*) number_of_applications,round((count (*)::decimal/(select count(*) from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid))*100,2) percentage from eg_fn_firenoc fnoc inner join eg_fn_firenocdetail fdet on fdet.firenocuuid=fnoc.uuid
     groupby: GROUP BY channel
+    orderby: ORDER BY channel

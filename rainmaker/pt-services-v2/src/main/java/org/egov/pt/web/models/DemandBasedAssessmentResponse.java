@@ -1,19 +1,19 @@
 package org.egov.pt.web.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import org.egov.common.contract.request.RequestInfo;
+import java.util.List;
+
 import org.egov.common.contract.response.ResponseInfo;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 @Data
 public class DemandBasedAssessmentResponse {
 
-    @JsonProperty("ResponseInfo")
-    ResponseInfo responseInfo;
+   @JsonProperty("ResponseInfo")
+   ResponseInfo responseInfo;
 
-    @JsonProperty("DemandBasedAssessments")
-    List<DemandBasedAssessment> DemandBasedAssessments;
-
+   @JsonProperty("demandBasedAssessments")
+   List<DemandBasedAssessment> demandBasedAssessments;
 }

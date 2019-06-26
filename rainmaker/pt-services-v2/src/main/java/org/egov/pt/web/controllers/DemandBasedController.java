@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -49,7 +48,6 @@ public class DemandBasedController {
     @RequestMapping(value = "/_generate", method = RequestMethod.POST)
     public ResponseEntity<DemandBasedAssessmentResponse> create(@Valid @RequestBody DemandGenerationRequest demandGenerationRequest) {
 
-    	mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         SearchCriteriaRequest searchCriteriaRequest = SearchCriteriaRequest.builder()
                 .searchCriteria(demandGenerationRequest.getSearchCriteria())
                 .requestInfo(demandGenerationRequest.getRequestInfo())

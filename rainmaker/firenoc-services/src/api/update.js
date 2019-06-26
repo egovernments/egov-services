@@ -7,7 +7,8 @@ import { addUUIDAndAuditDetails } from "../utils/create";
 import { getApprovedList } from "../utils/update";
 import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import { calculate } from "../services/firenocCalculatorService";
-import cloneDeep from "lodash/cloneDeep";
+// import cloneDeep from "lodash/cloneDeep";
+import filter from "lodash/filter";
 import {validateFireNOCModel} from "../utils/modelValidation";
 
 
@@ -29,8 +30,9 @@ export default ({ config, db }) => {
       }
 
       body = await addUUIDAndAuditDetails(body);
+
       //Check records for approved
-      let approvedList=await getApprovedList(cloneDeep(body));
+      // let approvedList=await getApprovedList(cloneDeep(body));
 
       //applay workflow
       let workflowResponse = await createWorkFlow(body);
@@ -49,10 +51,13 @@ export default ({ config, db }) => {
       });
 
       //check approved list
-      if (approvedList.FireNOCs.length>0) {
+      const approvedList=filter(body.FireNOCs,function(fireNoc) { return fireNoc.fireNOCNumber; });
+
+      // console.log("list length",approvedList.length);
+      if (approvedList.length>0) {
         payloads.push({
           topic: envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW,
-          messages: JSON.stringify(approvedList)
+          messages: JSON.stringify({RequestInfo,FireNOCs:approvedList})
         });
       }
       // console.log(JSON.stringify(body));

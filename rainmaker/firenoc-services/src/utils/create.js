@@ -103,6 +103,7 @@ export const addUUIDAndAuditDetails = async request => {
     };
     FireNOCs[i].fireNOCDetails.status =
       status[FireNOCs[i].fireNOCDetails.action];
+    FireNOCs[i] = await checkApproveRecord(FireNOCs[i],RequestInfo);
   }
   request.FireNOCs = FireNOCs;
   return request;
@@ -158,7 +159,25 @@ const createUser = async (requestInfo, owner, tenantId) => {
   return userCreateResponse;
 };
 
-
+const checkApproveRecord = async (fireNoc = {},RequestInfo) => {
+  if (fireNoc.fireNOCDetails.status == "APPROVED") {
+    let fireNOCNumber = fireNoc.fireNOCNumber;
+    fireNoc.fireNOCNumber = fireNOCNumber
+      ? fireNOCNumber
+      : await addIDGenId(RequestInfo, [
+          {
+            tenantId: fireNoc.tenantId,
+            format: envVariables.EGOV_CIRTIFICATE_FORMATE
+          }
+        ]);
+    fireNoc.fireNOCDetails.validFrom = new Date().getTime();
+    let validTo = new Date();
+    validTo.setFullYear(validTo.getFullYear() + 1);
+    fireNoc.fireNOCDetails.validTo = validTo.getTime();
+    fireNoc.fireNOCDetails.issuedDate = new Date().getTime();
+  }
+  return fireNoc;
+};
 
 const addDefaultUserDetails = (tenantId, owner) => {
   if (!owner.userName || isEmpty(owner.userName))

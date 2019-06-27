@@ -154,7 +154,7 @@ public class ApplicationProperties {
 	@Value("${egov.idgen.hostname}")
 	private String idGenHost;
 	
-	@Value("${rcptno.gen.uri}")
+	@Value("${egov.idgen.uri}")
 	private String idGenUrl;
 
 	@Value("${bs.billaccountdetail.seq.name}")

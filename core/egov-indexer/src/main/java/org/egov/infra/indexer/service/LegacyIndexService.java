@@ -17,8 +17,8 @@ import org.egov.infra.indexer.custom.pt.PTCustomDecorator;
 import org.egov.infra.indexer.custom.pt.PropertyResponse;
 import org.egov.infra.indexer.models.IndexJob;
 import org.egov.infra.indexer.models.IndexJob.StatusEnum;
-import org.egov.infra.indexer.producer.IndexerProducer;
 import org.egov.infra.indexer.models.IndexJobWrapper;
+import org.egov.infra.indexer.producer.IndexerProducer;
 import org.egov.infra.indexer.util.IndexerUtils;
 import org.egov.infra.indexer.util.ResponseInfoFactory;
 import org.egov.infra.indexer.web.contract.Index;
@@ -28,7 +28,6 @@ import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.Mapping.ConfigKeyEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.PropertyResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -56,9 +55,6 @@ public class LegacyIndexService {
 
 	@Autowired
 	private IndexerProducer indexerProducer;
-
-	@Autowired
-	private IndexerService indexerService;
 
 	@Value("${egov.core.reindex.topic.name}")
 	private String reindexTopic;

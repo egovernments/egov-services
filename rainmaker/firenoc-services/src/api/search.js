@@ -53,7 +53,13 @@ export default ({ config, db }) => {
       const roles = get(request.body, "RequestInfo.userInfo.roles");
       const userUUID = get(request.body, "RequestInfo.userInfo.uuid");
       if (some(roles, { code: "CITIZEN" }) && userUUID) {
-        text = `${text} FN.createdby = '${userUUID}' AND`;
+        const mobileNumber = get(request.body, "RequestInfo.userInfo.mobileNumber");
+        const tenantId=get(request.body, "RequestInfo.userInfo.tenantId");
+        console.log(mobileNumber);
+        console.log(tenantId);
+        text = `${text} FN.createdby = '${userUUID}' OR`;
+        queryObj.mobileNumber=queryObj.mobileNumber?queryObj.mobileNumber:mobileNumber;
+        queryObj.tenantId=queryObj.tenantId?queryObj.tenantId:tenantId;
       } else {
         if (queryObj.tenantId) {
           text = `${text} FN.tenantid = '${queryObj.tenantId}' AND`;
@@ -123,7 +129,7 @@ export default ({ config, db }) => {
       }
 
 
-      // console.log(sqlQuery);
+      console.log(sqlQuery);
 
 
 

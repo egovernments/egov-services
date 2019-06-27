@@ -216,13 +216,13 @@ const BuildingUOM = {
   properties: {
     code: {
       type: "string",
-      description: "Code of the unit code",
+      description: "Code of the unit code"
       // valid_uom:true
     },
     value: {
       type: "integer",
       description: "Value entered for the uom",
-      minimum: 1
+      minimum: 0
     },
     isActiveUom: {
       type: "boolean",
@@ -299,23 +299,31 @@ const OwnerInfo = {
     mobileNumber: {
       type: "string",
       description: "mobile number of the autheticated user",
-      pattern:"^[6789][0-9]{9}$"
+      pattern: "^[6789][0-9]{9}$"
     },
-    gender:{
+    gender: {
       type: "string",
-      enum: ["MALE", "FEMALE","TRANSGENDER"]
+      enum: ["MALE", "FEMALE", "TRANSGENDER"]
     },
-    name:{
-      type:"string"
+    name: {
+      type: "string"
     },
-    dob:{
-      type:"integer"
+    dob: {
+      type: "integer"
     },
-    fatherOrHusbandName:{
-      type:"string"
+    fatherOrHusbandName: {
+      type: "string"
     }
   },
-  required:["name","mobileNumber","gender","relationship","correspondenceAddress","dob","fatherOrHusbandName"]
+  required: [
+    "name",
+    "mobileNumber",
+    "gender",
+    "relationship",
+    "correspondenceAddress",
+    "dob",
+    "fatherOrHusbandName"
+  ]
 };
 
 const PropertyDetails = {
@@ -360,7 +368,7 @@ const Buildings = {
     usageType: {
       type: "string",
       description: "building usage type",
-      valid_buildingType:true
+      valid_buildingType: true
     },
     uoms: {
       type: "array",
@@ -403,7 +411,7 @@ const FireNOCDetails = {
     firestationId: {
       type: "string",
       description: "Fire station id where we are applying fire fireNOC.",
-      valid_firestation:true
+      valid_firestation: true
     },
     applicationDate: {
       type: "integer",
@@ -417,7 +425,7 @@ const FireNOCDetails = {
       description: "Fire NOC applicable for financial year.",
       maxLength: 64,
       minLength: 2,
-      valid_financialYear:true
+      valid_financialYear: true
     },
     issuedDate: {
       type: "integer",
@@ -463,10 +471,7 @@ const FireNOCDetails = {
     noOfBuildings: {
       type: "string",
       description: "it might be single or multiple",
-      enum: [
-        "SINGLE",
-        "MULTIPLE"
-      ]
+      enum: ["SINGLE", "MULTIPLE"]
     },
     buildings: {
       type: "array",
@@ -481,7 +486,7 @@ const FireNOCDetails = {
         ownerShipType: {
           description: "type pf the owner ship",
           type: "string",
-          valid_ownerShipCategory:true
+          valid_ownerShipCategory: true
         },
         owners: {
           description:
@@ -511,12 +516,12 @@ const FireNOCDetails = {
   },
   then: {
     properties: {
-      buildings: { maxItems:1 }
+      buildings: { maxItems: 1 }
     }
   },
   else: {
     properties: {
-      buildings: { minItems:1 }
+      buildings: { minItems: 1 }
     }
   },
   required: [

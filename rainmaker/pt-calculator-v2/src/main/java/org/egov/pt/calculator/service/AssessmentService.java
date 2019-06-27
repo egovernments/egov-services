@@ -54,16 +54,18 @@ public class AssessmentService {
 		return repository.saveAssessments(assessments, info);
 	}
 	
+
+
 	/**
 	 * Returns the latest assessment for the given criteria
-	 * 
-	 * @param assessment
+	 *
+	 * @param assessments
 	 * @return
 	 */
-	public List<Assessment> getMaxAssessment(Assessment assessment){
-		
+	public List<Assessment> getMaxAssessment(List<Assessment> assessments){
+
 		List<Object> preparedStatementList = new ArrayList<>();
-		String query = utils.getMaxAssessmentQuery(assessment, preparedStatementList);
+		String query = utils.getMaxAssessmentQuery(assessments, preparedStatementList);
 		return repository.getAssessments(query, preparedStatementList.toArray());
 	}
 	

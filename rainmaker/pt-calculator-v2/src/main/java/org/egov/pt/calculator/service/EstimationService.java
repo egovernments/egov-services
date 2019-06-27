@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.pt.calculator.advise.Hook;
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.util.PBFirecessUtils;
@@ -18,6 +19,7 @@ import org.egov.pt.calculator.web.models.CalculationReq;
 import org.egov.pt.calculator.web.models.CalculationRes;
 import org.egov.pt.calculator.web.models.TaxHeadEstimate;
 import org.egov.pt.calculator.web.models.demand.Category;
+import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
@@ -70,7 +72,8 @@ public class EstimationService {
 	 * @param request incoming calculation request containing the criteria.
 	 * @return Map<String, Calculation> key of assessment number and value of calculation object.
 	 */
-	public Map<String, Calculation> getEstimationPropertyMap(CalculationReq request) {
+	//@Hook(pre=false,post = true,key="ESTIMATE")
+	public Map<String, Calculation> getEstimationPropertyMap(CalculationReq request,Map<String,Demand> propertyIdToDemandMap,Set<Demand> oldDemandsToBeCancelled) {
 
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<CalculationCriteria> criteriaList = request.getCalculationCriteria();
@@ -81,7 +84,7 @@ public class EstimationService {
 			PropertyDetail detail = property.getPropertyDetails().get(0);
 			calcValidator.validatePropertyForCalculation(detail);
 			String assessmentNumber = detail.getAssessmentNumber();
-			Calculation calculation = getCalculation(requestInfo, criteria, getEstimationMap(criteria, requestInfo),masterMap);
+			Calculation calculation = getCalculation(requestInfo, criteria, getEstimationMap(criteria, requestInfo),masterMap,propertyIdToDemandMap,oldDemandsToBeCancelled);
 			calculation.setServiceNumber(assessmentNumber);
 			calculationPropertyMap.put(assessmentNumber, calculation);
 		}
@@ -95,16 +98,18 @@ public class EstimationService {
 	 * @param request incoming calculation request containing the criteria.
 	 * @return CalculationRes calculation object containing all the tax for the given criteria.
 	 */
-    public CalculationRes getTaxCalculation(CalculationReq request) {
+	//@Hook(pre=false,post = true)
+	public CalculationRes getTaxCalculation(CalculationReq request) {
 
-        CalculationCriteria criteria = request.getCalculationCriteria().get(0);
-        Property property = criteria.getProperty();
-        PropertyDetail detail = property.getPropertyDetails().get(0);
-        calcValidator.validatePropertyForCalculation(detail);
-        Map<String,Object> masterMap = mDataService.getMasterMap(request);
-        return new CalculationRes(new ResponseInfo(), Collections.singletonList(getCalculation(request.getRequestInfo(), criteria,
-                getEstimationMap(criteria, request.getRequestInfo()),masterMap)));
-    }
+		CalculationCriteria criteria = request.getCalculationCriteria().get(0);
+		Property property = criteria.getProperty();
+		PropertyDetail detail = property.getPropertyDetails().get(0);
+		calcValidator.validatePropertyForCalculation(detail);
+		Map<String,Object> masterMap = mDataService.getMasterMap(request);
+		Map<String,Demand> propertyIdToDemandMap = demandService.getLatestDemandForCurrentFinancialYear(request.getRequestInfo(),Collections.singletonList(property));
+		return new CalculationRes(new ResponseInfo(), Collections.singletonList(getCalculation(request.getRequestInfo(), criteria,
+				getEstimationMap(criteria, request.getRequestInfo()),masterMap,propertyIdToDemandMap,null)));
+	}
 
 	/**
 	 * Generates a List of Tax head estimates with tax head code,
@@ -369,7 +374,9 @@ public class EstimationService {
 	 * @return Calculation object constructed based on the resulting tax amount and other applicables(rebate/penalty)
 	 */
     private Calculation getCalculation(RequestInfo requestInfo, CalculationCriteria criteria,
-									   Map<String,List> estimatesAndBillingSlabs,Map<String,Object> masterMap) {
+									   Map<String,List> estimatesAndBillingSlabs,Map<String,Object> masterMap,
+									   Map<String,Demand> propertyIdToDemandMap,
+									   Set<Demand> oldDemandsToBeCancelled) {
 
 		List<TaxHeadEstimate> estimates = estimatesAndBillingSlabs.get("estimates");
 		List<String> billingSlabIds = estimatesAndBillingSlabs.get("billingSlabIds");
@@ -436,7 +443,7 @@ public class EstimationService {
 
 		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption);
 		// false in the argument represents that the demand shouldn't be updated from this call
-		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(ptTax, criteria, requestInfo, false);
+		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(ptTax, criteria, false,propertyIdToDemandMap,oldDemandsToBeCancelled);
 
 		if(collectedAmtForOldDemand.compareTo(BigDecimal.ZERO) > 0)
 			estimates.add(TaxHeadEstimate.builder()

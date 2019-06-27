@@ -11,23 +11,23 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
-import org.egov.pt.calculator.web.models.Assessment;
-import org.egov.pt.calculator.web.models.DemandDetailAndCollection;
-import org.egov.pt.calculator.web.models.GetBillCriteria;
+import org.egov.pt.calculator.web.models.*;
 import org.egov.pt.calculator.web.models.collections.Receipt;
 import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
+import org.egov.pt.calculator.web.models.demand.DemandResponse;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
+import org.egov.pt.calculator.web.models.property.Property;
+import org.egov.pt.calculator.web.models.property.PropertyDetail;
+import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
-import static org.egov.pt.calculator.util.CalculatorConstants.ALLOWED_RECEIPT_STATUS;
-import static org.egov.pt.calculator.util.CalculatorConstants.SERVICE_FIELD_VALUE_PT;
-import static org.egov.pt.calculator.util.CalculatorConstants.STATUS_FIELD_FOR_SEARCH_URL;
+import static org.egov.pt.calculator.util.CalculatorConstants.*;
 
 @Component
 @Getter
@@ -187,7 +187,7 @@ public class CalculatorUtils {
 					.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
 					.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
 					.append(CalculatorConstants.SEPARATER)
-					.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +getBillCriteria.getAssessmentNumber());
+					.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+ PT_CONSUMER_CODE_SEPARATOR +getBillCriteria.getAssessmentNumber());
 
 		else return new StringBuilder().append(configurations.getBillingServiceHost())
 				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
@@ -201,16 +201,25 @@ public class CalculatorUtils {
 	/**
 	 * method to create demandsearch url with demand criteria
 	 *
-	 * @param assessment
+	 * @param assessments
 	 * @return
 	 */
-	public StringBuilder getDemandSearchUrl(Assessment assessment) {
+	public StringBuilder getDemandSearchUrl(List<Assessment> assessments) {
+
+		String tenantId = assessments.get(0).getTenantId();
+
+		Set<String> consumerCodes = new HashSet<>();
+
+		assessments.forEach(assessment -> {
+			consumerCodes.add(assessment.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +assessment.getAssessmentNumber());
+		});
 
 		return new StringBuilder().append(configurations.getBillingServiceHost())
 				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(assessment.getTenantId())
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER)
-				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(assessment.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +assessment.getAssessmentNumber());
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
+				.append(StringUtils.join(consumerCodes));
 	}
 
 	/**
@@ -312,6 +321,7 @@ public class CalculatorUtils {
 	 * @param assessment
 	 * @return
 	 */
+	@Deprecated
 	 public String getMaxAssessmentQuery(Assessment assessment, List<Object> preparedStmtList) {
 
  		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
@@ -337,6 +347,51 @@ public class CalculatorUtils {
 			preparedStmtList.add(assessment.getAssessmentYear());
 		}
 		
+		query.append(" AND a1.active IS TRUE");
+
+		return query.toString();
+	}
+
+
+	/**
+	 * Query to fetch latest assessment for the given criteria
+	 *
+	 * @param assessments
+	 * @return
+	 */
+	public String getMaxAssessmentQuery(List<Assessment> assessments, List<Object> preparedStmtList) {
+
+		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
+
+				+ "(select Max(createdtime) as maxtime, propertyid, concat(propertyid,':', assessmentyear) as key, assessmentyear from eg_pt_assessment group by propertyid, assessmentyear) a2 "
+
+				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=? ");
+
+		preparedStmtList.add(assessments.get(0).getTenantId());
+
+		Set<String> keys = new HashSet<>();
+
+		Set<String> demandIds = new HashSet<>();
+
+		assessments.forEach(assessment -> {
+			keys.add(assessment.getPropertyId().concat(":").concat(assessment.getAssessmentYear()));
+			if(assessment.getDemandId()!=null)
+				demandIds.add(assessment.getDemandId());
+		});
+
+		if (!CollectionUtils.isEmpty(demandIds)) {
+
+			query.append("and a1.demandId IN (").append(createQuery(demandIds)).append(")");
+			addToPreparedStatement(preparedStmtList, demandIds);
+		}
+
+		if (!CollectionUtils.isEmpty(keys)) {
+
+			query.append("and key IN (").append(createQuery(keys)).append(")");
+			addToPreparedStatement(preparedStmtList, keys);
+		}
+
+
 		query.append(" AND a1.active IS TRUE");
 
 		return query.toString();
@@ -441,6 +496,64 @@ public class CalculatorUtils {
 		Long eodEpoch = endOfDay.atZone(ZoneId.of(ZoneId.SHORT_IDS.get("IST"))).toInstant().toEpochMilli();
 		return eodEpoch;
 	}
+
+
+	/**
+	 * method to create demandsearch url with demand criteria
+	 *
+	 * @param request
+	 * @return
+	 */
+	public StringBuilder getDemandSearchUrl(CalculationReq request) {
+
+		String tenentId = request.getCalculationCriteria().get(0).getTenantId();
+		List<String> consumerCodes = new LinkedList<>();
+
+		List<CalculationCriteria> calculationCriterias = request.getCalculationCriteria();
+		for(CalculationCriteria calculationCriteria : calculationCriterias){
+			Property property = calculationCriteria.getProperty();
+			PropertyDetail detail = ((Property) property).getPropertyDetails().get(0);
+			consumerCodes.add(property.getPropertyId()+PT_CONSUMER_CODE_SEPARATOR +detail.getAssessmentNumber());
+		}
+
+		return new StringBuilder().append(configurations.getBillingServiceHost())
+				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenentId)
+				.append(CalculatorConstants.SEPARATER)
+				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
+				.append(StringUtils.join(consumerCodes,","));
+	}
+
+
+	/*
+	 * private String createQuery(Set<String> ids) {
+	 *
+	 * final String quotes = "'"; final String comma = ","; StringBuilder builder =
+	 * new StringBuilder(); Iterator<String> iterator = ids.iterator();
+	 * while(iterator.hasNext()) {
+	 * builder.append(quotes).append(iterator.next()).append(quotes);
+	 * if(iterator.hasNext()) builder.append(comma); } return builder.toString(); }
+	 */
+
+	private String createQuery(Set<String> ids) {
+		StringBuilder builder = new StringBuilder();
+		int length = ids.size();
+		for (int i = 0; i < length; i++) {
+			builder.append(" ?");
+			if (i != length - 1)
+				builder.append(",");
+		}
+		return builder.toString();
+	}
+
+	private void addToPreparedStatement(List<Object> preparedStmtList, Set<String> ids) {
+		ids.forEach(id -> {
+			preparedStmtList.add(id);
+		});
+	}
+
+
+
 
 
 

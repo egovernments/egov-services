@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pt.calculator.repository.Repository;
@@ -87,8 +88,13 @@ public class DemandService {
 		List<Demand> demands = new ArrayList<>();
 		List<String> lesserAssessments = new ArrayList<>();
 		Map<String, String> consumerCodeFinYearMap = new HashMap<>();
-		
-		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request);
+		Set<Demand> oldDemandsToBeCancelled = new HashSet<>();
+		List<Property> properties = request.getCalculationCriteria().stream().map(CalculationCriteria::getProperty).collect(Collectors.toList());
+		Map<String,Demand> propertyIdToDemandMap = getLatestDemandForCurrentFinancialYear(request.getRequestInfo(),properties);
+
+
+
+		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request,propertyIdToDemandMap,oldDemandsToBeCancelled);
 		for (CalculationCriteria criteria : criterias) {
 
 			PropertyDetail detail = criteria.getProperty().getPropertyDetails().get(0);
@@ -105,14 +111,14 @@ public class DemandService {
 
 			// true represents that the demand should be updated from this call
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
-					request.getRequestInfo(), true);
+					true,propertyIdToDemandMap,oldDemandsToBeCancelled);
 
 			if (carryForwardCollectedAmount.doubleValue() >= 0.0) {
 				Property property = criteria.getProperty();
 
 				Demand demand = prepareDemand(property,
 						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()),
-						request.getRequestInfo());
+						request.getRequestInfo(),propertyIdToDemandMap);
 
 				demands.add(demand);
 				consumerCodeFinYearMap.put(demand.getConsumerCode(), detail.getFinancialYear());
@@ -125,6 +131,12 @@ public class DemandService {
 		if (!CollectionUtils.isEmpty(lesserAssessments)) {
 			throw new CustomException(CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR,
 					CalculatorConstants.EG_PT_DEPRECIATING_ASSESSMENT_ERROR_MSG + lesserAssessments);
+		}
+
+		if(!CollectionUtils.isEmpty(oldDemandsToBeCancelled)){
+			DemandRequest requestForCancellation = DemandRequest.builder().demands(new LinkedList<>(oldDemandsToBeCancelled)).requestInfo(request.getRequestInfo()).build();
+			StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
+			repository.fetchResult(updateDemandUrl, requestForCancellation);
 		}
 		
 		DemandRequest dmReq = DemandRequest.builder().demands(demands).requestInfo(request.getRequestInfo()).build();
@@ -260,8 +272,8 @@ public class DemandService {
 	 * @param criteria
 	 * @return
 	 */
-	protected BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo
-			, boolean cancelDemand) {
+	protected BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria
+			, boolean cancelDemand,Map<String,Demand> propertyIdToDemandMap,Set<Demand> oldDemandsToBeCancelled) {
 
 		Property property = criteria.getProperty();
 
@@ -270,57 +282,71 @@ public class DemandService {
 
 		if(null == property.getPropertyId()) return carryForward;
 
-		Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
-		
+	//	Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+
+		Demand demand = propertyIdToDemandMap.get(property.getPropertyId());
+
 		if(null == demand) return carryForward;
 
 		carryForward = utils.getTotalCollectedAmountAndPreviousCarryForward(demand);
-		
+
 		for (DemandDetail detail : demand.getDemandDetails()) {
 			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_TAX))
 				oldTaxAmt = oldTaxAmt.add(detail.getTaxAmount());
-		}			
+		}
 
 		log.debug("The old tax amount in string : " + oldTaxAmt.toPlainString());
 		log.debug("The new tax amount in string : " + newTax.toPlainString());
-		
+
 		if (oldTaxAmt.compareTo(newTax) > 0)
 			carryForward = BigDecimal.valueOf(-1);
 
 		if (BigDecimal.ZERO.compareTo(carryForward) >= 0 || !cancelDemand) return carryForward;
-		
+
 		demand.setStatus(Demand.StatusEnum.CANCELLED);
-		DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
+		oldDemandsToBeCancelled.add(demand);
+		/*DemandRequest request = DemandRequest.builder().demands(Arrays.asList(demand)).requestInfo(requestInfo).build();
 		StringBuilder updateDemandUrl = utils.getUpdateDemandUrl();
-		repository.fetchResult(updateDemandUrl, request);
+		repository.fetchResult(updateDemandUrl, request);*/
 
 		return carryForward;
 	}
 
-	/**
-	 * @param requestInfo
-	 * @param property
-	 * @return
-	 */
-	public Demand getLatestDemandForCurrentFinancialYear(RequestInfo requestInfo, Property property) {
-		
-		Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
-				.tenantId(property.getTenantId())
-				.assessmentYear(property.getPropertyDetails().get(0).getFinancialYear()).build();
+	public Map<String,Demand> getLatestDemandForCurrentFinancialYear(RequestInfo requestInfo,List<Property> properties){
 
-		List<Assessment> assessments = assessmentService.getMaxAssessment(assessment);
+		List<Assessment> assessments = new LinkedList<>();
+		Map<String ,Demand> consumerCodeToDemandMap = new LinkedHashMap<>();
 
-		if (CollectionUtils.isEmpty(assessments))
-			return null;
 
-		Assessment latestAssessment = assessments.get(0);
-		log.debug(" the latest assessment : " + latestAssessment);
+		properties.forEach(property -> {
+			if(!StringUtils.isEmpty(property.getPropertyId())){
+				Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
+						.tenantId(property.getTenantId())
+						.assessmentYear(property.getPropertyDetails().get(0).getFinancialYear()).build();
+				assessments.add(assessment);
+			}
+		});
+
+		if(CollectionUtils.isEmpty(assessments))
+			return consumerCodeToDemandMap;
+
+		List<Assessment> maxAssessments = assessmentService.getMaxAssessment(assessments);
+
+		if (CollectionUtils.isEmpty(maxAssessments))
+			return consumerCodeToDemandMap;
+
 
 		DemandResponse res = mapper.convertValue(
-				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
+				repository.fetchResult(utils.getDemandSearchUrl(maxAssessments), new RequestInfoWrapper(requestInfo)),
 				DemandResponse.class);
-		return res.getDemands().get(0);
+
+		res.getDemands().forEach(demand -> {
+			consumerCodeToDemandMap.put(demand.getConsumerCode().split(":")[0],demand);
+		});
+
+		return consumerCodeToDemandMap;
 	}
+
 
 	/**
 	 * Prepares Demand object based on the incoming calculation object and property
@@ -329,7 +355,7 @@ public class DemandService {
 	 * @param calculation
 	 * @return
 	 */
-	private Demand prepareDemand(Property property, Calculation calculation, RequestInfo requestInfo) {
+	private Demand prepareDemand(Property property, Calculation calculation, RequestInfo requestInfo,Map<String,Demand> propertyIdToDemandMap) {
 
 		String tenantId = property.getTenantId();
 		PropertyDetail detail = property.getPropertyDetails().get(0);
@@ -341,7 +367,10 @@ public class DemandService {
 		else
 			owner = detail.getOwners().iterator().next();
 		
-		Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+	//	Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+
+
+		Demand demand = propertyIdToDemandMap.get(property.getPropertyId());
 
 		List<DemandDetail> details = new ArrayList<>();
 
@@ -580,6 +609,24 @@ public class DemandService {
 		BigDecimal diff = newAmount.subtract(latestDetailInfo.getTaxAmountForTaxHead());
 		BigDecimal newTaxAmountForLatestDemandDetail = latestDetailInfo.getLatestDemandDetail().getTaxAmount().add(diff);
 		latestDetailInfo.getLatestDemandDetail().setTaxAmount(newTaxAmountForLatestDemandDetail);
+	}
+
+
+	/**
+	 * Searches demand for thw given calculationRequest and creates a map
+	 * of consumerCode to Demand
+	 * @param request The input caluclation request
+	 * @return
+	 */
+	public Map<String,Demand> getDemandToConsumerCodeMap(CalculationReq request){
+
+		DemandResponse res = mapper.convertValue(
+				repository.fetchResult(utils.getDemandSearchUrl(request), new RequestInfoWrapper(request.getRequestInfo())),
+				DemandResponse.class);
+
+		Map<String,Demand> demandToConsumerCodeMap = res.getDemands().stream().collect(Collectors.toMap(Demand::getConsumerCode,Function.identity()));
+
+		return demandToConsumerCodeMap;
 	}
 
 }

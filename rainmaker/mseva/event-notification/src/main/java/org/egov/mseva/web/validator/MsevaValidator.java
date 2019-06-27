@@ -168,7 +168,7 @@ public class MsevaValidator {
 			});
 		}
 		
-		// validateMDMSData(requestInfo, event, errorMap);
+		validateMDMSData(requestInfo, event, errorMap);
 	}
 
 	private void validateMDMSData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {

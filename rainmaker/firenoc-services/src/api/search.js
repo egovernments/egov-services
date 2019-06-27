@@ -51,7 +51,9 @@ export default ({ config, db }) => {
         const tenantId=get(request.body, "RequestInfo.userInfo.tenantId");
         console.log(mobileNumber);
         console.log(tenantId);
-        text = `${text} where FN.createdby = '${userUUID}' OR`;
+        text = `${text} where `
+        // text = `${text} where FN.createdby = '${userUUID}' OR`;
+
         queryObj.mobileNumber=queryObj.mobileNumber?queryObj.mobileNumber:mobileNumber;
         queryObj.tenantId=queryObj.tenantId?queryObj.tenantId:tenantId;
       } else {

@@ -1,12 +1,12 @@
-import config from "../config/config";
 import { requestInfoToResponseInfo } from "../utils";
 import { searchService } from "../controller/search";
 import { generateDemand } from "./demandService";
 import { getFireNoc } from "./firenocService";
 import isEmpty from "lodash/isEmpty";
 import envVariables from "../envVariables";
+import mdmsData from "./mdmsService";
 
-export const calculateService = async (req, pool) => {
+export const calculateService = async (req, pool, next) => {
   let calculalteResponse = {};
   const requestInfo = req.body.RequestInfo;
   const tenantId = req.body.CalulationCriteria[0].tenantId;
@@ -16,15 +16,15 @@ export const calculateService = async (req, pool) => {
     true
   );
 
-  let calculations = await getCalculation(req, pool, config);
+  let calculations = await getCalculation(req, pool, next);
   calculalteResponse.Calculation = calculations;
 
-  let a = await generateDemand(requestInfo, tenantId, calculations, config);
+  let a = await generateDemand(requestInfo, tenantId, calculations);
 
   return calculalteResponse;
 };
 
-const getCalculation = async (req, pool, config) => {
+const getCalculation = async (req, pool, next) => {
   let calculations = [];
   const requestInfo = req.body.RequestInfo;
   for (let i = 0; i < req.body.CalulationCriteria.length; i++) {
@@ -53,8 +53,9 @@ const getCalculation = async (req, pool, config) => {
 
     let calculation = await calculateForSingleReq(
       calculateCriteria,
-      config,
-      pool
+      requestInfo,
+      pool,
+      next
     );
 
     calculations.push(calculation);
@@ -63,12 +64,27 @@ const getCalculation = async (req, pool, config) => {
   return calculations;
 };
 
-const calculateForSingleReq = async (calculateCriteria, config, pool) => {
+const calculateForSingleReq = async (
+  calculateCriteria,
+  requestInfo,
+  pool,
+  next
+) => {
+  let mdms = await mdmsData(requestInfo, calculateCriteria.tenantId);
+  let mdmsConfig = {};
+  for (let i = 0; i < mdms.MdmsRes.firenoc.FireNocULBConstats.length; i++) {
+    let constEntry = mdms.MdmsRes.firenoc.FireNocULBConstats[i];
+    mdmsConfig = { ...mdmsConfig, [constEntry.code]: constEntry.value };
+  }
+  for (let i = 0; i < mdms.MdmsRes.firenoc.FireNocStateConstats.length; i++) {
+    let constEntry = mdms.MdmsRes.firenoc.FireNocStateConstats[i];
+    mdmsConfig = { ...mdmsConfig, [constEntry.code]: constEntry.value };
+  }
   let searchReqParam = {};
   searchReqParam.tenantId = calculateCriteria.fireNOC.tenantId;
   searchReqParam.fireNOCType =
     calculateCriteria.fireNOC.fireNOCDetails.fireNOCType;
-  searchReqParam.calculationType = config.CALCULATON_TYPE;
+  searchReqParam.calculationType = mdmsConfig.CALCULATON_TYPE;
 
   let calculation = {
     applicationNumber: calculateCriteria.applicationNumber,
@@ -79,8 +95,10 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
   const feeEstimate = await calculateNOCFee(
     searchReqParam,
     calculateCriteria,
-    config,
-    pool
+    mdmsConfig,
+    pool,
+    requestInfo,
+    next
   );
   calculation.taxHeadEstimates.push(feeEstimate);
   if (calculateCriteria.fireNOC.fireNOCDetails.additionalDetail.adhocPenalty) {
@@ -91,10 +109,10 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
     const adhocRebateEstimate = calculateAdhocRebate(calculateCriteria);
     calculation.taxHeadEstimates.push(adhocRebateEstimate);
   }
-  const taxEstimate = calculateTaxes(config, calculation);
+  const taxEstimate = calculateTaxes(mdmsConfig, calculation);
   calculation.taxHeadEstimates.push(taxEstimate);
 
-  const roundoffEstimate = calculateRoundOff(config, calculation);
+  const roundoffEstimate = calculateRoundOff(calculation);
   calculation.taxHeadEstimates.push(roundoffEstimate);
   return calculation;
 };
@@ -102,8 +120,10 @@ const calculateForSingleReq = async (calculateCriteria, config, pool) => {
 const calculateNOCFee = async (
   searchReqParam,
   calculateCriteria,
-  config,
-  pool
+  mdmsConfig,
+  pool,
+  requestInfo,
+  next
 ) => {
   let nocfee = 0;
   let buidingnocfees = [];
@@ -122,18 +142,28 @@ const calculateNOCFee = async (
     });
     for (let uomindex = 0; uomindex < uoms.length; uomindex++) {
       searchReqParam.uom = uoms[uomindex].code;
-      if (config.CALCULATON_TYPE !== "FLAT")
+      if (mdmsConfig.CALCULATON_TYPE !== "FLAT")
         searchReqParam.uomValue = uoms[uomindex].value;
       const billingslabs = await searchService(searchReqParam, {}, pool);
+      let errors = [];
       if (billingslabs.length > 1) {
-        console.log("More than 1 billingslabs");
-        throw new Error("More than 1 billingslabs");
+        errors = [...errors, { message: "More than 1 billingslabs!" }];
       }
-      // if (billingslabs.length < 1) {
-      //   console.log("No Billing slabs found");
-      //   throw new Error("No billing slab found");
-      // }
-      if (config.CALCULATON_TYPE === "FLAT") {
+      if (billingslabs.length < 1) {
+        errors = [...errors, { message: "No Billing slabs found!" }];
+      }
+      if (errors.length > 0) {
+        next({
+          errorType: "custom",
+          errorReponse: {
+            ResponseInfo: requestInfoToResponseInfo(requestInfo, false),
+            Errors: errors
+          }
+        });
+        return;
+      }
+
+      if (mdmsConfig.CALCULATON_TYPE === "FLAT") {
         buidingnocfee += Number(billingslabs[0].rate);
       } else {
         buidingnocfee += Number(
@@ -141,17 +171,17 @@ const calculateNOCFee = async (
         );
       }
     }
-    if (config.CALCULATON_TYPE !== "FLAT") {
+    if (mdmsConfig.CALCULATON_TYPE !== "FLAT") {
       const minimumFee =
         searchReqParam.fireNOCType === "NEW"
-          ? config.MIN_NEW
-          : config.MIN_PROVISIONAL;
+          ? mdmsConfig.MINIMUM_NEW
+          : mdmsConfig.MINIMUM_PROVISIONAL;
       buidingnocfee = Math.max(buidingnocfee, minimumFee);
     }
 
     buidingnocfees.push(buidingnocfee);
   }
-  switch (config.MULTI_BUILDING_CALC_METHOD) {
+  switch (mdmsConfig.MULTI_BUILDING_CALC_METHOD) {
     case "SUM":
       nocfee = buidingnocfees.reduce((a, b) => a + b, 0);
       break;
@@ -194,14 +224,14 @@ const calculateAdhocRebate = calculateCriteria => {
   return adhocRebateEstimate;
 };
 
-const calculateTaxes = (config, calculation) => {
+const calculateTaxes = (mdmsConfig, calculation) => {
   let taxableAmount = 0;
   calculation.taxHeadEstimates.map(taxHeadEstimate => {
     if (envVariables.TAXABLE_TAXHEADS.includes(taxHeadEstimate.taxHeadCode)) {
       taxableAmount += taxHeadEstimate.estimateAmount;
     }
   });
-  let taxAmount = (taxableAmount * config.TAX_PERCENTAGE) / 100;
+  let taxAmount = (taxableAmount * mdmsConfig.TAX_PERCENTAGE) / 100;
   taxAmount = taxAmount.toFixed(2);
   const taxEstimate = {
     category: "TAX",
@@ -211,7 +241,7 @@ const calculateTaxes = (config, calculation) => {
   return taxEstimate;
 };
 
-const calculateRoundOff = (config, calculation) => {
+const calculateRoundOff = calculation => {
   let roundoffAmount = 0;
   let totalAmount = 0;
   calculation.taxHeadEstimates.map(taxHeadEstimate => {

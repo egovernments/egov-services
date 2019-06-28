@@ -10,9 +10,8 @@ const asyncHandler = require("express-async-handler");
 export default pool => {
   let api = Router();
 
-  api.post(
-    "/firenoc-calculator/billingslab/_create",
-    asyncHandler(async (req, res, next) => create(req, res, next))
+  api.post("/firenoc-calculator/billingslab/_create", (req, res, next) =>
+    create(req, res, next)
   );
   api.post("/firenoc-calculator/billingslab/_search", (req, res, next) =>
     search(req, res, pool, next)

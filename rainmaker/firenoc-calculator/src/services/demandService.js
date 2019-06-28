@@ -3,12 +3,7 @@ import { httpRequest } from "../utils/api";
 import get from "lodash/get";
 import envVariables from "../envVariables";
 
-export const generateDemand = async (
-  requestInfo,
-  tenantId,
-  calculations,
-  config
-) => {
+export const generateDemand = async (requestInfo, tenantId, calculations) => {
   let consumercodeList = calculations.map(calculation => {
     return calculation.applicationNumber;
   });
@@ -29,20 +24,15 @@ export const generateDemand = async (
     else createcalculations.push(calculation);
   });
   if (createcalculations.length > 0) {
-    let cr = await createDemand(requestInfo, createcalculations, config);
+    let cr = await createDemand(requestInfo, createcalculations);
   }
   if (updatecalculations.length > 0) {
-    let ud = await updateDemand(
-      requestInfo,
-      updatecalculations,
-      config,
-      demandsSearch
-    );
+    let ud = await updateDemand(requestInfo, updatecalculations, demandsSearch);
   }
   return "uri";
 };
 
-const createDemand = async (requestInfo, calculations, config) => {
+const createDemand = async (requestInfo, calculations) => {
   let demands = [];
   calculations.map(calculation => {
     let tenantId = calculation.tenantId;
@@ -80,12 +70,7 @@ const createDemand = async (requestInfo, calculations, config) => {
   });
 };
 
-const updateDemand = async (
-  requestInfo,
-  calculations,
-  config,
-  demandsSearch
-) => {
+const updateDemand = async (requestInfo, calculations, demandsSearch) => {
   let demandMap = {};
   demandsSearch.Demands.map(demand => {
     if (get(demand, "payer") && !demand.payer.uuid) demand.payer = null; // demand search is sending payer object in case of null

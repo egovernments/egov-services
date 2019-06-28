@@ -35,7 +35,6 @@ export default search;
 
 export const searchService = async (reqestCriteria, searchResponse, pool) => {
   const querystring = generateQuery(reqestCriteria);
-  console.log("querystring", querystring);
   let billingSlabs = [];
   billingSlabs = await pool
     .query(querystring)

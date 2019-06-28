@@ -120,16 +120,11 @@ public class StorageService {
 			src = awsS3Source;
 		final String source = src;
 		
-/*		Map<String, org.egov.filestore.persistence.entity.Artifact> fileMap = artifactList.stream()
-				.filter(a -> (null != a.getFileSource() && a.getFileSource().equals(source))).collect(Collectors
-						.toMap(org.egov.filestore.persistence.entity.Artifact::getFileStoreId, Function.identity()));*/
-		
 		Map<String, String> mapOfIdAndFile = artifactList.stream()
 				.filter(a -> (null != a.getFileSource() && a.getFileSource().equals(source))).collect(Collectors
 						.toMap(org.egov.filestore.persistence.entity.Artifact::getFileStoreId, 
 								org.egov.filestore.persistence.entity.Artifact::getFileName));
 		return cloudFilesManager.getFiles(mapOfIdAndFile);
-		//return awsS3Repository.getUrlMap(fileMap);
 	}
 
 	private String getUrlFromName(String completeName) {

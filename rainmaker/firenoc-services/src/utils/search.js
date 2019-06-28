@@ -9,15 +9,15 @@ import isNil from "lodash/isNil";
 
 let requestInfo = {};
 export const status = {
-  "INITIATE":"INITIATED",
-  "APPROVE":"APPROVED",
-  "APPLY":"PENDINGPAYMENT",
-  "ADHOC":"PENDINGPAYMENT",
-  "PAY":"DOCUMENTVERIFY",
-  "FORWARD":"FIELDINSPECTION",
-  "REJECT":"REJECTED",
-  "REFER":"REFERED",
-  "CANCEL":"CANCELLED"
+  INITIATE: "INITIATED",
+  APPROVE: "APPROVED",
+  APPLY: "PENDINGPAYMENT",
+  ADHOC: "PENDINGPAYMENT",
+  PAY: "DOCUMENTVERIFY",
+  FORWARD: "",
+  REJECT: "REJECTED",
+  REFER: "REFERED",
+  CANCEL: "CANCELLED"
 };
 
 export const actions = {
@@ -28,28 +28,29 @@ export const actions = {
   FIELDINSPECTION: "FORWARD",
   REJECTED: "REJECT",
   CANCELLED: "CANCEL",
-  REFERED:"REFER"
+  REFERED: "REFER",
+  PENDINGAPPROVAL: "FORWARD"
 };
 
-const intConversion=(string)=>{
-  return string?parseInt(string):null
-}
+const intConversion = string => {
+  return string ? parseInt(string) : null;
+};
 
-const fireNOCRowMapper =async (row, mapper = {}) => {
+const fireNOCRowMapper = async (row, mapper = {}) => {
   let fireNoc = isEmpty(mapper) ? {} : mapper;
   fireNoc.id = row.fid;
   fireNoc.tenantId = row.tenantid;
   fireNoc.fireNOCNumber = row.firenocnumber;
   fireNoc.provisionFireNOCNumber = row.provisionfirenocnumber;
   fireNoc.oldFireNOCNumber = row.oldfirenocnumber;
-  fireNoc.dateOfApplied =intConversion(row.dateofapplied);
+  fireNoc.dateOfApplied = intConversion(row.dateofapplied);
   let auditDetails = {
     createdBy: row.createdby,
     lastModifiedBy: row.lastmodifiedby,
     createdTime: intConversion(row.createdtime),
     lastModifiedTime: intConversion(row.lastmodifiedtime)
   };
-  let owners=await fireNocOwnersRowMapper(
+  let owners = await fireNocOwnersRowMapper(
     row,
     get(fireNoc, "fireNOCDetails.applicantDetails.owners", [])
   );
@@ -92,7 +93,7 @@ const fireNOCRowMapper =async (row, mapper = {}) => {
     applicantDetails: {
       ownerShipType: row.ownertype,
       owners,
-      additionalDetail: get(row,'additionaldetail.ownerAuditionalDetail',{})
+      additionalDetail: get(row, "additionaldetail.ownerAuditionalDetail", {})
     },
     additionalDetail: row.additionaldetail,
     auditDetails
@@ -125,13 +126,13 @@ const fireNocOwnersRowMapper = async (row, mapper = []) => {
   } else {
     let user = {};
     if (row.useruuid) {
-      user =await searchUser(requestInfo, row.useruuid);
+      user = await searchUser(requestInfo, row.useruuid);
     }
     // console.info("user",user);
-    user={
+    user = {
       ...ownerObject,
       ...user
-    }
+    };
     mapper.push(user);
   }
   return mapper;
@@ -206,10 +207,10 @@ export const mergeSearchResults = async (response, query = {}, reqInfo) => {
     let fireNoc = {};
     let index = findIndex(result, { id: response[i].fid });
     if (index != -1) {
-      fireNoc =await fireNOCRowMapper(response[i], result[index]);
+      fireNoc = await fireNOCRowMapper(response[i], result[index]);
       result[index] = fireNoc;
     } else {
-      fireNoc =await fireNOCRowMapper(response[i]);
+      fireNoc = await fireNOCRowMapper(response[i]);
       result.push(fireNoc);
     }
   }
@@ -217,10 +218,10 @@ export const mergeSearchResults = async (response, query = {}, reqInfo) => {
   return result;
 };
 
-const  removeEmpty=(obj)=> {
+const removeEmpty = obj => {
   Object.keys(obj).forEach(function(key) {
-    if (obj[key] && typeof obj[key] === 'object') removeEmpty(obj[key])
-    else if (obj[key] == null) delete obj[key]
+    if (obj[key] && typeof obj[key] === "object") removeEmpty(obj[key]);
+    else if (obj[key] == null) delete obj[key];
   });
 };
 
@@ -232,12 +233,12 @@ const searchUser = async (requestInfo, uuid) => {
     requestInfo,
     userSearchReqCriteria
   );
-  let users=get(userSearchResponse,"user",[]);
-  return users.length?users[0]:{};
+  let users = get(userSearchResponse, "user", []);
+  return users.length ? users[0] : {};
 };
 
-export const searchByMobileNumber=async (mobileNumber,tenantId)=>{
-  var userSearchReqCriteria={};
+export const searchByMobileNumber = async (mobileNumber, tenantId) => {
+  var userSearchReqCriteria = {};
   userSearchReqCriteria.userType = "CITIZEN";
   userSearchReqCriteria.tenantId = tenantId;
   userSearchReqCriteria.mobileNumber = mobileNumber;
@@ -246,4 +247,4 @@ export const searchByMobileNumber=async (mobileNumber,tenantId)=>{
     userSearchReqCriteria
   );
   return userSearchResponse;
-}
+};

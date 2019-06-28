@@ -137,7 +137,7 @@ const searchDemand = async (requestInfo, tenantId, consumercodeList) => {
 };
 
 export const generateBill = async (requestInfo, billCriteria) => {
-  const consumerCode = billCriteria.consumerCode.split(",");
+  const consumerCode = billCriteria.applicationNumber.split(",");
   const tenantId = billCriteria.tenantId;
   let demandsSearch = await searchDemand(requestInfo, tenantId, consumerCode);
 

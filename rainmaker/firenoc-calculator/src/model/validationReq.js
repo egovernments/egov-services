@@ -835,7 +835,7 @@ export const getBillReq = {
       name: "applicationNumber",
       in: "query",
       description: "Unique Fire NOC application number.",
-      required: true,
+      // required: true,
       type: "string"
     }
   },

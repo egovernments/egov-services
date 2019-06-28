@@ -216,8 +216,8 @@ const BuildingUOM = {
   properties: {
     code: {
       type: "string",
-      description: "Code of the unit code"
-      // valid_uom:true
+      description: "Code of the unit code",
+      valid_uom:true
     },
     value: {
       type: "integer",
@@ -230,7 +230,7 @@ const BuildingUOM = {
     },
     active: {
       type: "boolean"
-    }
+    },
   }
 };
 

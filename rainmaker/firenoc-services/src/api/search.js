@@ -77,7 +77,12 @@ export default ({ config, db }) => {
         // console.log(queryObj.ids.split(","));
         let ids=queryObj.ids.split(",");
         for (var i = 0; i < ids.length; i++) {
-          sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' OR`;
+          if (ids.length>1) {
+            sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' OR`;
+          } else {
+            sqlQuery = `${sqlQuery} FN.uuid = '${ids[i]}' AND`;
+          }
+
         }
       }
 

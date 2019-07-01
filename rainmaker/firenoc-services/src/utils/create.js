@@ -103,7 +103,7 @@ export const addUUIDAndAuditDetails = async request => {
     };
     FireNOCs[i].fireNOCDetails.status =
       status[FireNOCs[i].fireNOCDetails.action];
-    FireNOCs[i] = await checkApproveRecord(FireNOCs[i],RequestInfo);
+    FireNOCs[i] = await checkApproveRecord(FireNOCs[i], RequestInfo);
   }
   request.FireNOCs = FireNOCs;
   return request;
@@ -159,7 +159,7 @@ const createUser = async (requestInfo, owner, tenantId) => {
   return userCreateResponse;
 };
 
-const checkApproveRecord = async (fireNoc = {},RequestInfo) => {
+const checkApproveRecord = async (fireNoc = {}, RequestInfo) => {
   if (fireNoc.fireNOCDetails.status == "APPROVED") {
     let fireNOCNumber = fireNoc.fireNOCNumber;
     fireNoc.fireNOCNumber = fireNOCNumber

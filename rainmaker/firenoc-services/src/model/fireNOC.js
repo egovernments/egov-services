@@ -318,11 +318,11 @@ const OwnerInfo = {
   required: [
     "name",
     "mobileNumber",
-    "gender",
-    "relationship",
+    // "gender",
+    // "relationship",
     "correspondenceAddress",
-    "dob",
-    "fatherOrHusbandName"
+    // "dob",
+    // "fatherOrHusbandName"
   ]
 };
 

@@ -30,6 +30,7 @@ export default ({ config, db }) => {
       // console.log(JSON.stringify(mdms));
       body = await addUUIDAndAuditDetails(body);
       let workflowResponse = await createWorkFlow(body);
+      // console.log(JSON.stringify(workflowResponse));
 
       //need to implement notification
       //calculate call

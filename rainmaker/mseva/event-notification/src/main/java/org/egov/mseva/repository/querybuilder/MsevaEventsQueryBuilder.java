@@ -23,16 +23,38 @@ public class MsevaEventsQueryBuilder {
 			+ "COUNT(*) as unread FROM eg_men_events WHERE id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
 			+ "lastmodifiedtime > (SELECT lastlogintime FROM eg_men_user_llt WHERE userid IN (:userid))";
 	
+	/**
+	 * Returns query for search events
+	 * 
+	 * @param criteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getSearchQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
 		String query = EVENT_SEARCH_QUERY;
 		return addWhereClause(query, criteria, preparedStatementValues);
 	}
 	
+	/**
+	 * Returns query for count of events
+	 * 
+	 * @param criteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	public String getCountQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
 		String query = COUNT_OF_NOTIFICATION_QUERY;
 		return addWhereClauseForCountQuery(query, criteria, preparedStatementValues);
 	}
 	
+	/**
+	 * Appends where clause to the query. 
+	 *
+	 * @param query
+	 * @param criteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	private String addWhereClauseForCountQuery(String query, EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(query);
@@ -43,6 +65,14 @@ public class MsevaEventsQueryBuilder {
 
 	}
 	
+	/**
+	 * Builds the where clause for the query based on the criteria.
+	 * 
+	 * @param query
+	 * @param criteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
 	private String addWhereClause(String query, EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(query);		

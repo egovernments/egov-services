@@ -33,7 +33,12 @@ public class MsevaRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
-	
+	/**
+	 * Repository method to fetch events
+	 * 
+	 * @param criteria
+	 * @return
+	 */
 	public List<Event> fetchEvents(EventSearchCriteria criteria){
 		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String query = queryBuilder.getSearchQuery(criteria, preparedStatementValues);
@@ -48,6 +53,12 @@ public class MsevaRepository {
 		return events;
 	}
 	
+	/**
+	 * Repository method to fetch count of events
+	 * 
+	 * @param criteria
+	 * @return
+	 */
 	public NotificationCountResponse fetchCount(EventSearchCriteria criteria){
 		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String query = queryBuilder.getCountQuery(criteria, preparedStatementValues);

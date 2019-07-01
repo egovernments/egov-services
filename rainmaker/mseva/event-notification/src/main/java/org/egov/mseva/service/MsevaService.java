@@ -56,7 +56,7 @@ import org.egov.mseva.model.lltWrapper;
 import org.egov.mseva.model.enums.Status;
 import org.egov.mseva.producer.MsevaEventsProducer;
 import org.egov.mseva.repository.MsevaRepository;
-import org.egov.mseva.utils.MsevaConstants;
+import org.egov.mseva.utils.MsevaUtils;
 import org.egov.mseva.utils.ResponseInfoFactory;
 import org.egov.mseva.web.contract.Event;
 import org.egov.mseva.web.contract.EventRequest;
@@ -65,7 +65,6 @@ import org.egov.mseva.web.contract.EventSearchCriteria;
 import org.egov.mseva.web.contract.NotificationCountResponse;
 import org.egov.mseva.web.validator.MsevaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListenerMethodProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -91,7 +90,17 @@ public class MsevaService {
 
 	@Autowired
 	private MsevaRepository repository;
+	
+	@Autowired
+	private MsevaUtils utils;
 
+	/**
+	 * Service method to create events
+	 * Enriches the request and produces it on the queue for persister to pick.
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public EventResponse createEvents(EventRequest request) {
 		validator.validateCreateEvent(request);
 		log.info("enriching and storing the event......");
@@ -103,6 +112,16 @@ public class MsevaService {
 				.events(request.getEvents()).build();
 	}
 
+	/**
+	 * Service method to update the events.
+	 * Enriches the request and produces it on the queue for persister to pick.
+	 * This method also creates counter events the following scenario:
+	 * 1. When an ACTIVE event is made INACTIVE or CANCELLED. (Counter event on delete)
+	 * 2. When details an event irrespective of what status does it have, are updated. (Counter event on update)
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public EventResponse updateEvents(EventRequest request) {
 		validator.validateUpdateEvent(request);
 		log.info("enriching and updating the event......");
@@ -154,6 +173,14 @@ public class MsevaService {
 				.events(request.getEvents()).build();
 	}
 
+	/**
+	 * Service method to search all the events.
+	 * 
+	 * @param requestInfo
+	 * @param criteria
+	 * @param isUpdate
+	 * @return
+	 */
 	public EventResponse searchEvents(RequestInfo requestInfo, EventSearchCriteria criteria, Boolean isUpdate) {
 		validator.validateSearch(requestInfo, criteria);
 		log.info("Searching events......");
@@ -165,6 +192,13 @@ public class MsevaService {
 				.events(events).build();
 	}
 
+	/**
+	 * Service method to fetch count of events as per criteria. 
+	 * 
+	 * @param requestInfo
+	 * @param criteria
+	 * @return
+	 */
 	public NotificationCountResponse fetchCount(RequestInfo requestInfo, EventSearchCriteria criteria) {
 		validator.validateSearch(requestInfo, criteria);
 		enrichSearchCriteria(requestInfo, criteria);
@@ -173,7 +207,12 @@ public class MsevaService {
 		return response;
 	}
 	
-	
+	/**
+	 * Service method used to persist the lastlogintime of the user.
+	 * 
+	 * @param requestInfo
+	 * @return
+	 */
 	public ResponseInfo persistLlt(RequestInfo requestInfo) {
 		LastLoginDetails loginDetails = LastLoginDetails.builder().userId(requestInfo.getUserInfo().getUuid())
 				.lastLoginTime(new Date().getTime()).build();
@@ -185,6 +224,12 @@ public class MsevaService {
 	}
 	
 
+	/**
+	 * Method to enrich the create request by setting ids, status, auditDetails etc.
+	 * This method also populates a field called recepientEventMap, which is a mapping between the particular event and its recipients in a specific format.
+	 * 
+	 * @param request
+	 */
 	private void enrichCreateEvent(EventRequest request) {
 		request.getEvents().forEach(event -> {
 			if (null != event.getActions()) {
@@ -201,7 +246,7 @@ public class MsevaService {
 				event.setStatus(Status.ACTIVE);
 			
 			List<RecepientEvent> recepientEventList = new ArrayList<>();
-			manageRecepients(event, recepientEventList);
+			utils.manageRecepients(event, recepientEventList);
 			event.setRecepientEventMap(recepientEventList);
 			
 			event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
@@ -216,6 +261,12 @@ public class MsevaService {
 		});
 	}
 
+	/**
+	 * Method to enrich the update request by setting ids, status, auditDetails etc.
+	 * This method also populates a field called recepientEventMap, which is a mapping between the particular event and its recipients in a specific format.
+	 * 
+	 * @param request
+	 */
 	private void enrichUpdateEvent(EventRequest request) {
 		request.getEvents().forEach(event -> {
 			if (null != event.getActions()) {
@@ -233,7 +284,7 @@ public class MsevaService {
 				}
 			}
 			List<RecepientEvent> recepientEventList = new ArrayList<>();
-			manageRecepients(event, recepientEventList);
+			utils.manageRecepients(event, recepientEventList);
 			event.setRecepientEventMap(recepientEventList);
 
 			AuditDetails auditDetails = event.getAuditDetails();
@@ -245,6 +296,17 @@ public class MsevaService {
 		});
 	}
 
+	/**
+	 * Method to enrich search criteria based on role as follows:
+	 * 1. Incase of CITIZEN, criteria is enriched using the userInfo present in RI.
+	 * 2. For anyother role, the search criteria is left untouched,
+	 * 
+	 * This method also derives a list of recipients in a specified format from the criteria to build search clause for the query.
+	 * 
+	 * 
+	 * @param requestInfo
+	 * @param criteria
+	 */
 	private void enrichSearchCriteria(RequestInfo requestInfo, EventSearchCriteria criteria) {
 		if (requestInfo.getUserInfo().getType().equals("CITIZEN")) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()))
@@ -267,78 +329,11 @@ public class MsevaService {
 
 		if (!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles())
 				|| !StringUtils.isEmpty(criteria.getTenantId()))
-			buildRecepientListForSearch(criteria);
+			utils.buildRecepientListForSearch(criteria);
 
 		log.info("recepeients: " + criteria.getRecepients());
 	}
 
-	private void buildRecepientListForSearch(EventSearchCriteria criteria) {
-		List<String> recepients = new ArrayList<>();
-		if (!CollectionUtils.isEmpty(criteria.getUserids()))
-			criteria.getUserids().forEach(user -> recepients.add(user));
 
-		if (!CollectionUtils.isEmpty(criteria.getRoles())) {
-			criteria.getRoles().forEach(role -> {
-				role = role.replaceAll("\\.", "|");
-				String[] typeAndRole = role.split("[|]");
-				recepients.add(typeAndRole[0] + "|*|*");
-				recepients.add("*|" + typeAndRole[1] + "|*");
-				recepients.add(role + "|*");
-				if (!StringUtils.isEmpty(criteria.getTenantId())) {
-					recepients.add(typeAndRole[0] +"|*|"+criteria.getTenantId());
-					recepients.add("*|"+ typeAndRole[1] + "|" +criteria.getTenantId());
-					recepients.add(role + "|" + criteria.getTenantId());
-				}
-					
-			});
-		}
-		if (!StringUtils.isEmpty(criteria.getTenantId())) {
-			recepients.add("*|*|" + criteria.getTenantId());
-		}
-		recepients.add(MsevaConstants.ALL_KEYWORD);
-
-		criteria.setRecepients(recepients);
-	}
-
-	private void manageRecepients(Event event, List<RecepientEvent> recepientEventList) {
-		if (CollectionUtils.isEmpty(event.getRecepient().getToUsers())
-				&& CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-			RecepientEvent rcpntevent = RecepientEvent.builder().recepient("*|*|" + event.getTenantId())
-					.eventId(event.getId()).build();
-			recepientEventList.add(rcpntevent);
-		} else {
-			if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-				if(!CollectionUtils.isEmpty(event.getRecepient().getToRoles()))
-					event.getRecepient().getToRoles().clear();
-				if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-					event.getRecepient().getToUsers().forEach(user -> {
-						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(user).eventId(event.getId())
-								.build();
-						recepientEventList.add(rcpntevent);
-					});
-				}
-			} // toUsers will take precedence over toRoles.
-			else {
-				if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-					if(!event.getRecepient().getToRoles().contains(MsevaConstants.ALL_KEYWORD)) {
-						event.getRecepient().getToRoles().forEach(role -> {
-							role = role.replaceAll("\\.", "|");
-							role = role + "|" + event.getTenantId();
-							RecepientEvent rcpntevent = RecepientEvent.builder().recepient(role).eventId(event.getId())
-									.build();
-							recepientEventList.add(rcpntevent);
-						});
-					}else {
-						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(MsevaConstants.ALL_KEYWORD).eventId(event.getId())
-								.build();
-						recepientEventList.add(rcpntevent);
-					}
-
-				}
-			}
-
-		}
-
-	}
 
 }

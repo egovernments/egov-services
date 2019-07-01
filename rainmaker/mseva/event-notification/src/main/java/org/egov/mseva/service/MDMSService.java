@@ -32,6 +32,13 @@ public class MDMSService {
 	private PropertiesManager props;
 	
 	
+	/**
+	 * Method to fetch event types from MDMS
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
 	public List<String> fetchEventTypes(RequestInfo requestInfo, String tenantId) {
 		StringBuilder uri = new StringBuilder();
 		uri.append(props.getMdmsHost()).append(props.getMdmsSearchEndpoint());
@@ -49,6 +56,13 @@ public class MDMSService {
 		return codes;
 	}
 	
+	/**
+	 * Method to build the body for MDMS request
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @return
+	 */
 	private MdmsCriteriaReq getRequestForEvents(RequestInfo requestInfo, String tenantId) {
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(MsevaConstants.MEN_MDMS_EVENTMASTER_CODE)

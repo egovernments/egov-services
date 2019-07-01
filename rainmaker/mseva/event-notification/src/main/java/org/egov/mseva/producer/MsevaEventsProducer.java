@@ -12,6 +12,12 @@ public class MsevaEventsProducer {
     @Autowired
     private CustomKafkaTemplate<String, Object> kafkaTemplate;
 
+    /**
+     * Kafka Producer.
+     * 
+     * @param topic
+     * @param value
+     */
     public void push(String topic, Object value) {
         log.info("Topic: "+topic);
         kafkaTemplate.send(topic, value);

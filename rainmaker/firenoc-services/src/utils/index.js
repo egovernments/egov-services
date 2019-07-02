@@ -60,7 +60,7 @@ export const createWorkFlow = async body => {
       assignee: fireNOC.fireNOCDetails.assignee
         ? { uuid: fireNOC.fireNOCDetails.assignee }
         : fireNOC.fireNOCDetails.assignee,
-      douments: get(fireNOC.fireNOCDetails, "wfDocuments", null),
+      documents: get(fireNOC.fireNOCDetails, "wfDocuments", null),
       sla: 0,
       previousStatus: null,
       moduleName: envVariables.BUSINESS_SERVICE

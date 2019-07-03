@@ -31,7 +31,7 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
 
 
-       - query: INSERT INTO eg_fn_firenocdetail(uuid, firenocuuid, applicationnumber, firenoctype, firestationid, applicationdate, financialyear, issueddate, validfrom, validto, action, channel, noofbuildings, tenantid, additionaldetail, createdby, lastmodifiedby, createdtime, lastmodifiedtime, propertyid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - query: INSERT INTO eg_fn_firenocdetail(uuid, firenocuuid, applicationnumber, firenoctype, firestationid, applicationdate, financialyear, issueddate, validfrom, validto, action,channel, noofbuildings, tenantid, additionaldetail, createdby, lastmodifiedby, createdtime, lastmodifiedtime, propertyid,status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.id
@@ -75,6 +75,8 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.auditDetails.lastModifiedTime
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.propertyDetails.propertyid
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.status
 
 
        - query: INSERT INTO eg_fn_owner(uuid, tenantid, firenocdetailsuuid, isactive, isprimaryowner, ownertype, ownershippercentage, relationship, active, institutionid, createdby, createdtime, lastmodifiedby, lastmodifiedtime,useruuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
@@ -270,7 +272,7 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.id
 
 
-       - query: UPDATE eg_fn_firenocdetail SET fireNOCType = ?, firestationId = ?, additionaldetail = ?,financialYear = ?,action = ?,channel = ?,noOfBuildings = ?,propertyId = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
+       - query: UPDATE eg_fn_firenocdetail SET fireNOCType = ?, firestationId = ?, additionaldetail = ?,financialYear = ?,action = ?,status=?,channel = ?,noOfBuildings = ?,propertyId = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
 
@@ -285,6 +287,8 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.financialYear
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.action
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.status
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.channel
 
@@ -548,7 +552,7 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.id
 
 
-       - query: UPDATE eg_fn_firenocdetail SET validFrom=?,validTo=?,issueddate = ?, action = ?,   additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
+       - query: UPDATE eg_fn_firenocdetail SET validFrom=?,validTo=?,issueddate = ?, action = ?,status=?,   additionaldetail = ?,lastmodifiedby = ?,  lastmodifiedtime = ? WHERE uuid = ?;
          basePath: FireNOCs.*.fireNOCDetails
          jsonMaps:
 
@@ -559,6 +563,8 @@ serviceMaps:
           - jsonPath: $.FireNOCs.*.fireNOCDetails.issuedDate
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.action
+
+          - jsonPath: $.FireNOCs.*.fireNOCDetails.status
 
           - jsonPath: $.FireNOCs.*.fireNOCDetails.additionalDetail
             type: JSON

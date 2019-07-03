@@ -57,7 +57,7 @@ const fireNOCRowMapper = async (row, mapper = {}) => {
   let fireNOCDetails = {
     id: row.firenocdetailsid,
     applicationNumber: row.applicationnumber,
-    status: status[row.action],
+    status: row.status,
     fireNOCType: row.firenoctype,
     firestationId: row.firestationid,
     applicationDate: intConversion(row.applicationdate),

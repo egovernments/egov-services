@@ -1,13 +1,12 @@
 import { Router } from "express";
 import producer from "../kafka/producer";
-import { requestInfoToResponseInfo, createWorkFlow} from "../utils";
+import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails } from "../utils/create";
 import { calculate } from "../services/firenocCalculatorService";
-import {validateFireNOCModel} from "../utils/modelValidation";
+import { validateFireNOCModel } from "../utils/modelValidation";
 const asyncHandler = require("express-async-handler");
-
 
 export default ({ config, db }) => {
   let api = Router();
@@ -16,14 +15,17 @@ export default ({ config, db }) => {
     asyncHandler(async ({ body }, res, next) => {
       let payloads = [];
       //getting mdms data
-      let mdms = await mdmsData(body.RequestInfo,body.FireNOCs[0].tenantId);
+      let mdms = await mdmsData(body.RequestInfo, body.FireNOCs[0].tenantId);
       //model validator
-      let errors=validateFireNOCModel(body,mdms);
-      if (errors.length>0) {
-        next({errorType:"custom",errorReponse:{
-          ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
-          Errors: errors
-        }})
+      let errors = validateFireNOCModel(body, mdms);
+      if (errors.length > 0) {
+        next({
+          errorType: "custom",
+          errorReponse: {
+            ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
+            Errors: errors
+          }
+        });
         return;
       }
 
@@ -38,6 +40,9 @@ export default ({ config, db }) => {
       for (var i = 0; i < FireNOCs.length; i++) {
         let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       }
+
+      FireNOCs = updateStatus(FireNOCs, workflowResponse);
+
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
         messages: JSON.stringify(body)
@@ -52,4 +57,21 @@ export default ({ config, db }) => {
     })
   );
   return api;
+};
+
+const updateStatus = (FireNOCs, workflowResponse) => {
+  let workflowStatus = {};
+  for (let i = 0; i < workflowResponse.ProcessInstances.length; i++) {
+    workflowStatus = {
+      ...workflowStatus,
+      [workflowResponse.ProcessInstances[i].businessId]:
+        workflowResponse.ProcessInstances[i].state.state
+    };
+  }
+  FireNOCs = FireNOCs.map(firenoc => {
+    firenoc.fireNOCDetails.status =
+      workflowStatus[firenoc.fireNOCDetails.applicationNumber];
+    return firenoc;
+  });
+  return FireNOCs;
 };

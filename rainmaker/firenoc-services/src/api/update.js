@@ -9,23 +9,25 @@ import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import { calculate } from "../services/firenocCalculatorService";
 // import cloneDeep from "lodash/cloneDeep";
 import filter from "lodash/filter";
-import {validateFireNOCModel} from "../utils/modelValidation";
-
+import { validateFireNOCModel } from "../utils/modelValidation";
 
 export default ({ config, db }) => {
   let api = Router();
   api.post(
     "/_update",
-    asyncHandler(async ({ body }, res,next) => {
+    asyncHandler(async ({ body }, res, next) => {
       let payloads = [];
-      let mdms = await mdmsData(body.RequestInfo,body.FireNOCs[0].tenantId);
+      let mdms = await mdmsData(body.RequestInfo, body.FireNOCs[0].tenantId);
       //model validator
-      let errors=validateFireNOCModel(body,mdms);
-      if (errors.length>0) {
-        next({errorType:"custom",errorReponse:{
-          ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
-          Errors: errors
-        }})
+      let errors = validateFireNOCModel(body, mdms);
+      if (errors.length > 0) {
+        next({
+          errorType: "custom",
+          errorReponse: {
+            ResponseInfo: requestInfoToResponseInfo(body.RequestInfo, true),
+            Errors: errors
+          }
+        });
         return;
       }
 
@@ -43,7 +45,7 @@ export default ({ config, db }) => {
         let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       }
 
-
+      FireNOCs = updateStatus(FireNOCs, workflowResponse);
 
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_UPDATE,
@@ -51,13 +53,15 @@ export default ({ config, db }) => {
       });
 
       //check approved list
-      const approvedList=filter(body.FireNOCs,function(fireNoc) { return fireNoc.fireNOCNumber; });
+      const approvedList = filter(body.FireNOCs, function(fireNoc) {
+        return fireNoc.fireNOCNumber;
+      });
 
       // console.log("list length",approvedList.length);
-      if (approvedList.length>0) {
+      if (approvedList.length > 0) {
         payloads.push({
           topic: envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW,
-          messages: JSON.stringify({RequestInfo,FireNOCs:approvedList})
+          messages: JSON.stringify({ RequestInfo, FireNOCs: approvedList })
         });
       }
       // console.log(JSON.stringify(body));
@@ -71,4 +75,21 @@ export default ({ config, db }) => {
     })
   );
   return api;
+};
+
+const updateStatus = (FireNOCs, workflowResponse) => {
+  let workflowStatus = {};
+  for (let i = 0; i < workflowResponse.ProcessInstances.length; i++) {
+    workflowStatus = {
+      ...workflowStatus,
+      [workflowResponse.ProcessInstances[i].businessId]:
+        workflowResponse.ProcessInstances[i].state.state
+    };
+  }
+  FireNOCs = FireNOCs.map(firenoc => {
+    firenoc.fireNOCDetails.status =
+      workflowStatus[firenoc.fireNOCDetails.applicationNumber];
+    return firenoc;
+  });
+  return FireNOCs;
 };

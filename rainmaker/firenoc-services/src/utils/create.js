@@ -189,3 +189,20 @@ const addDefaultUserDetails = (tenantId, owner) => {
   ];
   return owner;
 };
+
+export const updateStatus = (FireNOCs, workflowResponse) => {
+  let workflowStatus = {};
+  for (let i = 0; i < workflowResponse.ProcessInstances.length; i++) {
+    workflowStatus = {
+      ...workflowStatus,
+      [workflowResponse.ProcessInstances[i].businessId]:
+        workflowResponse.ProcessInstances[i].state.state
+    };
+  }
+  FireNOCs = FireNOCs.map(firenoc => {
+    firenoc.fireNOCDetails.status =
+      workflowStatus[firenoc.fireNOCDetails.applicationNumber];
+    return firenoc;
+  });
+  return FireNOCs;
+};

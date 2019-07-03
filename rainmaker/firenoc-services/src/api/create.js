@@ -3,7 +3,7 @@ import producer from "../kafka/producer";
 import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
-import { addUUIDAndAuditDetails } from "../utils/create";
+import { addUUIDAndAuditDetails, updateStatus } from "../utils/create";
 import { calculate } from "../services/firenocCalculatorService";
 import { validateFireNOCModel } from "../utils/modelValidation";
 const asyncHandler = require("express-async-handler");
@@ -57,21 +57,4 @@ export default ({ config, db }) => {
     })
   );
   return api;
-};
-
-const updateStatus = (FireNOCs, workflowResponse) => {
-  let workflowStatus = {};
-  for (let i = 0; i < workflowResponse.ProcessInstances.length; i++) {
-    workflowStatus = {
-      ...workflowStatus,
-      [workflowResponse.ProcessInstances[i].businessId]:
-        workflowResponse.ProcessInstances[i].state.state
-    };
-  }
-  FireNOCs = FireNOCs.map(firenoc => {
-    firenoc.fireNOCDetails.status =
-      workflowStatus[firenoc.fireNOCDetails.applicationNumber];
-    return firenoc;
-  });
-  return FireNOCs;
 };

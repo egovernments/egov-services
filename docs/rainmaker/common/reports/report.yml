@@ -82,7 +82,7 @@ ReportDefinitions:
         pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=tenant&masterName=tenants|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
         source: common
         wrapper: true
-        isMandatory: false
+        isMandatory: true
         searchClause: AND rt.tenantId = $ulb
       - name: service
         label: reports.common.CollectionRegister.service

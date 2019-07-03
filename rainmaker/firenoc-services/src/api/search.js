@@ -49,8 +49,8 @@ export default ({ config, db }) => {
       if (some(roles, { code: "CITIZEN" }) && userUUID) {
         const mobileNumber = get(request.body, "RequestInfo.userInfo.mobileNumber");
         const tenantId=get(request.body, "RequestInfo.userInfo.tenantId");
-        console.log(mobileNumber);
-        console.log(tenantId);
+        // console.log(mobileNumber);
+        // console.log(tenantId);
         text = `${text} where `
         // text = `${text} where FN.createdby = '${userUUID}' OR`;
 
@@ -90,7 +90,7 @@ export default ({ config, db }) => {
         // console.log("mobile number");
         let userSearchResponse = await searchByMobileNumber(
           queryObj.mobileNumber,
-          queryObj.tenantId ||envVariables.EGOV_DEFAULT_STATE_ID
+          envVariables.EGOV_DEFAULT_STATE_ID
         );
         // console.log(userSearchResponse);
         let searchUserUUID = get(userSearchResponse, "user.0.uuid");

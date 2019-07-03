@@ -78,7 +78,7 @@ export const addUUIDAndAuditDetails = async (request, method = "_update") => {
         let userCreateResponse = await createUser(
           RequestInfo,
           owners[owneriter],
-          FireNOCs[i].tenantId
+          envVariables.EGOV_DEFAULT_STATE_ID
         );
         let ownerUUID = get(owners[owneriter], "ownerUUID");
         owners[owneriter] = {
@@ -182,10 +182,10 @@ const addDefaultUserDetails = (tenantId, owner) => {
   if (!owner.userName || isEmpty(owner.userName))
     owner.userName = owner.mobileNumber;
   owner.active = true;
-  owner.tenantId = tenantId.split(".")[0];
+  owner.tenantId = envVariables.EGOV_DEFAULT_STATE_ID;
   owner.type = "CITIZEN";
   owner.roles = [
-    { code: "CITIZEN", name: "Citizen", tenantId: tenantId.split(".")[0] }
+    { code: "CITIZEN", name: "Citizen", tenantId: envVariables.EGOV_DEFAULT_STATE_ID }
   ];
   return owner;
 };

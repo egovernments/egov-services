@@ -18,14 +18,15 @@ export const addUUIDAndAuditDetails = async (request, method = "_update") => {
       FireNOCs[i],
       "fireNOCDetails.applicationNumber"
     );
-    FireNOCs[i].fireNOCDetails.applicationNumber = fireNOCApplication && method != "_create"
-      ? fireNOCApplication
-      : await addIDGenId(RequestInfo, [
-          {
-            tenantId: FireNOCs[i].tenantId,
-            format: envVariables.EGOV_APPLICATION_FORMATE
-          }
-        ]);
+    FireNOCs[i].fireNOCDetails.applicationNumber =
+      fireNOCApplication && method != "_create"
+        ? fireNOCApplication
+        : await addIDGenId(RequestInfo, [
+            {
+              tenantId: FireNOCs[i].tenantId,
+              format: envVariables.EGOV_APPLICATION_FORMATE
+            }
+          ]);
     FireNOCs[i].fireNOCDetails.buildings = FireNOCs[
       i
     ].fireNOCDetails.buildings.map(building => {
@@ -34,7 +35,8 @@ export const addUUIDAndAuditDetails = async (request, method = "_update") => {
       building.applicationDocuments = building.applicationDocuments.map(
         applicationDocument => {
           let applicationId = applicationDocument.id;
-          applicationDocument.id = applicationId && method != "_create" ? applicationId : uuidv1();
+          applicationDocument.id =
+            applicationId && method != "_create" ? applicationId : uuidv1();
           return applicationDocument;
         }
       );
@@ -49,25 +51,31 @@ export const addUUIDAndAuditDetails = async (request, method = "_update") => {
       FireNOCs[i],
       "fireNOCDetails.propertyDetails.address.id"
     );
-    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = addressId && method != "_create"
-      ? addressId
-      : uuidv1();
+    FireNOCs[i].fireNOCDetails.propertyDetails.address.id =
+      addressId && method != "_create" ? addressId : uuidv1();
     let applicationDetailsId = get(
       FireNOCs[i],
       "fireNOCDetails.applicantDetails.additionalDetail.id"
     );
-    FireNOCs[
-      i
-    ].fireNOCDetails.applicantDetails.additionalDetail.id = applicationDetailsId && method != "_create"
-      ? applicationDetailsId
-      : uuidv1();
+    FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail.id =
+      applicationDetailsId && method != "_create"
+        ? applicationDetailsId
+        : uuidv1();
     let createdBy = get(FireNOCs[i], "auditDetails.createdBy");
     let createdTime = get(FireNOCs[i], "auditDetails.createdTime");
     FireNOCs[i].auditDetails = {
-      createdBy: createdBy && method != "_create" ? createdBy : get(RequestInfo, "userInfo.uuid", ""),
-      lastModifiedBy: createdBy && method != "_create" ? get(RequestInfo, "userInfo.uuid", "") : "",
-      createdTime: createdTime && method != "_create" ? createdTime : new Date().getTime(),
-      lastModifiedTime: createdTime && method != "_create" ? new Date().getTime() : 0
+      createdBy:
+        createdBy && method != "_create"
+          ? createdBy
+          : get(RequestInfo, "userInfo.uuid", ""),
+      lastModifiedBy:
+        createdBy && method != "_create"
+          ? get(RequestInfo, "userInfo.uuid", "")
+          : "",
+      createdTime:
+        createdTime && method != "_create" ? createdTime : new Date().getTime(),
+      lastModifiedTime:
+        createdTime && method != "_create" ? new Date().getTime() : 0
     };
     if (
       FireNOCs[i].fireNOCDetails.applicantDetails.owners &&
@@ -185,7 +193,11 @@ const addDefaultUserDetails = (tenantId, owner) => {
   owner.tenantId = envVariables.EGOV_DEFAULT_STATE_ID;
   owner.type = "CITIZEN";
   owner.roles = [
-    { code: "CITIZEN", name: "Citizen", tenantId: envVariables.EGOV_DEFAULT_STATE_ID }
+    {
+      code: "CITIZEN",
+      name: "Citizen",
+      tenantId: envVariables.EGOV_DEFAULT_STATE_ID
+    }
   ];
   return owner;
 };

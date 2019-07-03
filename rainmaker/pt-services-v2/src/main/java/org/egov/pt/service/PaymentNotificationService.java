@@ -186,7 +186,7 @@ public class PaymentNotificationService {
             tenantId = documentContext.read("$.Transaction.tenantId");
             valMap.put("tenantId",tenantId);
 
-            moduleId = documentContext.read("$.Transaction.taxAndPayments[0].businessService");
+            moduleId = documentContext.read("$.Transaction.consumerCode");
             valMap.put("moduleId",moduleId);
             valMap.put("propertyId",moduleId.split(":")[0]);
             valMap.put("assessmentNumber",moduleId.split(":")[1]);

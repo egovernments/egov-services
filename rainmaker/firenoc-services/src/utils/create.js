@@ -5,21 +5,20 @@ import userService from "../services/userService";
 import isEmpty from "lodash/isEmpty";
 import { status } from "./search";
 
-export const addUUIDAndAuditDetails = async request => {
+export const addUUIDAndAuditDetails = async (request, method = "_update") => {
   let { FireNOCs, RequestInfo } = request;
   //for loop should be replaced new alternative
   for (var i = 0; i < FireNOCs.length; i++) {
     let id = get(FireNOCs[i], "id");
-    FireNOCs[i].id = id ? id : uuidv1();
+    FireNOCs[i].id = id && method != "_create" ? id : uuidv1();
     let fireNOCDetailID = get(FireNOCs[i], "fireNOCDetails.id");
-    FireNOCs[i].fireNOCDetails.id = fireNOCDetailID
-      ? fireNOCDetailID
-      : uuidv1();
+    FireNOCs[i].fireNOCDetails.id =
+      fireNOCDetailID && method != "_create" ? fireNOCDetailID : uuidv1();
     let fireNOCApplication = get(
       FireNOCs[i],
       "fireNOCDetails.applicationNumber"
     );
-    FireNOCs[i].fireNOCDetails.applicationNumber = fireNOCApplication
+    FireNOCs[i].fireNOCDetails.applicationNumber = fireNOCApplication && method != "_create"
       ? fireNOCApplication
       : await addIDGenId(RequestInfo, [
           {
@@ -31,17 +30,17 @@ export const addUUIDAndAuditDetails = async request => {
       i
     ].fireNOCDetails.buildings.map(building => {
       let buildingId = building.id;
-      building.id = buildingId ? buildingId : uuidv1();
+      building.id = buildingId && method != "_create" ? buildingId : uuidv1();
       building.applicationDocuments = building.applicationDocuments.map(
         applicationDocument => {
           let applicationId = applicationDocument.id;
-          applicationDocument.id = applicationId ? applicationId : uuidv1();
+          applicationDocument.id = applicationId && method != "_create" ? applicationId : uuidv1();
           return applicationDocument;
         }
       );
       building.uoms = building.uoms.map(uom => {
         let uomId = uom.id;
-        uom.id = uomId ? uomId : uuidv1();
+        uom.id = uomId && method != "_create" ? uomId : uuidv1();
         return uom;
       });
       return building;
@@ -50,7 +49,7 @@ export const addUUIDAndAuditDetails = async request => {
       FireNOCs[i],
       "fireNOCDetails.propertyDetails.address.id"
     );
-    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = addressId
+    FireNOCs[i].fireNOCDetails.propertyDetails.address.id = addressId && method != "_create"
       ? addressId
       : uuidv1();
     let applicationDetailsId = get(
@@ -59,16 +58,16 @@ export const addUUIDAndAuditDetails = async request => {
     );
     FireNOCs[
       i
-    ].fireNOCDetails.applicantDetails.additionalDetail.id = applicationDetailsId
+    ].fireNOCDetails.applicantDetails.additionalDetail.id = applicationDetailsId && method != "_create"
       ? applicationDetailsId
       : uuidv1();
     let createdBy = get(FireNOCs[i], "auditDetails.createdBy");
     let createdTime = get(FireNOCs[i], "auditDetails.createdTime");
     FireNOCs[i].auditDetails = {
-      createdBy: createdBy ? createdBy : get(RequestInfo, "userInfo.uuid", ""),
-      lastModifiedBy: createdBy ? get(RequestInfo, "userInfo.uuid", "") : "",
-      createdTime: createdTime ? createdTime : new Date().getTime(),
-      lastModifiedTime: createdTime ? new Date().getTime() : 0
+      createdBy: createdBy && method != "_create" ? createdBy : get(RequestInfo, "userInfo.uuid", ""),
+      lastModifiedBy: createdBy && method != "_create" ? get(RequestInfo, "userInfo.uuid", "") : "",
+      createdTime: createdTime && method != "_create" ? createdTime : new Date().getTime(),
+      lastModifiedTime: createdTime && method != "_create" ? new Date().getTime() : 0
     };
     if (
       FireNOCs[i].fireNOCDetails.applicantDetails.owners &&
@@ -85,7 +84,7 @@ export const addUUIDAndAuditDetails = async request => {
         owners[owneriter] = {
           ...owners[owneriter],
           ...get(userCreateResponse, "user.0", []),
-          ownerUUID: ownerUUID ? ownerUUID : uuidv1()
+          ownerUUID: ownerUUID && method != "_create" ? ownerUUID : uuidv1()
         };
       }
     }
@@ -101,8 +100,8 @@ export const addUUIDAndAuditDetails = async request => {
       ownerAuditionalDetail:
         FireNOCs[i].fireNOCDetails.applicantDetails.additionalDetail
     };
-    FireNOCs[i].fireNOCDetails.status =
-      status[FireNOCs[i].fireNOCDetails.action];
+    // FireNOCs[i].fireNOCDetails.status =
+    //   status[FireNOCs[i].fireNOCDetails.action];
     FireNOCs[i] = await checkApproveRecord(FireNOCs[i], RequestInfo);
   }
   request.FireNOCs = FireNOCs;

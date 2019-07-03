@@ -45,7 +45,7 @@ export default ({ config, db }) => {
         let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       }
 
-      FireNOCs = updateStatus(FireNOCs, workflowResponse);
+      body.FireNOCs = updateStatus(FireNOCs, workflowResponse);
 
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_UPDATE,

@@ -30,7 +30,7 @@ export default ({ config, db }) => {
       }
 
       // console.log(JSON.stringify(mdms));
-      body = await addUUIDAndAuditDetails(body);
+      body = await addUUIDAndAuditDetails(body,"_create");
       let workflowResponse = await createWorkFlow(body);
       // console.log(JSON.stringify(workflowResponse));
 
@@ -41,7 +41,7 @@ export default ({ config, db }) => {
         let firenocResponse = await calculate(FireNOCs[i], RequestInfo);
       }
 
-      FireNOCs = updateStatus(FireNOCs, workflowResponse);
+      body.FireNOCs = updateStatus(FireNOCs, workflowResponse);
 
       payloads.push({
         topic: envVariables.KAFKA_TOPICS_FIRENOC_CREATE,

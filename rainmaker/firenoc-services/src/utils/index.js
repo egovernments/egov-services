@@ -48,6 +48,22 @@ export const addIDGenId = async (requestInfo, idRequests) => {
   return get(idGenResponse, "idResponses[0].id");
 };
 
+export const getLocationDetails = async (requestInfo, tenantId) => {
+  let requestBody = {
+    RequestInfo: requestInfo
+  };
+  // console.log(JSON.stringify(requestBody));
+  let locationResponse = await httpRequest({
+    hostURL: envVariables.EGOV_LOCATION_HOST,
+    endPoint: `${envVariables.EGOV_LOCATION_CONTEXT_PATH}${
+      envVariables.EGOV_LOCATION_SEARCH_ENDPOINT
+    }?hierarchyTypeCode=${envVariables.EGOV_LOCATION_HIERARCHY_TYPE_CODE}&boundaryType=${envVariables.EGOV_LOCATION_BOUNDARY_TYPE_CODE}&tenantId=${tenantId}`,
+    requestBody
+  });
+  // console.log("idgenresponse",locationResponse);
+  return locationResponse;
+};
+
 export const createWorkFlow = async body => {
   //wfDocuments and comment should rework after that
   let processInstances = body.FireNOCs.map(fireNOC => {

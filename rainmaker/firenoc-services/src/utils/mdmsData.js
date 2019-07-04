@@ -21,10 +21,6 @@ export default async (requestInfo = {},tenantId) => {
           ]
         },
         {
-          moduleName: "egov-location",
-          masterDetails: [{ name: "TenantBoundary" }]
-        },
-        {
           moduleName: "egf-master",
           masterDetails: [{ name: "FinancialYear" }]
         },

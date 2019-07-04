@@ -1,11 +1,13 @@
 import { Router } from "express";
 import producer from "../kafka/producer";
-import { requestInfoToResponseInfo, createWorkFlow } from "../utils";
+import { requestInfoToResponseInfo, createWorkFlow ,getLocationDetails} from "../utils";
 import envVariables from "../envVariables";
 import mdmsData from "../utils/mdmsData";
 import { addUUIDAndAuditDetails, updateStatus } from "../utils/create";
 import { calculate } from "../services/firenocCalculatorService";
 import { validateFireNOCModel } from "../utils/modelValidation";
+import set from "lodash/set";
+import get from "lodash/get";
 const asyncHandler = require("express-async-handler");
 
 export default ({ config, db }) => {
@@ -16,8 +18,14 @@ export default ({ config, db }) => {
       let payloads = [];
       //getting mdms data
       let mdms = await mdmsData(body.RequestInfo, body.FireNOCs[0].tenantId);
+
+      //location data
+      let locationResponse=await getLocationDetails(body.RequestInfo,body.FireNOCs[0].tenantId);
+
+      set(mdms,"MdmsRes.firenoc.boundary",get(locationResponse,"TenantBoundary.0.boundary"));
+      // console.log(JSON.stringify(locationResponse));
       //model validator
-      let errors = validateFireNOCModel(body, mdms);
+      let errors =validateFireNOCModel(body, mdms);
       if (errors.length > 0) {
         next({
           errorType: "custom",

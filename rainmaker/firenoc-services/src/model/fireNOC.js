@@ -201,7 +201,8 @@ const Address = {
       type: "object",
       properties: {
         code: {
-          type: "string"
+          type: "string",
+          valid_boundary:true
         }
       },
       required: ["code"]

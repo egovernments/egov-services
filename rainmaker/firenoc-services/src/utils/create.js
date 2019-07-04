@@ -167,7 +167,7 @@ const createUser = async (requestInfo, owner, tenantId) => {
 };
 
 const checkApproveRecord = async (fireNoc = {}, RequestInfo) => {
-  if (fireNoc.fireNOCDetails.status == "APPROVED") {
+  if (fireNoc.fireNOCDetails.action == "APPROVE") {
     let fireNOCNumber = fireNoc.fireNOCNumber;
     fireNoc.fireNOCNumber = fireNOCNumber
       ? fireNOCNumber
@@ -180,6 +180,7 @@ const checkApproveRecord = async (fireNoc = {}, RequestInfo) => {
     fireNoc.fireNOCDetails.validFrom = new Date().getTime();
     let validTo = new Date();
     validTo.setFullYear(validTo.getFullYear() + 1);
+    validTo.setDate(validTo.getDate() - 1);
     fireNoc.fireNOCDetails.validTo = validTo.getTime();
     fireNoc.fireNOCDetails.issuedDate = new Date().getTime();
   }

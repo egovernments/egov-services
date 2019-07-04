@@ -10,12 +10,13 @@ const getAjvInstance=()=>{
 }
 
 
-export const validateFireNOCModel = (data,mdmsData) => {
+export const validateFireNOCModel =(data,mdmsData) => {
   const fireStations=get(mdmsData,"MdmsRes.firenoc.FireStations",[]);
   const uoms=get(mdmsData,"MdmsRes.firenoc.UOMs",[]);
   const ownerShipCategory=get(mdmsData,"MdmsRes.common-masters.OwnerShipCategory",[]);
   const buildingType=get(mdmsData,"MdmsRes.firenoc.BuildingType",[]);
   const financialYear=get(mdmsData,"MdmsRes.egf-master.FinancialYear",[]);
+  const boundary=get(mdmsData,"MdmsRes.firenoc.boundary",[]);
   const ajv=getAjvInstance();
   // console.log(financialYear);
   ajv.addKeyword('valid_firestation', {
@@ -49,6 +50,13 @@ export const validateFireNOCModel = (data,mdmsData) => {
   ajv.addKeyword('valid_financialYear', {
     validate: function (schema, data) {
       return some(financialYear,{code:data});
+    },
+    errors: false
+  });
+
+  ajv.addKeyword('valid_boundary', {
+    validate: function (schema, data) {
+      return some(boundary,{code:data});
     },
     errors: false
   });

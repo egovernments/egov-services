@@ -8,29 +8,6 @@ import omitBy from "lodash/omitBy";
 import isNil from "lodash/isNil";
 
 let requestInfo = {};
-export const status = {
-  INITIATE: "INITIATED",
-  APPROVE: "APPROVED",
-  APPLY: "PENDINGPAYMENT",
-  ADHOC: "PENDINGPAYMENT",
-  PAY: "DOCUMENTVERIFY",
-  FORWARD: "FIELDINSPECTION",
-  REJECT: "REJECTED",
-  REFER: "REFERED",
-  CANCEL: "CANCELLED"
-};
-
-export const actions = {
-  INITIATED: "INITIATE",
-  APPROVED: "APPROVE",
-  PENDINGPAYMENT: "APPLY",
-  DOCUMENTVERIFY: "PAY",
-  FIELDINSPECTION: "FORWARD",
-  REJECTED: "REJECT",
-  CANCELLED: "CANCEL",
-  REFERED: "REFER",
-  PENDINGAPPROVAL: "FORWARD"
-};
 
 const intConversion = string => {
   return string ? parseInt(string) : null;

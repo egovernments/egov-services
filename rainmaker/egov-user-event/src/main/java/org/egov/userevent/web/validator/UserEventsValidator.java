@@ -150,11 +150,16 @@ public class UserEventsValidator {
 	 */
 	private void validateRI(RequestInfo requestInfo, Map<String, String> errorMap) {
 		if (null != requestInfo) {
-			if ((StringUtils.isEmpty(requestInfo.getUserInfo().getUuid()))
-					|| (CollectionUtils.isEmpty(requestInfo.getUserInfo().getRoles()))
-					|| (StringUtils.isEmpty(requestInfo.getUserInfo().getTenantId()))) {
-				errorMap.put(ErrorConstants.MISSING_ROLE_USERID_CODE, ErrorConstants.MISSING_ROLE_USERID_MSG);
+			if(null != requestInfo.getUserInfo()) {
+				if ((StringUtils.isEmpty(requestInfo.getUserInfo().getUuid()))
+						|| (CollectionUtils.isEmpty(requestInfo.getUserInfo().getRoles()))
+						|| (StringUtils.isEmpty(requestInfo.getUserInfo().getTenantId()))) {
+					errorMap.put(ErrorConstants.MISSING_ROLE_USERID_CODE, ErrorConstants.MISSING_ROLE_USERID_MSG);
+				}
+			}else {
+				errorMap.put(ErrorConstants.MISSING_USR_INFO_CODE, ErrorConstants.MISSING_USR_INFO_MSG);
 			}
+
 		} else {
 			errorMap.put(ErrorConstants.MISSING_REQ_INFO_CODE, ErrorConstants.MISSING_REQ_INFO_MSG);
 		}

@@ -11,6 +11,9 @@ public class ErrorConstants {
 	public static final String MISSING_REQ_INFO_CODE = "MEN_REQ_INFO_MISSING";
 	public static final String MISSING_REQ_INFO_MSG = "RequestInfo is mandatory in the request.";
 	
+	public static final String MISSING_USR_INFO_CODE = "MEN_USR_INFO_MISSING";
+	public static final String MISSING_USR_INFO_MSG = "UserIndfo is mandatory within the RequestInfo.";
+	
 	public static final String EMPTY_RECEPIENT_CODE = "MEN_EMPTY_RECEPIENT";
 	public static final String EMPTY_RECEPIENT_MSG = "toRoles and toUsers both cannot be empty, provide atleast one of them. "
 			+ "Incase the event is addressed to everyone, send 'All' in toRoles";

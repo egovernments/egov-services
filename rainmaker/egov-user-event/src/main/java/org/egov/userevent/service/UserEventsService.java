@@ -44,9 +44,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.userevent.config.PropertiesManager;
 import org.egov.userevent.model.AuditDetails;
@@ -58,6 +61,7 @@ import org.egov.userevent.producer.UserEventsProducer;
 import org.egov.userevent.repository.UserEventRepository;
 import org.egov.userevent.utils.MsevaUtils;
 import org.egov.userevent.utils.ResponseInfoFactory;
+import org.egov.userevent.utils.UserEventsConstants;
 import org.egov.userevent.web.contract.Event;
 import org.egov.userevent.web.contract.EventRequest;
 import org.egov.userevent.web.contract.EventResponse;
@@ -129,7 +133,8 @@ public class UserEventsService {
 		List<Event> counterEvents = new ArrayList<>();
 		request.getEvents().forEach(event -> {
 			Boolean isCounterEventReq = true;
-			if (null != event.getEventDetails() && (null == event.getGenerateCounterEvent() || event.getGenerateCounterEvent())) {
+			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE) 
+					&& (null == event.getGenerateCounterEvent() || event.getGenerateCounterEvent())) {
 				String description = null;
 				if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.CANCELLED)) {
 					if (null != event.getEventDetails().getFromDate()
@@ -299,7 +304,7 @@ public class UserEventsService {
 	/**
 	 * Method to enrich search criteria based on role as follows:
 	 * 1. Incase of CITIZEN, criteria is enriched using the userInfo present in RI.
-	 * 2. For anyother role, the search criteria is left untouched,
+	 * 2. For EMPLOYEE, only those events that are posted by him for that particular tenant are returned.
 	 * 
 	 * This method also derives a list of recipients in a specified format from the criteria to build search clause for the query.
 	 * 
@@ -320,6 +325,13 @@ public class UserEventsService {
 			roles.add("CITIZEN.CITIZEN");
 			criteria.setUserids(userIds);
 			criteria.setRoles(roles);
+		}else {
+			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
+			if(roles.contains("EMPLOYEE")) {
+				List<String> postedBy = new ArrayList<>();
+				postedBy.add(requestInfo.getUserInfo().getUuid());
+				criteria.setPostedBy(postedBy);
+			}
 		}
 		if (CollectionUtils.isEmpty(criteria.getStatus())) {
 			List<String> statuses = new ArrayList<>();

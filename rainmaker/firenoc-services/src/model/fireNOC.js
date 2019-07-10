@@ -202,7 +202,7 @@ const Address = {
       properties: {
         code: {
           type: "string",
-          valid_boundary:true
+          valid_boundary: true
         }
       },
       required: ["code"]
@@ -218,7 +218,7 @@ const BuildingUOM = {
     code: {
       type: "string",
       description: "Code of the unit code",
-      valid_uom:true
+      valid_uom: true
     },
     value: {
       type: "integer",
@@ -231,7 +231,7 @@ const BuildingUOM = {
     },
     active: {
       type: "boolean"
-    },
+    }
   }
 };
 
@@ -303,17 +303,25 @@ const OwnerInfo = {
       pattern: "^[6789][0-9]{9}$"
     },
     gender: {
-      type: ["string","null"],
-      enum: ["MALE", "FEMALE", "TRANSGENDER"]
+      oneOf: [
+        { type: "null" },
+        {
+          type: "string",
+          enum: ["MALE", "FEMALE", "TRANSGENDER"]
+        }
+      ]
+      // type: ["string","null"],
+      // valid_gender:true
+      // enum: ["MALE", "FEMALE", "TRANSGENDER"]
     },
     name: {
       type: "string"
     },
     dob: {
-      type: ["integer","null"]
+      type: ["integer", "null"]
     },
     fatherOrHusbandName: {
-      type: ["string","null"]
+      type: ["string", "null"]
     }
   },
   required: [
@@ -321,7 +329,7 @@ const OwnerInfo = {
     "mobileNumber",
     // "gender",
     // "relationship",
-    "correspondenceAddress",
+    "correspondenceAddress"
     // "dob",
     // "fatherOrHusbandName"
   ]

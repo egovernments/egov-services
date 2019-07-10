@@ -2,10 +2,13 @@ package org.egov.win.utils;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.win.config.PropertyManager;
 import org.egov.win.model.SearcherRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,36 +20,47 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Component
 public class CronUtils {
 
-	@Value("${egov.searcher.host}")
-	private String searcherHost;
 
-	@Value("${egov.searcher.endpoint}")
-	private String searcherEndpoint;
-
-	@Value("${egov.impact.emailer.interval.in.secs}")
-	private Long timeInterval;
-
+	@Autowired
+	private PropertyManager propertyManager;
+	
 	private static final String MODULE_NAME = "{moduleName}";
 
 	private static final String SEARCH_NAME = "{searchName}";
 
 	/**
-	 * Prepares request and uri for data search
+	 * Prepares request and uri for rainmaker data search
 	 * 
 	 * @param uri
 	 * @param defName
 	 * @return SearcherRequest
 	 */
 	public SearcherRequest preparePlainSearchReq(StringBuilder uri, String defName) {
-		uri.append(searcherHost);
-		String endPoint = searcherEndpoint.replace(MODULE_NAME, CronConstants.SEARCHER_CRON_MOD_NAME)
+		uri.append(propertyManager.getSearcherHost());
+		String endPoint = propertyManager.getSearcherEndpoint().replace(MODULE_NAME, CronConstants.SEARCHER_CRON_MOD_NAME)
 				.replace(SEARCH_NAME, defName);
 		uri.append(endPoint);
 		HashMap<String, Long> param = new HashMap<>();
-		param.put("intervalinsecs", timeInterval);
+		param.put("intervalinsecs", propertyManager.getTimeInterval());
 		SearcherRequest searcherRequest = SearcherRequest.builder().requestInfo(new RequestInfo()).searchCriteria(param)
 				.build();
 		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for WS data search
+	 * 
+	 * @param uri
+	 * @param defName
+	 * @return SearcherRequest
+	 */
+	public void prepareWSSearchReq(StringBuilder uri) {
+		uri.append(propertyManager.getWsHost());
+		String endPoint = propertyManager.getWsEndpoint()
+				.replace("{ulbCode}", propertyManager.getWsULBCode())
+				.replace("{date}", String.valueOf((new Date().getTime())))
+				.replace("{interval}", propertyManager.getWsIntervalInMS().toString());
+		uri.append(endPoint);		
 	}
 
 	/**

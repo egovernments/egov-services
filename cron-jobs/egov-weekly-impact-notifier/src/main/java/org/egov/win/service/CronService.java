@@ -21,6 +21,7 @@ import org.egov.win.model.PT;
 import org.egov.win.model.SearcherRequest;
 import org.egov.win.model.StateWide;
 import org.egov.win.model.TL;
+import org.egov.win.model.WaterAndSewerage;
 import org.egov.win.producer.Producer;
 import org.egov.win.repository.CronRepository;
 import org.egov.win.utils.CronConstants;
@@ -40,12 +41,12 @@ public class CronService {
 
 	@Autowired
 	private EmailService emailService;
-
-	@Autowired
-	private CronRepository repository;
-
+	
 	@Autowired
 	private CronUtils utils;
+	
+	@Autowired
+	private ExternalAPIService externalAPIService;
 
 	@Autowired
 	private Producer producer;
@@ -76,10 +77,11 @@ public class CronService {
 	private Email getDataFromDb() {
 		Body body = new Body();
 		enrichHeadersOfTheTable(body);
-		enrichBodyWithStateWideData(body);
+		List<Map<String, Object>> wsData = enrichBodyWithStateWideData(body);
 		enrichBodyWithPGRData(body);
 		enrichBodyWithPTData(body);
 		enrichBodyWithTLData(body);
+		enrichBodyWithWSData(body, wsData);
 		return Email.builder().body(body).build();
 	}
 
@@ -96,8 +98,9 @@ public class CronService {
 		body.setHeader(header);
 	}
 
-	private void enrichBodyWithStateWideData(Body body) {
-		List<Map<String, Object>> data = getData(CronConstants.SEARCHER_SW);
+	private List<Map<String, Object>> enrichBodyWithStateWideData(Body body) {
+		List<Map<String, Object>> data = externalAPIService.getRainmakerData(CronConstants.SEARCHER_SW);
+		List<Map<String, Object>> wsData = externalAPIService.getWSData();
 		List<Map<String, Object>> ulbCovered = new ArrayList<>();
 		List<Map<String, Object>> revenueCollected = new ArrayList<>();
 		List<Map<String, Object>> servicesApplied = new ArrayList<>();
@@ -109,12 +112,18 @@ public class CronService {
 			Map<String, Object> noOfCitizensResgisteredPerWeek = new HashMap<>();
 			String prefix = "Week";
 			Integer noOfWeeks = 6;
+			Integer wsIndex = 0;
 			for (int week = 0; week < noOfWeeks; week++) {
 				if (record.get("day").equals(prefix + week)) {
-					ulbCoveredPerWeek.put("w" + week + "ulbc", record.get("ulbcovered"));
-					revenueCollectedPerWeek.put("w" + week + "revcoll", record.get("revenuecollected"));
-					servicesAppliedPerWeek.put("w" + week + "serapp", record.get("servicesapplied"));
+					ulbCoveredPerWeek.put("w" + week + "ulbc",
+							(Double.valueOf(record.get("ulbcovered").toString()) + Double.valueOf(wsData.get(wsIndex).get("ulbsCovered").toString())));
+					revenueCollectedPerWeek.put("w" + week + "revcoll", 
+							(Double.valueOf(record.get("revenuecollected").toString()) + Double.valueOf(wsData.get(wsIndex).get("revenueCollected").toString())));
+					servicesAppliedPerWeek.put("w" + week + "serapp", 
+							(Double.valueOf(record.get("servicesapplied").toString()) + Double.valueOf(wsData.get(wsIndex).get("servicesApplied").toString())));
+
 					noOfCitizensResgisteredPerWeek.put("w" + week + "citreg", record.get("noofusersregistered"));
+					wsIndex++;
 				}
 			}
 			ulbCovered.add(ulbCoveredPerWeek);
@@ -126,10 +135,12 @@ public class CronService {
 		StateWide stateWide = StateWide.builder().noOfCitizensResgistered(noOfCitizensResgistered)
 				.revenueCollected(revenueCollected).servicesApplied(servicesApplied).ulbCovered(ulbCovered).build();
 		body.setStateWide(stateWide);
+		
+		return wsData;
 	}
 
 	private void enrichBodyWithPGRData(Body body) {
-		List<Map<String, Object>> data = getData(CronConstants.SEARCHER_PGR);
+		List<Map<String, Object>> data = externalAPIService.getRainmakerData(CronConstants.SEARCHER_PGR);
 		List<Map<String, Object>> ulbCovered = new ArrayList<>();
 		List<Map<String, Object>> totalComplaints = new ArrayList<>();
 		List<Map<String, Object>> redressal = new ArrayList<>();
@@ -156,7 +167,7 @@ public class CronService {
 	}
 
 	private void enrichBodyWithPGRChannelData(Body body, PGR pgr) {
-		List<Map<String, Object>> data = getData(CronConstants.SEARCHER_PGR_CHANNEL);
+		List<Map<String, Object>> data = externalAPIService.getRainmakerData(CronConstants.SEARCHER_PGR_CHANNEL);
 		List<Map<String, Object>> ivr = new ArrayList<>();
 		List<Map<String, Object>> mobiileApp = new ArrayList<>();
 		List<Map<String, Object>> webApp = new ArrayList<>();
@@ -183,7 +194,7 @@ public class CronService {
 	}
 
 	private void enrichBodyWithPTData(Body body) {
-		List<Map<String, Object>> data = getData(CronConstants.SEARCHER_PT);
+		List<Map<String, Object>> data = externalAPIService.getRainmakerData(CronConstants.SEARCHER_PT);
 		List<Map<String, Object>> ulbCovered = new ArrayList<>();
 		List<Map<String, Object>> revenueCollected = new ArrayList<>();
 		List<Map<String, Object>> noOfProperties = new ArrayList<>();
@@ -211,7 +222,7 @@ public class CronService {
 	}
 
 	private void enrichBodyWithTLData(Body body) {
-		List<Map<String, Object>> data = getData(CronConstants.SEARCHER_TL);
+		List<Map<String, Object>> data = externalAPIService.getRainmakerData(CronConstants.SEARCHER_TL);
 		List<Map<String, Object>> ulbCovered = new ArrayList<>();
 		List<Map<String, Object>> licenseIssued = new ArrayList<>();
 		for (Map<String, Object> record : data) {
@@ -232,25 +243,36 @@ public class CronService {
 		TL tl = TL.builder().ulbCovered(ulbCovered).licenseIssued(licenseIssued).build();
 		body.setTl(tl);
 	}
-
-	private List<Map<String, Object>> getData(String defName) {
-		StringBuilder uri = new StringBuilder();
-		ObjectMapper mapper = utils.getObjectMapper();
-		List<Map<String, Object>> data = new ArrayList<>();
-		SearcherRequest request = utils.preparePlainSearchReq(uri, defName);
-		Optional<Object> response = repository.fetchResult(uri, request);
-		try {
-			List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(response.get(), "$.data"), List.class);
-			for (Object record : dataParsedToList) {
-				data.add(mapper.convertValue(record, Map.class));
+	
+	private void enrichBodyWithWSData(Body body, List<Map<String, Object>> data) {
+		List<Map<String, Object>> ulbCovered = new ArrayList<>();
+		List<Map<String, Object>> revenueCollected = new ArrayList<>();
+		List<Map<String, Object>> servicesApplied = new ArrayList<>();
+		for (Map<String, Object> record : data) {
+			Map<String, Object> ulbCoveredPerWeek = new HashMap<>();
+			Map<String, Object> revenueCollectedPerWeek = new HashMap<>();
+			Map<String, Object> servicesAppliedPerWeek = new HashMap<>();
+			String prefix = "Week";
+			Integer noOfWeeks = 6;
+			for (int week = 0; week < noOfWeeks; week++) {
+				if (record.get("day").equals(prefix + week)) {
+					ulbCoveredPerWeek.put("w" + week + "wsulbc", record.get("ulbsCovered"));
+					revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected"));
+					servicesAppliedPerWeek.put("w" + week + "wsserapp", record.get("servicesApplied"));
+				}
 			}
-		} catch (Exception e) {
-			throw new CustomException("EMAILER_DATA_RETREIVAL_FAILED", "Failed to retrieve data from the db");
+			ulbCovered.add(ulbCoveredPerWeek);
+			revenueCollected.add(revenueCollectedPerWeek);
+			servicesApplied.add(servicesAppliedPerWeek);
 		}
 
-		return data;
-
+		WaterAndSewerage waterAndSewerage = WaterAndSewerage.builder()
+				.revenueCollected(revenueCollected).serviceApplied(servicesApplied).ulbCovered(ulbCovered).build();
+		body.setWaterAndSewerage(waterAndSewerage);
+	
 	}
+
+		
 
 	private void send(Email email, String content) {
 		String[] addresses = toAddress.split(",");

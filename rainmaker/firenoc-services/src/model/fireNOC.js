@@ -303,17 +303,17 @@ const OwnerInfo = {
       pattern: "^[6789][0-9]{9}$"
     },
     gender: {
-      type: "string",
+      type: ["string","null"],
       enum: ["MALE", "FEMALE", "TRANSGENDER"]
     },
     name: {
       type: "string"
     },
     dob: {
-      type: "integer"
+      type: ["integer","null"]
     },
     fatherOrHusbandName: {
-      type: "string"
+      type: ["string","null"]
     }
   },
   required: [

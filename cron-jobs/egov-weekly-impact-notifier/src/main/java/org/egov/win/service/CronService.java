@@ -252,14 +252,11 @@ public class CronService {
 			Map<String, Object> ulbCoveredPerWeek = new HashMap<>();
 			Map<String, Object> revenueCollectedPerWeek = new HashMap<>();
 			Map<String, Object> servicesAppliedPerWeek = new HashMap<>();
-			String prefix = "Week";
 			Integer noOfWeeks = 6;
 			for (int week = 0; week < noOfWeeks; week++) {
-				if (record.get("day").equals(prefix + week)) {
-					ulbCoveredPerWeek.put("w" + week + "wsulbc", record.get("ulbsCovered"));
-					revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected"));
-					servicesAppliedPerWeek.put("w" + week + "wsserapp", record.get("servicesApplied"));
-				}
+				ulbCoveredPerWeek.put("w" + week + "wsulbc", record.get("ulbsCovered"));
+				revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected"));
+				servicesAppliedPerWeek.put("w" + week + "wsserapp", record.get("servicesApplied"));
 			}
 			ulbCovered.add(ulbCoveredPerWeek);
 			revenueCollected.add(revenueCollectedPerWeek);

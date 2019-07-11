@@ -34,10 +34,15 @@ public class ExternalAPIService {
 		SearcherRequest request = utils.preparePlainSearchReq(uri, defName);
 		Optional<Object> response = repository.fetchResult(uri, request);
 		try {
-			List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(response.get(), "$.data"), List.class);
-			for (Object record : dataParsedToList) {
-				data.add(mapper.convertValue(record, Map.class));
+			if(response.isPresent()) {
+				Object parsedResponse = mapper.convertValue(response.get(), Map.class);
+				log.info("Parsed response: "+ parsedResponse);
+				List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(parsedResponse, "$.data"), List.class);
+				for (Object record : dataParsedToList) {
+					data.add(mapper.convertValue(record, Map.class));
+				}
 			}
+
 		} catch (Exception e) {
 			throw new CustomException("EMAILER_DATA_RETREIVAL_FAILED", "Failed to retrieve data from the db");
 		}

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -35,20 +36,12 @@ public class CronRepository {
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Object response = null;
 		try {
-			response = restTemplate.postForObject(uri.toString(), request, Map.class);
+			response = restTemplate.postForObject(uri.toString(), request, JsonNode.class);
 		} catch (HttpClientErrorException e) {
 			log.error("External Service threw an Exception: ", e);
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		} catch (Exception e) {
 			log.error("Exception while fetching from external service with Map parser: ", e);
-		}
-		if(null == response) {
-			try {
-				log.info("Trying with List parser!");
-				response = restTemplate.postForObject(uri.toString(), request, List.class);
-			}catch(Exception ex) {
-				log.error("Exception while fetching from external service with List parser: ", ex);
-			}
 		}
 
 		return Optional.ofNullable(response);

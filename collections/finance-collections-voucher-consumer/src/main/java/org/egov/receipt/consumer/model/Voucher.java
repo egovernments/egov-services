@@ -106,5 +106,9 @@ public class Voucher {
     private List<AccountDetail> ledgers = new ArrayList<>(0);
 
     private String tenantId;
+    
+    private String referenceDocument;
+    
+    private String serviceName;
 
 }

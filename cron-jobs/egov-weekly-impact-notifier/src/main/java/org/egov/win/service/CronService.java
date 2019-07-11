@@ -115,8 +115,7 @@ public class CronService {
 			Integer wsIndex = 0;
 			for (int week = 0; week < noOfWeeks; week++) {
 				if (record.get("day").equals(prefix + week)) {
-					ulbCoveredPerWeek.put("w" + week + "ulbc",
-							(Double.valueOf(record.get("ulbcovered").toString()) + Double.valueOf(wsData.get(wsIndex).get("ulbsCovered").toString())));
+					ulbCoveredPerWeek.put("w" + week + "ulbc", record.get("ulbcovered")); //ws not added because we need a union logic.
 					revenueCollectedPerWeek.put("w" + week + "revcoll", 
 							(Double.valueOf(record.get("revenuecollected").toString()) + Double.valueOf(wsData.get(wsIndex).get("revenueCollected").toString())));
 					servicesAppliedPerWeek.put("w" + week + "serapp", 
@@ -248,19 +247,19 @@ public class CronService {
 		List<Map<String, Object>> ulbCovered = new ArrayList<>();
 		List<Map<String, Object>> revenueCollected = new ArrayList<>();
 		List<Map<String, Object>> servicesApplied = new ArrayList<>();
+		Integer week = 0;
 		for (Map<String, Object> record : data) {
 			Map<String, Object> ulbCoveredPerWeek = new HashMap<>();
 			Map<String, Object> revenueCollectedPerWeek = new HashMap<>();
 			Map<String, Object> servicesAppliedPerWeek = new HashMap<>();
-			Integer noOfWeeks = 6;
-			for (int week = 0; week < noOfWeeks; week++) {
-				ulbCoveredPerWeek.put("w" + week + "wsulbc", record.get("ulbsCovered"));
-				revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected"));
-				servicesAppliedPerWeek.put("w" + week + "wsserapp", record.get("servicesApplied"));
-			}
+			ulbCoveredPerWeek.put("w" + week + "wsulbc", record.get("ulbsCovered"));
+			revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected"));
+			servicesAppliedPerWeek.put("w" + week + "wsserapp", record.get("servicesApplied"));
 			ulbCovered.add(ulbCoveredPerWeek);
 			revenueCollected.add(revenueCollectedPerWeek);
 			servicesApplied.add(servicesAppliedPerWeek);
+			
+			week++;
 		}
 
 		WaterAndSewerage waterAndSewerage = WaterAndSewerage.builder()

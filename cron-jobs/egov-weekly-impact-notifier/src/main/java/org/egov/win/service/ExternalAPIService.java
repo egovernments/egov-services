@@ -36,7 +36,6 @@ public class ExternalAPIService {
 		try {
 			if(response.isPresent()) {
 				Object parsedResponse = mapper.convertValue(response.get(), Map.class);
-				log.info("Parsed response: "+ parsedResponse);
 				List<Object> dataParsedToList = mapper.convertValue(JsonPath.read(parsedResponse, "$.data"), List.class);
 				for (Object record : dataParsedToList) {
 					data.add(mapper.convertValue(record, Map.class));

@@ -41,7 +41,7 @@ public class CronRepository {
 			log.error("External Service threw an Exception: ", e);
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		} catch (Exception e) {
-			log.error("Exception while fetching from external service with Map parser: ", e);
+			log.error("Exception while fetching from external service: ", e);
 		}
 
 		return Optional.ofNullable(response);

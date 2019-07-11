@@ -91,10 +91,11 @@ import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.factory.ResponseFactory;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -106,7 +107,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BillService {
 
 	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private ResponseFactory responseFactory;
@@ -137,6 +138,9 @@ public class BillService {
 	
 	@Autowired
 	private IdGenRepo idGenRepo;
+	
+	@Value("${kafka.topics.billgen.topic.name}")
+	private String notifTopicName;
 	
 	/**
 	 * Fetches the bill for given parameters
@@ -283,7 +287,9 @@ public class BillService {
 		else
 			throw new CustomException(EG_BS_BILL_NO_DEMANDS_FOUND_KEY, EG_BS_BILL_NO_DEMANDS_FOUND_MSG);
 
-		return create(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
+		BillRequest billRequest = BillRequest.builder().bills(bills).requestInfo(requestInfo).build();
+		kafkaTemplate.send(notifTopicName, null, billRequest);
+		return create(billRequest);
 	}
 
 	/**
@@ -369,7 +375,7 @@ public class BillService {
 		billNumberFormat = billNumberFormat.replace(appProps.getModuleReplaceStirng(), module);
 
 		if (appProps.getIsTenantLevelBillNumberingEnabled())
-			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), tenantId.split("\\.")[1]);
+			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), "_".concat(tenantId.split("\\.")[1]));
 		else
 			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), "");
 
@@ -630,38 +636,7 @@ public class BillService {
 		return getBillResponse(billRequest.getBills());
 	}
 	
-	/*
-	 * @deprecated methods 
-	 * 
-	 */
 
-	@Deprecated
-	private Map<String, List<GlCodeMaster>> getGlCodes(List<Demand> demands, String service,String tenantId, RequestInfo requestInfo) {
-
-		List<DemandDetail> demandDetails = new ArrayList<>();
-		for(Demand demand : demands){
-			demandDetails.addAll(demand.getDemandDetails());
-		}
-
-		log.debug("getGlCodes demandDetails:"+demandDetails);
-
-		Set<String>  taxHeadMasterCode = demandDetails.stream().
-				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
-
-		log.debug("getGlCodes taxHeadMasterCode:"+taxHeadMasterCode);
-		List<GlCodeMaster> glCodeMasters = glCodeMasterService.getGlCodes(
-				GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(
-				service).tenantId(tenantId).build(), requestInfo).getGlCodeMasters();
-		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
-		if(glCodeMasters.isEmpty())
-			throw new RuntimeException("No GlcodeMasters found for the given criteria");
-		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(
-				Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
-
-		log.debug("getTaxHeadMaster map:"+map);
-		return map;
-	}
-	
 	@Deprecated
 	public BillResponse apportion(BillRequest billRequest) {
 		return new BillResponse(responseFactory.getResponseInfo(billRequest.getRequestInfo(), HttpStatus.OK), billRepository.apportion(billRequest));

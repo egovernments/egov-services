@@ -397,17 +397,12 @@ public class VoucherServiceImpl implements VoucherService {
 	 * Method which is used to fetch the voucher details associated with business service and reference documents.
 	 */
 	@Override
-	public VoucherResponse getVoucherByServiceAndRefDoc(RequestInfo requestInfo, String tenantId, String serviceCode, String referenceDoc) throws VoucherCustomException{
+	public VoucherResponse getVoucherByServiceAndRefDoc(RequestInfo requestInfo, String tenantId, String serviceCode, String referenceDoc) throws VoucherCustomException, UnsupportedEncodingException{
 		requestInfo.setAuthToken(propertiesManager.getSiAuthToken());
 		VoucherRequest request = new VoucherRequest(tenantId, requestInfo, null);
-		try {
-			referenceDoc = URLEncoder.encode(referenceDoc,"UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
 		StringBuilder url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId)
 				+ propertiesManager.getVoucherSearchUrl()
-				+ "?servicecode=" + serviceCode +"&referencedocument="+referenceDoc);
+				+ "?servicecode=" + serviceCode +"&referencedocument="+URLEncoder.encode(referenceDoc,"UTF-8"));
 		try {
 			return mapper.convertValue(serviceRequestRepository.fetchResult(url, request, tenantId), VoucherResponse.class);
 		} catch (Exception e) {

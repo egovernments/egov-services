@@ -39,6 +39,8 @@
  */
 package org.egov.receipt.consumer.service;
 
+import java.io.UnsupportedEncodingException;
+
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
 import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.RequestInfo;
@@ -51,5 +53,5 @@ public interface VoucherService {
 	public boolean isVoucherCreationEnabled(ReceiptReq req, FinanceMdmsModel finSerMdms) throws Exception;
 	public boolean isTenantEnabledInFinanceModule(ReceiptReq req, FinanceMdmsModel finSerMdms) throws VoucherCustomException;
 	VoucherResponse getVoucherByServiceAndRefDoc(RequestInfo requestInfo, String tenantId, String serviceCode,
-			String referenceDoc) throws VoucherCustomException;
+			String referenceDoc) throws VoucherCustomException, UnsupportedEncodingException;
 }

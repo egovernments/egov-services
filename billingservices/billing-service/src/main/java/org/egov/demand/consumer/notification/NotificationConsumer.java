@@ -158,7 +158,7 @@ public class NotificationConsumer {
 		period.append(cal.get(Calendar.YEAR));
 		return period.toString();
 	}
-
+	
 	/**
 	 * Generic method to fetch data from localization.
 	 * 
@@ -174,8 +174,11 @@ public class NotificationConsumer {
 		List<String> codes = new ArrayList<>();
 		List<String> messages = new ArrayList<>();
 		Object result = null;
+		String locale = "";
 		
-		String locale = requestInfo.getMsgId().split("[|]")[1]; // Conventionally locale is sent in the second(1) index of msgid split by |
+		if(requestInfo.getMsgId().contains("|"))
+			locale= requestInfo.getMsgId().split("[\\|]")[1]; // Conventionally locale is sent in the second(1) index of msgid split by |
+		
 		if(StringUtils.isEmpty(locale))
 			locale = fallBackLocale;
 		

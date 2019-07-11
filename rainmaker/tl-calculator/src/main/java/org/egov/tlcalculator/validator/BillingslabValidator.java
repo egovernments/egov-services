@@ -47,7 +47,6 @@ public class BillingslabValidator {
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
-		log.info("All validations passed.");
 	}
 	
 	/**
@@ -71,7 +70,6 @@ public class BillingslabValidator {
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
-		log.info("All validations passed.");
 	}
 	
 	/**

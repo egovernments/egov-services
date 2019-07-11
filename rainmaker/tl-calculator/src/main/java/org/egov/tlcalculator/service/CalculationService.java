@@ -175,7 +175,7 @@ public class CalculationService {
           throw new CustomException("INVALID AMOUNT","Tax amount is negative");
 
       if(calulationCriteria.getTradelicense().getTradeLicenseDetail().getAdhocExemption()!=null){
-          if(totalTax.compareTo(calulationCriteria.getTradelicense().getTradeLicenseDetail().getAdhocExemption())==-1)
+          if(totalTax.compareTo(calulationCriteria.getTradelicense().getTradeLicenseDetail().getAdhocExemption().abs())==-1)
               throw new CustomException("INVALID ADHOC REBATE","Adhoc Rebate cannot be greater than tax amount");
       }
 

@@ -97,7 +97,7 @@ public class CronUtils {
 		calendar.setTimeInMillis(epochTime);
 		StringBuilder date = new StringBuilder();
 		String suffix = null;
-		if (Calendar.DAY_OF_MONTH == 11 || Calendar.DAY_OF_MONTH == 12 || Calendar.DAY_OF_MONTH == 13) {
+		if (calendar.get(Calendar.DAY_OF_MONTH) >= 11 && calendar.get(Calendar.DAY_OF_MONTH) <= 13) {
 			suffix = "th ";
 		} else {
 			Integer dateEndingwith = calendar.get(Calendar.DAY_OF_MONTH) % 10;

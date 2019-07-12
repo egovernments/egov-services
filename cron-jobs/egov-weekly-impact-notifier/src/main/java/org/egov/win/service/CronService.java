@@ -1,5 +1,6 @@
 package org.egov.win.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,7 +118,7 @@ public class CronService {
 				if (record.get("day").equals(prefix + week)) {
 					ulbCoveredPerWeek.put("w" + week + "ulbc", record.get("ulbcovered")); //ws not added because we need a union logic.
 					revenueCollectedPerWeek.put("w" + week + "revcoll", 
-							(Double.valueOf(record.get("revenuecollected").toString()) + (Double.valueOf(wsData.get(wsIndex).get("revenueCollected").toString()))));
+							(new BigDecimal(record.get("revenuecollected").toString()).add(new BigDecimal(wsData.get(wsIndex).get("revenueCollected").toString()))));
 					servicesAppliedPerWeek.put("w" + week + "serapp", 
 							(Double.valueOf(record.get("servicesapplied").toString()) + Double.valueOf(wsData.get(wsIndex).get("servicesApplied").toString())));
 
@@ -253,7 +254,7 @@ public class CronService {
 			Map<String, Object> revenueCollectedPerWeek = new HashMap<>();
 			Map<String, Object> servicesAppliedPerWeek = new HashMap<>();
 			ulbCoveredPerWeek.put("w" + week + "wsulbc", record.get("ulbsCovered"));
-			revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected")	);
+			revenueCollectedPerWeek.put("w" + week + "wsrevcoll", record.get("revenueCollected"));
 			servicesAppliedPerWeek.put("w" + week + "wsserapp", record.get("servicesApplied"));
 			ulbCovered.add(ulbCoveredPerWeek);
 			revenueCollected.add(revenueCollectedPerWeek);
@@ -277,7 +278,6 @@ public class CronService {
 			email.setSubject(subject);
 			EmailRequest request = EmailRequest.builder().email(email.getTo()).subject(email.getSubject()).isHTML(true)
 					.body(content).build();
-			log.info("EMAIL: "+request);
 			producer.push(emailTopic, request);
 		}
 	}

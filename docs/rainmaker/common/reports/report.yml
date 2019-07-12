@@ -23,7 +23,7 @@ ReportDefinitions:
         label: reports.common.CollectionRegister.transactions
         type: number
         source: common
-        total: false
+        total: true
       - name: cash_sum
         label: reports.common.CollectionRegister.cash
         type: number
@@ -33,7 +33,7 @@ ReportDefinitions:
         label: reports.common.CollectionRegister.transactions
         type: number
         source: common
-        total: false
+        total: true
       - name: cheque_sum
         label: reports.common.CollectionRegister.cheque
         type: number
@@ -43,7 +43,7 @@ ReportDefinitions:
         label: reports.common.CollectionRegister.transactions
         type: number
         source: common
-        total: false
+        total: true
       - name: dd_sum
         label: reports.common.CollectionRegister.dd
         type: number
@@ -53,7 +53,7 @@ ReportDefinitions:
         label: reports.common.CollectionRegister.transactions
         type: number
         source: common
-        total: false
+        total: true
       - name: online_sum
         label: reports.common.CollectionRegister.online
         type: number
@@ -63,7 +63,7 @@ ReportDefinitions:
         label: reports.common.CollectionRegister.transactions
         type: number
         source: common
-        total: false
+        total: true
       - name: card_sum
         label: reports.common.CollectionRegister.card
         type: number

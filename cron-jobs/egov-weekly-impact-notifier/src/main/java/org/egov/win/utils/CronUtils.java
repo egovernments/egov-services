@@ -17,7 +17,10 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CronUtils {
 
 
@@ -89,6 +92,8 @@ public class CronUtils {
 		calendar.setTimeInMillis(epochTime);
 		StringBuilder date = new StringBuilder();
 		String suffix = null;
+		log.info("EPOCH: "+epochTime);
+		log.info("DAY: "+ Calendar.DAY_OF_MONTH);
 		if (Calendar.DAY_OF_MONTH >= 11 && Calendar.DAY_OF_MONTH <= 13) {
 			suffix = "th ";
 		} else {

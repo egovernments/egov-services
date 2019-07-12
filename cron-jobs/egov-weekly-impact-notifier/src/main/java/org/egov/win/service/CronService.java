@@ -106,6 +106,7 @@ public class CronService {
 		List<Map<String, Object>> revenueCollected = new ArrayList<>();
 		List<Map<String, Object>> servicesApplied = new ArrayList<>();
 		List<Map<String, Object>> noOfCitizensResgistered = new ArrayList<>();
+		Map<String, Object> map = utils.getWeekWiseRevenue(wsData);
 		for (Map<String, Object> record : data) {
 			Map<String, Object> ulbCoveredPerWeek = new HashMap<>();
 			Map<String, Object> revenueCollectedPerWeek = new HashMap<>();
@@ -118,14 +119,13 @@ public class CronService {
 				if (record.get("day").equals(prefix + week)) {
 					ulbCoveredPerWeek.put("w" + week + "ulbc", record.get("ulbcovered")); //ws not added because we need a union logic.
 					revenueCollectedPerWeek.put("w" + week + "revcoll", 
-							(record.get("revenuecollected").toString() + " + " + wsData.get(wsIndex).get("revenueCollected").toString()));
+							(new BigDecimal(record.get("revenuecollected").toString()).add(new BigDecimal(((Map) (map.get(prefix + week))).get("revenueCollected").toString()))));
 					servicesAppliedPerWeek.put("w" + week + "serapp", 
-							(Double.valueOf(record.get("servicesapplied").toString()) + Double.valueOf(wsData.get(wsIndex).get("servicesApplied").toString())));
-
+							(new BigDecimal(record.get("servicesapplied").toString()).add(new BigDecimal(((Map) (map.get(prefix + week))).get("servicesApplied").toString()))));
 					noOfCitizensResgisteredPerWeek.put("w" + week + "citreg", record.get("noofusersregistered"));
 					wsIndex++;
 				}
-			}
+			}					
 			ulbCovered.add(ulbCoveredPerWeek);
 			revenueCollected.add(revenueCollectedPerWeek);
 			servicesApplied.add(servicesAppliedPerWeek);
@@ -278,6 +278,7 @@ public class CronService {
 			email.setSubject(subject);
 			EmailRequest request = EmailRequest.builder().email(email.getTo()).subject(email.getSubject()).isHTML(true)
 					.body(content).build();
+			log.info("EMAIL: "+request);
 			producer.push(emailTopic, request);
 		}
 	}

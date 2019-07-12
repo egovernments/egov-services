@@ -85,6 +85,16 @@ public class CronUtils {
 
 		return mapper;
 	}
+	
+	public Map<String, Object> getWeekWiseRevenue(List<Map<String, Object>> wsData){
+		Map<String, Object> map = new HashMap<>();
+		int index = 0;
+		for(Map<String, Object> data: wsData) {
+			map.put("Week" + index, data);
+			index++;
+		}
+		return map;
+	}
 
 	/**
 	 * Fetches day and month alongwith suffix of the data being fetched.

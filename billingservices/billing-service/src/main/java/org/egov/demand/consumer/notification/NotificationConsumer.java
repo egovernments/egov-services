@@ -64,12 +64,16 @@ public class NotificationConsumer {
 	public static final String BUSINESSSERVICE_CODES_JSONPATH = "$.MdmsRes.BillingService.BusinessService";
 
 	public static final String USERNAME_REPLACE_STRING = "{username}";
-	public static final String MODULE_REPLACE_STRING = "{module}";
 	public static final String PERIOD_REPLACE_STRING = "{period}";
-	public static final String KEYNAME_OF_MODULE_REPLACE_STRING = "{primarykeystring}";
-	public static final String SERVICENUMBER_OF_MODULE_REPLACE_STRING = "{servicenumber}";
-	public static final String EXPIRY_DATE_REPLACE_STRING = "{expirydate}";
 	
+	public static final String MODULE_REPLACE_STRING = "{module}";
+	public static final String MODULE_REPLACE_STRING_VALUE = "Property Tax";
+	
+	public static final String MODULE_PRIMARYKEY_REPLACE_STRING = "{primarykeystring}";
+	public static final String MODULE_PRIMARYKEY_REPLACE_STRING_VALUE = "property-id";
+	
+	public static final String SERVICENUMBER_OF_MODULE_REPLACE_STRING = "{propertyid}";
+	public static final String EXPIRY_DATE_REPLACE_STRING = "{expirydate}";
 	
 
 	/**
@@ -139,10 +143,12 @@ public class NotificationConsumer {
 		if (!StringUtils.isEmpty(content)) {
 
 			content = content.replace(USERNAME_REPLACE_STRING, bill.getPayerName());
-			content = content.replace(EXPIRY_DATE_REPLACE_STRING, detail.getBillNumber());
+			content = content.replace(EXPIRY_DATE_REPLACE_STRING, detail.getExpiryDate().toString());
 			content = content.replace(PERIOD_REPLACE_STRING, getPeriod(detail.getFromPeriod(), detail.getToPeriod()));
 			content = content.replace(SERVICENUMBER_OF_MODULE_REPLACE_STRING, detail.getConsumerCode().split(":")[0]);
-			content = content.replace(KEYNAME_OF_MODULE_REPLACE_STRING, "Property Tax");
+			content = content.replace(MODULE_REPLACE_STRING, MODULE_REPLACE_STRING_VALUE);
+			content = content.replace(MODULE_PRIMARYKEY_REPLACE_STRING, MODULE_PRIMARYKEY_REPLACE_STRING_VALUE);
+			
 		}
 		return content;
 	}

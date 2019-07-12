@@ -116,9 +116,7 @@ public class CronService {
 			for (int week = 0; week < noOfWeeks; week++) {
 				if (record.get("day").equals(prefix + week)) {
 					ulbCoveredPerWeek.put("w" + week + "ulbc", record.get("ulbcovered")); //ws not added because we need a union logic.
-					revenueCollectedPerWeek.put("w" + week + "revcoll", 
-							(Double.valueOf(record.get("revenuecollected").toString()) + 
-									Math.floor(((Double.valueOf(wsData.get(wsIndex).get("revenueCollected").toString())) / 10000000) * 1000) / 1000));
+					revenueCollectedPerWeek.put("w" + week + "revcoll", (Double.valueOf(record.get("revenuecollected").toString())));
 					servicesAppliedPerWeek.put("w" + week + "serapp", 
 							(Double.valueOf(record.get("servicesapplied").toString()) + Double.valueOf(wsData.get(wsIndex).get("servicesApplied").toString())));
 

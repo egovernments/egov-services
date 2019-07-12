@@ -65,6 +65,7 @@ public class NotificationConsumer {
 
 	public static final String USERNAME_REPLACE_STRING = "{username}";
 	public static final String PERIOD_REPLACE_STRING = "{period}";
+	public static final String TAX_REPLACE_STRING = "{amt}";
 	
 	public static final String MODULE_REPLACE_STRING = "{module}";
 	public static final String MODULE_REPLACE_STRING_VALUE = "Property Tax";
@@ -148,6 +149,7 @@ public class NotificationConsumer {
 			content = content.replace(SERVICENUMBER_OF_MODULE_REPLACE_STRING, detail.getConsumerCode().split(":")[0]);
 			content = content.replace(MODULE_REPLACE_STRING, MODULE_REPLACE_STRING_VALUE);
 			content = content.replace(MODULE_PRIMARYKEY_REPLACE_STRING, MODULE_PRIMARYKEY_REPLACE_STRING_VALUE);
+			content = content.replace(TAX_REPLACE_STRING, detail.getTotalAmount().toString());
 			
 		}
 		return content;

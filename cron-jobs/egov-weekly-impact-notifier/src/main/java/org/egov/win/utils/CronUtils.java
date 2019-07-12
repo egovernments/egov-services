@@ -4,10 +4,14 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.win.config.PropertyManager;
 import org.egov.win.model.SearcherRequest;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.time.temporal.ChronoUnit;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,9 +97,7 @@ public class CronUtils {
 		calendar.setTimeInMillis(epochTime);
 		StringBuilder date = new StringBuilder();
 		String suffix = null;
-		log.info("EPOCH: "+epochTime);
-		log.info("DAY: "+ Calendar.DAY_OF_MONTH);
-		if (Calendar.DAY_OF_MONTH >= 11 && Calendar.DAY_OF_MONTH <= 13) {
+		if (Calendar.DAY_OF_MONTH == 11 || Calendar.DAY_OF_MONTH == 12 || Calendar.DAY_OF_MONTH == 13) {
 			suffix = "th ";
 		} else {
 			Integer dateEndingwith = calendar.get(Calendar.DAY_OF_MONTH) % 10;

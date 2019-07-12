@@ -73,7 +73,7 @@ public class NotificationConsumer {
 	public static final String MODULE_PRIMARYKEY_REPLACE_STRING = "{primarykeystring}";
 	public static final String MODULE_PRIMARYKEY_REPLACE_STRING_VALUE = "property-id";
 	
-	public static final String SERVICENUMBER_OF_MODULE_REPLACE_STRING = "{propertyid}";
+	public static final String SERVICENUMBER_OF_MODULE_REPLACE_STRING = "{servicenumber}";
 	public static final String EXPIRY_DATE_REPLACE_STRING = "{expirydate}";
 	
 
@@ -143,8 +143,11 @@ public class NotificationConsumer {
 
 		if (!StringUtils.isEmpty(content)) {
 
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(detail.getExpiryDate());
+			
 			content = content.replace(USERNAME_REPLACE_STRING, bill.getPayerName());
-			content = content.replace(EXPIRY_DATE_REPLACE_STRING, detail.getExpiryDate().toString());
+			content = content.replace(EXPIRY_DATE_REPLACE_STRING, cal.getTime().toString());
 			content = content.replace(PERIOD_REPLACE_STRING, getPeriod(detail.getFromPeriod(), detail.getToPeriod()));
 			content = content.replace(SERVICENUMBER_OF_MODULE_REPLACE_STRING, detail.getConsumerCode().split(":")[0]);
 			content = content.replace(MODULE_REPLACE_STRING, MODULE_REPLACE_STRING_VALUE);

@@ -287,6 +287,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/DemandDetail'
+      billExpiryTime:
+        type: integer
+        format: int64
+        description: Time in epoch indicating the period in which the bills generated for this particular demand expires or invalidates.          
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       additionalDetails:  
@@ -396,17 +400,6 @@ definitions:
         type: boolean
         description: Particular demand goes as credit or debit.
         default: false
-      isActualDemand:
-        type: boolean
-        description: 'true for tax/charges/penalty, false for advances(if any).'
-      validFrom:
-        type: integer
-        format: int64
-        description: start date from when the tax is applicable.
-      validTill:
-        type: integer
-        format: int64
-        description: end date till when the tax is applicable.
       auditDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     required:
@@ -537,6 +530,10 @@ definitions:
       consumerType:
         type: string
         description: Type of the entity for which the bill is being created.
+      expiryDate:
+        type: number
+        format: int64
+        description: end of bill validity in epoch time.   
       minimumAmount:
         type: number
         description: Minimum bill amount to be paid.

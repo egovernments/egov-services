@@ -39,23 +39,33 @@
  */
 package org.egov.demand.repository;
 
+import static org.egov.demand.util.Constants.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.querybuilder.BusinessServDetailQueryBuilder;
 import org.egov.demand.repository.rowmapper.BusinessServDetailRowMapper;
+import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.BusinessServiceDetailRequest;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
 
 @Repository
 public class BusinessServiceDetailRepository {
@@ -63,7 +73,13 @@ public class BusinessServiceDetailRepository {
     private static final Logger logger = LoggerFactory.getLogger(BusinessServiceDetailRepository.class);
 
     @Autowired
+    private Util util;
+    
+    @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private ObjectMapper mapper;
 
     @Autowired
     private BusinessServDetailRowMapper businessServDetailRowMapper;
@@ -85,6 +101,51 @@ public class BusinessServiceDetailRepository {
         }
         return businessServiceDetailList;
     }
+
+
+
+    /**
+     * Fetches the BussinessServiceDetail based on search criteria
+     * @param requestInfo The requestInfo of the search request
+     * @param BusinessServiceDetailsCriteria The search criteria for BussinessServiceDetailBussinessServiceDetail
+     * @return List of BussinessServiceDetail
+     */
+    public List<BusinessServiceDetail> getBussinessServiceDetail(RequestInfo requestInfo,BusinessServiceDetailCriteria BusinessServiceDetailsCriteria){
+
+        MdmsCriteriaReq mdmsCriteriaReq = util.prepareMdMsRequest(BusinessServiceDetailsCriteria.getTenantId(),
+                MODULE_NAME, Collections.singletonList(BUSINESSSERVICE_MASTERNAME), null,
+                requestInfo);
+
+        DocumentContext documentContext = util.getAttributeValues(mdmsCriteriaReq);
+
+        StringBuilder filterExpression = new StringBuilder();
+
+		if (BusinessServiceDetailsCriteria.getId() != null && !BusinessServiceDetailsCriteria.getId().isEmpty()) {
+			if (filterExpression.length() != 0)
+				filterExpression.append(" && ");
+			filterExpression.append(
+					BUSINESSSERVICE_IDS_FILTER.replace("VAL", util.getStringVal(BusinessServiceDetailsCriteria.getId())));
+		}
+		
+		if (!CollectionUtils.isEmpty(BusinessServiceDetailsCriteria.getBusinessService())) {
+			if (filterExpression.length() != 0)
+				filterExpression.append(" && ");
+			filterExpression.append(BUSINESSSERVICE_SERVICES_FILTER.replace("VAL",
+					util.getStringVal(BusinessServiceDetailsCriteria.getBusinessService())));
+		}
+
+        String jsonPath;
+        if(filterExpression.length()!=0)
+            jsonPath = BUSINESSSERVICE_EXPRESSION.replace("EXPRESSION",filterExpression.toString());
+        else jsonPath = MDMS_NO_FILTER_BUSINESSSERVICE;
+
+        return  mapper.convertValue(documentContext.read(jsonPath), new TypeReference<List<BusinessServiceDetail>>() {});
+    }
+
+
+
+
+
 
     public List<BusinessServiceDetail> create(BusinessServiceDetailRequest businessServiceDetailRequest) {
         List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRequest.getBusinessServiceDetails();

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -12,11 +13,15 @@ import java.util.concurrent.TimeUnit;
 import org.egov.pt.calculator.util.CalculatorConstants;
 import org.egov.pt.calculator.util.CalculatorUtils;
 import org.egov.pt.calculator.web.models.TaxHeadEstimate;
+import org.egov.pt.calculator.web.models.collections.Receipt;
+import org.egov.pt.calculator.web.models.demand.Bill;
 import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
+import org.egov.pt.calculator.web.models.demand.BillDetail;
 import org.egov.pt.calculator.web.models.demand.BillRequest;
 import org.egov.pt.calculator.web.models.demand.BillResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import net.minidev.json.JSONArray;
 
@@ -48,7 +53,7 @@ public class PayService {
 	 * @return
 	 */
 	public Map<String, BigDecimal> applyPenaltyRebateAndInterest(BigDecimal taxAmt, BigDecimal collectedPtTax,
-			Long lastCollectedTime, String assessmentYear, Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+			 String assessmentYear, Map<String, JSONArray> timeBasedExmeptionMasterMap,List<Receipt> receipts) {
 
 		if (BigDecimal.ZERO.compareTo(taxAmt) >= 0)
 			return null;
@@ -63,11 +68,11 @@ public class PayService {
 
 		if (rebate.equals(BigDecimal.ZERO)) {
 			penalty = getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
-			interest = getInterest(taxAmt.subtract(collectedPtTax), assessmentYear, lastCollectedTime,
-					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER));
+			interest = getInterest(taxAmt.subtract(collectedPtTax), assessmentYear,
+					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER),receipts);
 		}
 
-		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate.setScale(2, 2));
+		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate.setScale(2, 2).negate());
 		estimates.put(CalculatorConstants.PT_TIME_PENALTY, penalty.setScale(2, 2));
 		estimates.put(CalculatorConstants.PT_TIME_INTEREST, interest.setScale(2, 2));
 		return estimates;
@@ -128,8 +133,8 @@ public class PayService {
 	 * @param assessmentYear
 	 * @return
 	 */
-	public BigDecimal getInterest(BigDecimal taxAmt, String assessmentYear, Long lastCollectedTime,
-			JSONArray interestMasterList) {
+	public BigDecimal getInterest(BigDecimal taxAmt, String assessmentYear,
+								  JSONArray interestMasterList, List<Receipt> receipts) {
 
 		BigDecimal interestAmt = BigDecimal.ZERO;
 		Map<String, Object> interestMap = mDService.getApplicableMaster(assessmentYear, interestMasterList);
@@ -142,13 +147,52 @@ public class PayService {
 		setDateToCalendar(time, cal);
 		long current = System.currentTimeMillis();
 		long interestStart = cal.getTimeInMillis();
-		long numberOfDaysInMillies = 0 < lastCollectedTime ? current - lastCollectedTime : current - interestStart;
-		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies))));
-		if(BigDecimal.ONE.compareTo(noOfDays) <= 0) noOfDays = noOfDays.add(BigDecimal.ONE);
-		if (interestStart < current)
-			interestAmt = mDService.calculateApplicables(taxAmt, interestMap);
 
-		return interestAmt.multiply(noOfDays.divide(BigDecimal.valueOf(365), 6, 5));
+		if(interestStart < current){
+
+			if(CollectionUtils.isEmpty(receipts)){
+				long numberOfDaysInMillies = current - interestStart;
+				BigDecimal interestCalculated = calculateInterest(numberOfDaysInMillies,taxAmt,interestMap);
+				return interestCalculated;
+			}
+			else{
+				BigDecimal applicableAmount;
+				BigDecimal interestCalculated;
+				int numberOfPeriods = receipts.size()+1;
+				long numberOfDaysInMillies;
+				Receipt receipt;
+
+				for(int i = 0 ; i<numberOfPeriods; i++){
+
+					if(i!=numberOfPeriods-1)
+					 receipt = receipts.get(i);
+					else receipt = receipts.get(i-1);
+					Bill bill = receipt.getBill().get(0);
+					BillDetail detail = receipt.getBill().get(0).getBillDetails().get(0);
+
+					if(i==0){
+						applicableAmount = taxAmt;
+						numberOfDaysInMillies = detail.getReceiptDate() - interestStart;
+						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
+					}
+					else if(i==numberOfPeriods-1){
+						applicableAmount = getRemainingAmount(receipt);;
+						numberOfDaysInMillies = detail.getReceiptDate() - current;
+						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
+					}
+					else {
+						Receipt receiptPrev = receipts.get(i-1);
+						Bill billPrev = receiptPrev.getBill().get(0);
+						BillDetail detailPrev = billPrev.getBillDetails().get(0);
+						applicableAmount = getRemainingAmount(receiptPrev);
+						numberOfDaysInMillies = detail.getReceiptDate() - detailPrev.getReceiptDate();
+						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
+					}
+					interestAmt = interestAmt.add(interestCalculated);
+				}
+			}
+		}
+		return interestAmt;
 	}
 	
 	/**
@@ -160,7 +204,7 @@ public class PayService {
 	public BillResponse apportionBills(BillRequest billRequest) {
 
 		billRequest.getBills().forEach(bill -> bill.getBillDetails().forEach(detail -> {
-			BigDecimal amtPaid = detail.getAmountPaid();
+			BigDecimal amtPaid = detail.getCollectedAmount();
 			apportionBillAccountDetails(detail.getBillAccountDetails(), amtPaid);
 		}));
 		return BillResponse.builder().bill(billRequest.getBills()).build();
@@ -183,8 +227,8 @@ public class PayService {
 
 			@Override
 			public int compare(BillAccountDetail arg0, BillAccountDetail arg1) {
-				String taxHead0 = arg0.getAccountDescription().split(CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR)[0];
-				String taxHead1 = arg1.getAccountDescription().split(CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR)[0];
+				String taxHead0 = arg0.getTaxHeadCode();
+				String taxHead1 = arg1.getTaxHeadCode();
 
 				Integer value0 = taxHeadpriorityMap.get(CalculatorConstants.MAX_PRIORITY_VALUE);
 				Integer value1 = taxHeadpriorityMap.get(CalculatorConstants.MAX_PRIORITY_VALUE);
@@ -213,12 +257,12 @@ public class PayService {
 		BigDecimal amtRemaining = amtPaid;
 		for (BillAccountDetail billAccountDetail : billAccountDetails) {
 			if (BigDecimal.ZERO.compareTo(amtRemaining) < 0) {
-				BigDecimal amtToBePaid = billAccountDetail.getCrAmountToBePaid();
+				BigDecimal amtToBePaid = billAccountDetail.getAmount();
 				if (amtToBePaid.compareTo(amtRemaining) >= 0) {
-					billAccountDetail.setCreditAmount(amtRemaining);
+					billAccountDetail.setAdjustedAmount(amtRemaining);
 					amtRemaining = BigDecimal.ZERO;
 				} else if (amtToBePaid.compareTo(amtRemaining) < 0) {
-					billAccountDetail.setCreditAmount(amtToBePaid);
+					billAccountDetail.setAdjustedAmount(amtToBePaid);
 					amtRemaining = amtRemaining.subtract(amtToBePaid);
 				}
 			} else break;
@@ -273,21 +317,44 @@ public class PayService {
 		BigDecimal roundOffPos = BigDecimal.ZERO;
 		BigDecimal roundOffNeg = BigDecimal.ZERO;
 
-		BigDecimal result = creditAmount.subtract(debitAmount);
+		BigDecimal result = creditAmount.add(debitAmount);
 		BigDecimal roundOffAmount = result.setScale(2, 2);
 		BigDecimal reminder = roundOffAmount.remainder(BigDecimal.ONE);
 
 		if (reminder.doubleValue() >= 0.5)
 			roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
 		else if (reminder.doubleValue() < 0.5)
-			roundOffNeg = roundOffNeg.add(reminder);
+			roundOffNeg = roundOffNeg.add(reminder).negate();
 
 		if (roundOffPos.doubleValue() > 0)
 			return TaxHeadEstimate.builder().estimateAmount(roundOffPos)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_CREDIT).build();
-		else if (roundOffNeg.doubleValue() > 0)
+					.taxHeadCode(CalculatorConstants.PT_ROUNDOFF).build();
+		else if (roundOffNeg.doubleValue() < 0)
 			return TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
-					.taxHeadCode(CalculatorConstants.PT_DECIMAL_CEILING_DEBIT).build();
+					.taxHeadCode(CalculatorConstants.PT_ROUNDOFF).build();
+		else
+			return null;
+	}
+
+	public TaxHeadEstimate roundOfDecimals(BigDecimal amount) {
+
+		BigDecimal roundOffPos = BigDecimal.ZERO;
+		BigDecimal roundOffNeg = BigDecimal.ZERO;
+
+		BigDecimal roundOffAmount = amount.setScale(2, 2);
+		BigDecimal reminder = roundOffAmount.remainder(BigDecimal.ONE);
+
+		if (reminder.doubleValue() >= 0.5)
+			roundOffPos = roundOffPos.add(BigDecimal.ONE.subtract(reminder));
+		else if (reminder.doubleValue() < 0.5)
+			roundOffNeg = roundOffNeg.add(reminder).negate();
+
+		if (roundOffPos.doubleValue() > 0)
+			return TaxHeadEstimate.builder().estimateAmount(roundOffPos)
+					.taxHeadCode(CalculatorConstants.PT_ROUNDOFF).build();
+		else if (roundOffNeg.doubleValue() < 0)
+			return TaxHeadEstimate.builder().estimateAmount(roundOffNeg)
+					.taxHeadCode(CalculatorConstants.PT_ROUNDOFF).build();
 		else
 			return null;
 	}
@@ -312,6 +379,45 @@ public class PayService {
 		startDay = startDay.replace(String.valueOf(yearOfStartDayInApplicableEntry),String.valueOf(yearOfStartDayInApplicableEntry+diffInYear));
 		String[] time = startDay.split("/");
 		return time;
+	}
+
+
+
+	/**
+	 * Calculates the interest based on the given parameters
+	 * @param numberOfDaysInMillies Time for which interest has to be calculated
+	 * @param applicableAmount The amount on which interest is applicable
+	 * @param interestMap The interest master data
+	 * @return interest calculated
+	 */
+	private BigDecimal calculateInterest(long numberOfDaysInMillies,BigDecimal applicableAmount,Map<String, Object> interestMap){
+		BigDecimal interestAmt;
+		BigDecimal noOfDays = BigDecimal.valueOf((TimeUnit.MILLISECONDS.toDays(Math.abs(numberOfDaysInMillies))));
+		if(BigDecimal.ONE.compareTo(noOfDays) <= 0) noOfDays = noOfDays.add(BigDecimal.ONE);
+		interestAmt = mDService.calculateApplicables(applicableAmount, interestMap);
+		return interestAmt.multiply(noOfDays.divide(BigDecimal.valueOf(365), 6, 5));
+	}
+
+
+	/**
+	 * Returns the amount remaining for the given receipt
+	 * @param receipt
+	 * @return
+	 */
+	private BigDecimal getRemainingAmount(Receipt receipt){
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal amountPaid = BigDecimal.ZERO;
+		List<BillDetail> billDetails = new LinkedList<>();
+
+		receipt.getBill().forEach(bill -> {
+			billDetails.addAll(bill.getBillDetails());
+		});
+
+		for(BillDetail billDetail : billDetails){
+			totalAmount.add(billDetail.getTotalAmount());
+			amountPaid.add(billDetail.getAmountPaid());
+		}
+		return totalAmount.subtract(amountPaid);
 	}
 
 }

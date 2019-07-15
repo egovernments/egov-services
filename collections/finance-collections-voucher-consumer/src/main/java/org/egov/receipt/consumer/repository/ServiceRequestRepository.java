@@ -51,10 +51,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 
@@ -66,6 +64,8 @@ public class ServiceRequestRepository {
 	private RestTemplate restTemplate;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private ObjectMapper mapper;
 	/**
 	 * Fetches results from searcher framework based on the uri and request that define what is to be searched.
 	 * 
@@ -75,7 +75,6 @@ public class ServiceRequestRepository {
 	 * @author atique
 	 */
 	public Object fetchResult(StringBuilder uri, Object request, String tenantId) throws VoucherCustomException{
-		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		Object response = null;
 		

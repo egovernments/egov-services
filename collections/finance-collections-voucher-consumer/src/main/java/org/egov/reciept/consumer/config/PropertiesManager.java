@@ -104,7 +104,7 @@ public class PropertiesManager {
     @Value("${egov.services.instrument.search.accountcodes.uri}")
     private String instrumentAccountCodeUrl;
     
-    @Value("${egov.services.egf.voucher.search}")
+    @Value("${egov.services.egf.voucher.search.by.service.reference}")
     private String voucherSearchUrl;
     
     @Value("${egov.services.egf.voucher.manualreceiptdate.config.url}")

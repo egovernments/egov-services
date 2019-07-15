@@ -75,8 +75,6 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
-import org.egov.demand.model.GlCodeMaster;
-import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxAndPayment;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
@@ -126,9 +124,6 @@ public class BillService {
 
 	@Autowired
 	private TaxHeadMasterService taxHeadService;
-	
-	@Autowired
-	private GlCodeMasterService glCodeMasterService;
 	
 	@Autowired
 	private Util util;
@@ -323,14 +318,20 @@ public class BillService {
 		
 		Map<String, TaxHeadMaster> taxHeadMap = getTaxHeadMaster(taxHeadCodes, tenantId, requestInfo);
 		Map<String, BusinessServiceDetail> businessMap = getBusinessService(businessCodes, tenantId, requestInfo);
-
+		List<String> billNumbers = null;
+		Boolean isBusinessServiceOne = false;
+		
+		if(businessCodes.size() == 1) {
+			billNumbers = getBillNumbers(requestInfo, tenantId, demands.get(0).getBusinessService(), demands.size());
+			isBusinessServiceOne = true;
+		}
 		/*
 		 * looping demand to create bill-detail and account-details object
 		 * 
 		 * setting ids to the same
 		 */
 		String billId = UUID.randomUUID().toString();
-
+		int i = 0;
 		for (Demand demand : demands) {
 
 			/* bill detail Gen */
@@ -340,7 +341,10 @@ public class BillService {
 			String billDetailId = UUID.randomUUID().toString();
 			billDetail.setId(billDetailId);
 			billDetail.setBill(billId);
-			billDetail.setBillNumber(getBillNumbers(requestInfo, tenantId, demands.get(0).getBusinessService(), 1).get(0));
+			if(isBusinessServiceOne)
+				billDetail.setBillNumber(billNumbers.get(i++));
+			else 
+				billDetail.setBillNumber(getBillNumbers(requestInfo, tenantId, demands.get(0).getBusinessService(), 1).get(0));
 
 			for (BillAccountDetail accDetail : billDetail.getBillAccountDetails()) {
 

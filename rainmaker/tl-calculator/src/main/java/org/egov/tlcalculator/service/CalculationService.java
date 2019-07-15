@@ -212,7 +212,7 @@ public class CalculationService {
     private TaxHeadEstimate getAdhocExemption(CalulationCriteria calulationCriteria){
         TradeLicense license = calulationCriteria.getTradelicense();
         TaxHeadEstimate estimate = new TaxHeadEstimate();
-        estimate.setEstimateAmount(license.getTradeLicenseDetail().getAdhocExemption());
+        estimate.setEstimateAmount(license.getTradeLicenseDetail().getAdhocExemption().negate());
         estimate.setTaxHeadCode(config.getAdhocExemptionTaxHead());
         estimate.setCategory(Category.EXEMPTION);
         return estimate;

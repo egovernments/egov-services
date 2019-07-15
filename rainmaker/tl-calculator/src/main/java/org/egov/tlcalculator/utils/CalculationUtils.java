@@ -1,17 +1,23 @@
 package org.egov.tlcalculator.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tlcalculator.config.TLCalculatorConfigs;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
 import org.egov.tlcalculator.web.models.AuditDetails;
 import org.egov.tlcalculator.web.models.RequestInfoWrapper;
+import org.egov.tlcalculator.web.models.demand.DemandDetail;
+import org.egov.tlcalculator.web.models.demand.TaxHeadEstimate;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
 import org.egov.tlcalculator.web.models.tradelicense.TradeLicenseResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class CalculationUtils {
@@ -120,6 +126,23 @@ public class CalculationUtils {
             return null;
 
         return response.getLicenses().get(0);
+    }
+
+
+    /**
+     * Sets the adhoc exemption amount in the latest demandDetail
+     * @param demandDetails
+     * @param taxHeadEstimate
+     */
+    public void updateAdhocRebate(List<DemandDetail> demandDetails,TaxHeadEstimate taxHeadEstimate){
+        demandDetails = Lists.reverse(demandDetails);
+        demandDetails.get(0).setTaxAmount(taxHeadEstimate.getEstimateAmount());
+
+        if(demandDetails.size()>1){
+            for(int i = 1;i<demandDetails.size();i++){
+                demandDetails.get(i).setTaxAmount(BigDecimal.ZERO);
+            }
+        }
     }
 
 }

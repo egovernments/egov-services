@@ -1,6 +1,7 @@
 package org.egov.tlcalculator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.egov.tlcalculator.utils.TLCalculatorConstants.MDMS_ADHOC_REBATE_TAXHEAD;
 import static org.egov.tlcalculator.utils.TLCalculatorConstants.MDMS_ROUNDOFF_TAXHEAD;
 
 
@@ -315,17 +317,25 @@ public class DemandService {
                                 .collectionAmount(BigDecimal.ZERO)
                                 .build());
             else {
-                 demandDetailList = taxHeadToDemandDetail.get(taxHeadEstimate.getTaxHeadCode());
-                 total = demandDetailList.stream().map(DemandDetail::getTaxAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
-                 diffInTaxAmount = taxHeadEstimate.getEstimateAmount().subtract(total);
-                 if(diffInTaxAmount.compareTo(BigDecimal.ZERO)!=0) {
-                     newDemandDetails.add(
-                             DemandDetail.builder()
-                                     .taxAmount(diffInTaxAmount)
-                                     .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode())
-                                     .tenantId(calculation.getTenantId())
-                                     .collectionAmount(BigDecimal.ZERO)
-                                     .build());
+
+                 if(taxHeadEstimate.getTaxHeadCode().equalsIgnoreCase(MDMS_ADHOC_REBATE_TAXHEAD)){
+                     demandDetailList = taxHeadToDemandDetail.get(taxHeadEstimate.getTaxHeadCode());
+                     demandDetailList.sort(Comparator.comparing(demandDetail -> demandDetail.getAuditDetails().getCreatedTime()));
+                     utils.updateAdhocRebate(demandDetailList,taxHeadEstimate);
+                 }
+                 else{
+                     demandDetailList = taxHeadToDemandDetail.get(taxHeadEstimate.getTaxHeadCode());
+                     total = demandDetailList.stream().map(DemandDetail::getTaxAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                     diffInTaxAmount = taxHeadEstimate.getEstimateAmount().subtract(total);
+                     if(diffInTaxAmount.compareTo(BigDecimal.ZERO)!=0) {
+                         newDemandDetails.add(
+                                 DemandDetail.builder()
+                                         .taxAmount(diffInTaxAmount)
+                                         .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode())
+                                         .tenantId(calculation.getTenantId())
+                                         .collectionAmount(BigDecimal.ZERO)
+                                         .build());
+                     }
                  }
             }
         }

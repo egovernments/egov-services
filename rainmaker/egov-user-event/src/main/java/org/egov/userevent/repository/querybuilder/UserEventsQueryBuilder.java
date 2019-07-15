@@ -15,13 +15,13 @@ public class UserEventsQueryBuilder {
 	private PropertiesManager properties;
 	
 	public static final String EVENT_SEARCH_QUERY = "SELECT id, tenantid, source, eventtype, description, status, referenceid, name, postedby,"
-			+ " eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime FROM eg_men_events ";
+			+ " eventdetails, actions, recepient, createdby, createdtime, lastmodifiedby, lastmodifiedtime FROM eg_usrevents_events ";
 	
-	public static final String EVENT_INNER_SEARCH_QUERY = "id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE ";
+	public static final String EVENT_INNER_SEARCH_QUERY = "id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE ";
 	
-	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT (SELECT COUNT(*) as total FROM eg_men_events WHERE id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients))), "
-			+ "COUNT(*) as unread FROM eg_men_events WHERE id IN (SELECT eventid FROM eg_men_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
-			+ "lastmodifiedtime > (SELECT lastlogintime FROM eg_men_user_llt WHERE userid IN (:userid))";
+	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT (SELECT COUNT(*) as total FROM eg_usrevents_events WHERE id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE recepient IN (:recepients))), "
+			+ "COUNT(*) as unread FROM eg_usrevents_events WHERE id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
+			+ "lastmodifiedtime > (SELECT lastaccesstime FROM eg_usrevents_user_lat WHERE userid IN (:userid))";
 	
 	/**
 	 * Returns query for search events

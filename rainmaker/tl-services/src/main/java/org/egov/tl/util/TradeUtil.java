@@ -12,6 +12,8 @@ import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.AuditDetails;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
+import org.egov.tl.web.models.workflow.BusinessService;
+import org.egov.tl.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,11 +31,17 @@ public class TradeUtil {
 
     private ServiceRequestRepository serviceRequestRepository;
 
+    private WorkflowService workflowService;
+
     @Autowired
-    public TradeUtil(TLConfiguration config, ServiceRequestRepository serviceRequestRepository) {
+    public TradeUtil(TLConfiguration config, ServiceRequestRepository serviceRequestRepository,
+                     WorkflowService workflowService) {
         this.config = config;
         this.serviceRequestRepository = serviceRequestRepository;
+        this.workflowService = workflowService;
     }
+
+
 
     /**
      * Method to return auditDetails for create/update flows
@@ -187,7 +195,7 @@ public class TradeUtil {
 
         // filter to only get code field from master data
 
-        final String filterCodeForUom = "$.[?(@.active==true)]";
+        final String filterCodeForUom = "$.[?(@.active==true && @.module=='TL')]";
 
         tlMasterDetails.add(MasterDetail.builder().name(TLConstants.MDMS_FINANCIALYEAR).filter(filterCodeForUom).build());
 
@@ -226,6 +234,21 @@ public class TradeUtil {
         MdmsCriteriaReq mdmsCriteriaReq = getMDMSRequest(requestInfo,tenantId);
         Object result = serviceRequestRepository.fetchResult(getMdmsSearchUrl(), mdmsCriteriaReq);
         return result;
+    }
+
+
+    /**
+     * Creates a map of id to isStateUpdatable
+     * @param searchresult Licenses from DB
+     * @param businessService The businessService configuration
+     * @return Map of is to isStateUpdatable
+     */
+    public Map<String,Boolean> getIdToIsStateUpdatableMap(BusinessService businessService,List<TradeLicense> searchresult){
+        Map<String ,Boolean> idToIsStateUpdatableMap = new HashMap<>();
+        searchresult.forEach(result -> {
+            idToIsStateUpdatableMap.put(result.getId(),workflowService.isStateUpdatable(result.getStatus(), businessService));
+        });
+        return idToIsStateUpdatableMap;
     }
 
 

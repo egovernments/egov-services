@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tracer.model.CustomException;
@@ -37,11 +38,11 @@ public class WorkflowIntegrator {
 	private static final String MODULENAMEKEY = "moduleName";
 
 	private static final String BUSINESSIDKEY = "businessId";
-	
+
 	private static final String DOCUMENTSKEY = "documents";
-	
+
 	private static final String ASSIGNEEKEY = "assignee";
-	
+
 	private static final String UUIDKEY = "uuid";
 
 	private static final String MODULENAMEVALUE = "TL";
@@ -50,37 +51,36 @@ public class WorkflowIntegrator {
 
 	private static final String REQUESTINFOKEY = "RequestInfo";
 
-	@Value("${create.tl.workflow.name}")
-	private String businessServiceValue;
-
-	@Value("${workflow.context.path}")
-	private String wfContextPath;
-
-	@Value("${workflow.transition.path}")
-	private String wfTransitionPath;
-
-	@Autowired
-	private RestTemplate rest;
-
 	private static final String PROCESSINSTANCESJOSNKEY = "$.ProcessInstances";
 
 	private static final String BUSINESSIDJOSNKEY = "$.businessId";
 
 	private static final String STATUSJSONKEY = "$.state.applicationStatus";
 
+	private RestTemplate rest;
+
+	private TLConfiguration config;
+
+
+	@Autowired
+	public WorkflowIntegrator(RestTemplate rest, TLConfiguration config) {
+		this.rest = rest;
+		this.config = config;
+	}
+
 	/**
 	 * Method to integrate with workflow
-	 * 
+	 *
 	 * takes the trade-license request as parameter constructs the work-flow request
-	 * 
+	 *
 	 * and sets the resultant status from wf-response back to trade-license object
-	 * 
+	 *
 	 * @param tradeLicenseRequest
 	 */
 	public void callWorkFlow(TradeLicenseRequest tradeLicenseRequest) {
 
 		String wfTenantId = tradeLicenseRequest.getLicenses().get(0).getTenantId();
-		
+
 		JSONArray array = new JSONArray();
 		for (TradeLicense license : tradeLicenseRequest.getLicenses()) {
 
@@ -89,13 +89,13 @@ public class WorkflowIntegrator {
 			uuidmap.put(UUIDKEY, license.getAssignee());
 			obj.put(BUSINESSIDKEY, license.getApplicationNumber());
 			obj.put(TENANTIDKEY, wfTenantId);
-			obj.put(BUSINESSSERVICEKEY, businessServiceValue);
+			obj.put(BUSINESSSERVICEKEY, config.getBusinessServiceValue());
 			obj.put(MODULENAMEKEY, MODULENAMEVALUE);
 			obj.put(ACTIONKEY, license.getAction());
 			obj.put(COMMENTKEY, license.getComment());
 			if (!StringUtils.isEmpty(license.getAssignee()))
 				obj.put(ASSIGNEEKEY, uuidmap);
-			obj.put(DOCUMENTSKEY, license.getWfDocumnets());
+			obj.put(DOCUMENTSKEY, license.getWfDocuments());
 			array.add(obj);
 		}
 
@@ -104,7 +104,7 @@ public class WorkflowIntegrator {
 		workFlowRequest.put(WORKFLOWREQUESTARRAYKEY, array);
 		String response = null;
 		try {
-			response = rest.postForObject(wfContextPath.concat(wfTransitionPath), workFlowRequest, String.class);
+			response = rest.postForObject(config.getWfHost().concat(config.getWfTransitionPath()), workFlowRequest, String.class);
 		} catch (HttpClientErrorException e) {
 
 			/*
@@ -135,7 +135,7 @@ public class WorkflowIntegrator {
 		Map<String, String> idStatusMap = new HashMap<>();
 		responseArray.forEach(
 				object -> {
-					
+
 					DocumentContext instanceContext = JsonPath.parse(object);
 					idStatusMap.put(instanceContext.read(BUSINESSIDJOSNKEY), instanceContext.read(STATUSJSONKEY));
 				});

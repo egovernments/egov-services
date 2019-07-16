@@ -126,15 +126,19 @@ public class  TradeLicense   {
    */
 
         @NotNull
+        @Size(max=64)
         @JsonProperty("action")
         private String action = null;
-        
+
+        @Size(max=64)
         @JsonProperty("assignee")
         private String assignee = null;
-        
-        @JsonProperty("wfDocumnets")
-        private List<Document> wfDocumnets;
 
+        @Valid
+        @JsonProperty("wfDocuments")
+        private List<Document> wfDocuments;
+
+        @Size(max=64)
         @JsonProperty("status")
         private String status = null;
 
@@ -148,7 +152,8 @@ public class  TradeLicense   {
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;
-        
+
+        @Size(max=128)
         private String comment;
 
 }

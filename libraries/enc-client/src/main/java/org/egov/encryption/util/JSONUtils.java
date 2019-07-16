@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
+@Deprecated
 public class JSONUtils {
 
     public static JsonNode merge(JsonNode newNode, JsonNode originalNode) {

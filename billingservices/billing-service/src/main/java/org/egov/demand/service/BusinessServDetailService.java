@@ -39,9 +39,10 @@
  */
 package org.egov.demand.service;
 
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
-import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.BusinessServiceDetail;
 import org.egov.demand.repository.BusinessServiceDetailRepository;
 import org.egov.demand.util.SequenceGenService;
@@ -55,9 +56,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class BusinessServDetailService {
@@ -82,9 +80,8 @@ public class BusinessServDetailService {
 	public BusinessServiceDetailResponse searchBusinessServiceDetails(
 			final BusinessServiceDetailCriteria businessServiceDetailCriteria, final RequestInfo requestInfo) {
 		
-		LOGGER.info("-- BusinessServDetailsService searchBusinessServiceDetails -- ");
 		final List<BusinessServiceDetail> businessServiceDetails = businessServiceDetailRepository
-				.searchBusinessServiceDetails(businessServiceDetailCriteria);
+				.getBussinessServiceDetail(requestInfo,businessServiceDetailCriteria);
 		return getBusinessServiceDetailResponse(businessServiceDetails, requestInfo);
 	}
 
@@ -110,11 +107,8 @@ public class BusinessServDetailService {
     }
 
     public BusinessServiceDetailResponse updateAsync(BusinessServiceDetailRequest businessServiceDetailRequest) {
-        RequestInfo requestInfo = businessServiceDetailRequest.getRequestInfo();
-        List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
-        String userId = businessServiceDetailRequest.getRequestInfo().getUserInfo().getId().toString();
-        Long currEpochDate = new Date().getTime();
-        AuditDetail auditDetail;
+
+    	List<BusinessServiceDetail> businessServiceDetailList = businessServiceDetailRequest.getBusinessServiceDetails();
         /*for (BusinessServiceDetail businessServiceDetail : businessServiceDetailList) {
             auditDetail = businessServiceDetail.getAuditDetails();
             auditDetail.setLastModifiedBy(userId);

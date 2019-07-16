@@ -40,10 +40,19 @@
 
 package org.egov.collection.web.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.Valid;
+
 import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.service.CollectionService;
 import org.egov.collection.service.WorkflowService;
+import org.egov.collection.util.migration.ReceiptMigration;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptReq;
 import org.egov.collection.web.contract.ReceiptRes;
@@ -53,77 +62,116 @@ import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/receipts")
 @Slf4j
 public class ReceiptController {
 
-    @Autowired
-    private CollectionService collectionService;
+	@Autowired
+	private CollectionService collectionService;
 
-    @Autowired
-    private WorkflowService workflowService;
+	@Autowired
+	private ReceiptMigration migrationService;
 
-    @RequestMapping(value = "/_search", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<ReceiptRes> search(@ModelAttribute ReceiptSearchCriteria receiptSearchCriteria,
-            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
+	@Autowired
+	private WorkflowService workflowService;
 
-        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-        List<Receipt> receipts = collectionService.getReceipts(requestInfo, receiptSearchCriteria);
-        return getSuccessResponse(receipts, requestInfo);
-    }
+	@Value("#{'${search.ignore.status}'.split(',')}")
+	private List<String> searchIgnoreStatus;
 
-    @RequestMapping(value = "/_create", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<ReceiptRes> create(@RequestBody @Valid ReceiptReq receiptRequest) {
+	@RequestMapping(value = "/_search", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ReceiptRes> search(@ModelAttribute ReceiptSearchCriteria receiptSearchCriteria,
+			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
 
-        Receipt receiptInfo = collectionService.createReceipt(receiptRequest);
-        return getSuccessResponse(Collections.singletonList(receiptInfo), receiptRequest.getRequestInfo());
+		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-    }
+		// Only do this if there is no receipt number search
+		// Only do this when search ignore status has been defined in
+		// application.properties
+		// Only do this when status has not been already provided for the search
+		if ((receiptSearchCriteria.getReceiptNumbers() == null || receiptSearchCriteria.getReceiptNumbers().isEmpty())
+				&& !searchIgnoreStatus.isEmpty()
+				&& (receiptSearchCriteria.getStatus() == null || receiptSearchCriteria.getStatus().isEmpty())) {
+			// Do not return ignored status for receipts by default
+			Set<String> defaultStatus = new HashSet<>();
+			for (ReceiptStatus receiptStatus : ReceiptStatus.values()) {
+				if (!searchIgnoreStatus.contains(receiptStatus.toString())) {
+					defaultStatus.add(receiptStatus.toString());
+				}
+			}
 
-    @RequestMapping(value = "/_workflow", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> workflow(@RequestBody @Valid ReceiptWorkflowRequest receiptWorkflowRequest) {
+			receiptSearchCriteria.setStatus(defaultStatus);
+		}
 
-        List<Receipt> receipts = workflowService.performWorkflow(receiptWorkflowRequest);
-        return getSuccessResponse(receipts, receiptWorkflowRequest.getRequestInfo());
-    }
+		List<Receipt> receipts = collectionService.getReceipts(requestInfo, receiptSearchCriteria);
 
-    @RequestMapping(value = "/_update", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptRequest) {
+		return getSuccessResponse(receipts, requestInfo);
+	}
 
-        List<Receipt> receiptInfo = collectionService.updateReceipt(receiptRequest);
+	@RequestMapping(value = "/_create", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ReceiptRes> create(@RequestBody @Valid ReceiptReq receiptRequest) {
 
-        return getSuccessResponse(receiptInfo, receiptRequest.getRequestInfo());
-    }
+		Receipt receiptInfo = collectionService.createReceipt(receiptRequest);
+		return getSuccessResponse(Collections.singletonList(receiptInfo), receiptRequest.getRequestInfo());
 
-    @RequestMapping(value = "/_validate", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> validate(@RequestBody @Valid ReceiptReq receiptReq) {
+	}
 
-        List<Receipt> receipt = collectionService.validateReceipt(receiptReq);
-        return getSuccessResponse(receipt, receiptReq.getRequestInfo());
+	@RequestMapping(value = "/_workflow", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> workflow(@RequestBody @Valid ReceiptWorkflowRequest receiptWorkflowRequest) {
 
-    }
+		List<Receipt> receipts = workflowService.performWorkflow(receiptWorkflowRequest);
+		return getSuccessResponse(receipts, receiptWorkflowRequest.getRequestInfo());
+	}
 
-    private ResponseEntity<ReceiptRes> getSuccessResponse(List<Receipt> receipts,
-            RequestInfo requestInfo) {
-        final ResponseInfo responseInfo = ResponseInfoFactory
-                .createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+	@RequestMapping(value = "/_update", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptRequest) {
 
-        ReceiptRes receiptResponse = new ReceiptRes(responseInfo, receipts);
-        return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
-    }
+		List<Receipt> receiptInfo = collectionService.updateReceipt(receiptRequest);
+
+		return getSuccessResponse(receiptInfo, receiptRequest.getRequestInfo());
+	}
+
+	@RequestMapping(value = "/_validate", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> validate(@RequestBody @Valid ReceiptReq receiptReq) {
+
+		List<Receipt> receipt = collectionService.validateReceipt(receiptReq);
+		return getSuccessResponse(receipt, receiptReq.getRequestInfo());
+
+	}
+
+	@PostMapping(value = "/_migratetov1")
+	@ResponseBody
+	public ResponseEntity<?> migrate(@RequestBody @Valid RequestInfoWrapper wrapper,
+			@RequestParam(required = false) Integer startBatch,  @RequestParam(required=true) Integer batchSizeInput) {
+
+		Map<String, String> resultMap = migrationService.migrateToV1(startBatch, batchSizeInput);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	private ResponseEntity<ReceiptRes> getSuccessResponse(List<Receipt> receipts, RequestInfo requestInfo) {
+		final ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+
+		ReceiptRes receiptResponse = new ReceiptRes(responseInfo, receipts);
+		return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
+	}
 }

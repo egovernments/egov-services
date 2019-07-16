@@ -3,6 +3,7 @@ package org.egov.pg.web.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.TestConfiguration;
+import org.egov.pg.models.TaxAndPayment;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
 
@@ -69,14 +71,20 @@ public class TransactionsApiControllerTest {
 
     @Test
     public void transactionsV1CreatePostSuccess() throws Exception {
+        TaxAndPayment taxAndPayment = TaxAndPayment.builder()
+                .amountPaid(new BigDecimal("100"))
+                .businessService("PT")
+                .taxAmount(new BigDecimal("100"))
+                .build();
         Transaction transaction = Transaction.builder().txnAmount("100.00")
                 .txnId("ABC231")
                 .billId("ORDER001")
                 .productInfo("Property Tax Payment")
                 .gateway("AXIS")
                 .module("PT")
-                .moduleId("PT_ASSESS")
                 .tenantId("pb")
+                .consumerCode("PT-21055")
+                .taxAndPayments(Collections.singletonList(taxAndPayment))
                 .callbackUrl("http://2a91377b.ngrok.io/pg-service/payments/v1/_update")
                 .user(user).build();
 
@@ -97,7 +105,6 @@ public class TransactionsApiControllerTest {
                 .productInfo("Property Tax Payment")
                 .gateway("AXIS")
                 .module("PT")
-                .moduleId("PT_ASSESS")
                 .tenantId("pb")
                 .callbackUrl("http://2a91377b.ngrok.io/pg-service/payments/v1/_update")
                 .user(user).build();

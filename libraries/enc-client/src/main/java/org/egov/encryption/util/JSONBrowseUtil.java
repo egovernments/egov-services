@@ -1,11 +1,7 @@
 package org.egov.encryption.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.node.ValueNode;
-
+import com.fasterxml.jackson.databind.node.*;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -40,7 +36,9 @@ public class JSONBrowseUtil {
     }
 
     private static <T, R> ValueNode mapValuesForValueNode(ValueNode valueNode, Function<T, R> valueMapper) {
-        return new TextNode(String.valueOf(valueMapper.apply( (T) valueNode.textValue())));
+        if(valueNode.isNull())
+            return NullNode.getInstance();
+        return new TextNode(String.valueOf(valueMapper.apply( (T) valueNode.asText())));
     }
 
 }

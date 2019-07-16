@@ -4,30 +4,16 @@ import org.egov.encryption.models.AccessType;
 import org.egov.encryption.models.Attribute;
 import org.egov.encryption.models.AttributeAccess;
 import org.egov.encryption.models.RoleAttributeAccess;
-import org.egov.tracer.model.CustomException;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class AbacFilter {
 
-    private Map<String, List<AttributeAccess>> roleAttributeAccessMapping;
-
-    private void initializeRoleAttributeAccessMapping(List<RoleAttributeAccess> roleAttributeAccessList) {
-        roleAttributeAccessMapping = new HashMap<>();
-        roleAttributeAccessMapping = roleAttributeAccessList.stream().collect(Collectors
-                .toMap(RoleAttributeAccess::getRoleCode, RoleAttributeAccess::getAttributeAccessList));
-    }
-
-    public AbacFilter() {
-
-    }
-
-    public AbacFilter(List<RoleAttributeAccess> roleAttributeAccessList) {
-        initializeRoleAttributeAccessMapping(roleAttributeAccessList);
-    }
 
     public Map<Attribute, AccessType> getAttributeAccessForRoles(
             List<String> roles, Map<String, List<AttributeAccess>> roleAttributeAccessMapping) {
@@ -42,6 +28,7 @@ public class AbacFilter {
                 AccessType accessType = attributeAccess.getAccessType();
                 if(attributeAccessTypeMap.containsKey(attribute)) {
                     if(attributeAccessTypeMap.get(attribute).ordinal() > accessType.ordinal()) {
+                        attributeAccessTypeMap.remove(attribute);
                         attributeAccessTypeMap.put(attribute, accessType);
                     }
                 } else {
@@ -51,13 +38,6 @@ public class AbacFilter {
         }
 
         return attributeAccessTypeMap;
-    }
-
-    public Map<Attribute, AccessType> getAttributeAccessForRoles(List<String> roles) {
-        if(this.roleAttributeAccessMapping != null)
-            return getAttributeAccessForRoles(roles, this.roleAttributeAccessMapping);
-        else
-            throw new CustomException("roleAttributeAccessMapping not defined", "roleAttributeAccessMapping not defined");
     }
 
     public Map<Attribute, AccessType> getAttributeAccessForRoles(List<String> roles, List<RoleAttributeAccess> roleAttributeAccessList) {

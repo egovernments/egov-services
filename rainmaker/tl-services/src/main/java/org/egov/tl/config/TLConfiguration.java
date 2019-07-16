@@ -92,6 +92,9 @@ public class TLConfiguration {
     @Value("${persister.update.tradelicense.workflow.topic}")
     private String updateWorkflowTopic;
 
+    @Value("${persister.update.tradelicense.adhoc.topic}")
+    private String updateAdhocTopic;
+
 
     //Location Config
     @Value("${egov.location.host}")
@@ -123,6 +126,10 @@ public class TLConfiguration {
 
     @Value("${egov.tl.calculator.calculate.endpoint}")
     private String calculateEndpoint;
+
+    @Value("${egov.tl.calculator.getBill.endpoint}")
+    private String getBillEndpoint;
+
 
 
     //Institutional key word
@@ -191,6 +198,27 @@ public class TLConfiguration {
 
     @Value("${egov.tl.min.period}")
     private Long minPeriod;
+
+
+    // Workflow
+    @Value("${create.tl.workflow.name}")
+    private String businessServiceValue;
+
+    @Value("${workflow.context.path}")
+    private String wfHost;
+
+    @Value("${workflow.transition.path}")
+    private String wfTransitionPath;
+
+    @Value("${workflow.businessservice.search.path}")
+    private String wfBusinessServiceSearchPath;
+
+
+    @Value("${is.external.workflow.enabled}")
+    private Boolean isExternalWorkFlowEnabled;
+
+
+
 
 
 

@@ -26,7 +26,10 @@ public class JSONBrowseUtilTest {
     public void test() throws IOException {
         JsonNode jsonNode = mapper.readTree("{\"asd\" : \"qwe\"}");
         jsonNode = JSONBrowseUtil.mapValues(jsonNode, v -> ((String) v).length() );
-        log.info(String.valueOf(jsonNode));
+
+        JsonNode expectedNode = mapper.readTree("{\"asd\" : \"3\"}");
+
+        assertEquals(expectedNode, jsonNode);
     }
 
 }

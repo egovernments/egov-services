@@ -147,7 +147,8 @@ public class NotificationConsumer {
 			cal.setTimeInMillis(detail.getExpiryDate());
 			
 			content = content.replace(USERNAME_REPLACE_STRING, bill.getPayerName());
-			content = content.replace(EXPIRY_DATE_REPLACE_STRING, cal.getTime().toString());
+			content = content.replace(EXPIRY_DATE_REPLACE_STRING,
+					" "+ cal.get(Calendar.DATE) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.YEAR)+ " ".toUpperCase());
 			content = content.replace(PERIOD_REPLACE_STRING, getPeriod(detail.getFromPeriod(), detail.getToPeriod()));
 			content = content.replace(SERVICENUMBER_OF_MODULE_REPLACE_STRING, detail.getConsumerCode().split(":")[0]);
 			content = content.replace(MODULE_REPLACE_STRING, MODULE_REPLACE_STRING_VALUE);

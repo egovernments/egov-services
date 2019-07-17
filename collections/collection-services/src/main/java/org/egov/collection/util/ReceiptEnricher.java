@@ -139,6 +139,7 @@ public class ReceiptEnricher {
 
             validatedBill.getBillDetails().get(i).setAdditionalDetails(billFromRequest.getBillDetails().get(i).getAdditionalDetails());
 
+	    validatedBill.getBillDetails().get(i).setBillNumber(validatedBill.getBillDetails().get(i).getId());	
             enrichBillAccountDetails(validatedBill.getBillDetails().get(i), billFromRequest.getBillDetails().get(i));
 
         }

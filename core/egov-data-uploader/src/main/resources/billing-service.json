@@ -17,11 +17,10 @@
               "did": null,
               "key": null,
               "msgId": null,
-              "authToken": "43477915-20d0-41f3-90ab-85a133fdf60a",
+              "authToken": "51f84bcd-2819-4456-a5b5-10fe644cc40a",
               "correlationId": "dd114b8a-a9bb-4933-802a-b40484da487c"
             },
-            "Demands": [
-              {
+            "Demands":{
                 "tenantId": "tenantId",
                 "consumerCode": "consumerCode",
                 "consumerType": "consumerType",
@@ -40,48 +39,47 @@
                 ],
                 "minimumAmountPayable": 1
               }
-            ]
           },
           "excelHeadersToRequestMap": {
             "Consumer Code": [
-              "$.Demands.*.consumerCode"
+              "$.Demands.consumerCode"
             ],
             "Consumer Type": [
-              "$.Demands.*.consumerType"
+              "$.Demands.consumerType"
             ],
             "Business Service": [
-              "$.Demands.*.businessService"
+              "$.Demands.businessService"
             ],
             "Tax-Period From": [
-              "$.Demands.*.taxPeriodFrom"
+              "$.Demands.taxPeriodFrom"
             ],
             "Tax-Period To": [
-              "$.Demands.*.taxPeriodTo"
+              "$.Demands.taxPeriodTo"
             ],
             "Payer UUID": [
-              "$.Demands.*.payer.uuid"
+              "$.Demands.payer.uuid"
             ],
             "Minimum Amount Payable": [
-              "$.Demands.*.minimumAmountPayable"
+              "$.Demands.minimumAmountPayable"
             ],
             "TaxHead Master Code": [
-              "$.Demands.*.demandDetails.*.taxHeadMasterCode"
+              "$.Demands.demandDetails.*.taxHeadMasterCode"
             ],
             "Tax Amount": [
-              "$.Demands.*.demandDetails.*.taxAmount"
+              "$.Demands.demandDetails.*.taxAmount"
             ],
             "Collection Amount": [
-              "$.Demands.*.demandDetails.*.collectionAmount"
+              "$.Demands.demandDetails.*.collectionAmount"
             ],
             "TenantId": [
-              "$.Demands.*.tenantId"
+              "$.Demands.tenantId"
             ]
           },
-          "arrayPath": "$.Demands.*",
+          "arrayPath": "$.Demands",
           "tenantIdPaths": [
-            "$.Demands.*.tenantId"
+            "$.Demands.tenantId"
           ],
-          "url": "http://billing-service:8080/billing-service/demand/_create",
+          "url": "https://egov-micro-dev.egovernments.org/billing-service/demand/_create",
           "additionalResFields": {
             "$.Demands.*.id[0]": "DemandId"
           }

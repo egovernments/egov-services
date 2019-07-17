@@ -32,6 +32,8 @@ public class EventDetails {
 	
 	private Long longitude;
 	
+	private String address;
+	
 	
 	public boolean isEmpty(EventDetails details) {
 		if(null == details.getFromDate() || null == details.getToDate() || null == details.getLatitude() || null == details.getLongitude()) {

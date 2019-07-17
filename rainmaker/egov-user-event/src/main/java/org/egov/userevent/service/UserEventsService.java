@@ -237,8 +237,8 @@ public class UserEventsService {
 	 */
 	private void enrichCreateEvent(EventRequest request) {
 		request.getEvents().forEach(event -> {
+			event.setId(UUID.randomUUID().toString());
 			if (null != event.getActions()) {
-				event.setId(UUID.randomUUID().toString());
 				event.getActions().setId(UUID.randomUUID().toString());
 				event.getActions().setEventId(event.getId());
 				event.getActions().setTenantId(event.getTenantId());

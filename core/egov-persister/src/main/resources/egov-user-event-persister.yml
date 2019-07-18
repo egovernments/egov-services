@@ -137,7 +137,7 @@ serviceMaps:
     queryMaps:      
     - query: INSERT INTO eg_usrevents_user_lat(userid, lastaccesstime) VALUES (?, ?) ON CONFLICT (userid) DO UPDATE SET lastaccesstime = ?;
 
-      basePath: lastLoginDetails
+      basePath: lastAccessDetails
       jsonMaps:
 
 

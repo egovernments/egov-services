@@ -1,5 +1,7 @@
 package org.egov.userevent.web.contract;
 
+import java.math.BigDecimal;
+
 import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
@@ -28,9 +30,9 @@ public class EventDetails {
 	
 	private Long toDate;
 	
-	private Long latitude;
+	private BigDecimal latitude;
 	
-	private Long longitude;
+	private BigDecimal longitude;
 	
 	private String address;
 	

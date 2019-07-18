@@ -44,7 +44,7 @@ public class WorkflowQueryBuilder {
             " ac.uuid as ac_uuid,ac.tenantId as ac_tenantId,ac.action as ac_action FROM ( ";
 
     private final String paginationWrapper = "SELECT * FROM " +
-            "(SELECT *, DENSE_RANK() OVER (ORDER BY wf_createdBy) offset_ FROM " +
+            "(SELECT *, DENSE_RANK() OVER (ORDER BY wf_id) offset_ FROM " +
             "({})" +
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";

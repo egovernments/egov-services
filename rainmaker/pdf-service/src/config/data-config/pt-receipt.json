@@ -1,236 +1,236 @@
 {
-    "DataConfigs": {
-       "serviceName": "PGR - rainmaker",
-       "version": "1.0.0",
-       "mappings": [
-          {
-             "topic": "pgr-pdf-generation",
-             "staticConfigPath": "https://raw.githubusercontent.com/egovernments/egov-services/vishal-feature-filestore/core/egov-indexer/src/main/resources/rainmaker-pgr-indexer.yml",
-             "mappings": [
-                {
-                   "direct": [
-                      {
-                         "variable": "content[2].columns[0].text[1]",
-                         "value": {
-                              "path":"Properties[0].propertyDetails[0].financialYear"                              
-                         }
-                      },                      
-                      {
-                         "variable":"content[3].table.body[0][1].text",
-                         "value":{
-                            "path":"Properties[0].oldPropertyId"                            
-                         }  
-                      },
-                      {
-                         "variable": "content[3].table.body[0][3].text",
-                         "value":{
-                              "path":"Properties[0].propertyId"                           
-                          } 
-                      },
-                      {
-                        "variable": "content[3].table.body[0][5].text",
+   "DataConfigs": {
+      "serviceName": "PGR - rainmaker",
+      "version": "1.0.0",
+      "mappings": [
+         {
+            "topic": "pgr-pdf-generation",
+            "staticConfigPath": "https://raw.githubusercontent.com/egovernments/egov-services/vishal-feature-filestore/core/egov-indexer/src/main/resources/rainmaker-pgr-indexer.yml",
+            "mappings": [
+               {
+                  "direct": [
+                     {
+                        "variable": "variable1",
+                        "value": {
+                             "path":"Properties[0].propertyDetails[0].financialYear"                              
+                        }
+                     },                      
+                     {
+                        "variable":"variable2",
                         "value":{
-                             "path":"Properties[0].propertyDetails[0].assessmentNumber"                           
+                           "path":"Properties[0].oldPropertyId"                            
+                        }  
+                     },
+                     {
+                        "variable": "variable3",
+                        "value":{
+                             "path":"Properties[0].propertyId"                           
                          } 
-                      },
-                      {
-                        "variable": "content[5].table.body[0][1].text",
-                        "value":{
-                             "path":"Properties[0].address.doorNo"                           
-                         } 
-                      },
-                      {
-                        "variable": "content[5].table.body[0][3].text",
-                        "value":{
-                             "path":"Properties[0].address.buildingName"                           
-                         } 
-                      },
-                      {
-                        "variable": "content[5].table.body[1][1].text",
-                        "value":{
-                             "path":"Properties[0].address.street"                           
-                         } 
-                      },
-                      {
-                        "variable": "content[5].table.body[1][3].text",
-                        "value":{
-                             "path":"Properties[0].address.locality.name"                           
-                         } 
-                      },
-                      {
-                        "variable": "content[7].table.body[0][1].text",
-                        "value":{
-                             "path":"Properties[0].propertyDetails[0].landArea"                           
-                         } 
-                      },
-                      {
-                        "variable": "content[7].table.body[0][3].text",
-                        "value":{
-                             "path":"Properties[0].propertyDetails[0].propertyType"                           
-                         } 
-                      },
-                      {
-                        "variable": "content[11].table.body",                        
-                        "value":{
-                             "path":"Properties[0].propertyDetails[0].owners"                          
-                         },
-                         "type":"array",
-                         "format":{                            
-                            "type":"string",
-                            "scema":["name","fatherOrHusbandName"]
+                     },
+                     {
+                       "variable": "variable4",
+                       "value":{
+                            "path":"Properties[0].propertyDetails[0].assessmentNumber"                           
                         } 
                      },
                      {
-                        "variable": "content[9].table.body",                        
-                        "value":{
-                             "path":"Properties[0].propertyDetails[0].units"                          
-                         },
-                         "type":"array-column",
-                         "format":{                            
-                            "type":"string",
-                            "scema":["floorNo","usageCategoryMajor","usageCategoryDetail","occupancyType","unitArea"]
+                       "variable": "variable5",
+                       "value":{
+                            "path":"Properties[0].address.doorNo"                           
                         } 
-                     } 
-                   ]
-                },
-                {
-                   "derived": [
-                      {
-                         "variable": "$variable",
-                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      },
-                      {
-                         "variable": "$variable",
-                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      }
-                   ]
-                },
-                {
-                   "externalAPI": [     
-                     {                         
-                        "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
-                        "queryParam": "consumerCode=$.Properties[0].propertyId:$.Properties[0].propertyDetails[0].assessmentNumber",
-                        "apiRequest": {
-                          "RequestInfo": {
-                              "action": "",
-                              "apiId": "Rainmaker",
-                              "authToken": "c9409736-ac8d-48ba-9c68-bbfa3e7e7f81",
-                              "did": "1",
-                              "key": "",
-                              "msgId": "20170310130900|en_IN",
-                              "requesterId": "",
-                              "ver": ".01"
-                          }
-                      },
-                      
-                        "responseMapping":[
-                          {
-                             "variable":"content[0].table.body[0][2].text[1]",
-                             "value":"Receipt[0].receiptNumber"
-                          },
-                          {
-                             "variable":"content[1].columns[0].text[1]",
-                             "value":"Receipt[0].receiptDate"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][0].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[7].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][1].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[3].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][2].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[2].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][3].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[8].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][4].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[4].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][5].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[6].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][6].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][7].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][8].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[5].amount"
-                          },
-                          {
-                             "variable":"content[13].table.body[1][9].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
-                          },
-                          {
-                             "variable":"content[15].table.body[0][1].text",
-                             "value":"Receipt[0].Bill[0].billDetails[0].amountPaid"
-                          },
-                          {
-                             "variable":"content[15].table.body[1][1].text",
-                             "value":"Receipt[0].instrument.instrumentType.name"
-                          },
-                          {
-                             "variable":"content[15].table.body[1][3].text",
-                             "value":"Receipt[0].instrument.bank.name"
-                          },
-                          {
-                             "variable":"content[15].table.body[2][1].text",
-                             "value":"Receipt[0].transactionId"
-                          },
-                          {
-                             "variable":"content[15].table.body[2][3].text",
-                             "value":"Receipt[0].instrument.transactionDateInput"
-                          }
-                      
-                       ]  
-                      }
-                   ]
-                },
-                {
-                   "mdmsDenormalization": [
-                      {
-                         "variable": "$variable",
-                         "moduleName": "common-masters",
-                         "masterName": "Department",
-                         "tenantId": "pb",
-                         "filter": "[?(@.code == $department)]",
-                         "filterMapping": [
-                            {
-                               "variable": "$department",
-                               "valueJsonpath": "$.department"
-                            }
-                         ],
-                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
-                      },
-                      {
-                         "variable": "$variable",
-                         "moduleName": "common-masters",
-                         "masterName": "Department",
-                         "tenantId": "pb",
-                         "filter": "[?(@.code == $department)]",
-                         "filterMapping": [
-                            {
-                               "variable": "$department",
-                               "valueJsonpath": "$.department"
-                            }
-                         ],
-                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
-                      }
-                   ]
-                }
-             ]
-          }
-       ]
-    }
- }
+                     },
+                     {
+                       "variable": "variable6",
+                       "value":{
+                            "path":"Properties[0].address.buildingName"                           
+                        } 
+                     },
+                     {
+                       "variable": "variable7",
+                       "value":{
+                            "path":"Properties[0].address.street"                           
+                        } 
+                     },
+                     {
+                       "variable": "variable8",
+                       "value":{
+                            "path":"Properties[0].address.locality.name"                           
+                        } 
+                     },
+                     {
+                       "variable": "variable9",
+                       "value":{
+                            "path":"Properties[0].propertyDetails[0].landArea"                           
+                        } 
+                     },
+                     {
+                       "variable": "variable10",
+                       "value":{
+                            "path":"Properties[0].propertyDetails[0].propertyType"                           
+                        } 
+                     },
+                     {
+                       "variable": "variable11",                        
+                       "value":{
+                            "path":"Properties[0].propertyDetails[0].owners"                          
+                        },
+                        "type":"array",
+                        "format":{                            
+                           "type":"string",
+                           "scema":["name","fatherOrHusbandName"]
+                       } 
+                    },
+                    {
+                       "variable": "variable12",                        
+                       "value":{
+                            "path":"Properties[0].propertyDetails[0].units"                          
+                        },
+                        "type":"array-column",
+                        "format":{                            
+                           "type":"string",
+                           "scema":["floorNo","usageCategoryMajor","usageCategoryDetail","occupancyType","unitArea"]
+                       } 
+                    } 
+                  ]
+               },
+               {
+                  "derived": [
+                     {
+                        "variable": "$variable",
+                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                     },
+                     {
+                        "variable": "$variable",
+                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                     }
+                  ]
+               },
+               {
+                  "externalAPI": [     
+                    {                         
+                       "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
+                       "queryParam": "consumerCode=$.Properties[0].propertyId:$.Properties[0].propertyDetails[0].assessmentNumber",
+                       "apiRequest": {
+                         "RequestInfo": {
+                             "action": "",
+                             "apiId": "Rainmaker",
+                             "authToken": "665f6ca9-bdc1-4b01-8bc6-77235dc36fed",
+                             "did": "1",
+                             "key": "",
+                             "msgId": "20170310130900|en_IN",
+                             "requesterId": "",
+                             "ver": ".01"
+                         }
+                     },
+                     
+                       "responseMapping":[
+                         {             
+                            "variable":"variable15",
+                            "value":"Receipt[0].receiptNumber"
+                         },
+                         {
+                            "variable":"variable16",
+                            "value":"Receipt[0].receiptDate"
+                         },
+                         {
+                            "variable":"variable17",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[7].amount"
+                         },
+                         {
+                            "variable":"variable18",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[3].amount"
+                         },
+                         {
+                            "variable":"variable19",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[2].amount"
+                         },
+                         {
+                            "variable":"variable20",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[8].amount"
+                         },
+                         {
+                            "variable":"variable21",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[4].amount"
+                         },
+                         {
+                            "variable":"variable22",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[6].amount"
+                         },
+                         {
+                            "variable":"variable23",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
+                         },
+                         {
+                            "variable":"variable24",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
+                         },
+                         {
+                            "variable":"variable25",
+                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[5].amount"
+                         },
+                         {
+                            "variable":"variable26",
+                            "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
+                         },
+                         {
+                            "variable":"variable27",
+                            "value":"Receipt[0].Bill[0].billDetails[0].amountPaid"
+                         },
+                         {
+                            "variable":"variable28",
+                            "value":"Receipt[0].instrument.instrumentType.name"
+                         },
+                         {
+                            "variable":"variable29",
+                            "value":"Receipt[0].instrument.bank.name"
+                         },
+                         {
+                            "variable":"variable30",
+                            "value":"Receipt[0].transactionId"
+                         },
+                         {
+                            "variable":"variable31",
+                            "value":"Receipt[0].instrument.transactionDateInput"
+                         }
+                     
+                      ]  
+                     }
+                  ]
+               },
+               {
+                  "mdmsDenormalization": [
+                     {
+                        "variable": "$variable",
+                        "moduleName": "common-masters",
+                        "masterName": "Department",
+                        "tenantId": "pb",
+                        "filter": "[?(@.code == $department)]",
+                        "filterMapping": [
+                           {
+                              "variable": "$department",
+                              "valueJsonpath": "$.department"
+                           }
+                        ],
+                        "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                     },
+                     {
+                        "variable": "$variable",
+                        "moduleName": "common-masters",
+                        "masterName": "Department",
+                        "tenantId": "pb",
+                        "filter": "[?(@.code == $department)]",
+                        "filterMapping": [
+                           {
+                              "variable": "$department",
+                              "valueJsonpath": "$.department"
+                           }
+                        ],
+                        "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   }
+}

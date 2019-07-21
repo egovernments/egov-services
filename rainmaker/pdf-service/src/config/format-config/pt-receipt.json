@@ -52,7 +52,7 @@
                   "text": "Receipt No.: ",
                   "bold": true
                 },
-                "01/2018-19/001672"
+                "{{variable15}}"
               ],
               "margin": [
                 10,
@@ -75,7 +75,7 @@
               "text": "Date: ",
               "bold": true
             },
-            "3-Jan-19"
+            "{{variable16}}"
           ],
           "alignment": "left"
         },
@@ -100,7 +100,7 @@
               "text": "Assessment Year: ",
               "bold": true
             },
-            "2018-19"
+            "{{variable1}}"
           ],
           "alignment": "left"
         },
@@ -132,7 +132,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable2}}",
               "border": [
                 false,
                 true,
@@ -151,7 +151,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "PT-107-015974",
+              "text": "{{variable3}}",
               "border": [
                 false,
                 true,
@@ -170,7 +170,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "AS-2019-01-03-016377",
+              "text": "{{variable4}}",
               "border": [
                 false,
                 true,
@@ -209,7 +209,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable5}}",
               "border": [
                 false,
                 true,
@@ -228,7 +228,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable6}}",
               "border": [
                 false,
                 true,
@@ -249,7 +249,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable7}}",
               "border": [
                 false,
                 true,
@@ -268,7 +268,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "ATAR SINGH COLONY - Area2",
+              "text": "{{variable8}}",
               "border": [
                 false,
                 true,
@@ -307,7 +307,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "900",
+              "text": "{{variable9}}",
               "border": [
                 false,
                 true,
@@ -326,7 +326,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "Independent Building",
+              "text": "{{variable10}}",
               "border": [
                 false,
                 true,
@@ -375,7 +375,8 @@
               "text": "Built Area/Total Annual Rent(sq yards)",
               "style": "receipt-assess-table-header"
             }
-          ]
+          ],
+          "{{variable12}}"
         ]
       },
       "layout": {}
@@ -393,48 +394,7 @@
           "*",
           "*"
         ],
-        "body": [
-          [
-            {
-              "text": "Owner  Name",
-              "border": [
-                true,
-                true,
-                false,
-                true
-              ],
-              "style": "receipt-table-key"
-            },
-            {
-              "text": "SB",
-              "border": [
-                false,
-                true,
-                true,
-                true
-              ]
-            },
-            {
-              "text": "Father's Name",
-              "border": [
-                true,
-                true,
-                false,
-                true
-              ],
-              "style": "receipt-table-key"
-            },
-            {
-              "text": "BB",
-              "border": [
-                false,
-                true,
-                true,
-                true
-              ]
-            }
-          ]
-        ]
+        "body": ["{{#variable11}}[{\"text\":\"Owner  Name\",\"border\":[true,true,false,true],\"style\":\"receipt-table-key\"},{\"text\":\"{{name}}\",\"border\":[false,true,true,true]},{\"text\":\"Father's Name\",\"border\":[true,true,false,true],\"style\":\"receipt-table-key\"},{\"text\":\"{{fatherOrHusbandName}}\",\"border\":[false,true,true,true]}]{{/variable11}}"]
       },
       "layout": {}
     },
@@ -492,31 +452,31 @@
           ],
           [
             {
-              "text": 12375
+              "text": "{{variable17}}"
             },
             {
-              "text": 618.75
+              "text": "{{variable18}}"
             },
             {
-              "text": 618.75
+              "text": "{{variable19}}"
             },
             {
-              "text": 1237.5
+              "text": "{{variable20}}"
             },
             {
-              "text": "0"
+              "text": "{{variable21}}"
             },
             {
-              "text": 73.24
+              "text": "{{variable22}}"
             },
             {
-              "text": "0"
+              "text": "{{variable23}}"
             },
             {
-              "text": "0"
+              "text": "{{variable24}}"
             },
             {
-              "text": -0.24
+              "text": "{{variable25}}"
             },
             {
               "text": 14923
@@ -552,7 +512,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "14923",
+              "text": "{{variable27}}",
               "border": [
                 false,
                 true,
@@ -593,7 +553,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "Cash",
+              "text": "{{variable28}}",
               "border": [
                 false,
                 true,
@@ -612,7 +572,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable29}}",
               "border": [
                 false,
                 true,
@@ -633,7 +593,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "AMRITSAR7161719020",
+              "text": "{{variable30}}",
               "border": [
                 false,
                 true,
@@ -652,7 +612,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "3-Jan-19",
+              "text": "{{variable31}}",
               "border": [
                 false,
                 true,
@@ -712,7 +672,7 @@
       "fontSize": 12,
       "bold": true,
       "margin": [
-        0,
+        0,  
         30,
         0,
         30

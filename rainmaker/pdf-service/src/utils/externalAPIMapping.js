@@ -3,7 +3,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { httpRequest } from "../api/api";
 
-export const externalAPIMapping=async function(key,req,formatconfig,dataconfig){
+export const externalAPIMapping=async function(key,req,formatconfig,dataconfig,variableTovalueMap){
 
    var objectOfExternalAPI = get(dataconfig, "DataConfigs.mappings[0].mappings[2].externalAPI", []);
    var externalAPIArray = objectOfExternalAPI.map(item => {
@@ -16,7 +16,6 @@ export const externalAPIMapping=async function(key,req,formatconfig,dataconfig){
       val: ""
     };
   });
-  
   for (let i = 0; i < externalAPIArray.length; i++) {
     
     var temp1 = "";
@@ -112,30 +111,34 @@ else
       );     
       
       //putting required data from external API call in format config      
-          
+      
       for (let j = 0; j < externalAPIArray[i].jPath.length; j++) {          
         let replaceValue=get(res, externalAPIArray[i].jPath[j].value, "NA");
         if(replaceValue==null)
         {
-          set(formatconfig,externalAPIArray[i].jPath[j].variable,"NA");  
+          // set(formatconfig,externalAPIArray[i].jPath[j].variable,"NA");  
+          variableTovalueMap[externalAPIArray[i].jPath[j].variable]="NA"
         }
         else{          
           if((externalAPIArray[i].jPath[j].value).search("Date")!="-1")
           {            
             let myDate = new Date(replaceValue);
             replaceValue=myDate.toLocaleDateString();            
-            set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+            // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+            variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;
           }
           else{          
-            set(
-              formatconfig,  
-              externalAPIArray[i].jPath[j].variable,
-              replaceValue
-            );
+            variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;
+            // set(
+            //   formatconfig,  
+            //   externalAPIArray[i].jPath[j].variable,
+            //   replaceValue
+            // );
           }
         }
       }     
          
   }  
-  return formatconfig;  
+  
+  // return fillValues(variableTovalueMap,formatconfig); 
 };

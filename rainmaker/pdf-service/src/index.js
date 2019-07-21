@@ -20,7 +20,6 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { strict } from "assert";
 import { Recoverable } from "repl";
-import { fileStoreOnComputer } from "./utils/fileStoreOnComputer";
 import { fileStoreAPICall } from "./utils/fileStoreAPICall";
 import { directMapping } from "./utils/directMapping";
 import { externalAPIMapping } from "./utils/externalAPIMapping";
@@ -46,6 +45,7 @@ var fileNameAppend="randomNumber";
         bolditalics: "fonts/Roboto-MediumItalic.ttf"
       }
     };
+    
     const printer =  new pdfMakePrinter(fontDescriptors);
     const doc = printer.createPdfKitDocument(docDefinition);
 
@@ -54,17 +54,19 @@ var fileNameAppend="randomNumber";
 
     //storing file on local computer/server
     doc.pipe(
-      fs.createWriteStream("src/pdfs/"+key+" "+fileNameAppend+".pdf").on("error", err => {
+       fs.createWriteStream("src/pdfs/"+key+" "+fileNameAppend+".pdf").on("error", err => {
         errorCallback(err.message);
       })
     );
     doc.on("end", () => {
-      successCallback("PDF successfully created and stored");
+      //filestore API call to store file on S3    
+    fileStoreAPICall(key,fileNameAppend,function(result) {
+      console.log("result",result) // "Some User token"
+      successCallback({message:"PDF successfully created and stored",filestoreId:result});
+   });
+      
     });
     doc.end();
-    //filestore API call to store file on S3    
-    var fun=fileStoreAPICall(key,fileNameAppend);    
-    
   } catch (err) {
     throw err;
   }
@@ -89,17 +91,17 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       
     }
 
-
+    let variableTovalueMap={};
   //direct mapping service
-  formatconfig=directMapping(req,formatconfig,dataconfig);  
+  directMapping(req,formatconfig,dataconfig,variableTovalueMap);  
 
   //external API mapping
-  formatconfig=await externalAPIMapping(key,req,formatconfig,dataconfig);
+  await externalAPIMapping(key,req,formatconfig,dataconfig,variableTovalueMap);
         
+  formatconfig=fillValues(variableTovalueMap,formatconfig);
   //putting formatconfig in a file to check docdefinition on pdfmake playground online
   var util = require('util');
   fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
-  
   //function to download pdf automatically 
   createPdfBinary(
     JSON.parse(JSON.stringify(formatconfig)),
@@ -107,7 +109,8 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       // doc successfully created
       res.json({
         status: 200,
-        data: response
+        data: response.message,
+        filestoreId:response.filestoreId
       });
     },
     error => {
@@ -145,4 +148,28 @@ app.listen(PORT, () => {
   console.log(`Server running at http:${PORT}/`);
 });
 
+export const fillValues=(variableTovalueMap,formatconfig)=>{
+  // let stringfromobject=JSON.stringify(formatconfig);
+  // for(let key in variableTovalueMap)
+  // {
+  //   stringfromobject=stringfromobject.replace("\""+key+"\"",JSON.stringify(variableTovalueMap[key]));
+  // // }
+  // return stringfromobject;
+  let mustache = require('mustache');
+  mustache.escape = function(text) {return text;};
+  let input=JSON.stringify(formatconfig);
+  // // mustache.parse(formatconfig);
+
+  // // console.log(mustache.render(input, variableTovalueMap));
+  // // let output=JSON.parse(mustache.render(input, variableTovalueMap));
+  // // console.log(variableTovalueMap);
+  // console.log(variableTovalueMap);
+  // console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
+  let output=JSON.parse(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
+ 
+  return output;
+} 
+
+
 export default app;
+

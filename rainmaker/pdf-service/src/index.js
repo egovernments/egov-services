@@ -48,7 +48,6 @@ var fileNameAppend="randomNumber";
     
     const printer =  new pdfMakePrinter(fontDescriptors);
     const doc = printer.createPdfKitDocument(docDefinition);
-
     //reference link
     //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
 
@@ -56,16 +55,19 @@ var fileNameAppend="randomNumber";
     doc.pipe(
        fs.createWriteStream("src/pdfs/"+key+" "+fileNameAppend+".pdf").on("error", err => {
         errorCallback(err.message);
+      }).on("close", () => {
+          fileStoreAPICall(key,fileNameAppend,function(result) {
+          successCallback({message:"PDF successfully created and stored",filestoreId:result});
+       });
       })
     );
-    doc.on("end", () => {
-      //filestore API call to store file on S3    
-    fileStoreAPICall(key,fileNameAppend,function(result) {
-      console.log("result",result) // "Some User token"
-      successCallback({message:"PDF successfully created and stored",filestoreId:result});
-   });
+  //   doc.on("end", () => {
+  //     //filestore API call to store file on S3    
+  //     fileStoreAPICall(key,fileNameAppend,function(result) {
+  //     successCallback({message:"PDF successfully created and stored",filestoreId:result});
+  //  });
       
-    });
+  //   });
     doc.end();
   } catch (err) {
     throw err;
@@ -91,20 +93,47 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       
     }
 
-    let variableTovalueMap={};
-  //direct mapping service
-  directMapping(req,formatconfig,dataconfig,variableTovalueMap);  
+  let formatObjectArrayObject={};
+  formatObjectArrayObject["content"]=[];
 
-  //external API mapping
-  await externalAPIMapping(key,req,formatconfig,dataconfig,variableTovalueMap);
-        
-  formatconfig=fillValues(variableTovalueMap,formatconfig);
-  //putting formatconfig in a file to check docdefinition on pdfmake playground online
+  for(let propertykey in req.body)
+  {
+    
+    if(req.body.hasOwnProperty(propertykey))
+    {
+      for(var i=0, len=req.body[propertykey].length; i < len; i++)
+      {
+        let moduleObject=req.body[propertykey][i];
+        let outerObject={};
+        outerObject["body"]={};
+        let formatObject=JSON.parse(JSON.stringify(formatconfig));
+        if((i!=0)&&(formatObject["content"][0]!==undefined))
+        {
+          formatObject["content"][0]["pageBreak"]= "before";
+        }
+        outerObject["body"][propertykey]=[];
+        outerObject["body"][propertykey].push(moduleObject);
+        let variableTovalueMap={};
+        //direct mapping service
+        directMapping(outerObject,formatObject,dataconfig,variableTovalueMap);  
+      
+        //external API mapping
+        await externalAPIMapping(key,outerObject,formatObject,dataconfig,variableTovalueMap);
+        formatObject=fillValues(variableTovalueMap,formatObject);
+        formatObjectArrayObject["content"].push(formatObject["content"]);
+        //putting formatconfig in a file to check docdefinition on pdfmake playground online
+      }
+    }
+  } 
+
+
+
+
   var util = require('util');
-  fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
+  fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatObjectArrayObject)) , 'utf-8');
   //function to download pdf automatically 
   createPdfBinary(
-    JSON.parse(JSON.stringify(formatconfig)),
+    JSON.parse(JSON.stringify(formatObjectArrayObject)),
     response => {
       // doc successfully created
       res.json({

@@ -105,14 +105,13 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       {
         let moduleObject=req.body[propertykey][i];
         let outerObject={};
-        outerObject["body"]={};
         let formatObject=JSON.parse(JSON.stringify(formatconfig));
         if((i!=0)&&(formatObject["content"][0]!==undefined))
         {
           formatObject["content"][0]["pageBreak"]= "before";
         }
-        outerObject["body"][propertykey]=[];
-        outerObject["body"][propertykey].push(moduleObject);
+        outerObject[propertykey]=[];
+        outerObject[propertykey].push(moduleObject);
         let variableTovalueMap={};
         //direct mapping service
         directMapping(outerObject,formatObject,dataconfig,variableTovalueMap);  

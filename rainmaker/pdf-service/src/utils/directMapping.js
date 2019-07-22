@@ -9,7 +9,7 @@ export const directMapping=(req,formatconfig,dataconfig,variableTovalueMap)=>{
     directArr = objectOfDirectMapping.map(item => {
       return {
         jPath: item.variable,
-        val: get(req.body, item.value.path, "NA"),
+        val: get(req, item.value.path, "NA"),
         valJsonPath: item.value.path,
         type: item.type,
         format: item.format

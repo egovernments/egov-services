@@ -34,7 +34,7 @@ if(key=="pt-receipt")
       if (flag == 1) {
         temp2 = temp1;
         temp1 = temp1.replace("$.", "");
-        var temp3 = get(req.body, temp1, "NA");          
+        var temp3 = get(req, temp1, "NA");          
         externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
         j = 0;
@@ -50,7 +50,7 @@ if(key=="pt-receipt")
     if (j == externalAPIArray[i].queryParams.length - 1 && flag == 1) {
       temp2 = temp1;
       temp1 = temp1.replace("$.", "");
-      var temp3 = get(req.body, temp1, "vikas");
+      var temp3 = get(req, temp1, "vikas");
 
       externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
@@ -71,7 +71,7 @@ else
         if (flag == 1) {
           temp2 = temp1;
           temp1 = temp1.replace("$.", "");
-          var temp3 = get(req.body, temp1, "NA");          
+          var temp3 = get(req, temp1, "NA");          
           externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
           j = 0;
@@ -86,7 +86,7 @@ else
       if (j == externalAPIArray[i].queryParams.length - 1 && flag == 1) {
         temp2 = temp1;
         temp1 = temp1.replace("$.", "");
-        var temp3 = get(req.body, temp1, "vikas");
+        var temp3 = get(req, temp1, "vikas");
 
         externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 

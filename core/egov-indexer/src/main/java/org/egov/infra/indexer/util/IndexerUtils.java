@@ -249,7 +249,6 @@ public class IndexerUtils {
 	 */
 	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
 		String modifiedFilter = mdmsMppings.getFilter();
-		log.info("buildfilter: " + modifiedFilter);
 		for (FilterMapping mdmsMapping : mdmsMppings.getFilterMapping()) {
 			Object value = JsonPath.read(kafkaJson, mdmsMapping.getValueJsonpath());
 			if (null == value) {
@@ -260,7 +259,6 @@ public class IndexerUtils {
 			}
 			modifiedFilter = modifiedFilter.replace(mdmsMapping.getVariable(), "'" + value.toString() + "'");
 		}
-		log.info("modifiedFilter: " + modifiedFilter);
 		return modifiedFilter;
 	}
 

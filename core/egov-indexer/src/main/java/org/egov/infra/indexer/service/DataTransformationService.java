@@ -187,7 +187,7 @@ public class DataTransformationService {
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
 					if (null == response)
 						continue;
-					log.info("Response: "+response);
+					log.info("URI Call: "+uri);
 				} catch (Exception e) {
 					log.error("Exception while trying to hit: " + uri);
 					continue;
@@ -252,7 +252,7 @@ public class DataTransformationService {
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					} catch (Exception e) {
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
-						log.debug("MDMS Request: " + request);
+						log.debug("MDMS Response: " + response);
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
 						continue;
 					}

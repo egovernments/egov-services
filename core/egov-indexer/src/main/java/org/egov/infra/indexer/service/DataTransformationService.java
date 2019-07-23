@@ -187,7 +187,10 @@ public class DataTransformationService {
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
 					if (null == response)
 						continue;
-					log.info("URI Call: "+uri);
+					if(uri.contains("http://egov-workflow-v2.egov:8080/egov-workflow-v2")) {
+						log.info("URI Call: "+uri);
+						log.info("response: "+ response);
+					}
 				} catch (Exception e) {
 					log.error("Exception while trying to hit: " + uri);
 					continue;

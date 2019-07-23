@@ -10,19 +10,19 @@
                 {
                    "direct": [
                       {
-                         "variable": "content[1].columns[0].text[1].text",
+                         "variable": "variable1",
                          "value": {
                               "path":"FireNOCs[0].fireNOCDetails.applicationNumber"                              
                          }
                       },
                       {
-                        "variable": "content[4].table.body[0][1].text",
+                        "variable": "variable2",
                         "value": {
                              "path":"FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].name"                              
                         }
                       },
                       {
-                       "variable": "content[4].table.body[0][3].text",
+                       "variable": "variable3",
                        "value": {
                             "path":"FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].mobileNumber"                              
                         }
@@ -49,49 +49,49 @@
                          "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
                          "queryParam": "consumerCode=$.FireNOCs[0].fireNOCDetails.applicationNumber",
                          "apiRequest": {
-                           "RequestInfo": {
-                               "action": "",
-                               "apiId": "Rainmaker",
-                               "authToken": "c9409736-ac8d-48ba-9c68-bbfa3e7e7f81",
-                               "did": "1",
-                               "key": "",
-                               "msgId": "20170310130900|en_IN",
-                               "requesterId": "",
-                               "ver": ".01"
-                           }
+                              "RequestInfo": {
+                                 "action": "",
+                                 "apiId": "Rainmaker",
+                                 "authToken": "665f6ca9-bdc1-4b01-8bc6-77235dc36fed",
+                                 "did": "1",
+                                 "key": "",
+                                 "msgId": "20170310130900|en_IN",
+                                 "requesterId": "",
+                                 "ver": ".01"
+                              }
                        },
 
                          "responseMapping":[
                            {
-                              "variable":"content[1].columns[1].text[1].text",
+                              "variable":"variable6",
                               "value":"Receipt[0].instrument.transactionDateInput"
                            },
                            {
-                              "variable":"content[2].columns[0].text[1].text",
+                              "variable":"variable7",
                               "value":"Receipt[0].receiptNumber"
                            },
                            {
-                              "variable":"content[6].table.body[1][0].text",
+                              "variable":"variable8",
                               "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
                            },
                            {
-                              "variable":"content[6].table.body[1][1].text",
+                              "variable":"variable9",
                               "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
                            },
                            {
-                              "variable":"content[6].table.body[1][3].text",
+                              "variable":"variable10",
                               "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
                            },
                            {
-                              "variable":"content[8].table.body[1][0].text",
+                              "variable":"variable11",
                               "value":"Receipt[0].instrument.transactionType"
                            },
                            {
-                              "variable":"content[8].table.body[1][1].text",
+                              "variable":"variable12",
                               "value":"Receipt[0].transactionId"
                            },
                            {
-                              "variable":"content[8].table.body[1][2].text",
+                              "variable":"variable13",
                               "value":"Receipt[0].instrument.bank.name"
                            }
 

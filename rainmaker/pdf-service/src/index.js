@@ -77,7 +77,7 @@ var fileNameAppend="randomNumber";
 app.post("/pdf", asyncHandler(async (req, res)=> { 
    key=req.query.key;
       
-   var formatconfig=require("./config/format-config/"+key);
+   var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
    var dataconfig=require("./config/data-config/"+key);  
    
    if(key=="tl-receipt"){          
@@ -106,6 +106,8 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
         let moduleObject=req.body[propertykey][i];
         let outerObject={};
         let formatObject=JSON.parse(JSON.stringify(formatconfig));
+
+        // Multipage pdf, each pdf from new page
         if((i!=0)&&(formatObject["content"][0]!==undefined))
         {
           formatObject["content"][0]["pageBreak"]= "before";
@@ -124,15 +126,14 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       }
     }
   } 
-
-
+  formatconfig["content"]=formatObjectArrayObject["content"];
 
 
   var util = require('util');
-  fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatObjectArrayObject)) , 'utf-8');
+  fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
   //function to download pdf automatically 
   createPdfBinary(
-    JSON.parse(JSON.stringify(formatObjectArrayObject)),
+    JSON.parse(JSON.stringify(formatconfig)),
     response => {
       // doc successfully created
       res.json({

@@ -11,79 +11,79 @@
                    "direct": [
                                             
                       {
-                        "variable": "content[1].columns[0].text[1].text",
+                        "variable": "variable1",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.additionalDetail.applicationType"                              
                         }
                      },
                      {
-                        "variable": "content[1].columns[1].text[1].text",
+                        "variable": "variable2",
                         "value": {
                              "path":"Licenses[0].oldLicenseNumber"                              
                         }
                      },
                       {
-                         "variable": "content[2].columns[0].text[1].text",
+                         "variable": "variable3",
                          "value":{
                               "path":"Licenses[0].applicationNumber"                           
                           } 
                       },
                       {
-                        "variable": "content[3].columns[0].text[1].text",
+                        "variable": "variable4",
                         "value": {
                              "path":"Licenses[0].financialYear"                              
                         }
                      },
                      {
-                        "variable": "content[5].table.body[0][1].text",
+                        "variable": "variable5",
                         "value": {
                              "path":"Licenses[0].tradeName"                              
                         }
                      },
                      {
-                        "variable": "content[5].table.body[0][3].text",
+                        "variable": "variable6",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.tradeUnits[0].tradeType"                              
                         }
                      },
                      {
-                        "variable": "content[6].table.body[0][1].text",
+                        "variable": "variable7",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.tradeUnits[0].tradeType"                              
                         }
                      },
                      {
-                        "variable": "content[6].table.body[1][1].text",
+                        "variable": "variable8",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.accessories[5]"                              
                         }
                      },
                      {
-                        "variable": "content[8].table.body[0][1].text",
+                        "variable": "variable9",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.address.doorNo"                              
                         }
                      },
                      {
-                        "variable": "content[8].table.body[0][3].text",
+                        "variable": "variable10",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.address.buildingName"                              
                         }
                      },
                      {
-                        "variable": "content[8].table.body[1][1].text",
+                        "variable": "variable11",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.address.street"                              
                         }
                      },
                      {
-                        "variable": "content[8].table.body[1][3].text",
+                        "variable": "variable12",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.address.locality.name"                              
                         }
                      },
                       {
-                        "variable": "content[10].table.body",                        
+                        "variable": "variable13",                        
                         "value":{
                              "path":"Licenses[0].tradeLicenseDetail.owners"                          
                          },
@@ -104,7 +104,7 @@
                       {
                          "variable": "$variable",
                          "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      }
+                      } 
                    ]
                 },
                 {
@@ -120,7 +120,7 @@
                            "RequestInfo": {
                                "action": "",
                                "apiId": "Rainmaker",
-                               "authToken": "c9409736-ac8d-48ba-9c68-bbfa3e7e7f81",
+                               "authToken": "665f6ca9-bdc1-4b01-8bc6-77235dc36fed",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",
@@ -131,35 +131,35 @@
 
                          "responseMapping":[
                            {
-                              "variable":"content[2].columns[1].text[1].text",
+                              "variable":"variable16",
                               "value":"Receipt[0].receiptNumber"
                            },
                            {
-                              "variable":"content[3].columns[1].text[1].text",
+                              "variable":"variable17",
                               "value":"Receipt[0].instrument.transactionDateInput"
                            },                           
                            {
-                              "variable":"content[12].table.body[1][0].text",
+                              "variable":"variable18",
                               "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
                            },
                            {
-                              "variable":"content[12].table.body[1][5].text",
+                              "variable":"variable19",
                               "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
                            },
                            {
-                              "variable":"content[14].table.body[0][1].text",
+                              "variable":"variable20",
                               "value":"Receipt[0].Bill[0].billDetails[0].amountPaid"
                            },
                            {
-                              "variable":"content[15].table.body[1][0].text",
+                              "variable":"variable21",
                               "value":"Receipt[0].instrument.transactionType"
                            },
                            {
-                              "variable":"content[15].table.body[1][1].text",
+                              "variable":"variable22",
                               "value":"Receipt[0].transactionId"
                            },
                            {
-                              "variable":"content[15].table.body[1][2].text",
+                              "variable":"variable23",
                               "value":"Receipt[0].instrument.bank.name"
                            }
                            

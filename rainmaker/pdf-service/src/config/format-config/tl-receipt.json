@@ -44,7 +44,7 @@
               {
                 "text": [
                   {
-                    "text": "",
+                    "text": "NA",
                     "bold": true,
                     "style": "receipt-no"
                   }
@@ -72,7 +72,7 @@
                 "bold": true
               },
               {
-                "text": "$value4",
+                "text": "{{variable1}}",
                 "bold": false
               }
             ],
@@ -85,7 +85,7 @@
                 "bold": true
               },
               {
-                "text": "NA",
+                "text": "{{variable2}}",
                 "bold": false
               }
             ],
@@ -103,7 +103,7 @@
                 "bold": true
               },
               {
-                "text": "$value5",
+                "text": "{{variable3}}",
                 "bold": false
               }
             ],
@@ -116,7 +116,7 @@
                 "bold": true
               },
               {
-                "text": "$value6",
+                "text": "{{variable16}}",
                 "bold": false
               }
             ],
@@ -134,7 +134,7 @@
                 "bold": true
               },
               {
-                "text": "$value7",
+                "text": "{{variable4}}",
                 "bold": false
               }
             ],
@@ -147,7 +147,7 @@
                 "bold": true
               },
               {
-                "text": "$value8",
+                "text": "{{variable17}}",
                 "bold": false
               }
             ],
@@ -202,7 +202,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "Test Trade 4A 3",
+                "text": "{{variable5}}",
                 "border": [
                   false,
                   true,
@@ -221,7 +221,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "Goods",
+                "text": "{{variable6}}",
                 "border": [
                   false,
                   true,
@@ -264,7 +264,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "Retail / Fireworks",
+                "text": "{{variable7}}",
                 "border": [
                   false,
                   false,
@@ -285,7 +285,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "(0) ",
+                "text": "{{variable8}}",
                 "border": [
                   false,
                   true,
@@ -344,7 +344,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "NA",
+                "text": "{{variable9}}",
                 "border": [
                   false,
                   true,
@@ -363,7 +363,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "NA",
+                "text": "{{variable10}}",
                 "border": [
                   false,
                   true,
@@ -384,7 +384,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "NA",
+                "text": "{{variable11}}",
                 "border": [
                   false,
                   true,
@@ -403,7 +403,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "GOLDEN PALM - W1",
+                "text": "{{variable12}}",
                 "border": [
                   false,
                   true,
@@ -451,48 +451,7 @@
             }
           
         ],
-          "body": [
-             [
-              {
-                "text": "Owner Name",
-                "border": [
-                  true,
-                  true,
-                  false,
-                  true
-                ],
-                "style": "receipt-table-key"
-              },
-              {
-                "text": "$value9",
-                "border": [
-                  false,
-                  true,
-                  true,
-                  true
-                ]
-              },
-              {
-                "text": "Mobile No.",
-                "border": [
-                  true,
-                  true,
-                  false,
-                  true
-                ],
-                "style": "receipt-table-key"
-              },
-              {
-                "text": "$value10",
-                "border": [
-                  false,
-                  true,
-                  true,
-                  true
-                ]
-              }
-            ]
-          ]
+          "body": ["{{#variable13}}[{\"text\":\"Owner Name\",\"border\":[true,true,false,true],\"style\":\"receipt-table-key\"},{\"text\":\"{{name}}","border\":[false,true,true,true]},{\"text\":\"Mobile No.\",\"border\":[true,true,false,true],\"style\":\"receipt-table-key\"},{\"text\":\"{{mobileNumber}}\",\"border\":[false,true,true,true]}]{{/variable13}}"]
         },
         "layout": {}
       },
@@ -630,7 +589,7 @@
             ],
             [
               {
-                "text": 1000,
+                "text": "{{variable18}}",
                 "border": [
                   true,
                   true,
@@ -644,7 +603,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NA",
+                "text": "NA5",
                 "border": [
                   true,
                   true,
@@ -700,7 +659,7 @@
                 "alignment": "center"
               },
               {
-                "text": 1000,
+                "text": "{{variable19}}",
                 "border": [
                   true,
                   true,
@@ -764,7 +723,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": 1000,
+                "text": "{{variable20}}",
                 "border": [
                   false,
                   true,
@@ -866,7 +825,7 @@
             ],
             [
               {
-                "text": "Cash",
+                "text": "{{variable21}}",
                 "border": [
                   true,
                   true,
@@ -880,7 +839,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NAWANSHAHR1210918672",
+                "text": "{{variable22}}",
                 "border": [
                   true,
                   true,
@@ -894,7 +853,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NA",
+                "text": "{{variable23}}",
                 "border": [
                   true,
                   true,

@@ -218,19 +218,25 @@ public class IndexerUtils {
 			UriMapping mdmsMppings) {
 		if (uri.toString().length() < 1)
 			uri.append(mdmsHost).append(mdmsEndpoint);
-		String filter = buildFilter(mdmsMppings.getFilter(), mdmsMppings, kafkaJson);
-		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(mdmsMppings.getMasterName())
-				.filter(filter).build();
-		List<MasterDetail> masterDetails = new ArrayList<>();
-		masterDetails.add(masterDetail);
-		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(mdmsMppings.getModuleName())
-				.masterDetails(masterDetails).build();
-		List<ModuleDetail> moduleDetails = new ArrayList<>();
-		moduleDetails.add(moduleDetail);
-		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(mdmsMppings.getTenantId())
-				.moduleDetails(moduleDetails).build();
+		try {
+			String filter = buildFilter(mdmsMppings.getFilter(), mdmsMppings, kafkaJson);
+			MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(mdmsMppings.getMasterName())
+					.filter(filter).build();
+			List<MasterDetail> masterDetails = new ArrayList<>();
+			masterDetails.add(masterDetail);
+			ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(mdmsMppings.getModuleName())
+					.masterDetails(masterDetails).build();
+			List<ModuleDetail> moduleDetails = new ArrayList<>();
+			moduleDetails.add(moduleDetail);
+			MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(mdmsMppings.getTenantId())
+					.moduleDetails(moduleDetails).build();
 
-		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+			return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+		}catch(Exception e) {
+			log.error("Exception while builing MDMSReq: ",e);
+			return null;
+		}
+
 	}
 
 	/**
@@ -243,7 +249,7 @@ public class IndexerUtils {
 	 */
 	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
 		String modifiedFilter = mdmsMppings.getFilter();
-		log.debug("buildfilter, kafkaJson: " + kafkaJson);
+		log.info("buildfilter: " + modifiedFilter);
 		for (FilterMapping mdmsMapping : mdmsMppings.getFilterMapping()) {
 			Object value = JsonPath.read(kafkaJson, mdmsMapping.getValueJsonpath());
 			if (null == value) {
@@ -254,6 +260,7 @@ public class IndexerUtils {
 			}
 			modifiedFilter = modifiedFilter.replace(mdmsMapping.getVariable(), "'" + value.toString() + "'");
 		}
+		log.info("modifiedFilter: " + modifiedFilter);
 		return modifiedFilter;
 	}
 

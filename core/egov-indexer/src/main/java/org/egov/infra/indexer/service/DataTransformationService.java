@@ -187,11 +187,11 @@ public class DataTransformationService {
 					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
 					if (null == response)
 						continue;
+					log.info("Response: "+response);
 				} catch (Exception e) {
 					log.error("Exception while trying to hit: " + uri);
 					continue;
 				}
-				log.debug("Response: " + response + " from the URI: " + uriMapping.getPath());
 				for (FieldMapping fieldMapping : uriMapping.getUriResponseMapping()) {
 					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
 					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
@@ -199,8 +199,8 @@ public class DataTransformationService {
 						Object value = JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath());
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					} catch (Exception e) {
+						log.error("Response: " + response + " from the URI: " + uriMapping.getPath());
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
-						log.debug("URI: " + uri);
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
 						continue;
 					}

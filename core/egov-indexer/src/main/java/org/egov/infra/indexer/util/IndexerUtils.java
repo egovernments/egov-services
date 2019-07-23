@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.util;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -489,24 +490,38 @@ public class IndexerUtils {
 	 * @return
 	 */
 	public DocumentContext addTimeStamp(Index index, DocumentContext context) {
-		String epochValue = null;
 		try {
 			ObjectMapper mapper = getObjectMapper();
-			epochValue = mapper
+			String epochValue = mapper
 					.writeValueAsString(JsonPath.read(context.jsonString().toString(), index.getTimeStampField()));
-			Date date = new Date(Long.valueOf(epochValue));
+			if(null == epochValue) {
+				log.info("NULL found in place of timestamp field.");
+				return context;
+			}
+			Date date = new Date(Long.valueOf(convertEpochToLong(epochValue)));
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
 			log.info("Exception while adding timestamp!");
-			log.info("epochValue: "+epochValue);
-			log.info("Data: "+context.jsonString());
-			log.error("Exception: ", e);
+			log.info("Time stamp field: "+index.getTimeStampField());
 		}
-
+		
 		return context;
 
+	}
+
+	/**
+	 * Method to convert double with scientific precision to plain long
+	 * ex:- 1.5534533434E10-->15534533434
+	 *
+	 * @param value
+	 * @return
+	 */
+	public String convertEpochToLong(String value){
+		DecimalFormat df = new DecimalFormat("#");
+		df.setMaximumFractionDigits(0);
+		return df.format(Double.valueOf(value));
 	}
 	
 	/**

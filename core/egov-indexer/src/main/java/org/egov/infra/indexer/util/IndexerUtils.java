@@ -489,19 +489,20 @@ public class IndexerUtils {
 	 * @return
 	 */
 	public DocumentContext addTimeStamp(Index index, DocumentContext context) {
-		Date date = null;
+		String epochValue = null;
 		try {
 			ObjectMapper mapper = getObjectMapper();
-			String epochValue = mapper
+			epochValue = mapper
 					.writeValueAsString(JsonPath.read(context.jsonString().toString(), index.getTimeStampField()));
-			date = new Date(Long.valueOf(epochValue));
+			Date date = new Date(Long.valueOf(epochValue));
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
 			log.info("Exception while adding timestamp!");
-			log.info("Date: "+date);
-			log.debug("Data: " + context.jsonString());
+			log.info("epochValue: "+epochValue);
+			log.info("Data: "+context.jsonString());
+			log.error("Exception: ", e);
 		}
 
 		return context;

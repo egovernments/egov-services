@@ -57,7 +57,11 @@ export const getLocationDetails = async (requestInfo, tenantId) => {
     hostURL: envVariables.EGOV_LOCATION_HOST,
     endPoint: `${envVariables.EGOV_LOCATION_CONTEXT_PATH}${
       envVariables.EGOV_LOCATION_SEARCH_ENDPOINT
-    }?hierarchyTypeCode=${envVariables.EGOV_LOCATION_HIERARCHY_TYPE_CODE}&boundaryType=${envVariables.EGOV_LOCATION_BOUNDARY_TYPE_CODE}&tenantId=${tenantId}`,
+    }?hierarchyTypeCode=${
+      envVariables.EGOV_LOCATION_HIERARCHY_TYPE_CODE
+    }&boundaryType=${
+      envVariables.EGOV_LOCATION_BOUNDARY_TYPE_CODE
+    }&tenantId=${tenantId}`,
     requestBody
   });
   // console.log("idgenresponse",locationResponse);
@@ -86,11 +90,13 @@ export const createWorkFlow = async body => {
     RequestInfo: body.RequestInfo,
     ProcessInstances: processInstances
   };
+  console.log("requestBody", JSON.stringify(requestBody));
   let workflowResponse = await httpRequest({
     hostURL: envVariables.EGOV_WORKFLOW_HOST,
     endPoint: envVariables.EGOV_WORKFLOW_TRANSITION_ENDPOINT,
     requestBody
   });
+  console.log("workflowResponse", JSON.stringify(workflowResponse));
   return workflowResponse;
 };
 

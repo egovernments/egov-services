@@ -43,7 +43,7 @@ public class BillingslabValidator {
 		duplicateCheck(billingSlabReq, errorMap);
 		dataIntegrityCheck(billingSlabReq, errorMap);
 		Map<String, List<String>> mdmsDataMap = service.getMDMSDataForValidation(billingSlabReq);
-		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> validateMDMSCodes(slab, mdmsDataMap, errorMap));
+		billingSlabReq.getBillingSlab().stream().forEach(slab -> validateMDMSCodes(slab, mdmsDataMap, errorMap));
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
@@ -66,7 +66,7 @@ public class BillingslabValidator {
 		dataIntegrityCheck(billingSlabReq, errorMap);
 		duplicateCheck(billingSlabReq, errorMap); //Suppose slab s is being updated to s'. If that s' is already available, the update shouldn't be allowed.
 		Map<String, List<String>> mdmsDataMap = service.getMDMSDataForValidation(billingSlabReq);
-		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> validateMDMSCodes(slab, mdmsDataMap, errorMap));
+		billingSlabReq.getBillingSlab().stream().forEach(slab -> validateMDMSCodes(slab, mdmsDataMap, errorMap));
 		if(!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
 		}
@@ -78,7 +78,7 @@ public class BillingslabValidator {
 	 * @param errorMap
 	 */
 	public void tenantIdCheck(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
-		Set<String> tenantIds = billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab::getTenantId).collect(Collectors.toSet());
+		Set<String> tenantIds = billingSlabReq.getBillingSlab().stream().map(BillingSlab::getTenantId).collect(Collectors.toSet());
 		if(tenantIds.size() > 1) {
 			errorMap.put(ErrorConstants.MULTIPLE_TENANT_CODE, ErrorConstants.MULTIPLE_TENANT_MSG);
 			throw new CustomException(errorMap);
@@ -92,7 +92,7 @@ public class BillingslabValidator {
 	 */
 	public void duplicateCheck(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
 		List<BillingSlab> duplicateSlabs = new ArrayList<>();
-		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> {
+		billingSlabReq.getBillingSlab().stream().forEach(slab -> {
 			BillingSlabSearchCriteria criteria = BillingSlabSearchCriteria.builder().tenantId(slab.getTenantId()).accessoryCategory(slab.getAccessoryCategory())
 					.tradeType(slab.getTradeType())
 					.licenseType(null == slab.getLicenseType() ? null : slab.getLicenseType().toString())
@@ -119,11 +119,11 @@ public class BillingslabValidator {
 	 */
 	public void areRecordsExisiting(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
 		BillingSlabSearchCriteria criteria = BillingSlabSearchCriteria.builder().tenantId(billingSlabReq.getBillingSlab().get(0).getTenantId())
-				.ids(billingSlabReq.getBillingSlab().parallelStream().map(BillingSlab :: getId).collect(Collectors.toList())).build();
+				.ids(billingSlabReq.getBillingSlab().stream().map(BillingSlab :: getId).collect(Collectors.toList())).build();
 		BillingSlabRes slabRes = service.searchSlabs(criteria, billingSlabReq.getRequestInfo());
 		List<String> ids = new ArrayList<>();
 		if(billingSlabReq.getBillingSlab().size() != slabRes.getBillingSlab().size()) {
-			List<String> responseIds = slabRes.getBillingSlab().parallelStream().map(BillingSlab :: getId).collect(Collectors.toList());
+			List<String> responseIds = slabRes.getBillingSlab().stream().map(BillingSlab :: getId).collect(Collectors.toList());
 			for(BillingSlab slab: billingSlabReq.getBillingSlab()) {
 				if(!responseIds.contains(slab.getId()))
 					ids.add(slab.getId());
@@ -140,7 +140,7 @@ public class BillingslabValidator {
 	 * @param errorMap
 	 */
 	public void dataIntegrityCheck(BillingSlabReq billingSlabReq, Map<String, String> errorMap) {
-		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> {
+		billingSlabReq.getBillingSlab().stream().forEach(slab -> {
 			if(!StringUtils.isEmpty(slab.getAccessoryCategory()) && !StringUtils.isEmpty(slab.getTradeType())) {
 				errorMap.put(ErrorConstants.INVALID_SLAB_CODE, ErrorConstants.INVALID_SLAB_MSG);
 			}

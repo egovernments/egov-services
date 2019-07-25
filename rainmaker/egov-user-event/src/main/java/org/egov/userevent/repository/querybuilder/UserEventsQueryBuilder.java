@@ -2,6 +2,7 @@ package org.egov.userevent.repository.querybuilder;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.userevent.config.PropertiesManager;
 import org.egov.userevent.web.contract.EventSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +115,14 @@ public class UserEventsQueryBuilder {
             addClauseIfRequired(preparedStatementValues, queryBuilder);
 			queryBuilder.append("referenceid IN (:referenceid)");
 			preparedStatementValues.put("referenceid", criteria.getReferenceIds());
+		}
+		
+		if(!criteria.getIsCitizenSearch()) {
+			if(!StringUtils.isEmpty(criteria.getTenantId())) {
+	            addClauseIfRequired(preparedStatementValues, queryBuilder);
+				queryBuilder.append("tenantid = :tenantid");
+				preparedStatementValues.put("tenantid", criteria.getTenantId());
+			}
 		}
 
 		if(!CollectionUtils.isEmpty(criteria.getRecepients())) {

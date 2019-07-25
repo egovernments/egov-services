@@ -304,7 +304,10 @@ public class UserEventsService {
 	/**
 	 * Method to enrich search criteria based on role as follows:
 	 * 1. Incase of CITIZEN, criteria is enriched using the userInfo present in RI.
-	 * 2. For EMPLOYEE, only those events that are posted by him for that particular tenant are returned.
+	 * 2. For EMPLOYEE, events posted in his tenant will be returned by default. 
+	 * Note - the filter on tenantId will mean as:
+	 * 'Events addressed to this tenant' in case of CITIZEN search.
+	 * 'Events created through this tenant' in case of EMPLOYEE search.
 	 * 
 	 * This method also derives a list of recipients in a specified format from the criteria to build search clause for the query.
 	 * 
@@ -328,9 +331,8 @@ public class UserEventsService {
 		}else {
 			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
 			if(roles.contains("EMPLOYEE")) {
-				List<String> postedBy = new ArrayList<>();
-				postedBy.add(requestInfo.getUserInfo().getUuid());
-				criteria.setPostedBy(postedBy);
+				criteria.setIsCitizenSearch(false);
+				criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
 			}
 		}
 		if (CollectionUtils.isEmpty(criteria.getStatus())) {
@@ -339,9 +341,12 @@ public class UserEventsService {
 			criteria.setStatus(statuses);
 		}
 
-		if (!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles())
-				|| !StringUtils.isEmpty(criteria.getTenantId()))
-			utils.buildRecepientListForSearch(criteria);
+		if(criteria.getIsCitizenSearch()) {
+			if (!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles())
+				|| !StringUtils.isEmpty(criteria.getTenantId())) {
+				utils.buildRecepientListForSearch(criteria); 
+			}
+		}
 
 		log.info("recepeients: " + criteria.getRecepients());
 	}

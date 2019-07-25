@@ -69,4 +69,7 @@ public class ErrorConstants {
 	public static final String MEN_UPDATE_STATUS_NOTNULL_CODE = "MEN_UPDATE_STATUS_NOTNULL";
 	public static final String MEN_UPDATE_STATUS_NOTNULL_MSG = "Status cannot be null while updating the event.";
 	
+	public static final String MEN_BROADCAST_ED_FD_MANDATORY_CODE = "MEN_BROADCAST_ED_FD_MANDATORY";
+	public static final String MEN_BROADCAST_ED_FD_MANDATORY_MSG = "fromDate is mandatory for this type of event.";
+	
 }

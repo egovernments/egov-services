@@ -243,6 +243,15 @@ public class UserEventsValidator {
 								ErrorConstants.MEN_CREATE_NAMEMANDATOR_MSG);
 					}
 				}
+				
+				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE )) {
+					if (null == event.getEventDetails()) {
+						errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE,
+								ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
+					} else if (null == event.getEventDetails().getFromDate()) {
+						errorMap.put(ErrorConstants.MEN_BROADCAST_ED_FD_MANDATORY_CODE, ErrorConstants.MEN_BROADCAST_ED_FD_MANDATORY_MSG);
+					}
+				}
 
 			}
 		} else {

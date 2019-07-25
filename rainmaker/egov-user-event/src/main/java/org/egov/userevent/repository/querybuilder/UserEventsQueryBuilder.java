@@ -97,6 +97,12 @@ public class UserEventsQueryBuilder {
 			queryBuilder.append("postedby IN (:postedby)");
 			preparedStatementValues.put("postedby", criteria.getPostedBy());
 		}
+
+		if(!CollectionUtils.isEmpty(criteria.getEventTypes())) {
+            addClauseIfRequired(preparedStatementValues, queryBuilder);
+			queryBuilder.append("eventtype IN (:eventtype)");
+			preparedStatementValues.put("eventtype", criteria.getEventTypes());
+		}
 		
 		if(!CollectionUtils.isEmpty(criteria.getName())) {
             addClauseIfRequired(preparedStatementValues, queryBuilder);

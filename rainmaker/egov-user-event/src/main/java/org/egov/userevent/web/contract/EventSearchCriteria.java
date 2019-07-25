@@ -36,6 +36,8 @@ public class EventSearchCriteria {
 
 	private List<String> status;
 	
+	private List<String> eventTypes;
+
 	@NotNull
 	private String tenantId;
 	

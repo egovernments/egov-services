@@ -222,7 +222,7 @@ public class UserEventsService {
 		LastAccesDetails loginDetails = LastAccesDetails.builder().userId(requestInfo.getUserInfo().getUuid())
 				.lastAccessTime(new Date().getTime()).build();
 		LATWrapper wrapper = LATWrapper.builder().lastAccessDetails(loginDetails).build();
-		producer.push(properties.getLltDetailsTopic(), wrapper);
+		producer.push(properties.getLatDetailsTopic(), wrapper);
 		
 		return responseInfo.createResponseInfoFromRequestInfo(requestInfo, true);
 		

@@ -68,8 +68,8 @@ public class PropertiesManager {
 	@Value("${kafka.topics.persister.update.events}")
 	public String updateEventsPersisterTopic;
 	
-	@Value("${kafka.topics.llt.details}")
-	public String lltDetailsTopic;
+	@Value("${kafka.topics.lat.details}")
+	public String latDetailsTopic;
 	
 	@Value("${kafka.topics.save.events}")
 	public String saveEventsTopic;

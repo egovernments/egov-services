@@ -132,7 +132,7 @@ serviceMaps:
   - version: 1.0
     name: mSeva 
     description: Persists user last login details
-    fromTopic: user-events-llt
+    fromTopic: user-events-lat
     isTransaction: true
     queryMaps:      
     - query: INSERT INTO eg_usrevents_user_lat(userid, lastaccesstime) VALUES (?, ?) ON CONFLICT (userid) DO UPDATE SET lastaccesstime = ?;

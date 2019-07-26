@@ -58,7 +58,7 @@ public class MsevaUtils {
 	/**
 	 * This method is used to populate recepientEventMap in create and update flow. The logic is as follows:
 	 * 1. If both toUser and toRoles are empty, the event is assumed to be addressed to the ULB to which the event belongs to.
-	 * 2. if toUsers is non-empty, toRoles irrespective of its valus is discarded. toUsers will always take precedence.
+	 * 2. if toUsers is non-empty, toRoles irrespective of its values is discarded. toUsers will always take precedence.
 	 * 3. if toRoles is non-empty and toUsers is empty, the values of toRoles are coupled with tenantId, '.' is replaced with '|'
 	 * to build a list of recepients and store the same in the db, this intermediate list of recepients is introduced to make searches faster.
 	 * 

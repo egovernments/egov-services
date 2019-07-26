@@ -328,6 +328,7 @@ public class UserEventsService {
 			roles.add("CITIZEN.CITIZEN");
 			criteria.setUserids(userIds);
 			criteria.setRoles(roles);
+			criteria.setIsCitizenSearch(true);
 		}else {
 			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
 			if(roles.contains("EMPLOYEE")) {

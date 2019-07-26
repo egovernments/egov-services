@@ -56,8 +56,6 @@ public class Event {
 	
 	private String postedBy;
 	
-	@Valid
-	@NotNull
 	private Recepient recepient;
 	
 	private Action actions;

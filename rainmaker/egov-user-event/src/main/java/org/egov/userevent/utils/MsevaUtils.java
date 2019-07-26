@@ -21,9 +21,9 @@ public class MsevaUtils {
 	 * For instance, a CITIZEN with id: 10 belonging to amritsar trying to search for events should get all the events in the system addressed to:
 	 * CITIZEN|*|*, *|CITIZEN|*, *|*|pb.amritsar, CITIZEN|CITIZEN|*, *|CITIZEN|pb.amritsar, CITIZEN|*|pb.amritsar, CITIZEN|CITIZEN|pb.amritsar, userId - 10, All.
 	 * 
-	 * The format being - TYPE|ROLE|TENANTID, * is used to indicate 'Any'. A keyword 'All' indicated that the event is addressed to everyone.
+	 * The format being - TYPE|ROLE|TENANTID, * is used to indicate 'Any'. A keyword 'All' indicates that the event is addressed to everyone.
 	 * 
-	 * 
+	 *
 	 * @param criteria
 	 */
 	public void buildRecepientListForSearch(EventSearchCriteria criteria) {
@@ -33,7 +33,7 @@ public class MsevaUtils {
 
 		if (!CollectionUtils.isEmpty(criteria.getRoles())) {
 			criteria.getRoles().forEach(role -> {
-				role = role.replaceAll("\\.", "|");
+				role = role.replaceAll("\\.", "|"); //delimiter in the input is a dot, we convert it to pipe internally.
 				String[] typeAndRole = role.split("[|]");
 				recepients.add(typeAndRole[0] + "|*|*");
 				recepients.add("*|" + typeAndRole[1] + "|*");
@@ -68,42 +68,46 @@ public class MsevaUtils {
 	 * @param recepientEventList
 	 */
 	public void manageRecepients(Event event, List<RecepientEvent> recepientEventList) {
-		if (CollectionUtils.isEmpty(event.getRecepient().getToUsers())
-				&& CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-			RecepientEvent rcpntevent = RecepientEvent.builder().recepient("*|*|" + event.getTenantId())
-					.eventId(event.getId()).build();
-			recepientEventList.add(rcpntevent);
-		} else {
-			if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-				if(!CollectionUtils.isEmpty(event.getRecepient().getToRoles()))
-					event.getRecepient().getToRoles().clear();
+		if(null != event.getRecepient()) {
+			if (CollectionUtils.isEmpty(event.getRecepient().getToUsers())
+					&& CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
+				RecepientEvent rcpntevent = RecepientEvent.builder().recepient("*|*|" + event.getTenantId())
+						.eventId(event.getId()).build();
+				recepientEventList.add(rcpntevent);
+			} else {
 				if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-					event.getRecepient().getToUsers().forEach(user -> {
-						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(user).eventId(event.getId())
-								.build();
-						recepientEventList.add(rcpntevent);
-					});
-				}
-			} // toUsers will take precedence over toRoles.
-			else {
-				if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-					if(!event.getRecepient().getToRoles().contains(UserEventsConstants.ALL_KEYWORD)) {
-						event.getRecepient().getToRoles().forEach(role -> {
-							role = role.replaceAll("\\.", "|");
-							role = role + "|" + event.getTenantId();
-							RecepientEvent rcpntevent = RecepientEvent.builder().recepient(role).eventId(event.getId())
+					if(!CollectionUtils.isEmpty(event.getRecepient().getToRoles()))
+						event.getRecepient().getToRoles().clear();
+					if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
+						event.getRecepient().getToUsers().forEach(user -> {
+							RecepientEvent rcpntevent = RecepientEvent.builder().recepient(user).eventId(event.getId())
 									.build();
 							recepientEventList.add(rcpntevent);
 						});
-					}else {
-						RecepientEvent rcpntevent = RecepientEvent.builder().recepient(UserEventsConstants.ALL_KEYWORD).eventId(event.getId())
-								.build();
-						recepientEventList.add(rcpntevent);
 					}
-
+				} // toUsers will take precedence over toRoles.
+				else {
+					if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
+						if(!event.getRecepient().getToRoles().contains(UserEventsConstants.ALL_KEYWORD)) {
+							event.getRecepient().getToRoles().forEach(role -> {
+								role = role.replaceAll("\\.", "|");
+								role = role + "|" + event.getTenantId();
+								RecepientEvent rcpntevent = RecepientEvent.builder().recepient(role).eventId(event.getId())
+										.build();
+								recepientEventList.add(rcpntevent);
+							});
+						}else {
+							RecepientEvent rcpntevent = RecepientEvent.builder().recepient(UserEventsConstants.ALL_KEYWORD).eventId(event.getId())
+									.build();
+							recepientEventList.add(rcpntevent);
+						}
+					}
 				}
 			}
-
+		}else {
+			RecepientEvent rcpntevent = RecepientEvent.builder().recepient("*|*|" + event.getTenantId())
+					.eventId(event.getId()).build();
+			recepientEventList.add(rcpntevent);
 		}
 
 	}

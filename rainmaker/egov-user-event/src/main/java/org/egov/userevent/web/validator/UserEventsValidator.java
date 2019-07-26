@@ -178,14 +178,9 @@ public class UserEventsValidator {
 	 */
 	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
 		if (null != event.getEventDetails()) {
-			if (event.getEventDetails().isEmpty(event.getEventDetails())) {
-				errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE,
-						ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
-			}
 			if (event.getEventDetails().getFromDate() > event.getEventDetails().getToDate()) {
 				errorMap.put(ErrorConstants.INVALID_EVENT_DATE_CODE, ErrorConstants.INVALID_EVENT_DATE_MSG);
 			}
-
 		}
 		if(null != event.getRecepient()) {
 			if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
@@ -247,6 +242,9 @@ public class UserEventsValidator {
 				}
 				
 				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE )) {
+					if (StringUtils.isEmpty(event.getName())) {
+						errorMap.put(ErrorConstants.MEN_CREATE_NAMEMANDATORY_CODE, ErrorConstants.MEN_CREATE_NAMEMANDATOR_MSG);
+					}
 					if (null == event.getEventDetails()) {
 						errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE,
 								ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);

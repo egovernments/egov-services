@@ -187,31 +187,33 @@ public class UserEventsValidator {
 			}
 
 		}
-		if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
-			if (event.getRecepient().getToRoles().contains(UserEventsConstants.ALL_KEYWORD)
-					&& (event.getRecepient().getToRoles().size() > 1)) {
-				if ((event.getRecepient().getToRoles().size() > 1)
-						|| !CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-					errorMap.put(ErrorConstants.MEN_INVALID_TOROLE_ALL_CODE, ErrorConstants.MEN_INVALID_TOROLE_ALL_MSG);
+		if(null != event.getRecepient()) {
+			if (!CollectionUtils.isEmpty(event.getRecepient().getToRoles())) {
+				if (event.getRecepient().getToRoles().contains(UserEventsConstants.ALL_KEYWORD)
+						&& (event.getRecepient().getToRoles().size() > 1)) {
+					if ((event.getRecepient().getToRoles().size() > 1)
+							|| !CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
+						errorMap.put(ErrorConstants.MEN_INVALID_TOROLE_ALL_CODE, ErrorConstants.MEN_INVALID_TOROLE_ALL_MSG);
+					}
 				}
+				event.getRecepient().getToRoles().forEach(role -> {
+					Pattern p = Pattern.compile(UserEventsConstants.REGEX_FOR_SPCHARS_EXCEPT_DOT);
+					Matcher m = p.matcher(role);
+					if (m.find()) {
+						errorMap.put(ErrorConstants.MEN_INVALID_TOROLE_CODE, ErrorConstants.MEN_INVALID_TOROLE_MSG);
+					}
+				});
 			}
-			event.getRecepient().getToRoles().forEach(role -> {
-				Pattern p = Pattern.compile(UserEventsConstants.REGEX_FOR_SPCHARS_EXCEPT_DOT);
-				Matcher m = p.matcher(role);
-				if (m.find()) {
-					errorMap.put(ErrorConstants.MEN_INVALID_TOROLE_CODE, ErrorConstants.MEN_INVALID_TOROLE_MSG);
-				}
-			});
-		}
 
-		if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
-			event.getRecepient().getToUsers().forEach(user -> {
-				try {
-					UUID.fromString(user);
-				} catch (Exception e) {
-					errorMap.put(ErrorConstants.MEN_INVALID_TOUSER_CODE, ErrorConstants.MEN_INVALID_TOUSER_MSG);
-				}
-			});
+			if (!CollectionUtils.isEmpty(event.getRecepient().getToUsers())) {
+				event.getRecepient().getToUsers().forEach(user -> {
+					try {
+						UUID.fromString(user);
+					} catch (Exception e) {
+						errorMap.put(ErrorConstants.MEN_INVALID_TOUSER_CODE, ErrorConstants.MEN_INVALID_TOUSER_MSG);
+					}
+				});
+			}
 		}
 
 		validateMDMSData(requestInfo, event, errorMap);

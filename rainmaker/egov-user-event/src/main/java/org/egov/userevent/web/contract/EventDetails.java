@@ -1,6 +1,7 @@
 package org.egov.userevent.web.contract;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -35,6 +36,8 @@ public class EventDetails {
 	private BigDecimal longitude;
 	
 	private String address;
+	
+	private List<String> documents;
 	
 	
 	public boolean isEmpty(EventDetails details) {

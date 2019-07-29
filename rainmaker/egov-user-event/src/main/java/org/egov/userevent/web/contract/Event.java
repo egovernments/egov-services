@@ -44,6 +44,8 @@ public class Event {
 	@NotNull
 	private String eventType;
 	
+	private String eventCategory;
+	
 	private String name;
 	
 	@NotNull

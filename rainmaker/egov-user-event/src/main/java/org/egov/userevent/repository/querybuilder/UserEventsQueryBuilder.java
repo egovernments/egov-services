@@ -117,12 +117,15 @@ public class UserEventsQueryBuilder {
 			preparedStatementValues.put("referenceid", criteria.getReferenceIds());
 		}
 		
-		if(!criteria.getIsCitizenSearch()) {
-			if(!StringUtils.isEmpty(criteria.getTenantId())) {
-	            addClauseIfRequired(preparedStatementValues, queryBuilder);
-				queryBuilder.append("tenantid = :tenantid");
-				preparedStatementValues.put("tenantid", criteria.getTenantId());
+		if(null != criteria.getIsCitizenSearch()) {
+			if(!criteria.getIsCitizenSearch()) {
+				if(!StringUtils.isEmpty(criteria.getTenantId())) {
+		            addClauseIfRequired(preparedStatementValues, queryBuilder);
+					queryBuilder.append("tenantid = :tenantid");
+					preparedStatementValues.put("tenantid", criteria.getTenantId());
+				}
 			}
+			
 		}
 
 		if(!CollectionUtils.isEmpty(criteria.getRecepients())) {

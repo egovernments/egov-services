@@ -211,7 +211,7 @@ public class UserEventsValidator {
 			}
 		}
 
-		validateMDMSData(requestInfo, event, errorMap);
+		//validateMDMSData(requestInfo, event, errorMap);
 	}
 
 	/**
@@ -222,22 +222,30 @@ public class UserEventsValidator {
 	 * @param errorMap
 	 */
 	private void validateMDMSData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
-		List<String> eventTypes = mdmsService.fetchEventTypes(requestInfo, event.getTenantId());
-		if (!CollectionUtils.isEmpty(eventTypes)) {
+		Map<String, List<String>> eventMaster = mdmsService.fetchEventMasters(requestInfo, event.getTenantId());
+		List<String> eventTypes = eventMaster.get(UserEventsConstants.MEN_MDMS_EVENTMASTER_CODE);
+		List<String> eventCategories = eventMaster.get(UserEventsConstants.MEN_MDMS_EVENTCATEGORY_MASTER_CODE);
+		if (!CollectionUtils.isEmpty(eventTypes) && !CollectionUtils.isEmpty(eventCategories)) {
 			if (!eventTypes.contains(event.getEventType()))
 				errorMap.put(ErrorConstants.MEN_INVALID_EVENTTYPE_CODE, ErrorConstants.MEN_INVALID_EVENTTYPE_MSG);
 			else {
 				if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
-					if (null == event.getEventDetails()) {
-						errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE,
-								ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
-					} else if (event.getEventDetails().isEmpty(event.getEventDetails())) {
-						errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE,
-								ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
-					}
-					if (StringUtils.isEmpty(event.getName())) {
-						errorMap.put(ErrorConstants.MEN_CREATE_NAMEMANDATORY_CODE,
-								ErrorConstants.MEN_CREATE_NAMEMANDATOR_MSG);
+					if(!StringUtils.isEmpty(event.getEventCategory())) {
+						if(eventCategories.contains(event.getEventCategory())) {
+							if (null == event.getEventDetails()) {
+								errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE, ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
+							} else if (event.getEventDetails().isEmpty(event.getEventDetails())) {
+								errorMap.put(ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_CODE, ErrorConstants.MEN_UPDATE_EVENTDETAILS_MANDATORY_MSG);
+							}
+							if (StringUtils.isEmpty(event.getName())) {
+								errorMap.put(ErrorConstants.MEN_CREATE_NAMEMANDATORY_CODE, ErrorConstants.MEN_CREATE_NAMEMANDATOR_MSG);
+							}
+						}else {
+							errorMap.put(ErrorConstants.MEN_CREATE_CATEGORYMANDATORY_CODE, ErrorConstants.MEN_CREATE_CATEGORYMANDATORY_MSG);
+						}
+						
+					}else {
+						errorMap.put(ErrorConstants.MEN_CREATE_CATEGORYMANDATORY_CODE, ErrorConstants.MEN_CREATE_CATEGORYMANDATORY_MSG);
 					}
 				}
 				

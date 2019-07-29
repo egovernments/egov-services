@@ -7,8 +7,12 @@ public class UserEventsConstants {
 	
 	public static final String MEN_MDMS_MODULE_CODE = "mseva";	
 	public static final String MEN_MDMS_EVENTMASTER_CODE = "EventTypes";
+	public static final String MEN_MDMS_EVENTCATEGORY_MASTER_CODE = "EventCategories";
 	public static final String MEN_MDMS_EVENTMASTER_FILTER = "$.[?(@.active==true)].code";
+	public static final String MEN_MDMS_EVENTCATEGORY_MASTER_FILTER = "$.[?(@.active==true)].code";
 	public static final String MEN_MDMS_EVENTMASTER_CODES_JSONPATH = "$.MdmsRes." + MEN_MDMS_MODULE_CODE + "." + MEN_MDMS_EVENTMASTER_CODE;
+	public static final String MEN_MDMS_EVENTCATEGORY_MASTER_CODES_JSONPATH = "$.MdmsRes." + MEN_MDMS_MODULE_CODE + "." + MEN_MDMS_EVENTCATEGORY_MASTER_CODE;
+
 	
 	public static final String MEN_MDMS_EVENTSONGROUND_CODE = "EVENTSONGROUND";	
 	public static final String MEN_MDMS_BROADCAST_CODE = "BROADCAST";	

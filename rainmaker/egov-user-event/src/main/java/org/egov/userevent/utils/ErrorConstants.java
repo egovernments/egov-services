@@ -25,7 +25,7 @@ public class ErrorConstants {
 	public static final String INVALID_FROM_TO_DATE_MSG = "Date invalid, fromDate and toDate cannot be greater than currentDate";
 
 	public static final String MEN_ERROR_FROM_MDMS_CODE = "MEN_ERROR_FROM_MDMS";
-	public static final String MEN_ERROR_FROM_MDMS_MSG = "There was an error while fetching event types from MDMS";
+	public static final String MEN_ERROR_FROM_MDMS_MSG = "There was an error while fetching event masters from MDMS";
 	
 	public static final String MEN_NO_DATA_MDMS_CODE = "MEN_NO_DATA_MDMS";
 	public static final String MEN_NO_DATA_MDMS_MSG = "MDMS data for eventTypes is missing!";
@@ -50,6 +50,9 @@ public class ErrorConstants {
 	
 	public static final String MEN_CREATE_NAMEMANDATORY_CODE = "MEN_CREATE_NAMEMANDATORY";
 	public static final String MEN_CREATE_NAMEMANDATOR_MSG = "Name of the event is mandatory.";
+	
+	public static final String MEN_CREATE_CATEGORYMANDATORY_CODE = "MEN_CREATE_CATEGORYMANDATORY";
+	public static final String MEN_CREATE_CATEGORYMANDATORY_MSG = "Category of the event is mandatory.";
 	
 	public static final String MEN_CREATE_BROADCAST_CODE = "MEN_CREATE_BROADCAST";
 	public static final String MEN_CREATE_BROADCAST_MSG = "Broadcast messages should not contain any event details";

@@ -9,8 +9,8 @@ import axios from 'axios';
 
 export const httpRequest= async(
     endPoint,    
-    requestBody,
-    headers
+    requestBody=apiRequest,
+    headers=defaultheader
 )=>{
     let instance=axios.create({
       endPoint:endPoint,
@@ -35,4 +35,23 @@ try {
     throw errorReponse;
     
 }
+
+const apiRequest = {
+  RequestInfo: {
+      action: "",
+      apiId: "Rainmaker",
+      authToken: "7c9a4b91-b8b7-4121-804f-89148bd52550",
+      did: "1",
+      key: "",
+      msgId: "20170310130900|en_IN",
+      requesterId:   "",
+      ver: ".01"
+     }
+  }
+
+
+  const defaultheader={
+    "content-type": "application/json;charset=UTF-8",
+    "accept":"application/json, text/plain, */*" 
+   }
 

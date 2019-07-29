@@ -7,12 +7,6 @@ import fs, { exists } from "fs";
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
-import initializeDb from "./db";
-import middleware from "./middleware";
-import api from "./api";
-import config from "./config.json";
-import { PROPERTY } from "./endpoint";
-import { httpRequest } from "./api/api";
 import asyncHandler from 'express-async-handler';
 import * as pdfmake from "pdfmake/build/pdfmake";
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
@@ -23,19 +17,19 @@ import { Recoverable } from "repl";
 import { fileStoreAPICall } from "./utils/fileStoreAPICall";
 import { directMapping } from "./utils/directMapping";
 import { externalAPIMapping } from "./utils/externalAPIMapping";
-
+import envVariables from "./EnvironmentVariables";
 //create binary
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var pdfMakePrinter = require("pdfmake/src/printer");
 
+let localisationMap={};
 let app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
-var key;
-var fileNameAppend="randomNumber";
- function createPdfBinary(docDefinition, successCallback, errorCallback) {
+let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
+ function createPdfBinary(key,listDocDefinition, successCallback, errorCallback) {
    try {
     var fontDescriptors = {
       Roboto: {
@@ -47,58 +41,57 @@ var fileNameAppend="randomNumber";
     };
     
     const printer =  new pdfMakePrinter(fontDescriptors);
-    const doc = printer.createPdfKitDocument(docDefinition);
-    //reference link
-    //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
-
-    //storing file on local computer/server
-    doc.pipe(
-       fs.createWriteStream("src/pdfs/"+key+" "+fileNameAppend+".pdf").on("error", err => {
-        errorCallback(err.message);
-      }).on("close", () => {
-          fileStoreAPICall(key,fileNameAppend,function(result) {
-          successCallback({message:"PDF successfully created and stored",filestoreId:result});
-       });
-      })
-    );
-  //   doc.on("end", () => {
+    let noOfDefinitions=listDocDefinition.length;
+    let listOfFilestoreIds=[];
+    listDocDefinition.forEach(docDefinition =>
+    {
+        const doc = printer.createPdfKitDocument(docDefinition);
+        let fileNameAppend="-"+new Date().getTime();
+        let filename="src/pdfs/"+key+" "+fileNameAppend+".pdf"
+        //reference link
+        //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
+    
+        //storing file on local computer/server
+        doc.pipe(
+          fs.createWriteStream(filename).on("error", err => {
+            errorCallback(err.message);
+          }).on("close", () => {
+              fileStoreAPICall(filename).then((result)=>{
+              listOfFilestoreIds.push(result);
+              if(listOfFilestoreIds.length===noOfDefinitions)
+                successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
+          }).catch(err=>{
+            console.log(err.response.data);
+            errorCallback(err);
+          });
+        }
+        ));
+      //   doc.on("end", () => {
+      //     //filestore API call to store file on S3    
   //     //filestore API call to store file on S3    
-  //     fileStoreAPICall(key,fileNameAppend,function(result) {
-  //     successCallback({message:"PDF successfully created and stored",filestoreId:result});
-  //  });
-      
-  //   });
-    doc.end();
+      //     //filestore API call to store file on S3    
+      //     fileStoreAPICall(key,fileNameAppend,function(result) {
+      //     successCallback({message:"PDF successfully created and stored",filestoreId:result});
+      //  });
+          
+      //   });
+        doc.end();
+    });
   } catch (err) {
     throw err;
   }
 }
 
 app.post("/pdf", asyncHandler(async (req, res)=> { 
-   key=req.query.key;
+   let key=req.query.key;
       
    var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
    var dataconfig=require("./config/data-config/"+key);  
-   
-   if(key=="tl-receipt"){          
-          fileNameAppend=req.body.Licenses[0].applicationNumber;          
-    }
-      else if(key=="firenoc-receipt"){        
-          fileNameAppend=req.body.FireNOCs[0].fireNOCDetails.applicationNumber;        
-    }
-      else if(key=="pt-receipt"){        
-        fileNameAppend=req.body.Properties[0].propertyId+":"+req.body.Properties[0].propertyDetails[0].assessmentNumber;        
-    }
-    else{
-      
-    }
-
-  let formatObjectArrayObject={};
-  formatObjectArrayObject["content"]=[];
-
+ 
+  let formatObjectArrayObject=[];
+  let formatConfigByFile=[];
   for(let propertykey in req.body)
   {
-    
     if(req.body.hasOwnProperty(propertykey))
     {
       for(var i=0, len=req.body[propertykey].length; i < len; i++)
@@ -108,7 +101,7 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
         let formatObject=JSON.parse(JSON.stringify(formatconfig));
 
         // Multipage pdf, each pdf from new page
-        if((i!=0)&&(formatObject["content"][0]!==undefined))
+        if((formatObjectArrayObject.length!=0)&&(formatObject["content"][0]!==undefined))
         {
           formatObject["content"][0]["pageBreak"]= "before";
         }
@@ -116,24 +109,35 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
         outerObject[propertykey].push(moduleObject);
         let variableTovalueMap={};
         //direct mapping service
-        directMapping(outerObject,formatObject,dataconfig,variableTovalueMap);  
-      
+        await Promise.all([
+        directMapping(outerObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
+      ,
         //external API mapping
-        await externalAPIMapping(key,outerObject,formatObject,dataconfig,variableTovalueMap);
+        externalAPIMapping(key,outerObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
+         ]);
         formatObject=fillValues(variableTovalueMap,formatObject);
-        formatObjectArrayObject["content"].push(formatObject["content"]);
+        formatObjectArrayObject.push(formatObject["content"]);
         //putting formatconfig in a file to check docdefinition on pdfmake playground online
+
+        if(((i+1)==maxPagesAllowed)||((i+1)==len))
+        {
+          let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
+          formatconfigCopy["content"]=formatObjectArrayObject;
+          formatConfigByFile.push(formatconfigCopy);
+          formatObjectArrayObject=[];
+        }
       }
     }
   } 
-  formatconfig["content"]=formatObjectArrayObject["content"];
+  
 
 
-  var util = require('util');
-  fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
+  // var util = require('util');
+  // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
   //function to download pdf automatically 
   createPdfBinary(
-    JSON.parse(JSON.stringify(formatconfig)),
+    key,
+    formatConfigByFile,
     response => {
       // doc successfully created
       res.json({
@@ -195,10 +199,8 @@ export const fillValues=(variableTovalueMap,formatconfig)=>{
   // console.log(variableTovalueMap);
   // console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
   let output=JSON.parse(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
- 
   return output;
 } 
-
 
 export default app;
 

@@ -44,18 +44,28 @@
                         "variable": "variable6",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.tradeUnits[0].tradeType"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TL",   
+                           "module":"rainmaker-tl"
                         }
                      },
                      {
                         "variable": "variable7",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.tradeUnits[0].tradeType"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TL",   
+                           "module":"rainmaker-tl"
                         }
                      },
                      {
                         "variable": "variable8",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.accessories[5]"                              
+                             "path":"Licenses[0].tradeLicenseDetail.accessories[0].accessoryCategory"                              
                         }
                      },
                      {
@@ -120,7 +130,7 @@
                            "RequestInfo": {
                                "action": "",
                                "apiId": "Rainmaker",
-                               "authToken": "665f6ca9-bdc1-4b01-8bc6-77235dc36fed",
+                               "authToken": "7c9a4b91-b8b7-4121-804f-89148bd52550",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",
@@ -161,6 +171,14 @@
                            {
                               "variable":"variable23",
                               "value":"Receipt[0].instrument.bank.name"
+                           },
+                           {
+                              "variable":"variable24",
+                              "value":"Receipt[0].Bill[0].billDetails[0].manualReceiptNumber"
+                           },
+                           {
+                              "variable":"variable25",
+                              "value":"Receipt[0].Bill[0].billDetails[0].manualReceiptDate"
                            }
                            
                            

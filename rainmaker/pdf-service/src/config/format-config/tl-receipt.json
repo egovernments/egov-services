@@ -603,7 +603,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NA5",
+                "text": "NA",
                 "border": [
                   true,
                   true,
@@ -631,7 +631,7 @@
                 "alignment": "center"
               },
               {
-                "text": 0,
+                "text": "NA",
                 "border": [
                   true,
                   true,
@@ -645,7 +645,7 @@
                 "alignment": "center"
               },
               {
-                "text": 0,
+                "text": "NA",
                 "border": [
                   true,
                   true,
@@ -742,7 +742,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": 0,
+                "text": "{{variable20}}",
                 "border": [
                   false,
                   true,
@@ -913,7 +913,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "NA",
+                "text": "{{variable24}}",
                 "border": [
                   false,
                   true,
@@ -932,7 +932,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "NA",
+                "text": "{{variable25}}",
                 "border": [
                   false,
                   true,

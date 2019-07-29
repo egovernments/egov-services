@@ -3,7 +3,7 @@ import get from "lodash/get";
 import set from "lodash/set";
 import { httpRequest } from "../api/api";
 
-export const externalAPIMapping=async function(key,req,formatconfig,dataconfig,variableTovalueMap){
+export const externalAPIMapping=async function(key,req,formatconfig,dataconfig,variableTovalueMap,localisationMap){
 
    var objectOfExternalAPI = get(dataconfig, "DataConfigs.mappings[0].mappings[2].externalAPI", []);
    var externalAPIArray = objectOfExternalAPI.map(item => {
@@ -98,7 +98,7 @@ else
   
 }
     externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(/,/g,"&");
-      console.log(externalAPIArray[i].queryParams);
+      // console.log(externalAPIArray[i].queryParams);
     let requestBody = JSON.stringify(externalAPIArray[i].body);
     let headers={
       "content-type": "application/json;charset=UTF-8",

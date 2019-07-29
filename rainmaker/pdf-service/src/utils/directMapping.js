@@ -1,8 +1,9 @@
 import get from "lodash/get";
 import set from "lodash/set";
 import cloneDeep from "lodash/set";
+import {findAndUpdateLocalisation} from "./commons";
 
-export const directMapping=(req,formatconfig,dataconfig,variableTovalueMap)=>{    
+export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,localisationMap)=>{    
     
     var directArr = [];        
     var objectOfDirectMapping = get(dataconfig, "DataConfigs.mappings[0].mappings[0].direct", []);
@@ -12,7 +13,8 @@ export const directMapping=(req,formatconfig,dataconfig,variableTovalueMap)=>{
         val: get(req, item.value.path, "NA"),
         valJsonPath: item.value.path,
         type: item.type,
-        format: item.format
+        format: item.format,
+        localisation: item.localisation
       };
     });
   
@@ -76,8 +78,18 @@ export const directMapping=(req,formatconfig,dataconfig,variableTovalueMap)=>{
           variableTovalueMap[directArr[i].jPath]="NA";
           // set(formatconfig, directArr[i].jPath, "NA");
         else
-          variableTovalueMap[directArr[i].jPath]=directArr[i].val;
-          // set(formatconfig, directArr[i].jPath, directArr[i].val);        
+        {
+          if(directArr[i].localisation && directArr[i].localisation.required && directArr[i].localisation.prefix)
+            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(localisationMap,directArr[i].localisation.prefix+"_"+directArr[i].val,directArr[i].localisation.module);
+          else
+            variableTovalueMap[directArr[i].jPath]=directArr[i].val;
+          
+          // set(formatconfig, directArr[i].jPath, directArr[i].val);
+        }
+        
       }      
     }
 }
+
+
+

@@ -3,6 +3,7 @@ package org.egov.userevent.web.contract;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.egov.userevent.model.Document;
 import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
@@ -37,7 +38,7 @@ public class EventDetails {
 	
 	private String address;
 	
-	private List<String> documents;
+	private List<Document> documents;
 	
 	
 	public boolean isEmpty(EventDetails details) {

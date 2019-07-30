@@ -1,10 +1,10 @@
 {
     "DataConfigs": {
-       "serviceName": "PGR - rainmaker",
+       "serviceName": "rainmaker-noc",
        "version": "1.0.0",
        "mappings": [
           {
-             "topic": "pgr-pdf-generation",
+             "topic": "noc-pdf-generation",
              "staticConfigPath": "https://raw.githubusercontent.com/egovernments/egov-services/vishal-feature-filestore/core/egov-indexer/src/main/resources/rainmaker-pgr-indexer.yml",
              "mappings": [
                 {
@@ -52,7 +52,7 @@
                               "RequestInfo": {
                                  "action": "",
                                  "apiId": "Rainmaker",
-                                 "authToken": "7c9a4b91-b8b7-4121-804f-89148bd52550",
+                                 "authToken": "b59ec3af-c68f-4445-a2f0-8c2e7c9e5cd5",
                                  "did": "1",
                                  "key": "",
                                  "msgId": "20170310130900|en_IN",

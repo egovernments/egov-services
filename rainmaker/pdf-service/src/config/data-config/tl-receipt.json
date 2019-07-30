@@ -1,10 +1,10 @@
 {
     "DataConfigs": {
-       "serviceName": "PGR - rainmaker",
+       "serviceName": "rainmaker-tl",
        "version": "1.0.0",
        "mappings": [
           {
-             "topic": "pgr-pdf-generation",
+             "topic": "tl-pdf-generation",
              "staticConfigPath": "https://raw.githubusercontent.com/egovernments/egov-services/vishal-feature-filestore/core/egov-indexer/src/main/resources/rainmaker-pgr-indexer.yml",
              "mappings": [
                 {
@@ -14,6 +14,11 @@
                         "variable": "variable1",
                         "value": {
                              "path":"Licenses[0].tradeLicenseDetail.additionalDetail.applicationType"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TRADELICENSE_APPLICATIONTYPE",   
+                           "module":"rainmaker-tl"
                         }
                      },
                      {
@@ -130,7 +135,7 @@
                            "RequestInfo": {
                                "action": "",
                                "apiId": "Rainmaker",
-                               "authToken": "7c9a4b91-b8b7-4121-804f-89148bd52550",
+                               "authToken": "7d242eb4-40a5-4367-8f5c-2eca56095fe9",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",

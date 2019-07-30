@@ -123,9 +123,16 @@ else
           if((externalAPIArray[i].jPath[j].value).search("Date")!="-1")
           {            
             let myDate = new Date(replaceValue);
-            replaceValue=myDate.toLocaleDateString();            
-            // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
-            variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;
+            if(isNaN(myDate))
+            {
+              variableTovalueMap[externalAPIArray[i].jPath[j].variable]="NA";
+            }
+            else
+            {
+              replaceValue=myDate.toLocaleDateString();            
+              // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+              variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;
+            }
           }
           else{          
             variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;

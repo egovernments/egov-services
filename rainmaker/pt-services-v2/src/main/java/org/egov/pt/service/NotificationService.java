@@ -58,10 +58,15 @@ public class NotificationService {
         StringBuilder uri = util.getUri(tenantId,request.getRequestInfo());
         try{
             String citizenMobileNumber = request.getRequestInfo().getUserInfo().getMobileNumber();
-            LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, request.getRequestInfo());
-            String jsonString = new JSONObject(responseMap).toString();
-            String path = getJsonPath(topic,request.getRequestInfo().getUserInfo().getType());
-            Object messageObj = JsonPath.parse(jsonString).read(path);
+            String path = getJsonPath(topic, request.getRequestInfo().getUserInfo().getType());
+            Object messageObj = null;
+            try {
+                LinkedHashMap responseMap = (LinkedHashMap) serviceRequestRepository.fetchResult(uri, request.getRequestInfo());
+                String jsonString = new JSONObject(responseMap).toString();
+                messageObj = JsonPath.parse(jsonString).read(path);
+            }catch(Exception e) {
+            	throw new CustomException("LOCALIZATION ERROR","Unable to get message from localization");
+            }
             String message = ((ArrayList<String>)messageObj).get(0);
             List<Event> events = new ArrayList<>();
             request.getProperties().forEach(property -> {
@@ -84,8 +89,9 @@ public class NotificationService {
             }
 
         }
-        catch(Exception e)
-        {throw new CustomException("LOCALIZATION ERROR","Unable to get message from localization");}
+        catch(Exception e){
+        	throw new CustomException("ERROR_PROCESSING_NOTIFS","There was an error while processing notifications.");
+        }
     }
 
     /**

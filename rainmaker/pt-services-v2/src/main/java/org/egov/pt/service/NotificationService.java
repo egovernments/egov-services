@@ -75,7 +75,8 @@ public class NotificationService {
                 if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
                     listOfMobileNumber.add(citizenMobileNumber);
                 List<SMSRequest> smsRequests = getSMSRequests(listOfMobileNumber,customMessage);
-                log.info("smsRequests: "+smsRequests);
+                if(null == propertyConfiguration.getIsUserEventsNotificationEnabled())
+                	propertyConfiguration.setIsUserEventsNotificationEnabled(true);
                 if(propertyConfiguration.getIsUserEventsNotificationEnabled()) {
                 	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, path);
                 	if(!CollectionUtils.isEmpty(eventsForAProperty)) {
@@ -349,6 +350,8 @@ public class NotificationService {
      * @param smsRequestList The list of SMSRequest to be sent
      */
     private void sendSMS(List<SMSRequest> smsRequestList){
+    	if(null == propertyConfiguration.getIsSMSNotificationEnabled())
+    		propertyConfiguration.setIsSMSNotificationEnabled(true);
         if (propertyConfiguration.getIsSMSNotificationEnabled()) {
             if (CollectionUtils.isEmpty(smsRequestList))
                 log.info("Messages from localization couldn't be fetched!");

@@ -61,7 +61,7 @@ public class Service   {
   @JsonProperty("address")
   private String address;
 
-  @JsonProperty("email")
+  @JsonProperty("email")	
   @Email
   private String email;
 

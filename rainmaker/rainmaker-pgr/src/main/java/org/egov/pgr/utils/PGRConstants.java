@@ -103,6 +103,12 @@ public class PGRConstants {
 	public static final String SMS_NOTIFICATION_SLA_NAME = "<sla>";
 	public static final String SMS_NOTIFICATION_RATING_KEY = "<rating>";
 	
+	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String  USREVENTS_EVENT_NAME = "Public Grievance Redressal";
+	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-PGR";
+
+
+	
 
 
 	

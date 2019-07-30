@@ -75,7 +75,7 @@ serviceMaps:
     fromTopic: update-user-events
     isTransaction: true
     queryMaps:
-    - query: UPDATE eg_usrevents_events SET description = ?, status = ?, name = ?, category = ?, postedby = ?, eventdetails = ?, actions = ?, recepient = ? , lastmodifiedby = ?, lastmodifiedtime = ? WHERE id = ?;
+    - query: UPDATE eg_usrevents_events SET description = ?, status = ?, name = ?, category = ?, eventdetails = ?, actions = ?, recepient = ? , lastmodifiedby = ?, lastmodifiedtime = ? WHERE id = ?;
 
       basePath: events.*
       jsonMaps:
@@ -87,9 +87,7 @@ serviceMaps:
       - jsonPath: $.events.*.name
 
       - jsonPath: $.events.*.eventCategory
-      
-      - jsonPath: $.events.*.postedBy
-      
+            
       - jsonPath: $.events.*.eventDetails
         type: JSON
         dbType: JSONB

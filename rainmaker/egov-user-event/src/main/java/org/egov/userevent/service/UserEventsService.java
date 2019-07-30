@@ -41,6 +41,7 @@
 package org.egov.userevent.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -254,7 +255,13 @@ public class UserEventsService {
 			utils.manageRecepients(event, recepientEventList);
 			event.setRecepientEventMap(recepientEventList);
 			
-			event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
+			if(!StringUtils.isEmpty(event.getPostedBy())) {
+				if(!Arrays.asList(UserEventsConstants.INTEGRATED_MODULES).contains(event.getPostedBy())) {
+					event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
+				}
+			}else {
+				event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
+			}
 
 			AuditDetails auditDetails = AuditDetails.builder()
 					.createdBy(request.getRequestInfo().getUserInfo().getUuid()).createdTime(new Date().getTime())

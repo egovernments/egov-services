@@ -21,6 +21,8 @@ public class UserEventsConstants {
 	public static final String REGEX_FOR_SPCHARS_EXCEPT_DOT = "[$&+,:;=\\\\\\\\?@#|/'<>^()%!-]";	
 	public static final String REGEX_FOR_UUID = "[/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/]";
 	public static final String ALL_KEYWORD = "All";	
+	
+	public static final String[] INTEGRATED_MODULES = {"SYSTEM-PT", "SYSTEM-PGR", "SYSTEM-TL", "SYSTEM-FIRENOC"};
 
 
 	

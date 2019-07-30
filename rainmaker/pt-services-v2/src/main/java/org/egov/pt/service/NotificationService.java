@@ -9,10 +9,16 @@ import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.PTConstants;
 import org.egov.pt.util.PropertyUtil;
+import org.egov.pt.web.models.Action;
+import org.egov.pt.web.models.ActionItem;
+import org.egov.pt.web.models.Event;
+import org.egov.pt.web.models.EventRequest;
 import org.egov.pt.web.models.Property;
 import org.egov.pt.web.models.PropertyDetail;
 import org.egov.pt.web.models.PropertyRequest;
+import org.egov.pt.web.models.Recepient;
 import org.egov.pt.web.models.SMSRequest;
+import org.egov.pt.web.models.Source;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +63,26 @@ public class NotificationService {
             String path = getJsonPath(topic,request.getRequestInfo().getUserInfo().getType());
             Object messageObj = JsonPath.parse(jsonString).read(path);
             String message = ((ArrayList<String>)messageObj).get(0);
+            List<Event> events = new ArrayList<>();
             request.getProperties().forEach(property -> {
                 String customMessage = getCustomizedMessage(property,message,path);
                 Set<String> listOfMobileNumber = getMobileNumbers(property);
                 if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
                     listOfMobileNumber.add(citizenMobileNumber);
                 List<SMSRequest> smsRequests = getSMSRequests(listOfMobileNumber,customMessage);
+                if(propertyConfiguration.getIsUserEventsNotificationEnabled()) {
+                	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, path);
+                	if(!CollectionUtils.isEmpty(eventsForAProperty)) {
+                        events.addAll(eventsForAProperty);
+                	}
+                }
                 sendSMS(smsRequests);
              });
+            if(!CollectionUtils.isEmpty(events)) {
+                EventRequest eventReq = EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
+                sendEventNotification(eventReq);
+            }
+
         }
         catch(Exception e)
         {throw new CustomException("LOCALIZATION ERROR","Unable to get message from localization");}
@@ -212,6 +230,108 @@ public class NotificationService {
              });
          return smsRequests;
     }
+    
+    
+    
+    /**
+     * Creates and registers an event at the egov-user-event service at defined trigger points as that of sms notifs.
+     * 
+     * Assumption - The PropertyRequest received will always contain only one Property and that Property will have only one PropertyDetail.
+     * 
+     * @param mobileNumbers
+     * @param customizedMessage
+     * @param request
+     * @return
+     */
+    private List<Event> getEvents(Set<String> mobileNumbers, String customizedMessage,PropertyRequest request, String path) {
+    	Map<String, String> mapOfPhnoAndUUIDs = fetchUserUUIDs(mobileNumbers, request.getRequestInfo(), request.getProperties().get(0).getTenantId());
+		if (CollectionUtils.isEmpty(mapOfPhnoAndUUIDs.keySet()) || StringUtils.isEmpty(customizedMessage))
+			return null;
+    	List<Event> events = new ArrayList<>();
+		for(String mobile: mobileNumbers) {
+			if(null == mapOfPhnoAndUUIDs.get(mobile)) {
+				log.error("No UUID for mobile {} skipping event", mobile);
+				continue;
+			}
+	    	Property property = request.getProperties().get(0);
+			List<String> toUsers = new ArrayList<>();
+			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
+			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
+			Action action = null;
+			if(!path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE)) {
+				List<ActionItem> items = new ArrayList<>();
+				String actionLink = propertyConfiguration.getUiAppHost() + propertyConfiguration.getPayLink()
+							.replaceAll("$mobile", mobile)
+							.replaceAll("$assessmentId", property.getPropertyDetails().get(0).getAssessmentNumber())
+							.replaceAll("$propertyId", property.getPropertyId())
+							.replaceAll("$tenantId", property.getTenantId())
+							.replaceAll("$financialYear", property.getPropertyDetails().get(0).getFinancialYear());
+				
+				ActionItem item = ActionItem.builder().actionUrl(actionLink).code(propertyConfiguration.getPayCode()).build();
+				items.add(item);
+				
+				action = Action.builder().actionUrls(items).build();
+				
+			}
+			
+			events.add(Event.builder().tenantId(property.getTenantId()).description(customizedMessage)
+					.eventType(PTConstants.USREVENTS_EVENT_TYPE).name(PTConstants.USREVENTS_EVENT_NAME)
+					.postedBy(PTConstants.USREVENTS_EVENT_POSTEDBY).source(Source.WEBAPP).recepient(recepient)
+					.eventDetails(null).actions(action).build());
+			
+		}
+
+		
+		return events;
+    }
+    
+    
+    
+    /**
+     * Fetches UUIDs of CITIZENs based on the phone number.
+     * 
+     * @param mobileNumbers
+     * @param requestInfo
+     * @param tenantId
+     * @return
+     */
+    private Map<String, String> fetchUserUUIDs(Set<String> mobileNumbers, RequestInfo requestInfo, String tenantId) {
+    	Map<String, String> mapOfPhnoAndUUIDs = new HashMap<>();
+    	StringBuilder uri = new StringBuilder();
+    	uri.append(propertyConfiguration.getUserHost()).append(propertyConfiguration.getUserSearchEndpoint());
+    	Map<String, Object> userSearchRequest = new HashMap<>();
+    	userSearchRequest.put("RequestInfo", requestInfo);
+		userSearchRequest.put("tenantId", tenantId);
+		userSearchRequest.put("userType", "CITIZEN");
+    	for(String mobileNo: mobileNumbers) {
+    		userSearchRequest.put("userName", mobileNo);
+    		try {
+    			Object user = serviceRequestRepository.fetchResult(uri, userSearchRequest);
+    			if(null != user) {
+    				String uuid = JsonPath.read(user, "$.user[0].uuid");
+    				mapOfPhnoAndUUIDs.put(mobileNo, uuid);
+    			}else {
+        			log.error("Service returned null while fetching user for username - "+mobileNo);
+    			}
+    		}catch(Exception e) {
+    			log.error("Exception while fetching user for username - "+mobileNo);
+    			log.error("Exception trace: ",e);
+    			continue;
+    		}
+    	}
+    	return mapOfPhnoAndUUIDs;
+    }
+    
+    
+    /**
+     * Pushes the event request to Kafka Queue.
+     * 
+     * @param request
+     */
+    private void sendEventNotification(EventRequest request) {
+        producer.push(propertyConfiguration.getSaveUserEventsTopic(), request);
+    }
+    
 
     /**
      * Send the SMSRequest on the SMSNotification kafka topic

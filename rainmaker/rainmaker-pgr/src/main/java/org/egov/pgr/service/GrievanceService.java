@@ -572,10 +572,12 @@ public class GrievanceService {
 	 */
 	public Object fetchServiceDefs(RequestInfo requestInfo, String tenantId, List<String> departments) {
 		StringBuilder uri = new StringBuilder();
+		ObjectMapper mapper = new ObjectMapper();
 		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, departments,
 				requestInfo);
 		Object response = null;
 		try {
+			log.info("MDMS Request: "+mapper.writeValueAsString(mdmsCriteriaReq));
 			response = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 		} catch (Exception e) {
 			log.error("Exception while fetching serviceCodes: " + e);

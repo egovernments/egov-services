@@ -133,7 +133,8 @@ public class NotificationService {
 	}
 
 	/**
-	 * An employee might belong to different departments, This method fetches all his departments and returns only that department to which is current assigned complaint belongs to.
+	 * An employee might belong to different departments, 
+	 * This method fetches all his departments and returns only that department to which the currently assigned complaint belongs to.
 	 *  
 	 * @param serviceReq
 	 * @param codes

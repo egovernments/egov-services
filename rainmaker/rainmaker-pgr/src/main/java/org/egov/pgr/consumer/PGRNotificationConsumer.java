@@ -217,11 +217,11 @@ public class PGRNotificationConsumer {
 			
 			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_RESOLVED)) {
 				List<ActionItem> items = new ArrayList<>();
-				String actionLink = rateLink.replaceAll("$mobile", data.split("[|]")[0]).replaceAll("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
+				String actionLink = rateLink.replace("$mobile", data.split("[|]")[0]).replace("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
 				actionLink = uiAppHost + actionLink;
 				ActionItem item = ActionItem.builder().actionUrl(actionLink).code(rateCode).build();
 				items.add(item);
-				actionLink = reopenLink.replaceAll("$mobile", data.split("[|]")[0]).replaceAll("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
+				actionLink = reopenLink.replace("$mobile", data.split("[|]")[0]).replace("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
 				actionLink = uiAppHost + actionLink;
 				item = ActionItem.builder().actionUrl(actionLink).code(reopenCode).build();
 				items.add(item);
@@ -316,7 +316,6 @@ public class PGRNotificationConsumer {
 					List<String> deptCodes = new ArrayList<>(); deptCodes.add(employeeDetails.get("department"));
 					department = notificationService.getDepartmentForNotification(serviceReq, deptCodes, requestInfo);
 					designation = notificationService.getDesignation(serviceReq, employeeDetails.get("designation"), requestInfo);
-					log.info("DESG {} | DEPT {}", designation, department);
 				}else {
 					return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());	
 				}

@@ -36,8 +36,6 @@ public class ServiceRequestRepository {
 			log.error("Exception while fetching from searcher: ",e);
 		}
 		
-		log.info("Localization res: "+response);
-
 		return response;
 	}
 }

@@ -75,6 +75,7 @@ public class NotificationService {
                 if(request.getRequestInfo().getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
                     listOfMobileNumber.add(citizenMobileNumber);
                 List<SMSRequest> smsRequests = getSMSRequests(listOfMobileNumber,customMessage);
+                log.info("smsRequests: "+smsRequests);
                 if(propertyConfiguration.getIsUserEventsNotificationEnabled()) {
                 	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, path);
                 	if(!CollectionUtils.isEmpty(eventsForAProperty)) {
@@ -85,11 +86,13 @@ public class NotificationService {
              });
             if(!CollectionUtils.isEmpty(events)) {
                 EventRequest eventReq = EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
+                log.info("eventReq: "+eventReq);
                 sendEventNotification(eventReq);
             }
 
         }
         catch(Exception e){
+        	log.error("There was an error while processing notifications: ",e);
         	throw new CustomException("ERROR_PROCESSING_NOTIFS","There was an error while processing notifications.");
         }
     }
@@ -108,6 +111,8 @@ public class NotificationService {
             customMessage = getCustomizedUpdateMessage(property,message);
         if(path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE))
             customMessage = getCustomizedUpdateMessageEmployee(property,message);
+        
+        log.info("customMessage: "+customMessage);
 
         return customMessage;
     }

@@ -269,7 +269,7 @@ public class PGRNotificationConsumer {
 		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
 		String locale = null;
 		try {
-			locale = requestInfo.getMsgId().split("|")[1]; // Conventionally locale is sent in the first index of msgid split by |
+			locale = requestInfo.getMsgId().split("[|]")[1]; // Conventionally locale is sent in the first index of msgid split by |
 			if (StringUtils.isEmpty(locale)) 
 				locale = fallbackLocale;
 		} catch (Exception e) {

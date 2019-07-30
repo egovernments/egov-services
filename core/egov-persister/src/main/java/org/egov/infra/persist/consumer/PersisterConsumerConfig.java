@@ -4,6 +4,7 @@ package org.egov.infra.persist.consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.egov.infra.persist.web.contract.TopicMap;
+import org.egov.tracer.KafkaConsumerErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +43,9 @@ public class PersisterConsumerConfig {
     @Autowired
     private KafkaProperties kafkaProperties;
 
+    @Autowired
+    private KafkaConsumerErrorHandler kafkaConsumerErrorHandler;
+
     private Set<String> topics = new HashSet<>();
     
     @PostConstruct
@@ -79,6 +83,7 @@ public class PersisterConsumerConfig {
     	 // set more properties
     	 properties.setPauseEnabled(true);
     	 properties.setPauseAfter(0);
+    	 properties.setGenericErrorHandler(kafkaConsumerErrorHandler);
     	 properties.setMessageListener(indexerMessageListener);
     	 
          log.info("Custom KafkaListenerContainer built...");

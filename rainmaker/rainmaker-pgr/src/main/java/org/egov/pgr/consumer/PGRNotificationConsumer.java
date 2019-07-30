@@ -201,9 +201,8 @@ public class PGRNotificationConsumer {
 			}
 		}
 		for(String role: pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
-			if(role.equals(PGRConstants.ROLE_EMPLOYEE)) {
+			if(role.equals(PGRConstants.ROLE_EMPLOYEE)) 
 				continue;
-			}
 			String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
 			String data = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
 			if (StringUtils.isEmpty(message))
@@ -214,7 +213,6 @@ public class PGRNotificationConsumer {
 					.toUsers(toUsers).toRoles(null).build();
 			
 			Action action = null;
-			
 			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_RESOLVED)) {
 				List<ActionItem> items = new ArrayList<>();
 				String actionLink = rateLink.replace("$mobile", data.split("[|]")[0]).replace("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
@@ -227,7 +225,6 @@ public class PGRNotificationConsumer {
 				items.add(item);
 				
 				action = Action.builder().actionUrls(items).build();
-				
 			}
 			Event event = Event.builder()
 					.tenantId(serviceReq.getTenantId())

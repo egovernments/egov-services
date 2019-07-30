@@ -128,7 +128,6 @@ public class NotificationService {
 		} catch (Exception e) {
 			log.error("Exception: ", e);
 		}
-		log.info("employeeDetails: "+employeeDetails);
 		return employeeDetails;
 	}
 
@@ -151,7 +150,6 @@ public class NotificationService {
 				if (null == response) {
 					 return department;
 				}
-				log.info("Dept search: "+response);
 				try {
 					List<String> departments = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.[?(@.serviceCode=='" + serviceReq.getServiceCode() + "')].department");
 					if(CollectionUtils.isEmpty(departments)) {
@@ -287,30 +285,6 @@ public class NotificationService {
 		}
 
 	}
-	
-/*	public Map<String, Long> getSlaHours(RequestInfo requestInfo, String tenantId) {
-		StringBuilder uri = new StringBuilder();
-		MdmsCriteriaReq request = pGRUtils.prepareServiceDefSearchMdmsRequest(uri, tenantId, requestInfo);
-		Map<String, Long> mapOfServiceCodesAndSLA = new HashMap<>();
-		try {
-			Object response = serviceRequestRepository.fetchResult(uri, request);
-			if(null != response) {
-				List<String> serviceCodes = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.serviceCode");
-				List<Integer> slaHours = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours");
-				for(int i = 0; i < serviceCodes.size(); i++) {
-					Long epoch = pGRUtils.convertToMilliSec(slaHours.get(i));
-					mapOfServiceCodesAndSLA.put(serviceCodes.get(i), epoch);
-				}
-			}
-		}catch(Exception e) {
-			log.error("Exception while fetching service codes and respective sla: ",e);
-		}
-		if(CollectionUtils.isEmpty(mapOfServiceCodesAndSLA.keySet())) {
-			log.info("Returning default sla: "+egovDefaultServiceSla);
-			mapOfServiceCodesAndSLA.put("default", egovDefaultServiceSla);
-		}
-		return mapOfServiceCodesAndSLA;
-	}*/
 	
 	public Long getSlaHours() {
 		log.info("Returning default sla: "+egovDefaultServiceSla);

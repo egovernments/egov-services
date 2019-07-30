@@ -87,7 +87,6 @@ public class NotificationService {
              });
             if(!CollectionUtils.isEmpty(events)) {
                 EventRequest eventReq = EventRequest.builder().requestInfo(request.getRequestInfo()).events(events).build();
-                log.info("eventReq: "+eventReq);
                 sendEventNotification(eventReq);
             }
 
@@ -272,12 +271,13 @@ public class NotificationService {
 			Action action = null;
 			if(!path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE)) {
 				List<ActionItem> items = new ArrayList<>();
-				String actionLink = propertyConfiguration.getUiAppHost() + propertyConfiguration.getPayLink()
-							.replaceAll("$mobile", mobile)
-							.replaceAll("$assessmentId", property.getPropertyDetails().get(0).getAssessmentNumber())
-							.replaceAll("$propertyId", property.getPropertyId())
-							.replaceAll("$tenantId", property.getTenantId())
-							.replaceAll("$financialYear", property.getPropertyDetails().get(0).getFinancialYear());
+				String actionLink = propertyConfiguration.getPayLink().replace("$mobile", mobile)
+							.replace("$assessmentId", property.getPropertyDetails().get(0).getAssessmentNumber())
+							.replace("$propertyId", property.getPropertyId())
+							.replace("$tenantId", property.getTenantId())
+							.replace("$financialYear", property.getPropertyDetails().get(0).getFinancialYear());
+				
+				actionLink = propertyConfiguration.getUiAppHost() + actionLink;
 				
 				ActionItem item = ActionItem.builder().actionUrl(actionLink).code(propertyConfiguration.getPayCode()).build();
 				items.add(item);

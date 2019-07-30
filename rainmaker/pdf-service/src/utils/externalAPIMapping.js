@@ -120,7 +120,7 @@ else
           variableTovalueMap[externalAPIArray[i].jPath[j].variable]="NA"
         }
         else{          
-          if((externalAPIArray[i].jPath[j].value).search("Date")!="-1")
+          if((externalAPIArray[i].jPath[j].value).toLowerCase().search("date")!="-1")
           {            
             let myDate = new Date(replaceValue);
             if(isNaN(myDate))

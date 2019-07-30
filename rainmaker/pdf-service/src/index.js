@@ -57,12 +57,13 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
             errorCallback(err.message);
           }).on("close", () => {
               fileStoreAPICall(filename).then((result)=>{
+              // fs.unlink(filename,()=>{});
               listOfFilestoreIds.push(result);
               if(listOfFilestoreIds.length===noOfDefinitions)
                 successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
           }).catch(err=>{
-            console.log(err.response.data);
-            errorCallback(err);
+            console.log(err);
+            errorCallback({message:"error occurred while uploading pdf: "+err.message});
           });
         }
         ));
@@ -78,11 +79,13 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
         doc.end();
     });
   } catch (err) {
-    throw err;
+    console.log(err);
+    errorCallback({message:"error occured while creating pdf: "+err.message});
   }
 }
 
 app.post("/pdf", asyncHandler(async (req, res)=> { 
+  try{
    let key=req.query.key;
       
    var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
@@ -147,14 +150,24 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       });
     },
     error => {
+      res.status(500);
       // doc creation error
       res.json({
-        status: 400,
-        data: error
+        status: 500,
+        data: error.message
       });
     }
   );
-
+}
+catch(error)
+{
+  console.log(error);
+  res.status(500);
+  res.json({
+    status: 500,
+    data: error.message
+  });
+}
   // function to open PDF
   //  createPdfBinary(formatconfig, (response) => {
   //  	res.setHeader('Content-Type', 'application/pdf');

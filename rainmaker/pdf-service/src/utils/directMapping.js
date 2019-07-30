@@ -20,8 +20,7 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
   
     for (var i = 0; i < directArr.length; i++) {
       //for array type direct mapping
-      if (directArr[i].type == "array") {        
-        
+      if (directArr[i].type == "array") {   
         let arrayOfOwnerObject = [];
         // let ownerObject = JSON.parse(JSON.stringify(get(formatconfig, directArr[i].jPath + "[0]", [])));
         
@@ -33,7 +32,23 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
           // var x = 1;
           let ownerObject={}
           for (let k = 0; k < scema.length; k++) {
-            ownerObject[scema[k]]=get(val[j], scema[k], "");
+            let fieldValue=get(val[j], scema[k], "NA");
+            if(scema[k].toLowerCase().search("date")!="-1")
+            {            
+              let myDate = new Date(fieldValue);
+              if(isNaN(myDate))
+              {
+                ownerObject[scema[k]]="NA";
+              }
+              else
+              {
+                let replaceValue=myDate.toLocaleDateString();            
+                // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+                ownerObject[scema[k]]=replaceValue;
+              }
+            }
+            else
+              ownerObject[scema[k]]=fieldValue;
             // set(ownerObject[x], "text", get(val[j], scema[k], ""));
             // x += 2;
           }
@@ -58,7 +73,23 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
         {
           let arrayOfItems=[];
           for(let k=0;k<scema.length;k++){
-            arrayOfItems.push(get(val[j],scema[k],"NA"));
+              let fieldValue=get(val[j], scema[k], "NA");
+              if(scema[k].toLowerCase().search("date")!="-1")
+              {            
+                let myDate = new Date(fieldValue);
+                if(isNaN(myDate))
+                {
+                  arrayOfItems.push("NA");
+                }
+                else
+                {
+                  let replaceValue=myDate.toLocaleDateString();            
+                  // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+                  arrayOfItems.push(replaceValue);
+                }
+              }
+              else
+                arrayOfItems.push(fieldValue);
           }
           
           arrayOfBuiltUpDetails.push(arrayOfItems);
@@ -81,8 +112,23 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
         {
           if(directArr[i].localisation && directArr[i].localisation.required && directArr[i].localisation.prefix)
             variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(localisationMap,directArr[i].localisation.prefix+"_"+directArr[i].val,directArr[i].localisation.module);
-          else
-            variableTovalueMap[directArr[i].jPath]=directArr[i].val;
+          else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
+
+            {            
+              let myDate = new Date(directArr[i].val);
+              if(isNaN(myDate))
+              {
+                variableTovalueMap[directArr[i].jPath]="NA";
+              }
+              else
+              {
+                let replaceValue=myDate.toLocaleDateString();            
+                // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+                variableTovalueMap[directArr[i].jPath]=replaceValue;
+              }
+            }
+            else
+               variableTovalueMap[directArr[i].jPath]=directArr[i].val;
           
           // set(formatconfig, directArr[i].jPath, directArr[i].val);
         }

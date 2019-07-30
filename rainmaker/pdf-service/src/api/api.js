@@ -21,6 +21,7 @@ export const httpRequest= async(
     instance.defaults = Object.assign(instance.defaults, {
       headers,
     });
+    
 try {
    const response =  await instance.post(endPoint,requestBody);
   const responseStatus = parseInt(response.status, 10);
@@ -30,9 +31,9 @@ try {
     }
 } catch (error) {
   var errorReponse = error.response;
-  console.log(error) ;   
+  console.log(errorReponse) ; 
+  throw {message:"error occured while making request to "+endPoint+": response returned by call :"+parseInt(errorReponse.status, 10)};  
 }
-    throw errorReponse;
     
 }
 
@@ -40,7 +41,7 @@ const apiRequest = {
   RequestInfo: {
       action: "",
       apiId: "Rainmaker",
-      authToken: "7c9a4b91-b8b7-4121-804f-89148bd52550",
+      authToken: "67bbb246-b035-4323-9e4a-216d519e60b7",
       did: "1",
       key: "",
       msgId: "20170310130900|en_IN",

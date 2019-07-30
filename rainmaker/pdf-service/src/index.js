@@ -57,11 +57,12 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
             errorCallback(err.message);
           }).on("close", () => {
               fileStoreAPICall(filename).then((result)=>{
-              // fs.unlink(filename,()=>{});
+              fs.unlink(filename,()=>{});
               listOfFilestoreIds.push(result);
               if(listOfFilestoreIds.length===noOfDefinitions)
                 successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
           }).catch(err=>{
+            fs.unlink(filename,()=>{});
             console.log(err);
             errorCallback({message:"error occurred while uploading pdf: "+err.message});
           });

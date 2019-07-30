@@ -35,7 +35,7 @@ public class UrlProvider {
     private String preHookUrls;
 
 
-    public Map<String, String> getUrlToUrlMapping(String config) {
+    private Map<String, String> getUrlToUrlMapping(String config) {
         String[] urlArray;
         Map<String, String> map = new HashMap<>();
         if (StringUtils.isEmpty(config))

@@ -42,6 +42,7 @@ public class PreHookFilter extends ZuulFilter {
         PreHookFilterRequest req = PreHookFilterRequest.builder().Request(reqDc.jsonString()).build();
         String response = null;
         try {
+            log.debug("Executing pre-hook filter. Sending request to - " + UrlProvider.getUrlPreHooksMap().get(uri));
             response = restTemplate.postForObject(UrlProvider.getUrlPreHooksMap().get(uri), req,
                 String.class);
 
@@ -49,11 +50,10 @@ public class PreHookFilter extends ZuulFilter {
             requestWrapper.setPayload(response);
             ctx.setRequest(requestWrapper);
         } catch (HttpClientErrorException|HttpServerErrorException e) {
-            System.err.println(" the error : " + e.getResponseBodyAsString());
-            e.printStackTrace();
+            log.error("Pre-Hook - Http Exception Occurred", e);
             ExceptionUtils.raiseCustomException(e.getStatusCode(), "PRE_HOOK_ERROR - Pre-hook url threw an error - " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Pre-Hook - Exception Occurred", e);
             ExceptionUtils.raiseCustomException(HttpStatus.BAD_REQUEST, "PRE_HOOK_ERROR - Pre-hook url threw an error - " + e.getMessage());
         }
 

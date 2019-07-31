@@ -11,23 +11,20 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
-import org.egov.pt.calculator.web.models.Assessment;
-import org.egov.pt.calculator.web.models.DemandDetailAndCollection;
-import org.egov.pt.calculator.web.models.GetBillCriteria;
+import org.egov.pt.calculator.web.models.*;
 import org.egov.pt.calculator.web.models.collections.Receipt;
 import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
+import org.egov.pt.calculator.web.models.property.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
-import static org.egov.pt.calculator.util.CalculatorConstants.ALLOWED_RECEIPT_STATUS;
-import static org.egov.pt.calculator.util.CalculatorConstants.SERVICE_FIELD_VALUE_PT;
-import static org.egov.pt.calculator.util.CalculatorConstants.STATUS_FIELD_FOR_SEARCH_URL;
+import static org.egov.pt.calculator.util.CalculatorConstants.*;
 
 @Component
 @Getter
@@ -134,7 +131,7 @@ public class CalculatorUtils {
 	public StringBuilder getTaxHeadSearchUrl(String tenantId) {
 
 		return new StringBuilder().append(configurations.getBillingServiceHost())
-				.append(configurations.getTaxheadsSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(configurations.getTaxheadsSearchEndpoint()).append(URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
 				.append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
@@ -150,7 +147,7 @@ public class CalculatorUtils {
 	public StringBuilder getTaxPeriodSearchUrl(String tenantId) {
 
 		return new StringBuilder().append(configurations.getBillingServiceHost())
-				.append(configurations.getTaxPeriodSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(configurations.getTaxPeriodSearchEndpoint()).append(URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
 				.append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
@@ -166,7 +163,7 @@ public class CalculatorUtils {
 	public StringBuilder getReceiptSearchUrl(String tenantId, List<String> consumerCodes) {
 
 		return new StringBuilder().append(configurations.getCollectionServiceHost())
-				.append(configurations.getReceiptSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(configurations.getReceiptSearchEndpoint()).append(URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
 				.append(consumerCodes.toString().replace("[", "").replace("]", ""))
@@ -184,13 +181,13 @@ public class CalculatorUtils {
 
 		if(CollectionUtils.isEmpty(getBillCriteria.getConsumerCodes()))
 			return new StringBuilder().append(configurations.getBillingServiceHost())
-					.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+					.append(configurations.getDemandSearchEndPoint()).append(URL_PARAMS_SEPARATER)
 					.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
 					.append(CalculatorConstants.SEPARATER)
 					.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +getBillCriteria.getAssessmentNumber());
 
 		else return new StringBuilder().append(configurations.getBillingServiceHost())
-				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(configurations.getDemandSearchEndPoint()).append(URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
 				.append(CalculatorConstants.SEPARATER)
 				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(StringUtils.join(getBillCriteria.getConsumerCodes(),","));
@@ -207,7 +204,7 @@ public class CalculatorUtils {
 	public StringBuilder getDemandSearchUrl(Assessment assessment) {
 
 		return new StringBuilder().append(configurations.getBillingServiceHost())
-				.append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(configurations.getDemandSearchEndPoint()).append(URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(assessment.getTenantId())
 				.append(CalculatorConstants.SEPARATER)
 				.append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(assessment.getPropertyId()+ CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR +assessment.getAssessmentNumber());
@@ -265,7 +262,7 @@ public class CalculatorUtils {
 	 */
 	public StringBuilder getBillGenUrl(String tenantId, String demandId, String consumerCode) {
 		return new StringBuilder().append(configurations.getBillingServiceHost())
-				.append(configurations.getBillGenEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
+				.append(configurations.getBillGenEndPoint()).append(URL_PARAMS_SEPARATER)
 				.append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.DEMAND_ID_SEARCH_FIELD_NAME)
 				.append(demandId).append(CalculatorConstants.SEPARATER)
@@ -441,6 +438,53 @@ public class CalculatorUtils {
 		Long eodEpoch = endOfDay.atZone(ZoneId.of(ZoneId.SHORT_IDS.get("IST"))).toInstant().toEpochMilli();
 		return eodEpoch;
 	}
+
+
+    /**
+     * Creates search query for PT based on tenantId and list of assessment numbers
+     * @param tenantId TenantId of the properties
+     * @param assessmentNumbers List of assessmentNumbers to search
+     * @return List of properties
+     */
+	public StringBuilder getPTSearchQuery(String tenantId,List<String> assessmentNumbers){
+
+		StringBuilder url = new StringBuilder(configurations.getPtHost());
+		url.append(configurations.getPtSearchEndpoint())
+				.append(URL_PARAMS_SEPARATER)
+				.append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+				.append(SEPARATER)
+				.append(ASSESSMENTNUMBER_FIELD_SEARCH)
+				.append(StringUtils.join(assessmentNumbers,","));
+
+		return url;
+
+	}
+
+
+    /**
+     * Creates CalculationRequest from PropertyRequest
+     * @param request PropertyRequest for which calculation has to be done
+     * @return Calculation Request based on PropertyRequest
+     */
+	public CalculationReq createCalculationReq(PropertyRequest request){
+
+	    String tenantId = request.getProperties().get(0).getTenantId();
+	    RequestInfo requestInfo = request.getRequestInfo();
+	    List<CalculationCriteria> calculationCriterias = new LinkedList<>();
+
+	    request.getProperties().forEach(property -> {
+	        CalculationCriteria criteria = new CalculationCriteria();
+	        criteria.setTenantId(tenantId);
+	        criteria.setProperty(property);
+	        calculationCriterias.add(criteria);
+        });
+
+        CalculationReq calculationReq = new CalculationReq();
+        calculationReq.setRequestInfo(requestInfo);
+        calculationReq.setCalculationCriteria(calculationCriterias);
+
+        return calculationReq;
+    }
 
 
 

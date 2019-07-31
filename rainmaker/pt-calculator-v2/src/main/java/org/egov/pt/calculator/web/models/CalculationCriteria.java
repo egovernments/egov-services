@@ -29,15 +29,12 @@ import lombok.ToString;
 public class CalculationCriteria   {
 	
 		@Valid
-		@NotNull
         @JsonProperty("property")
         private Property property;
 
-        @JsonProperty("assesmentNumber")
-        private String assesmentNumber;
-
-        @JsonProperty("assessmentYear")
-        private String assessmentYear;
+		@NotNull
+        @JsonProperty("assessmentNumber")
+        private String assessmentNumber;
 
         @JsonProperty("oldAssessmentNumber")
         private String oldAssessmentNumber;

@@ -58,8 +58,24 @@ public class EstimationService {
 	@Autowired
 	CalculationValidator calcValidator;
 
+	@Autowired
+	private AssessmentService assessmentService;
+
+
 	@Value("${customization.pbfirecesslogic:false}")
 	Boolean usePBFirecessLogic;
+
+
+	/**
+	 * Calculates tax and creates demand for the given assessment number
+	 * @param calculationReq The calculation request object containing the calculation criteria
+	 * @return Map of assessment number to Calculation
+	 */
+	public Map<String, Calculation> calculateAndCreateDemand(CalculationReq calculationReq){
+		assessmentService.enrichAssessment(calculationReq);
+		Map<String,Calculation> res = demandService.generateDemands(calculationReq);
+		return res;
+	}
 
 
 	/**
@@ -377,7 +393,7 @@ public class EstimationService {
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
         String assessmentYear = detail.getFinancialYear();
-        String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssesmentNumber();
+        String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssessmentNumber();
         String tenantId = null != property.getTenantId() ? property.getTenantId() : criteria.getTenantId();
 
 		Map<String,Map<String, Object>> financialYearMaster = (Map<String,Map<String, Object>>)masterMap.get(FINANCIALYEAR_MASTER_KEY);

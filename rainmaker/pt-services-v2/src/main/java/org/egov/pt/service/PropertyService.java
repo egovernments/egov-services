@@ -1,16 +1,19 @@
 package org.egov.pt.service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.PropertyRepository;
 import org.egov.pt.util.PropertyUtil;
-import org.egov.pt.util.ResponseInfoFactory;
 import org.egov.pt.validator.PropertyValidator;
-import org.egov.pt.web.models.*;
-import org.egov.tracer.model.CustomException;
+import org.egov.pt.web.models.Property;
+import org.egov.pt.web.models.PropertyCriteria;
+import org.egov.pt.web.models.PropertyRequest;
+import org.egov.pt.web.models.UserDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -54,7 +57,7 @@ public class PropertyService {
 		enrichmentService.enrichCreateRequest(request,false);
 		userService.createUser(request);
 		userService.createCitizen(request);
-		calculationService.calculateTax(request);
+	//	calculationService.calculateTax(request);
 		producer.push(config.getSavePropertyTopic(), request);
 		return request.getProperties();
 	}
@@ -136,7 +139,7 @@ public class PropertyService {
 			propertyValidator.validateUpdateRequest(request);
 			enrichmentService.enrichCreateRequest(request,true);
 			userService.createUser(request);
-			calculationService.calculateTax(request);
+			//calculationService.calculateTax(request);
 			producer.push(config.getUpdatePropertyTopic(), request);
 			updatedProperties.addAll(request.getProperties());
 		});

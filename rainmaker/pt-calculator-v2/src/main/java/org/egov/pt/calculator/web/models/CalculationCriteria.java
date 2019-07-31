@@ -32,7 +32,6 @@ public class CalculationCriteria   {
         @JsonProperty("property")
         private Property property;
 
-		@NotNull
         @JsonProperty("assessmentNumber")
         private String assessmentNumber;
 

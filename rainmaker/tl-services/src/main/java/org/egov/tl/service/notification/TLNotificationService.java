@@ -120,16 +120,7 @@ public class TLNotificationService {
     			log.info("UUID search failed!");
     			continue;
     		}
-            Map<String,String > mobileNumberToMsg = smsRequests.stream().collect(Collectors.toMap(SMSRequest::getMobileNumber, SMSRequest::getMessage));
-			
-            List<ActionItem> items = new ArrayList<>();
-			String actionLink = config.getPayLink().replace("$applicationNo", license.getApplicationNumber())
-						.replace("$tenantId", license.getTenantId());
-			actionLink = config.getUiAppHost() + actionLink;
-			ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
-			items.add(item);
-			Action action = Action.builder().actionUrls(items).build();
-			
+            Map<String,String > mobileNumberToMsg = smsRequests.stream().collect(Collectors.toMap(SMSRequest::getMobileNumber, SMSRequest::getMessage));		
             for(String mobile: mobileNumbers) {
     			if(null == mapOfPhnoAndUUIDs.get(mobile) || null == mobileNumberToMsg.get(mobile)) {
     				log.error("No UUID/SMS for mobile {} skipping event", mobile);
@@ -138,6 +129,15 @@ public class TLNotificationService {
     			List<String> toUsers = new ArrayList<>();
     			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
     			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
+    			
+                List<ActionItem> items = new ArrayList<>();
+    			String actionLink = config.getPayLink().replace("$mobile", mobile)
+    						.replace("$applicationNo", license.getApplicationNumber())
+    						.replace("$tenantId", license.getTenantId());
+    			actionLink = config.getUiAppHost() + actionLink;
+    			ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
+    			items.add(item);
+    			Action action = Action.builder().actionUrls(items).build();
 				
 				events.add(Event.builder().tenantId(license.getTenantId()).description(mobileNumberToMsg.get(mobile))
 						.eventType(TLConstants.USREVENTS_EVENT_TYPE).name(TLConstants.USREVENTS_EVENT_NAME)

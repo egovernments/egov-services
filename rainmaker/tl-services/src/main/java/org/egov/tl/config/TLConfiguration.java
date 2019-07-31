@@ -216,6 +216,24 @@ public class TLConfiguration {
 
     @Value("${is.external.workflow.enabled}")
     private Boolean isExternalWorkFlowEnabled;
+    
+    
+    
+    //USER EVENTS
+	@Value("${egov.ui.app.host}")
+	private String uiAppHost;
+    
+	@Value("${egov.usr.events.create.topic}")
+	private String saveUserEventsTopic;
+		
+	@Value("${egov.usr.events.pay.link}")
+	private String payLink;
+	
+	@Value("${egov.usr.events.pay.code}")
+	private String payCode;
+	
+	@Value("${egov.user.event.notification.enabled}")
+	private Boolean isUserEventsNotificationEnabled;
 
 
 

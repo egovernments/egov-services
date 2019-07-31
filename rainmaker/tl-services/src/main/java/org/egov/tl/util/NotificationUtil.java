@@ -8,6 +8,7 @@ import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.Difference;
+import org.egov.tl.web.models.EventRequest;
 import org.egov.tl.web.models.RequestInfoWrapper;
 import org.egov.tl.web.models.SMSRequest;
 import org.egov.tl.web.models.TradeLicense;
@@ -297,15 +298,21 @@ public class NotificationUtil {
      * @param smsRequestList The list of SMSRequest to be sent
      */
     public void sendSMS(List<SMSRequest> smsRequestList){
-        if (config.getIsSMSEnabled()) {
-            if (CollectionUtils.isEmpty(smsRequestList))
-                log.info("Messages from localization couldn't be fetched!");
-            for(SMSRequest smsRequest: smsRequestList) {
-                producer.push(config.getSmsNotifTopic(), smsRequest);
-                log.info("MobileNumber: "+smsRequest.getMobileNumber()+" Messages: "+smsRequest.getMessage());
-            }
+        for(SMSRequest smsRequest: smsRequestList) {
+            producer.push(config.getSmsNotifTopic(), smsRequest);
+            log.info("MobileNumber: "+smsRequest.getMobileNumber()+" Messages: "+smsRequest.getMessage());
         }
     }
+    
+    /**
+     * Pushes the event request to Kafka Queue.
+     * 
+     * @param request
+     */
+    public void sendEventNotification(EventRequest request) {
+        producer.push(config.getSaveUserEventsTopic(), request);
+    }
+    
 
 
     /**

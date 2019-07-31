@@ -36,7 +36,7 @@ public class CalculationReqConsumer {
     @Autowired
     private ObjectMapper mapper;
 
-    @KafkaListener(topics = {"${kafka.save.property.topic},${kafka.update.property.topic}"})
+    @KafkaListener(topics = {"${kafka.save.property.topic}","${kafka.update.property.topic}"})
     public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         try {
             PropertyRequest propertyRequest = mapper.convertValue(record, PropertyRequest.class);

@@ -1,8 +1,7 @@
 import get from "lodash/get";
-import set from "lodash/set";
-import cloneDeep from "lodash/set";
 import {findAndUpdateLocalisation} from "./commons";
 
+var jp = require('jsonpath');
 export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,localisationMap)=>{    
     
     var directArr = [];        
@@ -10,7 +9,7 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
     directArr = objectOfDirectMapping.map(item => {
       return {
         jPath: item.variable,
-        val: get(req, item.value.path, "NA"),
+        val: jp.query(req,item.value.path)||"NA",
         valJsonPath: item.value.path,
         type: item.type,
         format: item.format,
@@ -32,7 +31,7 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
           // var x = 1;
           let ownerObject={}
           for (let k = 0; k < scema.length; k++) {
-            let fieldValue=get(val[j], scema[k], "NA");
+            let fieldValue= get(val[j], scema[k], "NA");
             if(scema[k].toLowerCase().search("date")!="-1")
             {            
               let myDate = new Date(fieldValue);
@@ -42,7 +41,7 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
               }
               else
               {
-                let replaceValue=myDate.toLocaleDateString();            
+                let replaceValue=getDateInRequiredFormat(myDate);      
                 // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
                 ownerObject[scema[k]]=replaceValue;
               }
@@ -60,14 +59,12 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
 
       //setting value in pdf for array-column type direct mapping 
       else if(directArr[i].type=="array-column"){        
-        
         let arrayOfBuiltUpDetails=[];
         // let arrayOfFields=get(formatconfig, directArr[i].jPath+"[0]",[]);
         // arrayOfBuiltUpDetails.push(arrayOfFields);
         
         let { format = {}, val = [], variable } = directArr[i];
         let { scema = [] } = format;
-        
         //to get data of multiple floor Built up details       
         for(let j=0;j<val.length;j++)
         {
@@ -83,7 +80,7 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
                 }
                 else
                 {
-                  let replaceValue=myDate.toLocaleDateString();            
+                  let replaceValue=getDateInRequiredFormat(myDate);          
                   // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
                   arrayOfItems.push(replaceValue);
                 }
@@ -105,7 +102,7 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
       //setting value in pdf for no type direct mapping
       else{
           //if data/value is not present then put NA
-        if(directArr[i].val==null)
+        if((directArr[i].val==null)||(directArr[i].val.every(function(v) { return v === null; })))
           variableTovalueMap[directArr[i].jPath]="NA";
           // set(formatconfig, directArr[i].jPath, "NA");
         else
@@ -115,14 +112,14 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
           else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
 
             {            
-              let myDate = new Date(directArr[i].val);
+              let myDate = new Date(directArr[i].val[0]);
               if(isNaN(myDate))
               {
                 variableTovalueMap[directArr[i].jPath]="NA";
               }
               else
               {
-                let replaceValue=myDate.toLocaleDateString();            
+                let replaceValue=getDateInRequiredFormat(myDate);           
                 // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
                 variableTovalueMap[directArr[i].jPath]=replaceValue;
               }
@@ -135,6 +132,13 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
         
       }      
     }
+}
+const getDateInRequiredFormat=(date)=>{
+  return date.toLocaleDateString('en-GB', {
+    day : '2-digit',
+    month : '2-digit',
+    year : 'numeric'
+}); 
 }
 
 

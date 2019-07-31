@@ -2,6 +2,7 @@
    "DataConfigs": {
       "serviceName": "rainmaker-pt",
       "version": "1.0.0",
+      "baseKeyPath": "$.Properties.*",
       "mappings": [
          {
             "topic": "pt-pdf-generation",
@@ -12,67 +13,67 @@
                      {
                         "variable": "variable1",
                         "value": {
-                             "path":"Properties[0].propertyDetails[0].financialYear"                              
+                             "path":"$.propertyDetails[*].financialYear"                              
                         }
                      },                      
                      {
                         "variable":"variable2",
                         "value":{
-                           "path":"Properties[0].oldPropertyId"                            
+                           "path":"$.oldPropertyId"                            
                         }  
                      },
                      {
                         "variable": "variable3",
                         "value":{
-                             "path":"Properties[0].propertyId"                           
+                             "path":"$.propertyId"                           
                          } 
                      },
                      {
                        "variable": "variable4",
                        "value":{
-                            "path":"Properties[0].propertyDetails[0].assessmentNumber"                           
+                            "path":"$.propertyDetails[0].assessmentNumber"                           
                         } 
                      },
                      {
                        "variable": "variable5",
                        "value":{
-                            "path":"Properties[0].address.doorNo"                           
+                            "path":"$.address.doorNo"                           
                         } 
                      },
                      {
                        "variable": "variable6",
                        "value":{
-                            "path":"Properties[0].address.buildingName"                           
+                            "path":"$.address.buildingName"                           
                         } 
                      },
                      {
                        "variable": "variable7",
                        "value":{
-                            "path":"Properties[0].address.street"                           
+                            "path":"$.address.street"                           
                         } 
                      },
                      {
                        "variable": "variable8",
                        "value":{
-                            "path":"Properties[0].address.locality.name"                           
+                            "path":"$.address.locality.name"                           
                         } 
                      },
                      {
                        "variable": "variable9",
                        "value":{
-                            "path":"Properties[0].propertyDetails[0].landArea"                           
+                            "path":"$.propertyDetails[0].landArea"                           
                         } 
                      },
                      {
                        "variable": "variable10",
                        "value":{
-                            "path":"Properties[0].propertyDetails[0].propertyType"                           
+                            "path":"$.propertyDetails[0].propertyType"                           
                         } 
                      },
                      {
                        "variable": "variable11",                        
                        "value":{
-                            "path":"Properties[0].propertyDetails[0].owners"                          
+                            "path":"$.propertyDetails[0].owners.*"                          
                         },
                         "type":"array",
                         "format":{                            
@@ -83,7 +84,7 @@
                     {
                        "variable": "variable12",                        
                        "value":{
-                            "path":"Properties[0].propertyDetails[0].units"                          
+                            "path":"$.propertyDetails[0].units.*"                          
                         },
                         "type":"array-column",
                         "format":{                            
@@ -109,12 +110,12 @@
                   "externalAPI": [     
                     {                         
                        "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
-                       "queryParam": "consumerCode=$.Properties[0].propertyId:$.Properties[0].propertyDetails[0].assessmentNumber",
+                       "queryParam": "consumerCode=$.propertyId:$.propertyDetails[0].assessmentNumber",
                        "apiRequest": {
                          "RequestInfo": {
                              "action": "",
                              "apiId": "Rainmaker",
-                             "authToken": "b59ec3af-c68f-4445-a2f0-8c2e7c9e5cd5",
+                             "authToken": "3afe660a-e8fe-4d80-8560-5d8659bfa446",
                              "did": "1",
                              "key": "",
                              "msgId": "20170310130900|en_IN",
@@ -126,71 +127,71 @@
                        "responseMapping":[
                          {             
                             "variable":"variable15",
-                            "value":"Receipt[0].receiptNumber"
+                            "value":"$.Receipt[0].receiptNumber"
                          },
                          {
                             "variable":"variable16",
-                            "value":"Receipt[0].receiptDate"
+                            "value":"$.Receipt[0].receiptDate"
                          },
                          {
                             "variable":"variable17",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[7].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[7].amount"
                          },
                          {
                             "variable":"variable18",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[3].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[3].amount"
                          },
                          {
                             "variable":"variable19",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[2].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[2].amount"
                          },
                          {
                             "variable":"variable20",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[8].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[8].amount"
                          },
                          {
                             "variable":"variable21",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[4].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[4].amount"
                          },
                          {
                             "variable":"variable22",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[6].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[6].amount"
                          },
                          {
                             "variable":"variable23",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
                          },
                          {
                             "variable":"variable24",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
                          },
                          {
                             "variable":"variable25",
-                            "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[5].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[5].amount"
                          },
                          {
                             "variable":"variable26",
-                            "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].totalAmount"
                          },
                          {
                             "variable":"variable27",
-                            "value":"Receipt[0].Bill[0].billDetails[0].amountPaid"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
                          },
                          {
                             "variable":"variable28",
-                            "value":"Receipt[0].instrument.instrumentType.name"
+                            "value":"$.Receipt[0].instrument.instrumentType.name"
                          },
                          {
                             "variable":"variable29",
-                            "value":"Receipt[0].instrument.bank.name"
+                            "value":"$.Receipt[0].instrument.bank.name"
                          },
                          {
                             "variable":"variable30",
-                            "value":"Receipt[0].transactionId"
+                            "value":"$.Receipt[0].transactionId"
                          },
                          {
                             "variable":"variable31",
-                            "value":"Receipt[0].instrument.transactionDateInput"
+                            "value":"$.Receipt[0].instrument.transactionDateInput"
                          }
                      
                       ]  

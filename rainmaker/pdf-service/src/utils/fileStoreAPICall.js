@@ -4,9 +4,9 @@ import fs from "fs";
 import get from "lodash/get";
 import axios, { post } from 'axios';
 var FormData = require('form-data')
-export const fileStoreAPICall=async function(filename){
+export const fileStoreAPICall=async function(filename,tenantId){
     var url =
-      "https://egov-micro-dev.egovernments.org/filestore/v1/files?tenantId=default&module=pdfgen&tag=00040-2017-QR";
+      `https://egov-micro-dev.egovernments.org/filestore/v1/files?tenantId=${tenantId}&module=pdfgen&tag=00040-2017-QR`;
   
       var form = new FormData();
       form.append("file", fs.createReadStream(filename));

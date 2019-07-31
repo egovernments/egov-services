@@ -1,7 +1,7 @@
 
 import get from "lodash/get";
-import set from "lodash/set";
 import { httpRequest } from "../api/api";
+var jp = require('jsonpath');
 
 export const externalAPIMapping=async function(key,req,formatconfig,dataconfig,variableTovalueMap,localisationMap){
 
@@ -33,8 +33,8 @@ if(key=="pt-receipt")
     if (externalAPIArray[i].queryParams[j] == "," || externalAPIArray[i].queryParams[j] == ":") {
       if (flag == 1) {
         temp2 = temp1;
-        temp1 = temp1.replace("$.", "");
-        var temp3 = get(req, temp1, "NA");          
+        // temp1 = temp1.replace("$.", "");
+        var temp3 = jp.query(req,temp1)||"NA";          
         externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
         j = 0;
@@ -49,8 +49,8 @@ if(key=="pt-receipt")
     }
     if (j == externalAPIArray[i].queryParams.length - 1 && flag == 1) {
       temp2 = temp1;
-      temp1 = temp1.replace("$.", "");
-      var temp3 = get(req, temp1, "vikas");
+      // temp1 = temp1.replace("$.", "");
+      var temp3 = jp.query(req,temp1)||"NA" ;
 
       externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
@@ -70,8 +70,8 @@ else
       if (externalAPIArray[i].queryParams[j] == ",") {
         if (flag == 1) {
           temp2 = temp1;
-          temp1 = temp1.replace("$.", "");
-          var temp3 = get(req, temp1, "NA");          
+          // temp1 = temp1.replace("$.", "");
+          var temp3 = jp.query(req,temp1)||"NA";          
           externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
           j = 0;
@@ -85,8 +85,8 @@ else
       }
       if (j == externalAPIArray[i].queryParams.length - 1 && flag == 1) {
         temp2 = temp1;
-        temp1 = temp1.replace("$.", "");
-        var temp3 = get(req, temp1, "vikas");
+        // temp1 = temp1.replace("$.", "");
+        var temp3 = jp.query(req,temp1)||"NA";
 
         externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(temp2, temp3);
 
@@ -113,23 +113,27 @@ else
       //putting required data from external API call in format config      
       
       for (let j = 0; j < externalAPIArray[i].jPath.length; j++) {          
-        let replaceValue=get(res, externalAPIArray[i].jPath[j].value, "NA");
-        if(replaceValue==null)
+        let replaceValue=jp.query(res,externalAPIArray[i].jPath[j].value)||"NA";
+        if((replaceValue==null)||(replaceValue.every(function(v) { return v === null; })))
         {
           // set(formatconfig,externalAPIArray[i].jPath[j].variable,"NA");  
           variableTovalueMap[externalAPIArray[i].jPath[j].variable]="NA"
         }
         else{          
           if((externalAPIArray[i].jPath[j].value).toLowerCase().search("date")!="-1")
-          {            
-            let myDate = new Date(replaceValue);
+          {           
+            let myDate = new Date(replaceValue[0]);
             if(isNaN(myDate))
             {
               variableTovalueMap[externalAPIArray[i].jPath[j].variable]="NA";
             }
             else
             {
-              replaceValue=myDate.toLocaleDateString();            
+              replaceValue=myDate.toLocaleDateString('en-GB', {
+                day : '2-digit',
+                month : '2-digit',
+                year : 'numeric'
+            });           
               // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
               variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;
             }
@@ -146,6 +150,5 @@ else
       }     
          
   }  
-  
   // return fillValues(variableTovalueMap,formatconfig); 
 };

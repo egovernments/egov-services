@@ -2,6 +2,7 @@
     "DataConfigs": {
        "serviceName": "rainmaker-tl",
        "version": "1.0.0",
+       "baseKeyPath": "$.Licenses.*",
        "mappings": [
           {
              "topic": "tl-pdf-generation",
@@ -13,7 +14,7 @@
                       {
                         "variable": "variable1",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.additionalDetail.applicationType"                              
+                             "path":"$.tradeLicenseDetail.additionalDetail.applicationType"                              
                         },
                         "localisation":{
                            "required":true,
@@ -24,31 +25,31 @@
                      {
                         "variable": "variable2",
                         "value": {
-                             "path":"Licenses[0].oldLicenseNumber"                              
+                             "path":"$.oldLicenseNumber"                              
                         }
                      },
                       {
                          "variable": "variable3",
                          "value":{
-                              "path":"Licenses[0].applicationNumber"                           
+                              "path":"$.applicationNumber"                           
                           } 
                       },
                       {
                         "variable": "variable4",
                         "value": {
-                             "path":"Licenses[0].financialYear"                              
+                             "path":"$.financialYear"                              
                         }
                      },
                      {
                         "variable": "variable5",
                         "value": {
-                             "path":"Licenses[0].tradeName"                              
+                             "path":"$.tradeName"                              
                         }
                      },
                      {
                         "variable": "variable6",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.tradeUnits[0].tradeType"                              
+                             "path":"$.tradeLicenseDetail.tradeUnits[0].tradeType"                              
                         },
                         "localisation":{
                            "required":true,
@@ -59,7 +60,7 @@
                      {
                         "variable": "variable7",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.tradeUnits[0].tradeType"                              
+                             "path":"$.tradeLicenseDetail.tradeUnits[0].tradeType"                              
                         },
                         "localisation":{
                            "required":true,
@@ -70,37 +71,37 @@
                      {
                         "variable": "variable8",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.accessories[0].accessoryCategory"                              
+                             "path":"$.tradeLicenseDetail.accessories[0].accessoryCategory"                              
                         }
                      },
                      {
                         "variable": "variable9",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.address.doorNo"                              
+                             "path":"$.tradeLicenseDetail.address.doorNo"                              
                         }
                      },
                      {
                         "variable": "variable10",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.address.buildingName"                              
+                             "path":"$.tradeLicenseDetail.address.buildingName"                              
                         }
                      },
                      {
                         "variable": "variable11",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.address.street"                              
+                             "path":"$.tradeLicenseDetail.address.street"                              
                         }
                      },
                      {
                         "variable": "variable12",
                         "value": {
-                             "path":"Licenses[0].tradeLicenseDetail.address.locality.name"                              
+                             "path":"$.tradeLicenseDetail.address.locality.name"                              
                         }
                      },
                       {
                         "variable": "variable13",                        
                         "value":{
-                             "path":"Licenses[0].tradeLicenseDetail.owners"                          
+                             "path":"$.tradeLicenseDetail.owners.*"                          
                          },
                          "type":"array",
                          "format":{                            
@@ -128,14 +129,14 @@
                       {
                          
                          "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
-                         "queryParam": "consumerCode=$.Licenses[0].applicationNumber",
+                         "queryParam": "consumerCode=$.applicationNumber",
                          
                          
                          "apiRequest": {
                            "RequestInfo": {
                                "action": "",
                                "apiId": "Rainmaker",
-                               "authToken": "7d242eb4-40a5-4367-8f5c-2eca56095fe9",
+                               "authToken": "1e37ea94-13cd-4e58-9dde-6c133a0a6902",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",
@@ -147,43 +148,43 @@
                          "responseMapping":[
                            {
                               "variable":"variable16",
-                              "value":"Receipt[0].receiptNumber"
+                              "value":"$.Receipt[0].receiptNumber"
                            },
                            {
                               "variable":"variable17",
-                              "value":"Receipt[0].instrument.transactionDateInput"
+                              "value":"$.Receipt[0].instrument.transactionDateInput"
                            },                           
                            {
                               "variable":"variable18",
-                              "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].totalAmount"
                            },
                            {
                               "variable":"variable19",
-                              "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].totalAmount"
                            },
                            {
                               "variable":"variable20",
-                              "value":"Receipt[0].Bill[0].billDetails[0].amountPaid"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
                            },
                            {
                               "variable":"variable21",
-                              "value":"Receipt[0].instrument.transactionType"
+                              "value":"$.Receipt[0].instrument.transactionType"
                            },
                            {
                               "variable":"variable22",
-                              "value":"Receipt[0].transactionId"
+                              "value":"$.Receipt[0].transactionId"
                            },
                            {
                               "variable":"variable23",
-                              "value":"Receipt[0].instrument.bank.name"
+                              "value":"$.Receipt[0].instrument.bank.name"
                            },
                            {
                               "variable":"variable24",
-                              "value":"Receipt[0].Bill[0].billDetails[0].manualReceiptNumber"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].manualReceiptNumber"
                            },
                            {
                               "variable":"variable25",
-                              "value":"Receipt[0].Bill[0].billDetails[0].manualReceiptDate"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].manualReceiptDate"
                            }
                            
                            

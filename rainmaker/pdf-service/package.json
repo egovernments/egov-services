@@ -39,6 +39,7 @@
     "express": "^4.13.3",
     "express-async-handler": "^1.1.4",
     "form-data": "^2.5.0",
+    "jsonpath": "^1.0.2",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
     "morgan": "^1.8.0",

@@ -2,6 +2,7 @@
     "DataConfigs": {
        "serviceName": "rainmaker-noc",
        "version": "1.0.0",
+       "baseKeyPath": "$.FireNOCs.*",
        "mappings": [
           {
              "topic": "noc-pdf-generation",
@@ -12,19 +13,19 @@
                       {
                          "variable": "variable1",
                          "value": {
-                              "path":"FireNOCs[0].fireNOCDetails.applicationNumber"                              
+                              "path":"$.fireNOCDetails.applicationNumber"                              
                          }
                       },
                       {
                         "variable": "variable2",
                         "value": {
-                             "path":"FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].name"                              
+                             "path":"$.fireNOCDetails.applicantDetails.owners[0].name"                              
                         }
                       },
                       {
                        "variable": "variable3",
                        "value": {
-                            "path":"FireNOCs[0].fireNOCDetails.applicantDetails.owners[0].mobileNumber"                              
+                            "path":"$.fireNOCDetails.applicantDetails.owners[0].mobileNumber"                              
                         }
                       }
                    ]
@@ -52,7 +53,7 @@
                               "RequestInfo": {
                                  "action": "",
                                  "apiId": "Rainmaker",
-                                 "authToken": "b59ec3af-c68f-4445-a2f0-8c2e7c9e5cd5",
+                                 "authToken": "3afe660a-e8fe-4d80-8560-5d8659bfa446",
                                  "did": "1",
                                  "key": "",
                                  "msgId": "20170310130900|en_IN",
@@ -64,35 +65,35 @@
                          "responseMapping":[
                            {
                               "variable":"variable6",
-                              "value":"Receipt[0].instrument.transactionDateInput"
+                              "value":"$.Receipt[0].instrument.transactionDateInput"
                            },
                            {
                               "variable":"variable7",
-                              "value":"Receipt[0].receiptNumber"
+                              "value":"$.Receipt[0].receiptNumber"
                            },
                            {
                               "variable":"variable8",
-                              "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
                            },
                            {
                               "variable":"variable9",
-                              "value":"Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
                            },
                            {
                               "variable":"variable10",
-                              "value":"Receipt[0].Bill[0].billDetails[0].totalAmount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].totalAmount"
                            },
                            {
                               "variable":"variable11",
-                              "value":"Receipt[0].instrument.transactionType"
+                              "value":"$.Receipt[0].instrument.transactionType"
                            },
                            {
                               "variable":"variable12",
-                              "value":"Receipt[0].transactionId"
+                              "value":"$.Receipt[0].transactionId"
                            },
                            {
                               "variable":"variable13",
-                              "value":"Receipt[0].instrument.bank.name"
+                              "value":"$.Receipt[0].instrument.bank.name"
                            }
 
                         ]  

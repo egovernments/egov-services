@@ -18,6 +18,7 @@ import { fileStoreAPICall } from "./utils/fileStoreAPICall";
 import { directMapping } from "./utils/directMapping";
 import { externalAPIMapping } from "./utils/externalAPIMapping";
 import envVariables from "./EnvironmentVariables";
+var jp = require('jsonpath');
 //create binary
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var pdfMakePrinter = require("pdfmake/src/printer");
@@ -29,7 +30,7 @@ app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
- function createPdfBinary(key,listDocDefinition, successCallback, errorCallback) {
+ function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId) {
    try {
     var fontDescriptors = {
       Roboto: {
@@ -54,9 +55,9 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
         //storing file on local computer/server
         doc.pipe(
           fs.createWriteStream(filename).on("error", err => {
-            errorCallback(err.message);
+            errorCallback({message:"error occurred while writing pdf: "+err.message});
           }).on("close", () => {
-              fileStoreAPICall(filename).then((result)=>{
+              fileStoreAPICall(filename,tenantId).then((result)=>{
               fs.unlink(filename,()=>{});
               listOfFilestoreIds.push(result);
               if(listOfFilestoreIds.length===noOfDefinitions)
@@ -88,77 +89,93 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
 app.post("/pdf", asyncHandler(async (req, res)=> { 
   try{
    let key=req.query.key;
-      
-   var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
-   var dataconfig=require("./config/data-config/"+key);  
- 
-  let formatObjectArrayObject=[];
-  let formatConfigByFile=[];
-  for(let propertykey in req.body)
-  {
-    if(req.body.hasOwnProperty(propertykey))
-    {
-      for(var i=0, len=req.body[propertykey].length; i < len; i++)
+   let tenantId=req.query.tenantId;
+   let errorMessage="";
+   if((key===undefined)||(key.trim()==="")){
+    errorMessage+=" key is compulsory,";
+   }
+   if((tenantId===undefined)||(tenantId.trim()==="")){
+    errorMessage+=" tenantId is compulsory,";
+   }
+   if(errorMessage!==""){
+    res.status(400);
+    res.json({
+      status: 400,
+      data: errorMessage
+    });
+   }
+   else
+   {
+    var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
+    var dataconfig=require("./config/data-config/"+key);  
+    var baseKeyPath=get(dataconfig,"DataConfigs.baseKeyPath");
+    let formatObjectArrayObject=[];
+    let formatConfigByFile=[];
+    let moduleObjectsArray=jp.query(req.body,baseKeyPath);
+      if(moduleObjectsArray!==undefined)
       {
-        let moduleObject=req.body[propertykey][i];
-        let outerObject={};
-        let formatObject=JSON.parse(JSON.stringify(formatconfig));
-
-        // Multipage pdf, each pdf from new page
-        if((formatObjectArrayObject.length!=0)&&(formatObject["content"][0]!==undefined))
+        for(var i=0, len=moduleObjectsArray.length; i < len; i++)
         {
-          formatObject["content"][0]["pageBreak"]= "before";
-        }
-        outerObject[propertykey]=[];
-        outerObject[propertykey].push(moduleObject);
-        let variableTovalueMap={};
-        //direct mapping service
-        await Promise.all([
-        directMapping(outerObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
-      ,
-        //external API mapping
-        externalAPIMapping(key,outerObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
-         ]);
-        formatObject=fillValues(variableTovalueMap,formatObject);
-        formatObjectArrayObject.push(formatObject["content"]);
-        //putting formatconfig in a file to check docdefinition on pdfmake playground online
-
-        if(((i+1)==maxPagesAllowed)||((i+1)==len))
-        {
-          let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
-          formatconfigCopy["content"]=formatObjectArrayObject;
-          formatConfigByFile.push(formatconfigCopy);
-          formatObjectArrayObject=[];
+          let moduleObject=moduleObjectsArray[i];
+          let formatObject=JSON.parse(JSON.stringify(formatconfig));
+  
+          // Multipage pdf, each pdf from new page
+          if((formatObjectArrayObject.length!=0)&&(formatObject["content"][0]!==undefined))
+          {
+            formatObject["content"][0]["pageBreak"]= "before";
+          }
+          let variableTovalueMap={};
+          //direct mapping service
+          await Promise.all([
+          directMapping(moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
+        ,
+          //external API mapping
+          externalAPIMapping(key,moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
+            ]);
+          formatObject=fillValues(variableTovalueMap,formatObject);
+          formatObjectArrayObject.push(formatObject["content"]);
+          //putting formatconfig in a file to check docdefinition on pdfmake playground online
+  
+          if(((i+1)==maxPagesAllowed)||((i+1)==len))
+          {
+            let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
+            formatconfigCopy["content"]=formatObjectArrayObject;
+            formatConfigByFile.push(formatconfigCopy);
+            formatObjectArrayObject=[];
+          }
         }
       }
-    }
-  } 
+      else{
+        throw {message:`could not find propery in request body with name ${baseKeyPath}`}; 
+      }
+    
+    
   
-
-
-  // var util = require('util');
-  // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
-  //function to download pdf automatically 
-  createPdfBinary(
-    key,
-    formatConfigByFile,
-    response => {
-      // doc successfully created
-      res.json({
-        status: 200,
-        data: response.message,
-        filestoreId:response.filestoreId
-      });
-    },
-    error => {
-      res.status(500);
-      // doc creation error
-      res.json({
-        status: 500,
-        data: error.message
-      });
-    }
-  );
+  
+    // var util = require('util');
+    // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
+    //function to download pdf automatically 
+    createPdfBinary(
+      key,
+      formatConfigByFile,
+      response => {
+        // doc successfully created
+        res.json({
+          status: 200,
+          data: response.message,
+          filestoreId:response.filestoreId
+        });
+      },
+      error => {
+        res.status(500);
+        // doc creation error
+        res.json({
+          status: 500,
+          data: "error in createPdfBinary"+error.message
+        });
+      },tenantId
+    );
+   }
 }
 catch(error)
 {
@@ -166,7 +183,7 @@ catch(error)
   res.status(500);
   res.json({
     status: 500,
-    data: error.message
+    data: "some unknown error: "+error.message
   });
 }
   // function to open PDF

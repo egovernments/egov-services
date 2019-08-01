@@ -115,7 +115,7 @@
                          "RequestInfo": {
                              "action": "",
                              "apiId": "Rainmaker",
-                             "authToken": "3afe660a-e8fe-4d80-8560-5d8659bfa446",
+                             "authToken": "1e37ea94-13cd-4e58-9dde-6c133a0a6902",
                              "did": "1",
                              "key": "",
                              "msgId": "20170310130900|en_IN",
@@ -192,8 +192,19 @@
                          {
                             "variable":"variable31",
                             "value":"$.Receipt[0].instrument.transactionDateInput"
-                         }
-                     
+                         },
+                         {
+                           "variable":"variable32",
+                           "value":"$.Receipt[0].Bill[0].billDetails[0].manualReceiptNumber"
+                        },
+                        {
+                           "variable":"variable33",
+                           "value":"$.Receipt[0].Bill[0].billDetails[0].manualReceiptDate"
+                        },
+                        {
+                           "variable":"variable34",
+                           "value":"$.Receipt[0].instrument.amount"
+                        }
                       ]  
                      }
                   ]

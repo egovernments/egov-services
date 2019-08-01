@@ -479,7 +479,7 @@
               "text": "{{variable25}}"
             },
             {
-              "text": "NA"
+              "text": "{{variable34}}"
             }
           ]
         ]
@@ -633,7 +633,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable32}}",
               "border": [
                 false,
                 true,
@@ -652,7 +652,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA",
+              "text": "{{variable33}}",
               "border": [
                 false,
                 true,

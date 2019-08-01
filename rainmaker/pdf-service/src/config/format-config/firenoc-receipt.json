@@ -398,21 +398,6 @@
         "layout": {}
       },
          
-         
-      {
-        "style": "pt-reciept-citizen-header",
-        "columns": [
-          {
-            "text": [
-              {
-                "text": "NA",
-                "bold": false
-              }
-            ],
-            "alignment": "center"
-          }
-        ]
-      },
       
           {
         "style": "pt-reciept-citizen-header",
@@ -435,7 +420,12 @@
             ],
             "alignment": "right"
           }
-        ]
+        ],
+        "margin": [
+          0,
+          40,
+          0,
+          0]
       }
       
   

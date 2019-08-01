@@ -16,7 +16,7 @@
                 "width": 50,
                 "height": 61.25,
                 "margin": [
-                  41,
+                  0,
                   12,
                   10,
                   10
@@ -44,14 +44,14 @@
               {
                 "text": [
                   {
-                    "text": "NA",
+                    "text": "{{variable16}}",
                     "bold": true,
                     "style": "receipt-no"
                   }
                 ],
                 "alignment": "center",
                 "margin": [
-                  -50,
+                  0,
                   30,
                   0,
                   2

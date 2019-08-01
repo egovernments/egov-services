@@ -29,6 +29,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
+
 @Service
 @Slf4j
 public class PayuGateway implements Gateway {
@@ -76,7 +78,7 @@ public class PayuGateway implements Gateway {
         params.add("amount", Utils.formatAmtAsRupee(transaction.getTxnAmount()));
         params.add("productinfo", transaction.getProductInfo());
         params.add("firstname", transaction.getUser().getName());
-        params.add("email", transaction.getUser().getEmailId());
+        params.add("email", Objects.toString(transaction.getUser().getEmailId(), ""));
         params.add("phone", transaction.getUser().getMobileNumber());
         params.add("surl", transaction.getCallbackUrl());
         params.add("furl", transaction.getCallbackUrl());
@@ -91,10 +93,14 @@ public class PayuGateway implements Gateway {
 
             HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 
-            System.out.println(restTemplate.postForObject(uriComponents.toUriString(), entity, String.class));
-            return restTemplate.postForLocation(
+            URI redirectUri = restTemplate.postForLocation(
                     uriComponents.toUriString(), entity
             );
+
+            if(isNull(redirectUri))
+                throw new CustomException("PAYU_REDIRECT_URI_GEN_FAILED", "Failed to generate redirect URI");
+            else
+                return redirectUri;
 
         } catch (RestClientException e){
             log.error("Unable to retrieve redirect URI from gateway", e);
@@ -104,18 +110,34 @@ public class PayuGateway implements Gateway {
 
     @Override
     public Transaction fetchStatus(Transaction currentStatus, Map<String, String> params) {
-//        String checksum = params.get("hash");
-//
-//        if (!StringUtils.isEmpty(checksum)) {
-//            if (validateHash(params, MERCHANT_KEY, MERCHANT_SALT)) {
-//                MultiValueMap<String, String> resp = new LinkedMultiValueMap<>();
-//                params.forEach(resp::add);
-//                Transaction txn = transformRawResponse(resp, currentStatus);
-//                if (txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE)) {
-//                    return txn;
-//                }
-//            }
-//        }
+        PayuResponse resp = objectMapper.convertValue(params, PayuResponse.class);
+        if( ! isNull(resp)){
+            resp.setTransaction_amount(resp.getAmount());
+            String checksum = resp.getHash();
+
+            String hashSequence = "SALT|status||||||udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|";
+            hashSequence = hashSequence.concat(MERCHANT_KEY);
+            hashSequence = hashSequence.replace("SALT", MERCHANT_SALT);
+            hashSequence = hashSequence.replace("status", resp.getStatus());
+            hashSequence = hashSequence.replace("udf5", resp.getUdf5());
+            hashSequence = hashSequence.replace("udf4", resp.getUdf4());
+            hashSequence = hashSequence.replace("udf3", resp.getUdf3());
+            hashSequence = hashSequence.replace("udf2", resp.getUdf2());
+            hashSequence = hashSequence.replace("udf1", resp.getUdf1());
+            hashSequence = hashSequence.replace("email", resp.getEmail());
+            hashSequence = hashSequence.replace("firstname", resp.getFirstname());
+            hashSequence = hashSequence.replace("productinfo", resp.getProductinfo());
+            hashSequence = hashSequence.replace("amount", resp.getTransaction_amount());
+            hashSequence = hashSequence.replace("txnid", resp.getTxnid());
+            String hash = hashCal(hashSequence);
+
+            if(checksum.equalsIgnoreCase(hash)){
+                Transaction txn = transformRawResponse(resp, currentStatus);
+                if (txn.getTxnStatus().equals(Transaction.TxnStatusEnum.PENDING) || txn.getTxnStatus().equals(Transaction.TxnStatusEnum.FAILURE)) {
+                    return txn;
+                }
+            }
+        }
 
         return fetchStatusFromGateway(currentStatus);
     }

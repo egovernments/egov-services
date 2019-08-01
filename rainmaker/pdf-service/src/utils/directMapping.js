@@ -1,15 +1,16 @@
 import get from "lodash/get";
-import {findAndUpdateLocalisation} from "./commons";
+import {findAndUpdateLocalisation,getDateInRequiredFormat,checkifNullAndSetValue} from "./commons";
 
 var jp = require('jsonpath');
 export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,localisationMap)=>{    
     
     var directArr = [];        
-    var objectOfDirectMapping = get(dataconfig, "DataConfigs.mappings[0].mappings[0].direct", []);
+    var objectOfDirectMapping = jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.direct.*");
+    objectOfDirectMapping=checkifNullAndSetValue(objectOfDirectMapping,[]);
     directArr = objectOfDirectMapping.map(item => {
       return {
         jPath: item.variable,
-        val: jp.query(req,item.value.path)||"NA",
+        val: checkifNullAndSetValue(jp.query(req,item.value.path),"NA"),
         valJsonPath: item.value.path,
         type: item.type,
         format: item.format,
@@ -100,46 +101,34 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
         // set(formatconfig,directArr[i].jPath,arrayOfBuiltUpDetails);      
       }
       //setting value in pdf for no type direct mapping
-      else{
-          //if data/value is not present then put NA
-        if((directArr[i].val==null)||(directArr[i].val.every(function(v) { return v === null; })))
-          variableTovalueMap[directArr[i].jPath]="NA";
-          // set(formatconfig, directArr[i].jPath, "NA");
-        else
-        {
-          if(directArr[i].localisation && directArr[i].localisation.required && directArr[i].localisation.prefix)
+      else 
+      {
+        directArr[i].val=checkifNullAndSetValue(directArr[i].val,"NA");
+        if((directArr[i].val!=="NA")&&directArr[i].localisation && directArr[i].localisation.required && directArr[i].localisation.prefix)
             variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(localisationMap,directArr[i].localisation.prefix+"_"+directArr[i].val,directArr[i].localisation.module);
-          else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
-
-            {            
-              let myDate = new Date(directArr[i].val[0]);
-              if(isNaN(myDate))
-              {
-                variableTovalueMap[directArr[i].jPath]="NA";
-              }
-              else
-              {
-                let replaceValue=getDateInRequiredFormat(myDate);           
-                // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
-                variableTovalueMap[directArr[i].jPath]=replaceValue;
-              }
-            }
-            else
-               variableTovalueMap[directArr[i].jPath]=directArr[i].val;
-          
-          // set(formatconfig, directArr[i].jPath, directArr[i].val);
+        else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
+        {            
+          let myDate = new Date(directArr[i].val[0]);
+          if(isNaN(myDate))
+          {
+            variableTovalueMap[directArr[i].jPath]="NA";
+          }
+          else
+          {
+            let replaceValue=getDateInRequiredFormat(myDate);           
+            // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
+            variableTovalueMap[directArr[i].jPath]=replaceValue;
+          }
         }
-        
-      }      
+        else
+            variableTovalueMap[directArr[i].jPath]=directArr[i].val;
+      }
+          // set(formatconfig, directArr[i].jPath, directArr[i].val);
     }
 }
-const getDateInRequiredFormat=(date)=>{
-  return date.toLocaleDateString('en-GB', {
-    day : '2-digit',
-    month : '2-digit',
-    year : 'numeric'
-}); 
-}
+
+
+
 
 
 

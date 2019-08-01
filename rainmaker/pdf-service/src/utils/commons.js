@@ -33,3 +33,19 @@ export const  findAndUpdateLocalisation=async(localisationMap,key,moduleName)=>{
         return key;
     }
   };
+
+
+export const getDateInRequiredFormat=(date)=>{
+    return date.toLocaleDateString('en-GB', {
+      day : '2-digit',
+      month : '2-digit',
+      year : 'numeric'
+  }); 
+  }
+
+  export const checkifNullAndSetValue=(value,setTo)=>{
+    if((value==undefined)||(value==null)||(value.length===0)||((value.length===1)&&(value[0]===null)))
+      return setTo;
+    else
+      return value;
+  }

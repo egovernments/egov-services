@@ -185,9 +185,15 @@
                            {
                               "variable":"variable25",
                               "value":"$.Receipt[0].Bill[0].billDetails[0].manualReceiptDate"
+                           },
+                           {
+                              "variable":"variable26",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_PENALTY')].amount"
+                           },
+                           {
+                              "variable":"variable27",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_REBATE')].amount"
                            }
-                           
-                           
                         ]  
                       }
                    ]

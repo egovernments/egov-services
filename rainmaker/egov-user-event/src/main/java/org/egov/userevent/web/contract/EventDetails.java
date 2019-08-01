@@ -40,6 +40,7 @@ public class EventDetails {
 	
 	private List<Document> documents;
 	
+	private BigDecimal fees;
 	
 	public boolean isEmpty(EventDetails details) {
 		if(null == details.getFromDate() || null == details.getToDate() || null == details.getLatitude() || null == details.getLongitude()) {

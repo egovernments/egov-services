@@ -93,7 +93,7 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_Locale", LOCALE);
         fields.put("vpc_Currency", CURRENCY);
         fields.put("vpc_ReturnURL", transaction.getCallbackUrl());
-        fields.put("vpc_MerchTxnRef", transaction.getModule() + "-" +transaction.getTxnId());
+        fields.put("vpc_MerchTxnRef", transaction.getTxnId());
         fields.put("vpc_OrderInfo", (String) transaction.getAdditionalFields().get(BANK_ACCOUNT_NUMBER));
         fields.put("vpc_Amount", String.valueOf(Utils.formatAmtAsPaise(transaction.getTxnAmount())));
 
@@ -150,11 +150,15 @@ public class AxisGateway implements Gateway {
 
     private Transaction fetchStatusFromGateway(Transaction currentStatus) {
         Map<String, String> fields = new HashMap<>();
+
+        String txnRef = StringUtils.isEmpty(currentStatus.getModule()) ? currentStatus.getTxnId() :
+                currentStatus.getModule() + "-" +currentStatus.getTxnId();
+
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_STATUS);
         fields.put("vpc_AccessCode", VPC_ACCESS_CODE);
         fields.put("vpc_Merchant", MERCHANT_ID);
-        fields.put("vpc_MerchTxnRef", currentStatus.getModule() + "-" +currentStatus.getTxnId());
+        fields.put("vpc_MerchTxnRef", txnRef);
         fields.put("vpc_User", AMA_USER);
         fields.put("vpc_Password", AMA_PWD);
 

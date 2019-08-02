@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.Builder.Default;
 
 @Setter
 @Getter
@@ -26,13 +27,13 @@ public class TaxHeadMasterCriteria {
 	private String service;
 	private String category;
 	private String name;
+	
+	@Default
 	private Set<String> code=new HashSet<>();
 	private Boolean isDebit;
 	private Boolean isActualDemand;
 	
+	@Default
 	private Set<String> id=new HashSet<>();
-	private Long validFrom;
-	private Long validTill;
-	private Long size;
-	private Long offset;
+
 }

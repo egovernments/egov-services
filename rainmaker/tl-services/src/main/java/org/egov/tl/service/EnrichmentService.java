@@ -8,6 +8,8 @@ import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.*;
 import org.egov.tl.web.models.Idgen.IdResponse;
 import org.egov.tl.web.models.user.UserDetailResponse;
+import org.egov.tl.web.models.workflow.BusinessService;
+import org.egov.tl.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,15 +28,17 @@ public class EnrichmentService {
     private TradeUtil tradeUtil;
     private BoundaryService boundaryService;
     private UserService userService;
+    private WorkflowService workflowService;
 
     @Autowired
     public EnrichmentService(IdGenRepository idGenRepository, TLConfiguration config, TradeUtil tradeUtil,
-                             BoundaryService boundaryService,UserService userService) {
+                             BoundaryService boundaryService,UserService userService,WorkflowService workflowService) {
         this.idGenRepository = idGenRepository;
         this.config = config;
         this.tradeUtil = tradeUtil;
         this.boundaryService = boundaryService;
         this.userService = userService;
+        this.workflowService = workflowService;
     }
 
 
@@ -53,7 +57,7 @@ public class EnrichmentService {
             tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
             Map<String,Long> taxPeriods = tradeUtil.getTaxPeriods(tradeLicense,mdmsData);
-            if(tradeLicense.getValidTo()==null)
+            if(tradeLicense.getLicenseType().equals(TradeLicense.LicenseTypeEnum.PERMANENT) || tradeLicense.getValidTo()==null)
                 tradeLicense.setValidTo(taxPeriods.get(TLConstants.MDMS_ENDDATE));
             
 
@@ -298,13 +302,12 @@ public class EnrichmentService {
      * Enriches the update request
      * @param tradeLicenseRequest The input update request
      */
-    public void enrichTLUpdateRequest(TradeLicenseRequest tradeLicenseRequest){
+    public void enrichTLUpdateRequest(TradeLicenseRequest tradeLicenseRequest,BusinessService businessService){
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
         AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getUuid(), false);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
             tradeLicense.setAuditDetails(auditDetails);
-            if(tradeLicense.getAction().equalsIgnoreCase(ACTION_APPLY)
-                    || tradeLicense.getAction().equalsIgnoreCase(ACTION_INITIATE)) {
+            if(workflowService.isStateUpdatable(tradeLicense.getStatus(), businessService)) {
                 tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
                 if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getAccessories())){
@@ -325,14 +328,6 @@ public class EnrichmentService {
                     }
                 });
 
-                if (tradeLicense.getAction().equalsIgnoreCase(ACTION_APPLY)) {
-                    tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
-                        if (document.getId() == null)
-                        {document.setId(UUID.randomUUID().toString());
-                            document.setActive(true);}
-                    });
-                }
-
                 tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
                     if(owner.getUuid()==null || owner.getUserActive()==null)
                         owner.setUserActive(true);
@@ -352,6 +347,15 @@ public class EnrichmentService {
                     tradeLicense.getTradeLicenseDetail().getInstitution().setTenantId(tradeLicense.getTenantId());
                     tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
                         owner.setInstitutionId(tradeLicense.getTradeLicenseDetail().getInstitution().getId());
+                    });
+                }
+
+                if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getApplicationDocuments())){
+                    tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
+                        if(document.getId()==null){
+                            document.setId(UUID.randomUUID().toString());
+                            document.setActive(true);
+                        }
                     });
                 }
             }
@@ -441,6 +445,20 @@ public class EnrichmentService {
      */
     public void postStatusEnrichment(TradeLicenseRequest tradeLicenseRequest){
         setLicenseNumberAndIssueDate(tradeLicenseRequest);
+    }
+
+
+    /**
+     * Creates search criteria from list of trade license
+     * @param licenses The licenses whose ids are to be added to search
+     * @return tradeLicenseSearch criteria on basis of tradelicense id
+     */
+    public TradeLicenseSearchCriteria getTradeLicenseCriteriaFromIds(List<TradeLicense> licenses){
+        TradeLicenseSearchCriteria criteria = new TradeLicenseSearchCriteria();
+        Set<String> licenseIds = new HashSet<>();
+        licenses.forEach(license -> licenseIds.add(license.getId()));
+        criteria.setIds(new LinkedList<>(licenseIds));
+        return criteria;
     }
 
 

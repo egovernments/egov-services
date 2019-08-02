@@ -59,6 +59,7 @@ public class ActionInfo   {
   private List<String> media = null;
 
   @JsonProperty("comments")
+  @Size(max=2000)
   private String comment = null;
 
   public String getUuid() {

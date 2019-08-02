@@ -27,6 +27,8 @@ public class EventDetails {
 	private String id;
 	
 	private String eventId;
+	
+	private String organizer;
 
 	private Long fromDate;
 	

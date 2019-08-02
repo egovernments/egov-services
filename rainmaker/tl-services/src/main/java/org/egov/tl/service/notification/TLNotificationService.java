@@ -130,14 +130,19 @@ public class TLNotificationService {
     			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
     			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
     			
-                List<ActionItem> items = new ArrayList<>();
-    			String actionLink = config.getPayLink().replace("$mobile", mobile)
-    						.replace("$applicationNo", license.getApplicationNumber())
-    						.replace("$tenantId", license.getTenantId());
-    			actionLink = config.getUiAppHost() + actionLink;
-    			ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
-    			items.add(item);
-    			Action action = Action.builder().actionUrls(items).build();
+    			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
+    			Action action = null;
+    			if(payTriggerList.contains(license.getStatus())) {
+                    List<ActionItem> items = new ArrayList<>();
+        			String actionLink = config.getPayLink().replace("$mobile", mobile)
+        						.replace("$applicationNo", license.getApplicationNumber())
+        						.replace("$tenantId", license.getTenantId());
+        			actionLink = config.getUiAppHost() + actionLink;
+        			ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
+        			items.add(item);
+        			action = Action.builder().actionUrls(items).build();
+    			}
+
 				
 				events.add(Event.builder().tenantId(license.getTenantId()).description(mobileNumberToMsg.get(mobile))
 						.eventType(TLConstants.USREVENTS_EVENT_TYPE).name(TLConstants.USREVENTS_EVENT_NAME)

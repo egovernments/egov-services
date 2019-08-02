@@ -235,9 +235,8 @@ public class TLConfiguration {
 	@Value("${egov.user.event.notification.enabled}")
 	private Boolean isUserEventsNotificationEnabled;
 
-
-
-
+	@Value("${egov.usr.events.pay.triggers}")
+	private String payTriggers;
 
 
 

@@ -38,7 +38,8 @@ public class PayuGateway implements Gateway {
     private final String GATEWAY_NAME = "PAYU";
     private final String MERCHANT_KEY;
     private final String MERCHANT_SALT;
-    private final String MERCHANT_URL;
+    private final String MERCHANT_URL_PAY;
+    private final String MERCHANT_URL_STATUS;
     private final String MERCHANT_PATH_PAY;
     private final String MERCHANT_PATH_STATUS;
     private final boolean ACTIVE;
@@ -53,7 +54,8 @@ public class PayuGateway implements Gateway {
         this.ACTIVE = Boolean.valueOf(environment.getRequiredProperty("payu.active"));
         this.MERCHANT_KEY = environment.getRequiredProperty("payu.merchant.key");
         this.MERCHANT_SALT = environment.getRequiredProperty("payu.merchant.salt");
-        this.MERCHANT_URL = environment.getRequiredProperty("payu.url");
+        this.MERCHANT_URL_PAY = environment.getRequiredProperty("payu.url");
+        this.MERCHANT_URL_STATUS = environment.getRequiredProperty("payu.url.status");
         this.MERCHANT_PATH_PAY = environment.getRequiredProperty("payu.path.pay");
         this.MERCHANT_PATH_STATUS = environment.getRequiredProperty("payu.path.status");
     }
@@ -84,7 +86,7 @@ public class PayuGateway implements Gateway {
         params.add("furl", transaction.getCallbackUrl());
         params.add("hash", hash);
 
-        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host(MERCHANT_URL).path
+        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host(MERCHANT_URL_PAY).path
                 (MERCHANT_PATH_PAY).build();
 
         try {
@@ -204,7 +206,7 @@ public class PayuGateway implements Gateway {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("form", "2");
 
-        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host(MERCHANT_URL).path
+        UriComponents uriComponents = UriComponentsBuilder.newInstance().scheme("https").host(MERCHANT_URL_STATUS).path
                 (MERCHANT_PATH_STATUS).queryParams(queryParams).build();
 
         try {
@@ -263,26 +265,5 @@ public class PayuGateway implements Gateway {
 
         return hexString.toString();
     }
-
-//    private boolean validateHash(Map<String, String> params, String merchantKey, String merchantSalt){
-//        String checksum = params.get("hash");
-//
-//        String suffix = "||||||||||";
-//
-//        String builder = merchantSalt + "|" +
-//                params.get("status") + "|" +
-//                suffix +
-//                params.get("email") + "|" +
-//                params.get("firstname") + "|" +
-//                params.get("productinfo") + "|" +
-//                params.get("amount") + "|" +
-//                params.get("txnid") + "|" +
-//                merchantKey;
-//
-//        String computedHash = hashCal(builder);
-//
-//        return checksum.equalsIgnoreCase(computedHash);
-//
-//    }
 
 }

@@ -111,6 +111,7 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
     var baseKeyPath=get(dataconfig,"DataConfigs.baseKeyPath");
     let formatObjectArrayObject=[];
     let formatConfigByFile=[];
+    let countOfObjectsInCurrentFile=0;
     let moduleObjectsArray=jp.query(req.body,baseKeyPath);
       if(moduleObjectsArray!==undefined)
       {
@@ -135,13 +136,14 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
           formatObject=fillValues(variableTovalueMap,formatObject);
           formatObjectArrayObject.push(formatObject["content"]);
           //putting formatconfig in a file to check docdefinition on pdfmake playground online
-  
-          if(((i+1)==maxPagesAllowed)||((i+1)==len))
+          countOfObjectsInCurrentFile++;
+          if((countOfObjectsInCurrentFile===maxPagesAllowed)||((i+1)==len))
           {
             let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
             formatconfigCopy["content"]=formatObjectArrayObject;
             formatConfigByFile.push(formatconfigCopy);
             formatObjectArrayObject=[];
+            countOfObjectsInCurrentFile=0;
           }
         }
       }

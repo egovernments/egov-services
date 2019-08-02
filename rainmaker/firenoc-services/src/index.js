@@ -13,27 +13,11 @@ import config from "./config.json";
 import tracer from "./middleware/tracer";
 import terminusOptions from "./utils/health";
 import envVariables from "./envVariables";
+import "./kafka/consumer";
 var swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger.json");
 const { createTerminus } = require("@godaddy/terminus");
 
-// const validator = require('swagger-express-validator');
-
-// const opts = {
-//   schema:swaggerDocument, // Swagger schema
-//   preserveResponseContentType: false, // Do not override responses for validation errors to always be JSON, default is true
-//   returnRequestErrors: true, // Include list of request validation errors with response, default is false
-//   returnResponseErrors: true, // Include list of response validation errors with response, default is false
-//   validateRequest: true,
-//   validateResponse: true,
-//   requestValidationFn: (req, data, errors) => {
-//     console.log(`failed request validation: ${req.method} ${req.originalUrl}\n ${util.inspect(errors)}`)
-//   },
-//   responseValidationFn: (req, data, errors) => {
-//     console.log(`failed response validation: ${req.method} ${req.originalUrl}\n ${util.inspect(errors)}`)
-//   },
-//   async: true
-// };
 
 let app = express();
 app.server = http.createServer(app);

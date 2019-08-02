@@ -52,7 +52,10 @@ public class PostHookFilter extends ZuulFilter {
                 String.class);
         } catch (HttpClientErrorException| HttpServerErrorException e) {
             log.error("POST-Hook - Http Exception Occurred", e);
-            ExceptionUtils.raiseCustomException(e.getStatusCode(), "POST_HOOK_ERROR - Post-hook url threw an error - " + e.getMessage());
+            ctx.setResponseBody(e.getResponseBodyAsString());
+            ctx.setResponseStatusCode(e.getRawStatusCode());
+            throw e;
+            //ExceptionUtils.raiseCustomException(e.getStatusCode(), "POST_HOOK_ERROR - Post-hook url threw an error - " + e.getMessage());
         } catch (Exception e) {
             log.error("POST-Hook - Exception Occurred", e);
             ExceptionUtils.raiseCustomException(HttpStatus.BAD_REQUEST, "POST_HOOK_ERROR - Post-hook url threw an error - " + e.getMessage());

@@ -211,7 +211,7 @@ public class UserEventsValidator {
 			}
 		}
 
-		//validateMDMSData(requestInfo, event, errorMap);
+		validateMDMSData(requestInfo, event, errorMap);
 	}
 
 	/**

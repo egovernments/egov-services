@@ -631,7 +631,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NA",
+                "text": "{{variable28}}",
                 "border": [
                   true,
                   true,
@@ -645,7 +645,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NA",
+                "text": "{{variable29}}",
                 "border": [
                   true,
                   true,

@@ -115,7 +115,7 @@
                          "RequestInfo": {
                              "action": "",
                              "apiId": "Rainmaker",
-                             "authToken": "1e37ea94-13cd-4e58-9dde-6c133a0a6902",
+                             "authToken": "c8ecd9a3-62a4-46af-a26e-a16745f96ee6",
                              "did": "1",
                              "key": "",
                              "msgId": "20170310130900|en_IN",
@@ -135,39 +135,39 @@
                          },
                          {
                             "variable":"variable17",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[7].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TAX')].amount"
                          },
                          {
                             "variable":"variable18",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[3].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_FIRE_CESS')].amount"
                          },
                          {
                             "variable":"variable19",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[2].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_CANCER_CESS')].amount"
                          },
                          {
                             "variable":"variable20",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[8].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_PENALTY')].amount"
                          },
                          {
                             "variable":"variable21",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[4].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_REBATE')].amount"
                          },
                          {
                             "variable":"variable22",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[6].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_INTEREST')].amount"
                          },
                          {
                             "variable":"variable23",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_UNIT_USAGE_EXEMPTION')].amount"
                          },
                          {
                             "variable":"variable24",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_OWNER_EXEMPTION')].amount"
                          },
                          {
                             "variable":"variable25",
-                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[5].amount"
+                            "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_ROUNDOFF')].amount"
                          },
                          {
                             "variable":"variable26",

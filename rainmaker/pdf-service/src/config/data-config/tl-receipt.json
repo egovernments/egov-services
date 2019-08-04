@@ -53,7 +53,7 @@
                         },
                         "localisation":{
                            "required":true,
-                           "prefix":"TL",   
+                           "prefix":"TRADELICENSE_TRADETYPE",
                            "module":"rainmaker-tl"
                         }
                      },
@@ -64,7 +64,7 @@
                         },
                         "localisation":{
                            "required":true,
-                           "prefix":"TL",   
+                           "prefix":"TRADELICENSE_TRADETYPE",   
                            "module":"rainmaker-tl"
                         }
                      },
@@ -136,7 +136,7 @@
                            "RequestInfo": {
                                "action": "",
                                "apiId": "Rainmaker",
-                               "authToken": "1e37ea94-13cd-4e58-9dde-6c133a0a6902",
+                               "authToken": "c8ecd9a3-62a4-46af-a26e-a16745f96ee6",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",
@@ -188,11 +188,19 @@
                            },
                            {
                               "variable":"variable26",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_PENALTY')].amount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='TL_TIME_PENALTY')].amount"
                            },
                            {
                               "variable":"variable27",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='PT_TIME_REBATE')].amount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='TL_TIME_REBATE')].amount"
+                           },
+                           {
+                              "variable":"variable28",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='TL_ADHOC_PENALTY')].amount"
+                           },
+                           {
+                              "variable":"variable29",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='TL_ADHOC_REBATE')].amount"
                            }
                         ]  
                       }

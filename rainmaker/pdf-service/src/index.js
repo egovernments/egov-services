@@ -18,6 +18,7 @@ import { fileStoreAPICall } from "./utils/fileStoreAPICall";
 import { directMapping } from "./utils/directMapping";
 import { externalAPIMapping } from "./utils/externalAPIMapping";
 import envVariables from "./EnvironmentVariables";
+// import {getFileStoreIds,insertStoreIds} from "./queries";
 var jp = require('jsonpath');
 //create binary
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -30,6 +31,7 @@ app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
+let serverport=envVariables.SERVER_PORT;
  function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId) {
    try {
     var fontDescriptors = {
@@ -61,7 +63,10 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
               fs.unlink(filename,()=>{});
               listOfFilestoreIds.push(result);
               if(listOfFilestoreIds.length===noOfDefinitions)
+              {
+                // insertStoreIds("",);
                 successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
+              }
           }).catch(err=>{
             fs.unlink(filename,()=>{});
             console.log(err);
@@ -86,7 +91,7 @@ let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
   }
 }
 
-app.post("/pdf", asyncHandler(async (req, res)=> { 
+app.post("/pdf/_create", asyncHandler(async (req, res)=> { 
   try{
    let key=req.query.key;
    let tenantId=req.query.tenantId;
@@ -162,8 +167,9 @@ app.post("/pdf", asyncHandler(async (req, res)=> {
       formatConfigByFile,
       response => {
         // doc successfully created
+        res.status(201);
         res.json({
-          status: 200,
+          status: 201,
           data: response.message,
           filestoreId:response.filestoreId
         });
@@ -209,28 +215,22 @@ catch(error)
   
 }));
 
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running at http:${PORT}/`);
+
+// app.post("/pdf/_search", asyncHandler(async (req, res)=> { 
+//   let jobid=req.query.jobid;
+//   let tenantId=req.query.tenantId;
+//   getFileStoreIds(jobid,tenantId,res);
+// }));
+
+
+app.listen(serverport, () => {
+  console.log(`Server running at http:${serverport}/`);
 });
 
 export const fillValues=(variableTovalueMap,formatconfig)=>{
-  // let stringfromobject=JSON.stringify(formatconfig);
-  // for(let key in variableTovalueMap)
-  // {
-  //   stringfromobject=stringfromobject.replace("\""+key+"\"",JSON.stringify(variableTovalueMap[key]));
-  // // }
-  // return stringfromobject;
   let mustache = require('mustache');
   mustache.escape = function(text) {return text;};
   let input=JSON.stringify(formatconfig);
-  // // mustache.parse(formatconfig);
-
-  // // console.log(mustache.render(input, variableTovalueMap));
-  // // let output=JSON.parse(mustache.render(input, variableTovalueMap));
-  // // console.log(variableTovalueMap);
-  // console.log(variableTovalueMap);
-  // console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
   let output=JSON.parse(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
   return output;
 } 

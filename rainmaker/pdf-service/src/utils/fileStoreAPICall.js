@@ -6,11 +6,11 @@ import axios, { post } from 'axios';
 var FormData = require('form-data')
 import envVariables from "../EnvironmentVariables";
 
-let egovHost=envVariables.EGOV_HOST;
+let egovFileHost=envVariables.EGOV_FILESTORE_SERVICE_HOST;
 let filestoreEndpoint=envVariables.EGOV_FILESTORE_SERVICE_ENDPOINT;
 
 export const fileStoreAPICall=async function(filename,tenantId){
-    var url =`${egovHost}${filestoreEndpoint}?tenantId=${tenantId}&module=pdfgen&tag=00040-2017-QR`;
+    var url =`${egovFileHost}${filestoreEndpoint}?tenantId=${tenantId}&module=pdfgen&tag=00040-2017-QR`;
       var form = new FormData();
       form.append("file", fs.createReadStream(filename));
       let response=await axios.post(url, form,  {headers: {

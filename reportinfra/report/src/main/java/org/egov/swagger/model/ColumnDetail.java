@@ -187,7 +187,7 @@ public ColumnDetail label(String label) {
   public TypeEnum getType() {
     return type;
   }
-Unnamed
+
   public void setType(TypeEnum type) {
     this.type = type;
   }

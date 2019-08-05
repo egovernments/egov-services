@@ -93,6 +93,7 @@ ReportDefinitions:
         state: true
         isMandatory: true
         isLocalisationRequired: true
+        localisationPrefix: "BILLINGSERVICE_BUSINESSSERVICE_"
         searchClause: AND REGEXP_REPLACE(rt.businessdetails,'\..*','') IN ($service)
       - name: paymentMode
         label: reports.common.CollectionRegister.mode

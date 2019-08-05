@@ -110,7 +110,7 @@ public class IntegrationService {
 						for(int i=0;i<keys.size();i++)
 						{
 							String servicecode=((String)keys.get(i)).replaceAll("\\..*","").toUpperCase();
-							String localisationLabel="BILLINGSERVICE_BUSINESSSERVICE_"+servicecode;
+							String localisationLabel=searchColumn.getLocalisationPrefix()+servicecode;
 							if(!valuesAfterLoc.contains(localisationLabel))
 							{
 								keysAfterLoc.add(servicecode);

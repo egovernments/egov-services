@@ -1,24 +1,8 @@
 swagger: '2.0'
-# eGSP YAML Template Version: 1.0 
-# This is a version number for the YAML template. This must not be changed.
-
 info:
   version: 1.0.0
-  ######################################################
-  # All API's are POST. _create,_search,_update for post,get and put. RequestInfo will be part of body. For multiple records we can pass multiple value with comman seperated values*.
-  # All _search will be synchronous and all _create and _update will be asynchronous*.
-  # RequestInfo and ResponseInfo object should be reffered from Common*.
-  # In _search API, tenantId should be passed in query param. In _create/_update, tenantId should be passed in the model.
-  # Readonly means that even if these fields are passed in the request, it will be ignored in create/update and will not be added/updated in the entities. The readonly fields might be passed to the _search API's to make use of fields for the search Query API. while calling _search API's even mandatory fields might not be available, it is mandatory only in the _create API's*.
-  # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message.
-  # Definition must start with Upper case followed by camel case.
-  # Every model will have tenantId. Validate tenantId on create.
-  # Parameter name must start with small case followed by camel case.
-  # Path must be in small case.
-  ######################################################
-  
   title: ID Generation service
-  description: >
+  description: |
     This service generates a unique ID/Code given the needed format e.g. an id wit format AP-PT-2017/04/11-000001-23 where format is can be decomposed as (- is used as a separator in the above example) -
       
       AP - Fixed string indicating the tenant
@@ -30,7 +14,7 @@ info:
       000001 - local sequence number
       
       23 - two random digits
-    
+
       This can be indicated to IDGen service as an ID needed in the format (square brackets indicate the parts that will be replaced by the svc to generate the new id) -
       AP-PT-[YYYY/MM/DD]-[SEQ_ACK_NUM]-[d{2}]
       
@@ -43,11 +27,10 @@ info:
       
   contact:
     name: Pranav
-host: phoenix-qa.egovernments.org
+host: egov-micro-dev.egovernments.org
 schemes:
   - https
-basePath: '/id/v1/'
-
+basePath: /id/v1/
 paths:
   /_genearte:
     post:
@@ -59,29 +42,18 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/IdGenerationRequest'
-      
       responses:
-      ####################################################
-      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
-      ###################################################
-        201:
+        '201':
           description: Id generated sucessfully.
           schema:
             $ref: '#/definitions/IdGenerationResponse'
-        400:
+        '400':
           description: Invalid input.
           schema:
             $ref: '#/definitions/IDGenErrorRes'
       tags:
-        - Property      
-  
+        - Property
 definitions:
-########################################################
-#RequestInfo and ResponseInfo object should be reffered from Common.
-#Definition must start with Upper case followed by camel case.
-#Every model will have tenantId
-########################################################
-
   IdRequest:
     type: object
     properties:
@@ -95,47 +67,42 @@ definitions:
           tenantid for which Id has to be generated. Please note that an id configuration can be overwritten for a particular tenant using tenantid prefix,  e.g. mycity.propertytax.acknumber configuration will be evaluated for mycity if both propertytax.acknumber and mycity.propertytax.acknumber are configured
       format:
         type: string
-        description : format of the id to be generated. Supported as per the description of the service.
+        description: format of the id to be generated. Supported as per the description of the service.
     required:
-    - tenantId
-    - idName
-          
-        
+      - tenantId
+      - idName
   IdResponse:
     type: object
     properties:
       id:
         type: string
-        description : This is the generated id
-    
+        description: This is the generated id
   IdGenerationRequest:
     description: Contract class to receive request.
     properties:
       requestInfo:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo"
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       idRequests:
         type: array
         items:
           $ref: '#/definitions/IdRequest'
-          
   IdGenerationResponse:
     description: Contract class to send response.
     properties:
       responseInfo:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       idResponses:
         type: array
         items:
           $ref: '#/definitions/IdResponse'
-
   IDGenErrorRes:
-    allOf: 
-    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    - type: object
-      properties:
-        codes:
-          type: string
-          enum:
-            - InvalidIDFormat
-            - IDSeqOverflow
-            - IDSeqNotFound
+    allOf:
+      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      - type: object
+        properties:
+          codes:
+            type: string
+            enum:
+              - InvalidIDFormat
+              - IDSeqOverflow
+              - IDSeqNotFound

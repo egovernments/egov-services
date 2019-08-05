@@ -39,7 +39,9 @@
  */
 package org.egov.receipt.consumer.service;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,6 +68,7 @@ import org.egov.receipt.consumer.model.ReceiptReq;
 import org.egov.receipt.consumer.model.RequestInfo;
 import org.egov.receipt.consumer.model.Scheme;
 import org.egov.receipt.consumer.model.TaxHeadMaster;
+import org.egov.receipt.consumer.model.Tenant;
 import org.egov.receipt.consumer.model.Voucher;
 import org.egov.receipt.consumer.model.VoucherRequest;
 import org.egov.receipt.consumer.model.VoucherResponse;
@@ -149,7 +152,7 @@ public class VoucherServiceImpl implements VoucherService {
 			VoucherSearchRequest vSearchReq = this.getVoucherSearchReq(receiptRequest);
 			return mapper.convertValue(serviceRequestRepository.fetchResult(voucher_cancel_url, vSearchReq, tenantId), VoucherResponse.class);
 		} catch (Exception e) {
-			throw new VoucherCustomException(ProcessStatus.FAILED, "Failed to create voucher");
+			throw new VoucherCustomException(ProcessStatus.FAILED, "Failed to cancel voucher");
 		}
 	}
 
@@ -172,31 +175,7 @@ public class VoucherServiceImpl implements VoucherService {
 		vSearchReq.setRequestInfo(requestInfo);
 		return vSearchReq;
 	}
-
-	/**
-	 * Function is used to check that whether the voucher is present/exist in
-	 * Finance setup or not.
-	 */
-	@Override
-	public boolean isVoucherExists(ReceiptReq receiptRequest) throws VoucherCustomException {
-		Receipt receipt = receiptRequest.getReceipt().get(0);
-		StringBuilder voucher_search_url = new StringBuilder(propertiesManager.getErpURLBytenantId(receipt.getTenantId())
-				+ propertiesManager.getVoucherSearchUrl());
-		VoucherSearchRequest vSearchReq = this.getVoucherSearchReq(receiptRequest);
-		VoucherResponse response = null;
-		try {
-			response = mapper.convertValue(serviceRequestRepository.fetchResult(voucher_search_url, vSearchReq, receipt.getTenantId()), VoucherResponse.class);
-		} catch (Exception e) {
-			throw new VoucherCustomException(ProcessStatus.FAILED,
-					"ERROR occured while calling " + voucher_search_url + " to check the existence of voucher");
-		}
-		boolean isExist = false;
-		if (response != null) {
-			isExist = response.getVouchers() != null ? !response.getVouchers().isEmpty() : false;
-		}
-		return isExist;
-	}
-
+	
 	/**
 	 * 
 	 * @param voucher
@@ -209,6 +188,7 @@ public class VoucherServiceImpl implements VoucherService {
 	private void setVoucherDetails(Voucher voucher, Receipt receipt, String tenantId, RequestInfo requestInfo,
 			FinanceMdmsModel finSerMdms) throws Exception {
 		BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
+		String receiptNumber = billDetail.getReceiptNumber();
 		String bsCode = billDetail.getBusinessService();
 		List<BusinessService> serviceByCode = this.getBusinessServiceByCode(tenantId, bsCode, requestInfo, finSerMdms);
 		List<TaxHeadMaster> taxHeadMasterByBusinessServiceCode = this.getTaxHeadMasterByBusinessServiceCode(tenantId,
@@ -223,6 +203,8 @@ public class VoucherServiceImpl implements VoucherService {
 		voucher.getFunction().setCode(businessService.getFunction());
 		voucher.setDepartment(businessService.getDepartment());
 		voucher.setFunctionary(new Functionary());
+		voucher.setServiceName(bsCode);
+		voucher.setReferenceDocument(receiptNumber);
 		String functionaryCode = businessService.getFunctionary() != null
 				& !StringUtils.isEmpty(businessService.getFunctionary()) ? businessService.getFunctionary() : null;
 		voucher.getFunctionary().setCode(functionaryCode);
@@ -243,7 +225,7 @@ public class VoucherServiceImpl implements VoucherService {
 		voucher.setModuleId(Long.valueOf(egModules != null ? egModules.getId().toString() : COLLECTIONS_EG_MODULES_ID));
 
 		voucher.setSource(
-				propertiesManager.getReceiptViewSourceUrl() + "?selectedReceipts=" + receipt.getBill().get(0).getBillDetails().get(0).getReceiptNumber());
+				propertiesManager.getReceiptViewSourceUrl() + "?selectedReceipts=" + receiptNumber);
 
 		voucher.setLedgers(new ArrayList<>());
 		amountMapwithGlcode = new LinkedHashMap<>();
@@ -387,6 +369,44 @@ public class VoucherServiceImpl implements VoucherService {
 		} catch (Exception e) {
 				LOGGER.error("ERROR while checking the module id for module name {}, default value 10 is considered.",
 						moduleName);
+		}
+		return null;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.egov.receipt.consumer.service.VoucherService#isTenantEnabledInFinanceModule(org.egov.receipt.consumer.model.ReceiptReq, org.egov.receipt.consumer.model.FinanceMdmsModel)
+	 * Method which is used to check whether Tenant is enabled in Finance module or not.
+	 */
+	@Override
+	public boolean isTenantEnabledInFinanceModule(ReceiptReq req, FinanceMdmsModel finSerMdms) throws VoucherCustomException{
+		Receipt receipt = req.getReceipt().get(0);
+		String tenantId = receipt.getTenantId();
+		Bill bill = receipt.getBill().get(0);
+		String bsCode = bill.getBillDetails().get(0).getBusinessService();
+		List<Tenant> tenantList = microServiceUtil.getFinanceTenantList(tenantId, bsCode, req.getRequestInfo(), finSerMdms);
+		List<Tenant> collect = tenantList.stream().filter(tenant -> tenant.getCode().equals(tenantId)).collect(Collectors.toList());
+		if(collect.isEmpty()){
+			throw new VoucherCustomException(ProcessStatus.NA, "TenantId "+tenantId+" is not enabled in Finance module.");
+		}
+		return true;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see org.egov.receipt.consumer.service.VoucherService#getVoucherByServiceAndRefDoc(org.egov.receipt.consumer.model.RequestInfo, java.lang.String, java.lang.String, java.lang.String)
+	 * Method which is used to fetch the voucher details associated with business service and reference documents.
+	 */
+	@Override
+	public VoucherResponse getVoucherByServiceAndRefDoc(RequestInfo requestInfo, String tenantId, String serviceCode, String referenceDoc) throws VoucherCustomException, UnsupportedEncodingException{
+		requestInfo.setAuthToken(propertiesManager.getSiAuthToken());
+		VoucherRequest request = new VoucherRequest(tenantId, requestInfo, null);
+		StringBuilder url = new StringBuilder(propertiesManager.getErpURLBytenantId(tenantId)
+				+ propertiesManager.getVoucherSearchUrl()
+				+ "?servicecode=" + serviceCode +"&referencedocument="+URLEncoder.encode(referenceDoc,"UTF-8"));
+		try {
+			return mapper.convertValue(serviceRequestRepository.fetchResult(url, request, tenantId), VoucherResponse.class);
+		} catch (Exception e) {
+				LOGGER.error("ERROR while fetching the voucher based on Service and Reference document");
 		}
 		return null;
 	}

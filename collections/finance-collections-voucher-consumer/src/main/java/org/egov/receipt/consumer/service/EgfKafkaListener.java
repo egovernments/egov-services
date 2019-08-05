@@ -38,14 +38,15 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.receipt.consumer.service;
-
 import java.util.Date;
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.receipt.consumer.entity.VoucherIntegrationLog;
+import org.egov.receipt.consumer.model.BillDetail;
 import org.egov.receipt.consumer.model.FinanceMdmsModel;
 import org.egov.receipt.consumer.model.ProcessStatus;
+import org.egov.receipt.consumer.model.Receipt;
 import org.egov.receipt.consumer.model.ReceiptReq;
+import org.egov.receipt.consumer.model.Voucher;
 import org.egov.receipt.consumer.model.VoucherResponse;
 import org.egov.receipt.consumer.repository.VoucherIntegartionLogRepository;
 import org.egov.receipt.custom.exception.VoucherCustomException;
@@ -87,26 +88,68 @@ public class EgfKafkaListener {
         	String topic = record.topic();
         	request = objectMapper.readValue(record.value(), ReceiptReq.class);
         	LOGGER.info("topic : {} ,  request : {}", topic, request);
-        	if(topic.equals(manager.getVoucherCreateTopic())){
-        		if (voucherService.isVoucherCreationEnabled(request, finSerMdms)) {
-        			voucherResponse = voucherService.createReceiptVoucher(request, finSerMdms);
-        			voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
-        			receiptService.updateReceipt(request, voucherResponse);
-        			instrumentService.createInstrument(request, voucherResponse, finSerMdms);
-        			this.getBackupToDB(request,ProcessStatus.SUCCESS,"Voucher created successfully with voucher number : "+voucherNumber,voucherNumber);
-        		}else{
-        			//Todo : Status should be different
-        			this.getBackupToDB(request,ProcessStatus.NA,"Voucher Creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService(),voucherNumber);
+        	if(voucherService.isTenantEnabledInFinanceModule(request, finSerMdms)){
+        		Receipt receipt = request.getReceipt().get(0);
+        		BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
+        		String description = "";
+        		ProcessStatus status = ProcessStatus.SUCCESS;
+        		//Fetching the voucher details for the combination of service code and reference document in ERP
+        		VoucherResponse voucherByServiceAndRefDoc = voucherService.getVoucherByServiceAndRefDoc(request.getRequestInfo(), receipt.getTenantId(), billDetail.getBusinessService(), billDetail.getReceiptNumber());
+        		if(topic.equals(manager.getVoucherCreateTopic())){
+        			if (voucherService.isVoucherCreationEnabled(request, finSerMdms)) {
+        				/* Checking existed voucher status if any present
+        				 * if voucher is present with status != 4 then terminate the process and printing specific log.
+        				 */
+        				if(!voucherByServiceAndRefDoc.getVouchers().isEmpty() && !voucherByServiceAndRefDoc.getVouchers().get(0).getStatus().getCode().equals("4")){
+        					voucherNumber = voucherByServiceAndRefDoc.getVouchers().get(0).getVoucherNumber();
+        					throw new VoucherCustomException(ProcessStatus.NA, "Already voucher exists ("+voucherNumber+") for service "+billDetail.getBusinessService()+" with reference number "+billDetail.getReceiptNumber()+".");
+        				}
+        				voucherResponse = voucherService.createReceiptVoucher(request, finSerMdms);
+        				voucherNumber = voucherResponse.getVouchers().get(0).getVoucherNumber();
+        				receiptService.updateReceipt(request, voucherResponse);
+        				instrumentService.createInstrument(request, voucherResponse, finSerMdms);
+        				description = "Voucher created successfully with VoucherNumber : "+voucherNumber;
+        				status = ProcessStatus.SUCCESS;
+        			}else{
+        				//Todo : Status should be different
+        				description = "Voucher creation is not enabled for business service code : "+request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getBusinessService();
+        				status = ProcessStatus.SUCCESS;
+        			}
+        			this.getBackupToDB(request,status,description,voucherNumber);
+        		}else if(topic.equals(manager.getVoucherCancelTopic())){
+        			/* Checking voucher existence in ERP for the combination.
+        			 * if not found then throwing exception with Not Found
+        			 * if voucher found cross checking the request voucher number and erp existed voucher number.if both are same then based on status it will proceed ahead.
+        			 * if status!=4 then proceed ahead to cancel the erp existed voucher.
+        			 * if status=4 then terminating execution and feeding data to table with specific message.
+        			 */
+        			if(!voucherByServiceAndRefDoc.getVouchers().isEmpty()){
+        				Voucher voucher = voucherByServiceAndRefDoc.getVouchers().get(0);
+        				String erpVoucherNumber = voucher.getVoucherNumber();
+        				String reqVoucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
+        				if(voucher.getStatus().getCode().equals("4")){
+        					status = ProcessStatus.NA;
+        					description = "Voucher("+erpVoucherNumber+") associated with service "+billDetail.getBusinessService()+" and reference number "+billDetail.getReceiptNumber()
+        								+ " is already in Cancelled status.";
+        					if(!reqVoucherNumber.isEmpty() && !erpVoucherNumber.equals(reqVoucherNumber)){
+        						description += "However, we found that the mapping voucher reference sent("+reqVoucherNumber+") is incorrect.";
+        					}
+        				}else{
+        					description = "Voucher number : "+erpVoucherNumber+" is CANCELLED successfully!";
+        					if(!reqVoucherNumber.isEmpty() && !erpVoucherNumber.equals(reqVoucherNumber)){
+        						description = "Voucher("+erpVoucherNumber+") associated with service "+billDetail.getBusinessService()
+        									+ " and reference number "+billDetail.getReceiptNumber()+" is Cancelled. "
+        									+ "However, we found that the mapping voucher reference sent("+reqVoucherNumber+") is incorrect.";
+        					}
+        					request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).setVoucherHeader(erpVoucherNumber);
+        					voucherService.cancelReceiptVoucher(request);
+        					instrumentService.cancelInstrument(request,finSerMdms);
+        				}
+        				this.getBackupToDB(request, status, description, erpVoucherNumber);
+        			}else{
+        				throw new VoucherCustomException(ProcessStatus.FAILED, "Voucher is not exist for service "+billDetail.getBusinessService()+" with reference number "+billDetail.getReceiptNumber());
+        			}
         		}
-        	}else if(topic.equals(manager.getVoucherCancelTopic())){
-                voucherNumber = request.getReceipt().get(0).getBill().get(0).getBillDetails().get(0).getVoucherHeader();
-                if(voucherService.isVoucherExists(request)){
-                	voucherService.cancelReceiptVoucher(request);
-                	instrumentService.cancelInstrument(request,finSerMdms);
-     			   	this.getBackupToDB(request,ProcessStatus.SUCCESS,"Voucher number : "+voucherNumber+" is CANCELLED successfully!",voucherNumber);
-                }else{
-                	this.getBackupToDB(request,ProcessStatus.FAILED,"Voucher is not found for voucherNumber : "+voucherNumber,voucherNumber);
-                }
         	}
         }catch(VoucherCustomException e){
         	this.getBackupToDB(request,e.getStatus(),e.getMessage(),voucherNumber);
@@ -126,7 +169,7 @@ public class EgfKafkaListener {
 			voucherIntegrationLog.setStatus(status.name());
 			voucherIntegrationLog.setDescription(description);
 			this.prepareVoucherIntegrationLog(voucherIntegrationLog, request, voucherNumber);
-			voucherIntegartionLogRepository.saveVoucherIntegrationLog(voucherIntegrationLog);			
+			voucherIntegartionLogRepository.saveVoucherIntegrationLog(voucherIntegrationLog);
 		} catch (Exception e) {
 			LOGGER.error("ERROR occurred while doing a backup to databases. "+e.getMessage());
 		}

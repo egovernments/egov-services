@@ -37,27 +37,19 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.mdms.service;
+package org.egov.receipt.consumer.model;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import org.egov.receipt.consumer.model.BusinessService;
-import org.egov.receipt.consumer.model.FinanceMdmsModel;
-import org.egov.receipt.consumer.model.FinancialStatus;
-import org.egov.receipt.consumer.model.RequestInfo;
-import org.egov.receipt.consumer.model.TaxHeadMaster;
-import org.egov.receipt.consumer.model.Tenant;
-import org.egov.receipt.custom.exception.VoucherCustomException;
-
-public interface MicroServiceUtil {
-	public List<TaxHeadMaster> getTaxHeadMasters(String tenantId, String code, RequestInfo requestInfo, FinanceMdmsModel finSerMdms) throws Exception;
-	public List<BusinessService> getBusinessService(String tenantId, String code, RequestInfo requestInfo, FinanceMdmsModel finSerMdms)  throws Exception;
-	String getBusinessServiceName(String tenantId, String code, RequestInfo requestInfo, FinanceMdmsModel finSerMdms)
-			throws VoucherCustomException;
-	String getGlcodeByInstrumentType(String tenantId, String businessCode, RequestInfo requestInfo,
-			FinanceMdmsModel finSerMdms, String instrumentType) throws VoucherCustomException;
-	FinancialStatus getFinancialStatusByCode(String tenantId, RequestInfo requestInfo, FinanceMdmsModel finSerMdms,
-			String statusCode) throws VoucherCustomException;
-	List<Tenant> getFinanceTenantList(String tenantId, String businessCode, RequestInfo requestInfo, FinanceMdmsModel finSerMdms)
-			throws VoucherCustomException;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class Tenant {
+private String code;
 }

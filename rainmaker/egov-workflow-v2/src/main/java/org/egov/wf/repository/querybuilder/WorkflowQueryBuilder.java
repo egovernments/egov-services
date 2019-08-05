@@ -79,7 +79,6 @@ public class WorkflowQueryBuilder {
 
 
         String query = addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
-        query = addOrderByCreatedTime(query);
         if(!criteria.getHistory())
             query = query + LATEST_RECORD;
 
@@ -91,6 +90,7 @@ public class WorkflowQueryBuilder {
     public String getProcessInstanceSearchQueryWithState(ProcessInstanceSearchCriteria criteria, List<Object> preparedStmtList) {
        String query = getProcessInstanceSearchQuery(criteria,preparedStmtList);
        String finalQuery = OUTER_QUERY+query+")" + " fp "+STATE_JOIN_QUERY;
+       finalQuery = addOrderByCreatedTime(finalQuery);
        return finalQuery;
     }
 
@@ -159,7 +159,7 @@ public class WorkflowQueryBuilder {
      */
     private String addOrderByCreatedTime(String query){
         StringBuilder builder = new StringBuilder(query);
-        builder.append(" ORDER BY result_offset.wf_lastModifiedTime DESC ");
+        builder.append(" ORDER BY fp.wf_createdTime DESC ");
         return builder.toString();
     }
 

@@ -80,7 +80,8 @@ public class TLRepository {
      * @param tradeLicenseRequest The update requuest
      */
     public void update(TradeLicenseRequest tradeLicenseRequest,Map<String,Boolean> idToIsStateUpdatableMap) {
-        RequestInfo requestInfo = new RequestInfo();
+        
+        RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
         List<TradeLicense> licenses = tradeLicenseRequest.getLicenses();
 
         List<TradeLicense> licesnsesForStatusUpdate = new LinkedList<>();

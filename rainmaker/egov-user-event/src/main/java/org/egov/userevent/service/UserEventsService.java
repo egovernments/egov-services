@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,9 +53,9 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.userevent.config.PropertiesManager;
 import org.egov.userevent.model.AuditDetails;
+import org.egov.userevent.model.LATWrapper;
 import org.egov.userevent.model.LastAccesDetails;
 import org.egov.userevent.model.RecepientEvent;
-import org.egov.userevent.model.LATWrapper;
 import org.egov.userevent.model.enums.Status;
 import org.egov.userevent.producer.UserEventsProducer;
 import org.egov.userevent.repository.UserEventRepository;

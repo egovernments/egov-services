@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.validation.annotation.Validated;
 
@@ -49,6 +50,7 @@ public class Event {
 	private String name;
 	
 	@NotNull
+	@Size(max = 280)
 	private String description;
 	
 	private Status status;

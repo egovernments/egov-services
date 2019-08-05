@@ -128,7 +128,7 @@
                      
                       {
                          
-                         "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
+                         "path": "http://collection-services:8080/collection-services/receipts/_search",
                          "queryParam": "consumerCode=$.applicationNumber",
                          
                          
@@ -136,7 +136,7 @@
                            "RequestInfo": {
                                "action": "",
                                "apiId": "Rainmaker",
-                               "authToken": "c8ecd9a3-62a4-46af-a26e-a16745f96ee6",
+                               "authToken": "4e54622f-3643-44f2-823e-a4be9ee016f7",
                                "did": "1",
                                "key": "",
                                "msgId": "20170310130900|en_IN",

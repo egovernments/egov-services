@@ -47,13 +47,13 @@
                      
                       {
                          
-                         "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
+                         "path": "http://collection-services:8080/collection-services/receipts/_search",
                          "queryParam": "consumerCode=$.fireNOCDetails.applicationNumber",
                          "apiRequest": {
                               "RequestInfo": {
                                  "action": "",
                                  "apiId": "Rainmaker",
-                                 "authToken": "1e37ea94-13cd-4e58-9dde-6c133a0a6902",
+                                 "authToken": "c8ecd9a3-62a4-46af-a26e-a16745f96ee6",
                                  "did": "1",
                                  "key": "",
                                  "msgId": "20170310130900|en_IN",

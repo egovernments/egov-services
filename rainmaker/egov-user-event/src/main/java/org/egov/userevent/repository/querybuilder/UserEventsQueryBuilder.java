@@ -20,6 +20,8 @@ public class UserEventsQueryBuilder {
 	
 	public static final String EVENT_INNER_SEARCH_QUERY = "id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE ";
 	
+	public static final String INSERT_USERLAT_IFNOT_EXISTS = "INSERT INTO eg_usrevents_user_lat VALUES (:userid, 0) ON CONFLICT DO NOTHING";
+	
 	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT (SELECT COUNT(*) as total FROM eg_usrevents_events WHERE id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE recepient IN (:recepients))), "
 			+ "COUNT(*) as unread FROM eg_usrevents_events WHERE id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
 			+ "lastmodifiedtime > (SELECT lastaccesstime FROM eg_usrevents_user_lat WHERE userid IN (:userid))";
@@ -36,6 +38,21 @@ public class UserEventsQueryBuilder {
 		return addWhereClause(query, criteria, preparedStatementValues);
 	}
 	
+
+	/**
+	 * Returns query for inserting user-lat value in the table.
+	 * 
+	 * @param criteria
+	 * @param preparedStatementValues
+	 * @return
+	 */
+	public String getInserIfNotExistsQuery(EventSearchCriteria criteria, Map<String, Object> preparedStatementValues) {
+		String query = INSERT_USERLAT_IFNOT_EXISTS;
+		preparedStatementValues.put("userid", criteria.getUserids().get(0)); //will always have one user.
+		
+		return query;
+		
+	}
 	/**
 	 * Returns query for count of events
 	 * 

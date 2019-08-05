@@ -61,10 +61,12 @@ public class UserEventRepository {
 	 */
 	public NotificationCountResponse fetchCount(EventSearchCriteria criteria){
 		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String insertQuery = queryBuilder.getInserIfNotExistsQuery(criteria, preparedStatementValues);
 		String query = queryBuilder.getCountQuery(criteria, preparedStatementValues);
 		log.info("Query: "+query);
 		NotificationCountResponse response = null;
 		try {
+			namedParameterJdbcTemplate.update(insertQuery, preparedStatementValues);
 			response = namedParameterJdbcTemplate.query(query, preparedStatementValues, countRowMapper);
 		}catch(Exception e) {
 			log.error("Error while fetching count from db: ", e);

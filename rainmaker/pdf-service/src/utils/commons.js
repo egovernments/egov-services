@@ -9,12 +9,12 @@ export const getTransformedLocale = label => {
   };
 
 
-export const  findAndUpdateLocalisation=async(localisationMap,key,moduleName)=>{
+export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,key,moduleName)=>{
     let standardisedKey=getTransformedLocale(key);
     if((localisationMap[key]===undefined)&&(localisationMap[standardisedKey]===undefined)){
         var res = await httpRequest(
-            `${egovLocHost}${localisationEndpoint}?locale=en_IN&tenantId=pb&module=${moduleName}`
-          
+            `${egovLocHost}${localisationEndpoint}?locale=en_IN&tenantId=pb&module=${moduleName}`,
+            requestInfo
             ); 
         res.messages.map(
             item=>{

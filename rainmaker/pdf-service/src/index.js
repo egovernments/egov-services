@@ -18,6 +18,8 @@ import { fileStoreAPICall } from "./utils/fileStoreAPICall";
 import { directMapping } from "./utils/directMapping";
 import { externalAPIMapping } from "./utils/externalAPIMapping";
 import envVariables from "./EnvironmentVariables";
+
+import {checkifNullAndSetValue} from "./utils/commons";
 // import {getFileStoreIds,insertStoreIds} from "./queries";
 var jp = require('jsonpath');
 //create binary
@@ -95,6 +97,7 @@ app.post("/pdf/_create", asyncHandler(async (req, res)=> {
   try{
    let key=req.query.key;
    let tenantId=req.query.tenantId;
+   let requestInfo=get(req,"RequestInfo");
    let errorMessage="";
    if((key===undefined)||(key.trim()==="")){
     errorMessage+=" key is compulsory,";
@@ -117,8 +120,8 @@ app.post("/pdf/_create", asyncHandler(async (req, res)=> {
     let formatObjectArrayObject=[];
     let formatConfigByFile=[];
     let countOfObjectsInCurrentFile=0;
-    let moduleObjectsArray=jp.query(req.body,baseKeyPath);
-      if(moduleObjectsArray!==undefined)
+    let moduleObjectsArray=checkifNullAndSetValue(jp.query(req.body,baseKeyPath),[]);
+      if(moduleObjectsArray!==[])
       {
         for(var i=0, len=moduleObjectsArray.length; i < len; i++)
         {
@@ -133,10 +136,10 @@ app.post("/pdf/_create", asyncHandler(async (req, res)=> {
           let variableTovalueMap={};
           //direct mapping service
           await Promise.all([
-          directMapping(moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
+          directMapping(moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
         ,
           //external API mapping
-          externalAPIMapping(key,moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap)
+          externalAPIMapping(key,moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
             ]);
           formatObject=fillValues(variableTovalueMap,formatObject);
           formatObjectArrayObject.push(formatObject["content"]);

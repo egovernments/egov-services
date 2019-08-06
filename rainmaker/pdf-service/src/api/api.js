@@ -30,9 +30,9 @@ try {
     return response.data;
     }
 } catch (error) {
-  var errorReponse = error.response;
+  var errorResponse = error.response;
   console.log(errorReponse) ; 
-  throw {message:"error occured while making request to "+endPoint+": response returned by call :"+parseInt(errorReponse.status, 10)};  
+  throw {message:"error occured while making request to "+endPoint+": response returned by call :"+(errorResponse || parseInt(errorResponse.status, 10))};  
 }
     
 }

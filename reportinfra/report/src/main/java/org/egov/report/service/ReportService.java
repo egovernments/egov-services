@@ -141,7 +141,7 @@ public class ReportService {
 			String tenantID) {
 		final MetadataResponse metadataResponses = new MetadataResponse();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
-		responseInfo.setResMsgId("Report Defintion not found");
+		responseInfo.setResMsgId("Report Definition not found");
 		metadataResponses.setRequestInfo(responseInfo);
 		metadataResponses.setTenantId(tenantID);
 		return new ResponseEntity<>(metadataResponses, HttpStatus.NOT_FOUND);

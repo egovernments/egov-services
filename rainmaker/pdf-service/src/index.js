@@ -97,7 +97,7 @@ app.post("/pdf/_create", asyncHandler(async (req, res)=> {
   try{
    let key=req.query.key;
    let tenantId=req.query.tenantId;
-   let requestInfo=get(req,"RequestInfo");
+   let requestInfo=get(req.body,"RequestInfo");
    let errorMessage="";
    if((key===undefined)||(key.trim()==="")){
     errorMessage+=" key is compulsory,";

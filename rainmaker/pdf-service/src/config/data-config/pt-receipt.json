@@ -111,9 +111,7 @@
                     {                         
                        "path": "http://collection-services:8080/collection-services/receipts/_search",
                        "queryParam": "consumerCode=$.propertyId:$.propertyDetails[0].assessmentNumber",
-                       "apiRequest": null
-                     },
-                     
+                       "apiRequest": null,
                        "responseMapping":[
                          {             
                             "variable":"variable15",

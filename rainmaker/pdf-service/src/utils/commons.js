@@ -14,7 +14,7 @@ export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,key,mo
     if((localisationMap[key]===undefined)&&(localisationMap[standardisedKey]===undefined)){
         var res = await httpRequest(
             `${egovLocHost}${localisationEndpoint}?locale=en_IN&tenantId=pb&module=${moduleName}`,
-            requestInfo
+            {"RequestInfo":requestInfo}
             ); 
         res.messages.map(
             item=>{

@@ -108,7 +108,7 @@ else
      }  
     var res = await httpRequest(
         externalAPIArray[i].uri + "?" + externalAPIArray[i].queryParams,
-        requestInfo,
+        {"RequestInfo":requestInfo},
         headers
       );     
       

@@ -22,7 +22,7 @@ public class ErrorConstants {
 	public static final String INVALID_EVENT_DATE_MSG = "Date invalid, fromDate cannot be greater than toDate";
 	
 	public static final String INVALID_FROM_TO_DATE_CODE = "MEN_INVALID_FROM_TO_DATE";
-	public static final String INVALID_FROM_TO_DATE_MSG = "Date invalid, fromDate and toDate cannot be greater than currentDate";
+	public static final String INVALID_FROM_TO_DATE_MSG = "Date invalid, fromDate and toDate cannot be prior to the currentDate";
 
 	public static final String MEN_ERROR_FROM_MDMS_CODE = "MEN_ERROR_FROM_MDMS";
 	public static final String MEN_ERROR_FROM_MDMS_MSG = "There was an error while fetching event masters from MDMS";

@@ -1,5 +1,6 @@
 package org.egov.userevent.web.validator;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,8 +179,14 @@ public class UserEventsValidator {
 	 */
 	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
 		if (null != event.getEventDetails()) {
-			if (event.getEventDetails().getFromDate() > event.getEventDetails().getToDate()) {
-				errorMap.put(ErrorConstants.INVALID_EVENT_DATE_CODE, ErrorConstants.INVALID_EVENT_DATE_MSG);
+			if(null !=  event.getEventDetails().getFromDate() && null != event.getEventDetails().getToDate()) {
+				if (event.getEventDetails().getFromDate() > event.getEventDetails().getToDate()) {
+					errorMap.put(ErrorConstants.INVALID_EVENT_DATE_CODE, ErrorConstants.INVALID_EVENT_DATE_MSG);
+				}
+				if(event.getEventDetails().getFromDate() < new Date().getTime() 
+						|| event.getEventDetails().getToDate() < new Date().getTime()) {
+					errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+				}
 			}
 		}
 		if(null != event.getRecepient()) {

@@ -23,6 +23,19 @@ public class UserEventsConstants {
 	public static final String ALL_KEYWORD = "All";	
 	
 	public static final String[] INTEGRATED_MODULES = {"SYSTEM-PT", "SYSTEM-PGR", "SYSTEM-TL", "SYSTEM-FIRENOC"};
+	
+	public static final String LOCALIZATION_MODULE_NAME = "egov-user-events";
+	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";
+	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages.*.message";
+	public static final String LOCALIZATION_COUNTEREVENT_ONDELETE_CODE = "egovuserevents.notification.counterevent.ondelete";
+	public static final String LOCALIZATION_COUNTEREVENT_ONDELETE_DEF_MSG = "<event_name> has been deleted. Please remove from your calendar.";
+	public static final String LOCALIZATION_COUNTEREVENT_ONUPDATE_CODE = "egovuserevents.notification.counterevent.onupdate";
+	public static final String LOCALIZATION_COUNTEREVENT_ONUPDATE_DEF_MSG = "Details of <event_name> have been updated.";
+
+
+
+	
+	
 
 
 	

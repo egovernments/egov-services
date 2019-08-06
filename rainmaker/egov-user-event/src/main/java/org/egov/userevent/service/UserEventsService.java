@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,7 @@ import org.egov.userevent.model.RecepientEvent;
 import org.egov.userevent.model.enums.Status;
 import org.egov.userevent.producer.UserEventsProducer;
 import org.egov.userevent.repository.UserEventRepository;
-import org.egov.userevent.utils.MsevaUtils;
+import org.egov.userevent.utils.UserEventsUtils;
 import org.egov.userevent.utils.ResponseInfoFactory;
 import org.egov.userevent.utils.UserEventsConstants;
 import org.egov.userevent.web.contract.Event;
@@ -96,7 +97,10 @@ public class UserEventsService {
 	private UserEventRepository repository;
 	
 	@Autowired
-	private MsevaUtils utils;
+	private UserEventsUtils utils;
+	
+	@Autowired
+	private LocalizationService localizationService;
 
 	/**
 	 * Service method to create events
@@ -135,37 +139,15 @@ public class UserEventsService {
 			Boolean isCounterEventReq = true;
 			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE) 
 					&& (null == event.getGenerateCounterEvent() || event.getGenerateCounterEvent())) {
-				String description = null;
-				if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.CANCELLED)) {
-					if (null != event.getEventDetails().getFromDate()
-							&& new Date().getTime() < event.getEventDetails().getFromDate()) {
-						description = event.getName() + " has been deleted. Please remove from your calendar.";
-					}else {
-						isCounterEventReq = false;
-					}
-				} else {
-					description = "Details of " + event.getName() + " have been updated.";
-				}
-				if(isCounterEventReq) {
-					Event counterEvent = new Event();
-					counterEvent.setActions(event.getActions());
-					counterEvent.setEventDetails(event.getEventDetails());
-					counterEvent.setReferenceId(event.getId());
-					counterEvent.setName(event.getName());
-					counterEvent.setEventType(event.getEventType());
-					counterEvent.setRecepient(event.getRecepient());
-					counterEvent.setSource(event.getSource());
-					counterEvent.setTenantId(event.getTenantId());
-					counterEvent.setRecepientEventMap(event.getRecepientEventMap());
-					counterEvent.setDescription(description);
+				Event counterEvent = buildCounterEvents(request.getRequestInfo(), event, isCounterEventReq);
+				if(null != counterEvent)
 					counterEvents.add(counterEvent);
-				}
-
 			}
 		});
 		if (!CollectionUtils.isEmpty(counterEvents)) {
 			EventRequest req = EventRequest.builder().requestInfo(request.getRequestInfo()).events(counterEvents)
 					.build();
+			log.info("Generating counter events.....");
 			createEvents(req);
 		}
 		producer.push(properties.getUpdateEventsPersisterTopic(), request);
@@ -176,6 +158,50 @@ public class UserEventsService {
 		return EventResponse.builder()
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
 				.events(request.getEvents()).build();
+	}
+	
+	
+	/**
+	 * Builds counter event on update or delete of an event.
+	 * 
+	 * 
+	 * @param requestInfo
+	 * @param event
+	 * @param isCounterEventReq
+	 * @return
+	 */
+	private Event buildCounterEvents(RequestInfo requestInfo, Event event, Boolean isCounterEventReq) {
+		String description = null;
+		Event counterEvent = new Event();
+		String tenanId = properties.getIsLocalizationStateLevel() ? event.getTenantId().split("\\.")[0] : event.getTenantId();
+		Map<String, String> localisedMsgs = localizationService.getLocalisedMessages(requestInfo, tenanId, "en_IN", UserEventsConstants.LOCALIZATION_MODULE_NAME);
+		if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.CANCELLED)) {
+			if (null != event.getEventDetails().getFromDate()
+					&& new Date().getTime() < event.getEventDetails().getFromDate()) {
+				description = localisedMsgs.get(UserEventsConstants.LOCALIZATION_COUNTEREVENT_ONDELETE_CODE).replace("<event_name>", event.getName());
+			}else {
+				isCounterEventReq = false;
+			}
+		} else {
+			description = localisedMsgs.get(UserEventsConstants.LOCALIZATION_COUNTEREVENT_ONUPDATE_CODE).replace("<event_name>", event.getName());
+		}
+		if(isCounterEventReq) {
+			counterEvent.setActions(event.getActions());
+			counterEvent.setEventDetails(event.getEventDetails());
+			counterEvent.setReferenceId(event.getId());
+			counterEvent.setName(event.getName());
+			counterEvent.setEventType(event.getEventType());
+			counterEvent.setRecepient(event.getRecepient());
+			counterEvent.setSource(event.getSource());
+			counterEvent.setTenantId(event.getTenantId());
+			counterEvent.setRecepientEventMap(event.getRecepientEventMap());
+			counterEvent.setDescription(description);
+		}
+		else {
+			counterEvent = null;
+		}
+		
+		return counterEvent;
 	}
 
 	/**

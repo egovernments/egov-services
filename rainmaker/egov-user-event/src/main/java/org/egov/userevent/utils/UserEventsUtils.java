@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 @Service
-public class MsevaUtils {
+public class UserEventsUtils {
 	
 	
 	

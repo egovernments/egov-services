@@ -59,6 +59,13 @@ public class PropertiesManager {
 	@Value("${egov.mdms.search.endpoint}")
 	public String mdmsSearchEndpoint;
 	
+	@Value("${egov.localisation.host}")
+	public String localisationHost;
+	
+	@Value("${egov.localisation.search.endpoint}")
+	public String localisationSearchEndpoint;
+	
+	
 	
 	
 	//Kafka Topics
@@ -84,4 +91,7 @@ public class PropertiesManager {
 	
 	@Value("${mseva.notif.search.limit}")
 	public Long defaultLimit;
+	
+	@Value("${egov.localisation.is.statelevel}")
+	public Boolean isLocalizationStateLevel;
 }

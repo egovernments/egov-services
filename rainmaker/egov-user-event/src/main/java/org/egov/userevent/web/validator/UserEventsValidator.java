@@ -97,8 +97,7 @@ public class UserEventsValidator {
 			if (!StringUtils.isEmpty(event.getReferenceId()))
 				errorMap.put(ErrorConstants.MEN_UPDATE_COUNTEREVENT_CODE, ErrorConstants.MEN_UPDATE_COUNTEREVENT_MSG);
 			if (null == event.getStatus()) {
-				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE,
-						ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
+				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE, ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
 			}
 		}
 		validateActions(request.getEvents(), responseFromDB, errorMap);
@@ -248,7 +247,7 @@ public class UserEventsValidator {
 								errorMap.put(ErrorConstants.MEN_CREATE_NAMEMANDATORY_CODE, ErrorConstants.MEN_CREATE_NAMEMANDATOR_MSG);
 							}
 						}else {
-							errorMap.put(ErrorConstants.MEN_CREATE_CATEGORYMANDATORY_CODE, ErrorConstants.MEN_CREATE_CATEGORYMANDATORY_MSG);
+							errorMap.put(ErrorConstants.MEN_INVALID_CATEGORYMANDATORY_CODE, ErrorConstants.MEN_INVALID_CATEGORYMANDATORY_MSG);
 						}
 						
 					}else {

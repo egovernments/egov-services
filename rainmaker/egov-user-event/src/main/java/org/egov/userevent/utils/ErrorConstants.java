@@ -54,6 +54,9 @@ public class ErrorConstants {
 	public static final String MEN_CREATE_CATEGORYMANDATORY_CODE = "MEN_CREATE_CATEGORYMANDATORY";
 	public static final String MEN_CREATE_CATEGORYMANDATORY_MSG = "Category of the event is mandatory.";
 	
+	public static final String MEN_INVALID_CATEGORYMANDATORY_CODE = "MEN_INVALID_CATEGORYMANDATORY";
+	public static final String MEN_INVALID_CATEGORYMANDATORY_MSG = "Category of the event is invalid.";
+	
 	public static final String MEN_CREATE_BROADCAST_CODE = "MEN_CREATE_BROADCAST";
 	public static final String MEN_CREATE_BROADCAST_MSG = "Broadcast messages should not contain any event details";
 	

@@ -187,6 +187,7 @@ public class UserEventsService {
 		}
 		if(isCounterEventReq) {
 			counterEvent.setActions(event.getActions());
+			counterEvent.setEventCategory(event.getEventCategory());
 			counterEvent.setEventDetails(event.getEventDetails());
 			counterEvent.setReferenceId(event.getId());
 			counterEvent.setName(event.getName());

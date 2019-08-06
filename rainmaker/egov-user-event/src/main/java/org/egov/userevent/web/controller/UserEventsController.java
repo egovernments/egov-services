@@ -79,7 +79,6 @@ public class UserEventsController {
 	private ResponseEntity<?> create(@RequestBody @Valid EventRequest request) {
 		EventResponse response = service.createEvents(request);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 	
 	/**

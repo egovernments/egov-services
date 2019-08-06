@@ -35,6 +35,7 @@ public class UserEventRowMapper implements ResultSetExtractor <List<Event>> {
 					.id(resultSet.getString("id"))
 					.tenantId(resultSet.getString("tenantid"))
 					.eventType(resultSet.getString("eventtype"))
+					.eventCategory(resultSet.getString("category"))
 					.source(Source.valueOf(resultSet.getString("source")))
 					.description(resultSet.getString("description"))
 					.name(resultSet.getString("name"))

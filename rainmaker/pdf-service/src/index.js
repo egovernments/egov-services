@@ -38,10 +38,10 @@ let serverport=envVariables.SERVER_PORT;
    try {
     var fontDescriptors = {
       Roboto: {
-        normal: "fonts/Roboto-Regular.ttf",
-        bold: "fonts/Roboto-Medium.ttf",
-        italics: "fonts/Roboto-Italic.ttf",
-        bolditalics: "fonts/Roboto-MediumItalic.ttf"
+        normal: "src/fonts/Roboto-Regular.ttf",
+        bold: "src/fonts/Roboto-Medium.ttf",
+        italics: "src/fonts/Roboto-Italic.ttf",
+        bolditalics: "src/fonts/Roboto-MediumItalic.ttf"
       }
     };
     

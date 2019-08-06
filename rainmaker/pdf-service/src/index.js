@@ -100,10 +100,13 @@ app.post("/pdf/_create", asyncHandler(async (req, res)=> {
    let requestInfo=get(req.body,"RequestInfo");
    let errorMessage="";
    if((key===undefined)||(key.trim()==="")){
-    errorMessage+=" key is compulsory,";
+    errorMessage+=" key is missing,";
    }
    if((tenantId===undefined)||(tenantId.trim()==="")){
-    errorMessage+=" tenantId is compulsory,";
+    errorMessage+=" tenantId is missing,";
+   }
+   if(requestInfo===undefined){
+    errorMessage+=" requestInfo is missing,";
    }
    if(errorMessage!==""){
     res.status(400);

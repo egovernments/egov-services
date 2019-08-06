@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export const httpRequest= async(
     endPoint,    
-    requestBody=apiRequest,
+    requestBody,
     headers=defaultheader
 )=>{
     let instance=axios.create({
@@ -36,19 +36,6 @@ try {
 }
     
 }
-
-const apiRequest = {
-  RequestInfo: {
-      action: "",
-      apiId: "Rainmaker",
-      authToken: "67bbb246-b035-4323-9e4a-216d519e60b7",
-      did: "1",
-      key: "",
-      msgId: "20170310130900|en_IN",
-      requesterId:   "",
-      ver: ".01"
-     }
-  }
 
 
   const defaultheader={

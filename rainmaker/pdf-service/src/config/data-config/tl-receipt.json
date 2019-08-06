@@ -132,18 +132,7 @@
                          "queryParam": "consumerCode=$.applicationNumber",
                          
                          
-                         "apiRequest": {
-                           "RequestInfo": {
-                               "action": "",
-                               "apiId": "Rainmaker",
-                               "authToken": "4e54622f-3643-44f2-823e-a4be9ee016f7",
-                               "did": "1",
-                               "key": "",
-                               "msgId": "20170310130900|en_IN",
-                               "requesterId": "",
-                               "ver": ".01"
-                              }
-                           },
+                         "apiRequest": null,
 
                          "responseMapping":[
                            {

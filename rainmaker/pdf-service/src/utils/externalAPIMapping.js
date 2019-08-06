@@ -13,7 +13,6 @@ var jp = require('jsonpath');
       uri: item.path,
       queryParams: item.queryParam,
       jPath: item.responseMapping,
-      body: item.apiRequest,
       variable: "",
       val: ""
     };
@@ -101,7 +100,6 @@ else
 }
     externalAPIArray[i].queryParams = externalAPIArray[i].queryParams.replace(/,/g,"&");
       // console.log(externalAPIArray[i].queryParams);
-    let requestBody = JSON.stringify(externalAPIArray[i].body);
     let headers={
       "content-type": "application/json;charset=UTF-8",
       "accept":"application/json, text/plain, */*" 

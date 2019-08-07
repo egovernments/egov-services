@@ -84,7 +84,7 @@ public class NotificationService {
                 if(null == propertyConfiguration.getIsUserEventsNotificationEnabled())
                 	propertyConfiguration.setIsUserEventsNotificationEnabled(true);
                 if(propertyConfiguration.getIsUserEventsNotificationEnabled()) {
-                	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, path);
+                	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, false);
                 	if(!CollectionUtils.isEmpty(eventsForAProperty)) {
                         events.addAll(eventsForAProperty);
                 	}
@@ -260,7 +260,7 @@ public class NotificationService {
      * @param request
      * @return
      */
-    private List<Event> getEvents(Set<String> mobileNumbers, String customizedMessage,PropertyRequest request, String path) {
+    public List<Event> getEvents(Set<String> mobileNumbers, String customizedMessage, PropertyRequest request, Boolean isActionReq) {
     	Map<String, String> mapOfPhnoAndUUIDs = fetchUserUUIDs(mobileNumbers, request.getRequestInfo(), request.getProperties().get(0).getTenantId());
 		if (CollectionUtils.isEmpty(mapOfPhnoAndUUIDs.keySet()) || StringUtils.isEmpty(customizedMessage))
 			return null;
@@ -275,7 +275,7 @@ public class NotificationService {
 			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
 			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
 			Action action = null;
-/*			if(!path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE)) {
+			if(isActionReq) {
 				List<ActionItem> items = new ArrayList<>();
 				String actionLink = propertyConfiguration.getPayLink().replace("$mobile", mobile)
 							.replace("$assessmentId", property.getPropertyDetails().get(0).getAssessmentNumber())
@@ -290,7 +290,7 @@ public class NotificationService {
 				
 				action = Action.builder().actionUrls(items).build();
 				
-			}*/
+			}
 			
 			events.add(Event.builder().tenantId(property.getTenantId()).description(customizedMessage)
 					.eventType(PTConstants.USREVENTS_EVENT_TYPE).name(PTConstants.USREVENTS_EVENT_NAME)
@@ -346,7 +346,7 @@ public class NotificationService {
      * 
      * @param request
      */
-    private void sendEventNotification(EventRequest request) {
+    public void sendEventNotification(EventRequest request) {
         producer.push(propertyConfiguration.getSaveUserEventsTopic(), request);
     }
     

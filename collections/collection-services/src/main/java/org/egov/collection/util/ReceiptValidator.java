@@ -420,7 +420,8 @@ public class ReceiptValidator {
 		for (Receipt receipt : receipts) {
 			String receiptStatus = receipt.getBill().get(0).getBillDetails().get(0).getStatus();
 			if (receiptStatus.equalsIgnoreCase(APPROVED.toString())
-					|| receiptStatus.equalsIgnoreCase(APPROVALPENDING.toString())) {
+					|| receiptStatus.equalsIgnoreCase(APPROVALPENDING.toString())
+					|| receiptStatus.equalsIgnoreCase(REMITTED.toString())) {
 				errorMap.put("BILL_ALREADY_PAID", "Bill has already been paid or is in pending state");
 				return;
 			}

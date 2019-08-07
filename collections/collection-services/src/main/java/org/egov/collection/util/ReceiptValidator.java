@@ -29,8 +29,7 @@ import static org.egov.collection.config.CollectionServiceConstants.RECEIPT_CHEQ
 import static org.egov.collection.config.CollectionServiceConstants.RECEIPT_CHEQUE_OR_DD_DATE_MESSAGE;
 import static org.egov.collection.config.CollectionServiceConstants.TENANT_ID_REQUIRED_CODE;
 import static org.egov.collection.config.CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE;
-import static org.egov.collection.model.enums.ReceiptStatus.APPROVALPENDING;
-import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
+import static org.egov.collection.model.enums.ReceiptStatus.*;
 import static org.egov.collection.util.Utils.jsonMerge;
 import static org.springframework.util.StringUtils.isEmpty;
 

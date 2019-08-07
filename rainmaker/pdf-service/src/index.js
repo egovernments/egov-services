@@ -93,7 +93,7 @@ let serverport=envVariables.SERVER_PORT;
   }
 }
 
-app.post("/pdf/_create", asyncHandler(async (req, res)=> { 
+app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> { 
   try{
    let key=req.query.key;
    let tenantId=req.query.tenantId;
@@ -222,7 +222,7 @@ catch(error)
 }));
 
 
-// app.post("/pdf/_search", asyncHandler(async (req, res)=> { 
+// app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> { 
 //   let jobid=req.query.jobid;
 //   let tenantId=req.query.tenantId;
 //   getFileStoreIds(jobid,tenantId,res);

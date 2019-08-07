@@ -275,7 +275,7 @@ public class NotificationService {
 			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
 			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
 			Action action = null;
-			if(!path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE)) {
+/*			if(!path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE)) {
 				List<ActionItem> items = new ArrayList<>();
 				String actionLink = propertyConfiguration.getPayLink().replace("$mobile", mobile)
 							.replace("$assessmentId", property.getPropertyDetails().get(0).getAssessmentNumber())
@@ -290,7 +290,7 @@ public class NotificationService {
 				
 				action = Action.builder().actionUrls(items).build();
 				
-			}
+			}*/
 			
 			events.add(Event.builder().tenantId(property.getTenantId()).description(customizedMessage)
 					.eventType(PTConstants.USREVENTS_EVENT_TYPE).name(PTConstants.USREVENTS_EVENT_NAME)

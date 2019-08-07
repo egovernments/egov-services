@@ -47,6 +47,8 @@ public class Event {
 	
 	private String eventCategory;
 	
+	@NotNull
+	@Size(max = 50)
 	private String name;
 	
 	@NotNull

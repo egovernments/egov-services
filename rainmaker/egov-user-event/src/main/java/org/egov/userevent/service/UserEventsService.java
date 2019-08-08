@@ -110,7 +110,7 @@ public class UserEventsService {
 	 * @return
 	 */
 	public EventResponse createEvents(EventRequest request) {
-		validator.validateCreateEvent(request);
+		validator.validateCreateEvent(request, true);
 		log.info("enriching and storing the event......");
 		enrichCreateEvent(request);
 		producer.push(properties.getSaveEventsPersisterTopic(), request);

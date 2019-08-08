@@ -41,12 +41,12 @@ public class UserEventsValidator {
 	 * 
 	 * @param request
 	 */
-	public void validateCreateEvent(EventRequest request) {
+	public void validateCreateEvent(EventRequest request, Boolean isCreate) {
 		log.info("Validating the request......");
 		Map<String, String> errorMap = new HashMap<>();
 		validateRI(request.getRequestInfo(), errorMap);
 		request.getEvents().forEach(event -> {
-			validateEventData(request.getRequestInfo(), event, errorMap);
+			validateEventData(request.getRequestInfo(), event, errorMap, isCreate);
 		});
 		if (!CollectionUtils.isEmpty(errorMap.keySet())) {
 			throw new CustomException(errorMap);
@@ -62,7 +62,7 @@ public class UserEventsValidator {
 	public void validateUpdateEvent(EventRequest request) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateForUpdate(request, errorMap);
-		validateCreateEvent(request);
+		validateCreateEvent(request, false);
 	}
 
 	/**
@@ -176,15 +176,17 @@ public class UserEventsValidator {
 	 * @param event
 	 * @param errorMap
 	 */
-	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap) {
+	private void validateEventData(RequestInfo requestInfo, Event event, Map<String, String> errorMap, Boolean isCreate) {
 		if (null != event.getEventDetails()) {
 			if(null !=  event.getEventDetails().getFromDate() && null != event.getEventDetails().getToDate()) {
 				if (event.getEventDetails().getFromDate() > event.getEventDetails().getToDate()) {
 					errorMap.put(ErrorConstants.INVALID_EVENT_DATE_CODE, ErrorConstants.INVALID_EVENT_DATE_MSG);
 				}
-				if(event.getEventDetails().getFromDate() < new Date().getTime() 
-						|| event.getEventDetails().getToDate() < new Date().getTime()) {
-					errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+				if(isCreate) {
+					if(event.getEventDetails().getFromDate() < new Date().getTime() 
+							|| event.getEventDetails().getToDate() < new Date().getTime()) {
+						errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+					}
 				}
 			}
 		}

@@ -121,13 +121,12 @@ public class UserEventsValidator {
 		Map<String, Status> mapOfIdAndCurrentState = dbEvents.stream()
 				.collect(Collectors.toMap(Event::getId, Event::getStatus));
 		reqEvents.forEach(event -> {
-			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
-				if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.ACTIVE)) {
-					errorMap.put(ErrorConstants.MEN_INVALID_ACTION_CANCEL_CODE,
-							ErrorConstants.MEN_INVALID_ACTION_CANCEL_MSG);
-				}
-					
+			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {					
 				if (mapOfIdAndCurrentState.get(event.getId()).equals(Status.CANCELLED)) {
+					if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.ACTIVE)) {
+						errorMap.put(ErrorConstants.MEN_INVALID_ACTION_CANCEL_CODE,
+								ErrorConstants.MEN_INVALID_ACTION_CANCEL_MSG);
+					}
 					if (event.getStatus().equals(Status.CANCELLED)) {
 						event.setGenerateCounterEvent(false);
 					}

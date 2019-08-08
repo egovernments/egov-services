@@ -140,6 +140,9 @@ public class UserEventsQueryBuilder {
 		            addClauseIfRequired(preparedStatementValues, queryBuilder);
 					queryBuilder.append("tenantid = :tenantid");
 					preparedStatementValues.put("tenantid", criteria.getTenantId());
+					
+		            addClauseIfRequired(preparedStatementValues, queryBuilder);
+					queryBuilder.append("referenceid IS NULL"); //counter events shouldn't be returned in employee search.
 				}
 			}
 			

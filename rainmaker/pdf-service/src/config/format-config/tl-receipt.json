@@ -25,11 +25,11 @@
               {
                 "stack": [
                   {
-                    "text": "AMRITSAR MUNCIPAL CORPORATION",
+                    "text": "AMRITSAR Nagar Panchayat",
                     "style": "receipt-logo-header"
                   },
                   {
-                    "text": "Trade Licence Receipt",
+                    "text": "Trade License Payment Receipt (Citizen Copy)",
                     "style": "receipt-logo-sub-header"
                   }
                 ],
@@ -42,20 +42,20 @@
                 ]
               },
               {
-                "text": [
+                "stack": [
+                  {
+                    "text": "Receipt No.",
+                    "style": "receipt-no",
+                    "bold": true
+                  },
                   {
                     "text": "{{variable16}}",
-                    "bold": true,
-                    "style": "receipt-no"
+                    "style": "receipt-no",
+                    "bold": true
                   }
                 ],
                 "alignment": "center",
-                "margin": [
-                  0,
-                  30,
-                  0,
-                  2
-                ]
+                "margin": [-50, 30, 0, 2]
               }
             ]
           ]
@@ -163,32 +163,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 66.630859375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 101.0302734375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            }
-          ],
+          "widths": ["*", "*", "*", "*"],
           "body": [
             [
               {

@@ -34,6 +34,22 @@ app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
 let serverport=envVariables.SERVER_PORT;
+
+let borderLayout = {
+  hLineColor: function(i, node) {
+    return "#979797";
+  },
+  vLineColor: function(i, node) {
+    return "#979797";
+  },
+  hLineWidth: function(i, node) {
+    return 0.5;
+  },
+  vLineWidth: function(i, node) {
+    return 0.5;
+  }
+};
+
  function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId) {
    try {
     var fontDescriptors = {
@@ -120,6 +136,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
     var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
     var dataconfig=require("./config/data-config/"+key);  
     var baseKeyPath=get(dataconfig,"DataConfigs.baseKeyPath");
+    let isCommonTableBorderRequired=get(dataconfig,"DataConfigs.isCommonTableBorderRequired");
     let formatObjectArrayObject=[];
     let formatConfigByFile=[];
     let countOfObjectsInCurrentFile=0;
@@ -145,6 +162,8 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           externalAPIMapping(key,moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
             ]);
           formatObject=fillValues(variableTovalueMap,formatObject);
+          if(isCommonTableBorderRequired===true)
+            formatObject=updateBorderlayout(formatObject);
           formatObjectArrayObject.push(formatObject["content"]);
           //putting formatconfig in a file to check docdefinition on pdfmake playground online
           countOfObjectsInCurrentFile++;
@@ -232,6 +251,17 @@ catch(error)
 app.listen(serverport, () => {
   console.log(`Server running at http:${serverport}/`);
 });
+
+const updateBorderlayout=(formatconfig)=>{
+  formatconfig.content=formatconfig.content.map(item=>{
+    if(item.hasOwnProperty('layout')&&((typeof item.layout)==='object')&&(Object.keys(item.layout).length===0))
+    {
+      item.layout=borderLayout;
+    }
+    return item;
+  });
+  return formatconfig;
+}
 
 export const fillValues=(variableTovalueMap,formatconfig)=>{
   let mustache = require('mustache');

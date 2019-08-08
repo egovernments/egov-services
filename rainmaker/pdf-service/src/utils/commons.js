@@ -28,20 +28,27 @@ export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,key,mo
     }
     else if(localisationMap[standardisedKey]){
         return localisationMap[standardisedKey];
-    }
+    }   
     else{
-        return key;
+        return standardisedKey;
     }
   };
 
+export const getDateInRequiredFormat = et => {
+    if (!et) return "NA";
+    var date = new Date(Math.round(Number(et)));
+    var formattedDate =
+      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    return formattedDate;
+  };
 
-export const getDateInRequiredFormat=(date)=>{
-    return date.toLocaleDateString('en-GB', {
-      day : '2-digit',
-      month : '2-digit',
-      year : 'numeric'
-  }); 
-  }
+// export const getDateInRequiredFormat=(date)=>{
+//     return date.toLocaleDateString('en-GB', {
+//       month : '2-digit',
+//       day : '2-digit',
+//       year : 'numeric'
+//   }); 
+//   }
 
   export const checkifNullAndSetValue=(value,setTo)=>{
     if((value==undefined)||(value==null)||(value.length===0)||((value.length===1)&&(value[0]===null)))

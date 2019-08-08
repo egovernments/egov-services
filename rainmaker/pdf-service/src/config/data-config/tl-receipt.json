@@ -3,6 +3,7 @@
        "serviceName": "rainmaker-tl",
        "version": "1.0.0",
        "baseKeyPath": "$.Licenses.*",
+       "isCommonTableBorderRequired":true,
        "mappings": [
           {
              "topic": "tl-pdf-generation",
@@ -153,7 +154,7 @@
                            },
                            {
                               "variable":"variable20",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
+                              "value":"xx"
                            },
                            {
                               "variable":"variable21",

@@ -3,6 +3,7 @@
       "serviceName": "rainmaker-pt",
       "version": "1.0.0",
       "baseKeyPath": "$.Properties.*",
+      "isCommonTableBorderRequired":true,
       "mappings": [
          {
             "topic": "pt-pdf-generation",
@@ -13,7 +14,7 @@
                      {
                         "variable": "variable1",
                         "value": {
-                             "path":"$.propertyDetails[*].financialYear"                              
+                             "path":"$.propertyDetails[0].financialYear"                              
                         }
                      },                      
                      {

@@ -36,13 +36,13 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
             if(scema[k].toLowerCase().search("date")!="-1")
             {            
               let myDate = new Date(fieldValue);
-              if(isNaN(myDate))
+              if(isNaN(myDate)||(fieldValue===0))
               {
                 ownerObject[scema[k]]="NA";
               }
               else
               {
-                let replaceValue=getDateInRequiredFormat(myDate);      
+                let replaceValue=getDateInRequiredFormat(fieldValue);      
                 // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
                 ownerObject[scema[k]]=replaceValue;
               }
@@ -75,13 +75,13 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
               if(scema[k].toLowerCase().search("date")!="-1")
               {            
                 let myDate = new Date(fieldValue);
-                if(isNaN(myDate))
+                if(isNaN(myDate)||(fieldValue===0))
                 {
                   arrayOfItems.push("NA");
                 }
                 else
                 {
-                  let replaceValue=getDateInRequiredFormat(myDate);          
+                  let replaceValue=getDateInRequiredFormat(fieldValue);          
                   // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
                   arrayOfItems.push(replaceValue);
                 }
@@ -109,13 +109,13 @@ export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,
         else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
         {            
           let myDate = new Date(directArr[i].val[0]);
-          if(isNaN(myDate))
+          if(isNaN(myDate)||(directArr[i].val[0]===0))
           {
             variableTovalueMap[directArr[i].jPath]="NA";
           }
           else
           {
-            let replaceValue=getDateInRequiredFormat(myDate);           
+            let replaceValue=getDateInRequiredFormat(directArr[i].val[0]);           
             // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
             variableTovalueMap[directArr[i].jPath]=replaceValue;
           }

@@ -54,12 +54,7 @@
                 },
                 "{{variable15}}"
               ],
-              "margin": [
-                10,
-                10,
-                10,
-                2
-              ]
+              "margin": [10, 10, 10, 2]
             }
           ]
         ]
@@ -784,11 +779,17 @@
         "color": "#484848"
       },
       "receipt-logo-header": {
-        "color": "#1E1E1E",
-        "fontFamily": "Roboto",
-        "fontSize": 18,
+        "color": "#484848",
+        "fontSize": 16,
         "bold": true,
-        "letterSpacing": 0.74
+        "decoration": "underline",
+        "decorationColor": "#484848"
+      },
+      "receipt-logo-sub-header": {
+        "color": "#484848",
+        "fontSize": 13,
+        "decoration": "underline",
+        "decorationColor": "#484848"
       },
       "receipt-logo-sub-text": {
         "color": "#656565",
@@ -796,17 +797,10 @@
         "fontSize": 14,
         "letterSpacing": 0.74
       },
-      "receipt-logo-sub-header": {
-        "color": "#1E1E1E",
-        "fontFamily": "Roboto",
-        "fontSize": 16,
-        "letterSpacing": 1.6,
-        "bold": true
-      },
       "receipt-footer": {
         "color": "#484848",
         "fontSize": 8,
-        "margin": [10, -15, 5, 20]
+        "margin": [0, -15, 5, 20]
       },
       "receipt-no": {
         "color": "#484848",

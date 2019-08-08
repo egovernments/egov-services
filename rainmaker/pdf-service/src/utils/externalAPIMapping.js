@@ -119,13 +119,13 @@ else
         else if((externalAPIArray[i].jPath[j].value).toLowerCase().search("date")!="-1")
         {         
           let myDate = new Date(replaceValue[0]);
-          if(isNaN(myDate))
+          if(isNaN(myDate)||(replaceValue[0]===0))
           {
             variableTovalueMap[externalAPIArray[i].jPath[j].variable]="NA";
           }
           else
           {
-            replaceValue=getDateInRequiredFormat(myDate);          
+            replaceValue=getDateInRequiredFormat(replaceValue[0]);          
             // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
             variableTovalueMap[externalAPIArray[i].jPath[j].variable]=replaceValue;
           }

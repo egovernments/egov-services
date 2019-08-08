@@ -3,6 +3,7 @@
        "serviceName": "rainmaker-noc",
        "version": "1.0.0",
        "baseKeyPath": "$.FireNOCs.*",
+       "isCommonTableBorderRequired":true,
        "mappings": [
           {
              "topic": "noc-pdf-generation",

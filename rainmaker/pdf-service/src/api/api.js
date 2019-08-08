@@ -31,8 +31,8 @@ try {
     }
 } catch (error) {
   var errorResponse = error.response;
-  console.log(errorResponse) ; 
-  throw {message:"error occured while making request to "+endPoint+": response returned by call :"+(errorResponse && parseInt(errorResponse.status, 10))};  
+  console.log(error) ; 
+  throw {message:"error occured while making request to "+endPoint+": response returned by call :"+(errorResponse ? parseInt(errorResponse.status, 10):error.message)};  
 }
     
 }

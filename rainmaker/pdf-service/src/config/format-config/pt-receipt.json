@@ -734,5 +734,88 @@
       "alignment": "left",
       "style": "receipt-footer"
     }
-  ]
+  ],
+  "styles": {
+      "pt-reciept-citizen-header": {
+        "fontSize": 14,
+        "margin": [0, 24, 0, 0], 
+        "color": "#1E1E1E"
+      },
+      "tl-certificate-data": {
+        "fontSize": 14,
+        "margin": [0, 40, 0, 0], 
+        "color": "#1E1E1E"
+      },
+      "tl-certificate-data-2": {
+        "fontSize": 14,
+        "margin": [0, 8, 0, 0], 
+        "color": "#1E1E1E"
+      },
+      "pt-reciept-citizen-subheader": {
+        "fontSize": 10,
+        "bold": true,
+        "margin": [0, 16, 0, 8], 
+        "color": "#484848"
+      },
+      "pt-reciept-citizen-table": {
+        "fontSize": 10,
+        "color": "#484848"
+      },
+      "receipt-assess-table": {
+        "fontSize": 10,
+        "color": "#484848",
+        "margin": [0, 8, 0, 0]
+      },
+      "receipt-assess-table-header": {
+        "bold": true,
+        "fillColor": "#D8D8D8",
+        "color": "#484848"
+      },
+      "receipt-header-details": {
+        "fontSize": 9,
+        "margin": [0, 0, 0, 8],
+        "color": "#484848"
+      },
+      "receipt-table-key": {
+        "color": "#484848",
+        "bold": true
+      },
+      "receipt-table-value": {
+        "color": "#484848"
+      },
+      "receipt-logo-header": {
+        "color": "#1E1E1E",
+        "fontFamily": "Roboto",
+        "fontSize": 18,
+        "bold": true,
+        "letterSpacing": 0.74
+      },
+      "receipt-logo-sub-text": {
+        "color": "#656565",
+        "fontFamily": "Roboto",
+        "fontSize": 14,
+        "letterSpacing": 0.74
+      },
+      "receipt-logo-sub-header": {
+        "color": "#1E1E1E",
+        "fontFamily": "Roboto",
+        "fontSize": 16,
+        "letterSpacing": 1.6,
+        "bold": true
+      },
+      "receipt-footer": {
+        "color": "#484848",
+        "fontSize": 8,
+        "margin": [10, -15, 5, 20]
+      },
+      "receipt-no": {
+        "color": "#484848",
+        "fontSize": 10
+      },
+      "tl-certificate-footer": {
+        "fontSize": 14,
+        "margin": [0, 50, 0, 0], 
+        "color": "#1E1E1E"
+      }
+    }
   }

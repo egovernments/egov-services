@@ -3,6 +3,7 @@ package org.egov.userevent.web.contract;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.userevent.model.Document;
 import org.springframework.validation.annotation.Validated;
 
@@ -45,10 +46,11 @@ public class EventDetails {
 	private BigDecimal fees;
 	
 	public boolean isEmpty(EventDetails details) {
-		if(null == details.getFromDate() || null == details.getToDate() || null == details.getLatitude() || null == details.getLongitude()) {
-			return true;
+		if(null != details.getFromDate() && null != details.getToDate() && 
+				(!StringUtils.isEmpty(details.getAddress()) || (null != details.getLatitude() && null != details.getLongitude()))) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 }

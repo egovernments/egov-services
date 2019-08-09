@@ -284,8 +284,15 @@ public class DemandService {
 		log.debug("The old tax amount in string : " + oldTaxAmt.toPlainString());
 		log.debug("The new tax amount in string : " + newTax.toPlainString());
 		
-		if (oldTaxAmt.compareTo(newTax) > 0)
-			carryForward = BigDecimal.valueOf(-1);
+		if (oldTaxAmt.compareTo(newTax) > 0) {
+			boolean isDepreciationAllowed = utils.isAssessmentDepreciationAllowed(
+					criteria.getAssessmentYear(),
+					property.getTenantId(),
+					property.getPropertyId(),
+					new RequestInfoWrapper(requestInfo));
+			if (!isDepreciationAllowed)
+				carryForward = BigDecimal.valueOf(-1);
+		}
 
 		if (BigDecimal.ZERO.compareTo(carryForward) >= 0 || !cancelDemand) return carryForward;
 		

@@ -48,11 +48,11 @@ public class Event {
 	private String eventCategory;
 	
 	@NotNull
-	@Size(max = 50)
+	@Size(max = 65)
 	private String name;
 	
 	@NotNull
-	@Size(max = 280)
+	@Size(max = 500)
 	private String description;
 	
 	private Status status;

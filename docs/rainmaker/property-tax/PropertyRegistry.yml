@@ -38,7 +38,7 @@ paths:
           schema:
             type: string
             format: varchar
-        - name: propertyDetailids
+        - name: assessmentNumbers
           in: query
           required: false
           description: List of assessmentNumbers to search.

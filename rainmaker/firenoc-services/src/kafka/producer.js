@@ -6,10 +6,10 @@ let client;
 
 if (process.env.NODE_ENV === "development") {
   client = new kafka.Client();
-  console.log("local - ");
+  console.log("local Producer- ");
 } else {
   client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });
-  console.log("cloud - ");
+  console.log("cloud Producer- ");
 }
 
 const producer = new Producer(client);

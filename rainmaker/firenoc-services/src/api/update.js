@@ -65,7 +65,7 @@ export default ({ config, db }) => {
         return fireNoc.fireNOCNumber;
       });
 
-      console.log("list length",approvedList.length);
+      // console.log("list length",approvedList.length);
       if (approvedList.length > 0) {
         payloads.push({
           topic: envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW,

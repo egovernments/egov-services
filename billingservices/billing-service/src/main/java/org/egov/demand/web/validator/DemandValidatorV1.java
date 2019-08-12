@@ -175,8 +175,6 @@ public class DemandValidatorV1 {
 
 				if (!taxHeadMap.containsKey(detail.getTaxHeadMasterCode()))
 					taxHeadsNotFound.add(detail.getTaxHeadMasterCode());
-				else
-					alterDebitTaxToNegativeInCaseOfPositve(taxHeadMap, detail);
 			});
 
 			validateTaxPeriod(taxPeriodBusinessMap, demand, errorMap, businessServicesWithNoTaxPeriods);
@@ -211,7 +209,7 @@ public class DemandValidatorV1 {
 	 * @param taxHeadMap
 	 * @param detail
 	 */
-	private void alterDebitTaxToNegativeInCaseOfPositve(Map<String, TaxHeadMaster> taxHeadMap, DemandDetail detail) {
+	private void alterDebitTaxToNegativeInCaseOfPositive(Map<String, TaxHeadMaster> taxHeadMap, DemandDetail detail) {
 		/*
 		 * setting tax amount to negative in case of debit tax-head and positive tax
 		 * value

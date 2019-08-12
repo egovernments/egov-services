@@ -34,6 +34,7 @@ app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
+console.log("maxPagesAllowed = ",maxPagesAllowed);
 let serverport=envVariables.SERVER_PORT;
 let mustache = require('mustache');
 mustache.escape = function(text) {return text;};

@@ -41,7 +41,7 @@ public class Utils {
         return mainNode;
     }
     
-	public boolean isPositiveInteger(BigDecimal bd) {
+	public static boolean isPositiveInteger(BigDecimal bd) {
 		return bd.compareTo(BigDecimal.ZERO) >= 0
 				&& (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0);
 	}

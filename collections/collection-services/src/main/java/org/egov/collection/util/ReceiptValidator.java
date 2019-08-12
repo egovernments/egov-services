@@ -80,12 +80,10 @@ public class ReceiptValidator {
 
 	private BusinessDetailsRepository businessDetailsRepository;
 	private CollectionRepository collectionRepository;
-	private Utils utils;
 
-	ReceiptValidator(BusinessDetailsRepository businessDetailsRepository, CollectionRepository collectionRepository, Utils utils) {
+	ReceiptValidator(BusinessDetailsRepository businessDetailsRepository, CollectionRepository collectionRepository) {
 		this.businessDetailsRepository = businessDetailsRepository;
 		this.collectionRepository = collectionRepository;
-		this.utils = utils;
 		
 	}
 
@@ -127,7 +125,7 @@ public class ReceiptValidator {
 
 			log.info("receipts: " + receipts);
 
-			if (isNull(billDetail.getTotalAmount()) || !utils.isPositiveInteger(billDetail.getTotalAmount())) {
+			if (isNull(billDetail.getTotalAmount()) || !Utils.isPositiveInteger(billDetail.getTotalAmount())) {
 				errorMap.put("INVALID_BILL_AMOUNT",
 						"Invalid bill amount! Amount should be  greater than or equal to 0 and " + "without fractions");
 			}

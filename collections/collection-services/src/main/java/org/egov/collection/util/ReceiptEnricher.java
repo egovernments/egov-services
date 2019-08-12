@@ -57,16 +57,14 @@ public class ReceiptEnricher {
     private InstrumentRepository instrumentRepository;
     private IdGenRepository idGenRepository;
     private BusinessDetailsRepository businessDetailsRepository;
-    private Utils utils;
 
     @Autowired
     public ReceiptEnricher(BillingServiceRepository billingRepository, InstrumentRepository instrumentRepository,
-                           IdGenRepository idGenRepository, BusinessDetailsRepository businessDetailsRepository, Utils utils) {
+                           IdGenRepository idGenRepository, BusinessDetailsRepository businessDetailsRepository) {
         this.billingRepository = billingRepository;
         this.instrumentRepository = instrumentRepository;
         this.idGenRepository = idGenRepository;
         this.businessDetailsRepository = businessDetailsRepository;
-        this.utils = utils;
     }
 
     /**
@@ -214,7 +212,7 @@ public class ReceiptEnricher {
                 mapOfBusinessSvcAndAmtPaid.entrySet().forEach( entryOfServiceAndAmtpaid -> {
                 	
                 	BigDecimal amtPaid = entryOfServiceAndAmtpaid.getValue();
-                	if(!utils.isPositiveInteger(amtPaid))
+                	if(!Utils.isPositiveInteger(amtPaid))
         				errorMap.put("INVALID_PAID_AMOUNT",
         						"Invalid paid amount! Amount paid should be greater than or Equal to 0 and " + "without fractions");
                 });

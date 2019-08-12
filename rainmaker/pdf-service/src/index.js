@@ -34,7 +34,6 @@ app.use(bodyParser.json({limit: '10mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
-console.log("maxPagesAllowed = ",maxPagesAllowed);
 let serverport=envVariables.SERVER_PORT;
 let mustache = require('mustache');
 mustache.escape = function(text) {return text;};
@@ -180,8 +179,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           formatObjectArrayObject.push(formatObject["content"]);
           //putting formatconfig in a file to check docdefinition on pdfmake playground online
           countOfObjectsInCurrentFile++;
-          console.log(countOfObjectsInCurrentFile+" "+maxPagesAllowed,(countOfObjectsInCurrentFile===maxPagesAllowed)||((i+1)==len));
-          if((countOfObjectsInCurrentFile===maxPagesAllowed)||((i+1)==len))
+          if((countOfObjectsInCurrentFile==maxPagesAllowed)||((i+1)==len))
           {
             let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
             formatconfigCopy["content"]=formatObjectArrayObject;

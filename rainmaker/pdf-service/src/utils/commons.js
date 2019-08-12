@@ -9,9 +9,9 @@ export const getTransformedLocale = label => {
   };
 
 
-export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,key,moduleName)=>{
+export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,key,moduleName,localisationModuleList)=>{
     let standardisedKey=getTransformedLocale(key);
-    if((localisationMap[key]===undefined)&&(localisationMap[standardisedKey]===undefined)){
+    if(!localisationModuleList.includes(moduleName)){
         var res = await httpRequest(
             `${egovLocHost}${localisationEndpoint}?locale=en_IN&tenantId=pb&module=${moduleName}`,
             {"RequestInfo":requestInfo}
@@ -21,6 +21,8 @@ export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,key,mo
                 localisationMap[item.code]=item.message;   
             }
         );
+        localisationModuleList.push(moduleName);
+
     }
     if(localisationMap[key])
     {

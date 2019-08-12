@@ -11,7 +11,7 @@ var jp = require('jsonpath');
  * @param {*} localisationMap - Map to store localisation key, value pair
  * @param {*} requestInfo - request info from request body
  */
-export const directMapping=async(req,dataconfig,variableTovalueMap,localisationMap,requestInfo)=>{    
+export const directMapping=async(req,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList)=>{    
     
     var directArr = [];        
     // using jp-jsonpath because loadash can not handele '*'
@@ -115,7 +115,7 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
       {
         directArr[i].val=checkifNullAndSetValue(directArr[i].val,"NA");
         if((directArr[i].val!=="NA")&&directArr[i].localisation && directArr[i].localisation.required && directArr[i].localisation.prefix)
-            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix+"_"+directArr[i].val,directArr[i].localisation.module);
+            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix+"_"+directArr[i].val,directArr[i].localisation.module,localisationModuleList);
         else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
         {            
           let myDate = new Date(directArr[i].val[0]);

@@ -27,6 +27,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var pdfMakePrinter = require("pdfmake/src/printer");
 
 let localisationMap={};
+let localisationModuleList=[];
 let app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json({limit: '10mb', extended: true}));
@@ -165,10 +166,10 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           let variableTovalueMap={};
           //direct mapping service
           await Promise.all([
-          directMapping(moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
+          directMapping(moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList)
         ,
           //external API mapping
-          externalAPIMapping(key,moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo),
+          externalAPIMapping(key,moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList),
             ]);
           
           await generateQRCodes(moduleObject,dataconfig,variableTovalueMap)

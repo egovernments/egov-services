@@ -13,7 +13,7 @@ import {findAndUpdateLocalisation,getDateInRequiredFormat,checkifNullAndSetValue
  * @param {*} requestInfo -request info from request body
  */
 
-export const externalAPIMapping=async function(key,req,dataconfig,variableTovalueMap,localisationMap,requestInfo){
+export const externalAPIMapping=async function(key,req,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList){
 var jp = require('jsonpath');
 
    var objectOfExternalAPI = checkifNullAndSetValue(jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.externalAPI.*"),[]);
@@ -124,7 +124,7 @@ else
       for (let j = 0; j < externalAPIArray[i].jPath.length; j++) {          
         let replaceValue=checkifNullAndSetValue(jp.query(res,externalAPIArray[i].jPath[j].value),"NA");
         if((replaceValue!=="NA")&&externalAPIArray[i].jPath[j].localisation && externalAPIArray[i].jPath[j].localisation.required && externalAPIArray[i].jPath[j].localisation.prefix)
-          variableTovalueMap[externalAPIArray[i].jPath[j].variable]= await findAndUpdateLocalisation(requestInfo,localisationMap,externalAPIArray[i].jPath[j].localisation.prefix+"_"+replaceValue,externalAPIArray[i].jPath[j].localisation.module);
+          variableTovalueMap[externalAPIArray[i].jPath[j].variable]= await findAndUpdateLocalisation(requestInfo,localisationMap,externalAPIArray[i].jPath[j].localisation.prefix+"_"+replaceValue,externalAPIArray[i].jPath[j].localisation.module,localisationModuleList);
         else if((externalAPIArray[i].jPath[j].value).toLowerCase().search("date")!="-1")
         {         
           let myDate = new Date(replaceValue[0]);

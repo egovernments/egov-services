@@ -50,6 +50,11 @@ export const getDateInRequiredFormat = et => {
 //   }); 
 //   }
 
+/**
+ * 
+ * @param {*} value 
+ * @param {*} setTo 
+ */
   export const checkifNullAndSetValue=(value,setTo)=>{
     if((value==undefined)||(value==null)||(value.length===0)||((value.length===1)&&(value[0]===null)))
       return setTo;

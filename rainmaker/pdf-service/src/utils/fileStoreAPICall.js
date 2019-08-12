@@ -9,6 +9,11 @@ import envVariables from "../EnvironmentVariables";
 let egovFileHost=envVariables.EGOV_FILESTORE_SERVICE_HOST;
 let filestoreEndpoint=envVariables.EGOV_FILESTORE_SERVICE_ENDPOINT;
 
+/**
+ * 
+ * @param {*} filename -name of localy stored temporary file
+ * @param {*} tenantId - tenantID
+ */
 export const fileStoreAPICall=async function(filename,tenantId){
     var url =`${egovFileHost}${filestoreEndpoint}?tenantId=${tenantId}&module=pdfgen&tag=00040-2017-QR`;
       var form = new FormData();

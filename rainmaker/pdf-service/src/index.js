@@ -18,7 +18,7 @@ import { fileStoreAPICall } from "./utils/fileStoreAPICall";
 import { directMapping } from "./utils/directMapping";
 import { externalAPIMapping } from "./utils/externalAPIMapping";
 import envVariables from "./EnvironmentVariables";
-
+import QRCode from "qrcode";
 import {checkifNullAndSetValue} from "./utils/commons";
 // import {getFileStoreIds,insertStoreIds} from "./queries";
 var jp = require('jsonpath');
@@ -34,7 +34,8 @@ app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
 let serverport=envVariables.SERVER_PORT;
-
+let mustache = require('mustache');
+mustache.escape = function(text) {return text;};
 let borderLayout = {
   hLineColor: function(i, node) {
     return "#979797";
@@ -50,6 +51,14 @@ let borderLayout = {
   }
 };
 
+/**
+ * 
+ * @param {*} key - name of the key used to identify module configs. Provided request URL
+ * @param {*} listDocDefinition - doc definitions as per pdfmake and formatconfig, each for each file
+ * @param {*} successCallback - callaback when success
+ * @param {*} errorCallback - callback when error
+ * @param {*} tenantId - tenantID
+ */
  function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId) {
    try {
     var fontDescriptors = {
@@ -75,7 +84,7 @@ let borderLayout = {
         //storing file on local computer/server
         doc.pipe(
           fs.createWriteStream(filename).on("error", err => {
-            errorCallback({message:"error occurred while writing pdf: "+err.message});
+            errorCallback({message:"error occurred while writing pdf: "+((typeof err)==='string')?err:err.message});
           }).on("close", () => {
               fileStoreAPICall(filename,tenantId).then((result)=>{
               fs.unlink(filename,()=>{});
@@ -88,7 +97,7 @@ let borderLayout = {
           }).catch(err=>{
             fs.unlink(filename,()=>{});
             console.log(err);
-            errorCallback({message:"error occurred while uploading pdf: "+err.message});
+            errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
           });
         }
         ));
@@ -105,7 +114,7 @@ let borderLayout = {
     });
   } catch (err) {
     console.log(err);
-    errorCallback({message:"error occured while creating pdf: "+err.message});
+    errorCallback({message:" error occured while creating pdf: "+((typeof err)==='string')?err:err.message});
   }
 }
 
@@ -156,11 +165,13 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           let variableTovalueMap={};
           //direct mapping service
           await Promise.all([
-          directMapping(moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
+          directMapping(moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
         ,
           //external API mapping
-          externalAPIMapping(key,moduleObject,formatObject,dataconfig,variableTovalueMap,localisationMap,requestInfo)
+          externalAPIMapping(key,moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo),
             ]);
+          
+          await generateQRCodes(moduleObject,dataconfig,variableTovalueMap)
           formatObject=fillValues(variableTovalueMap,formatObject);
           if(isCommonTableBorderRequired===true)
             formatObject=updateBorderlayout(formatObject);
@@ -219,24 +230,6 @@ catch(error)
     data: "some unknown error: "+error.message
   });
 }
-  // function to open PDF
-  //  createPdfBinary(formatconfig, (response) => {
-  //  	res.setHeader('Content-Type', 'application/pdf');
-  //  	console.log(req.body);
-  //  	res.send(response).download(); // Buffer data
-  //  	},function(error) {
-  //  		res.send('ERROR:' + error);
-  //  	}
-  //  	);
-
-  /*function to sent binary pdf data to s3
-	createPdfBinary(dd, function(binary) {
-	  res.contentType('application/pdf');
-	  console.log(req.body);
-	  res.send(binary);
-	}, function(error) {
-	  res.send('ERROR:' + error);
-	});*/
   
 }));
 
@@ -252,6 +245,10 @@ app.listen(serverport, () => {
   console.log(`Server running at http:${serverport}/`);
 });
 
+/**
+ * 
+ * @param {*} formatconfig - format config read from formatconfig file
+ */
 const updateBorderlayout=(formatconfig)=>{
   formatconfig.content=formatconfig.content.map(item=>{
     if(item.hasOwnProperty('layout')&&((typeof item.layout)==='object')&&(Object.keys(item.layout).length===0))
@@ -263,13 +260,37 @@ const updateBorderlayout=(formatconfig)=>{
   return formatconfig;
 }
 
+/**
+ * 
+ * @param {*} variableTovalueMap - key, value map. Keys are variable defined in data config
+ * and value is their corresponding values. Map will be used by Moustache template engine
+ * @param {*} formatconfig -format config read from formatconfig file
+ */
 export const fillValues=(variableTovalueMap,formatconfig)=>{
-  let mustache = require('mustache');
-  mustache.escape = function(text) {return text;};
   let input=JSON.stringify(formatconfig);
   let output=JSON.parse(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
   return output;
 } 
 
+
+/** 
+ * generateQRCodes-function to geneerate qrcodes
+ * moduleObject-current module object from request body
+ * dataconfig- data config read from dataconfig of module 
+*/
+const generateQRCodes=async(moduleObject,dataconfig,variableTovalueMap)=>{
+
+    let qrcodeMappings=checkifNullAndSetValue(jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.qrcodeConfig.*"),[]);
+
+    for(var i=0, len=qrcodeMappings.length; i < len; i++) 
+    {
+        let qrmapping=qrcodeMappings[i];
+        let varname=qrmapping.variable;
+        let qrtext=mustache.render(qrmapping.value, variableTovalueMap);
+        
+        let qrCodeImage = await QRCode.toDataURL(qrtext);
+        variableTovalueMap[varname]=qrCodeImage;
+    }
+}
 export default app;
 

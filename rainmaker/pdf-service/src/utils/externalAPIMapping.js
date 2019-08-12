@@ -3,8 +3,17 @@ import get from "lodash/get";
 import { httpRequest } from "../api/api";
 import {findAndUpdateLocalisation,getDateInRequiredFormat,checkifNullAndSetValue} from "./commons";
 
+/**
+ * 
+ * @param {*} key -name of the key used to identify module configs. Provided request URL
+ * @param {*} req -current module object, picked from request body
+ * @param {*} dataconfig - data config
+ * @param {*} variableTovalueMap -map used for filling values by template engine 'mustache'
+ * @param {*} localisationMap -Map to store localisation key, value pair
+ * @param {*} requestInfo -request info from request body
+ */
 
-export const externalAPIMapping=async function(key,req,formatconfig,dataconfig,variableTovalueMap,localisationMap,requestInfo){
+export const externalAPIMapping=async function(key,req,dataconfig,variableTovalueMap,localisationMap,requestInfo){
 var jp = require('jsonpath');
 
    var objectOfExternalAPI = checkifNullAndSetValue(jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.externalAPI.*"),[]);

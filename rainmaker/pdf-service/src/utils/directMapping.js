@@ -2,9 +2,19 @@ import get from "lodash/get";
 import {findAndUpdateLocalisation,getDateInRequiredFormat,checkifNullAndSetValue} from "./commons";
 
 var jp = require('jsonpath');
-export const directMapping=async(req,formatconfig,dataconfig,variableTovalueMap,localisationMap,requestInfo)=>{    
+
+/**
+ * 
+ * @param {*} req - current module object, picked from request body
+ * @param {*} dataconfig  - data config 
+ * @param {*} variableTovalueMap - map used for filling values by template engine 'mustache'
+ * @param {*} localisationMap - Map to store localisation key, value pair
+ * @param {*} requestInfo - request info from request body
+ */
+export const directMapping=async(req,dataconfig,variableTovalueMap,localisationMap,requestInfo)=>{    
     
     var directArr = [];        
+    // using jp-jsonpath because loadash can not handele '*'
     var objectOfDirectMapping = jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.direct.*");
     objectOfDirectMapping=checkifNullAndSetValue(objectOfDirectMapping,[]);
     directArr = objectOfDirectMapping.map(item => {

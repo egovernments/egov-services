@@ -63,11 +63,11 @@
                            },
                            {
                               "variable":"variable8",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[1].amount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='FIRENOC_FEES')].amount"
                            },
                            {
                               "variable":"variable9",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[0].amount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='FIRENOC_TAXES')].amount"
                            },
                            {
                               "variable":"variable10",
@@ -84,11 +84,38 @@
                            {
                               "variable":"variable13",
                               "value":"$.Receipt[0].instrument.bank.name"
+                           },
+                           {
+                              "variable":"variable15",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].receiptNumber"
+                           },
+                           {
+                              "variable":"variable16",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].receiptDate"
+                           },
+                           {
+                              "variable":"variable17",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
+                           },
+                           {
+                              "variable":"variable18",
+                              "value":"$.Receipt[0].instrument.instrumentType.name"
+                           },
+                           {
+                              "variable":"variable19",
+                              "value":"$.Receipt[0].instrument.transactionNumber"
                            }
-
                         ]  
                       }
                    ]
+                },
+                {
+                  "qrcodeConfig": [
+                     {
+                        "variable": "variable14",
+                        "value":"Application: {{variable1}}, Receipt number: {{variable15}}, Date of payment: {{variable16}}, Fees Paid: {{variable17}}, Payment mode: {{variable18}}, Transaction ID: {{variable19}}"
+                     }
+                  ]
                 },
                 {
                    "mdmsDenormalization": [

@@ -1,11 +1,12 @@
 package org.egov.collection.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import static java.util.Objects.isNull;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 
-import static java.util.Objects.isNull;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Utils {
 
@@ -39,4 +40,9 @@ public class Utils {
 
         return mainNode;
     }
+    
+	public boolean isPositiveInteger(BigDecimal bd) {
+		return bd.compareTo(BigDecimal.ZERO) >= 0
+				&& (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0);
+	}
 }

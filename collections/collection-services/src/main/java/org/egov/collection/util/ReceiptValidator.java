@@ -80,10 +80,13 @@ public class ReceiptValidator {
 
 	private BusinessDetailsRepository businessDetailsRepository;
 	private CollectionRepository collectionRepository;
+	private Utils utils;
 
-	ReceiptValidator(BusinessDetailsRepository businessDetailsRepository, CollectionRepository collectionRepository) {
+	ReceiptValidator(BusinessDetailsRepository businessDetailsRepository, CollectionRepository collectionRepository, Utils utils) {
 		this.businessDetailsRepository = businessDetailsRepository;
 		this.collectionRepository = collectionRepository;
+		this.utils = utils;
+		
 	}
 
 	/**
@@ -124,10 +127,11 @@ public class ReceiptValidator {
 
 			log.info("receipts: " + receipts);
 
-			if (isNull(billDetail.getTotalAmount()) || !isPositiveInteger(billDetail.getTotalAmount())) {
+			if (isNull(billDetail.getTotalAmount()) || !utils.isPositiveInteger(billDetail.getTotalAmount())) {
 				errorMap.put("INVALID_BILL_AMOUNT",
-						"Invalid bill amount! Amount should be  greater than 0 and " + "without fractions");
+						"Invalid bill amount! Amount should be  greater than or equal to 0 and " + "without fractions");
 			}
+			
 			if (!receipts.isEmpty()) {
 				validateIfReceiptForBillPresent(errorMap, receipts, billDetail);
 			}
@@ -507,10 +511,5 @@ public class ReceiptValidator {
 						.field(RCPTDATE_FIELD_NAME).build();
 			}
 		}
-	}
-
-	private boolean isPositiveInteger(BigDecimal bd) {
-		return bd.compareTo(BigDecimal.ZERO) >= 0
-				&& (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0);
 	}
 }

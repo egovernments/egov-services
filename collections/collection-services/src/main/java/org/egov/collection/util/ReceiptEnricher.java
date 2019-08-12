@@ -1,6 +1,27 @@
 package org.egov.collection.util;
 
-import lombok.extern.slf4j.Slf4j;
+import static java.util.Objects.isNull;
+import static org.egov.collection.model.enums.InstrumentTypesEnum.CARD;
+import static org.egov.collection.model.enums.InstrumentTypesEnum.CASH;
+import static org.egov.collection.model.enums.InstrumentTypesEnum.ONLINE;
+import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
+import static org.egov.collection.model.enums.ReceiptStatus.REMITTED;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.egov.collection.model.AuditDetails;
 import org.egov.collection.model.Instrument;
 import org.egov.collection.model.TransactionType;
@@ -12,25 +33,21 @@ import org.egov.collection.repository.BillingServiceRepository;
 import org.egov.collection.repository.BusinessDetailsRepository;
 import org.egov.collection.repository.IdGenRepository;
 import org.egov.collection.repository.InstrumentRepository;
-import org.egov.collection.web.contract.*;
+import org.egov.collection.web.contract.Bill;
+import org.egov.collection.web.contract.BillAccountDetail;
+import org.egov.collection.web.contract.BillDetail;
+import org.egov.collection.web.contract.BusinessDetailsResponse;
+import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.ReceiptReq;
+import org.egov.collection.web.contract.TaxAndPayment;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
-import static org.egov.collection.model.enums.InstrumentTypesEnum.*;
-import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
-import static org.egov.collection.model.enums.ReceiptStatus.REMITTED;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -40,14 +57,16 @@ public class ReceiptEnricher {
     private InstrumentRepository instrumentRepository;
     private IdGenRepository idGenRepository;
     private BusinessDetailsRepository businessDetailsRepository;
+    private Utils utils;
 
     @Autowired
     public ReceiptEnricher(BillingServiceRepository billingRepository, InstrumentRepository instrumentRepository,
-                           IdGenRepository idGenRepository, BusinessDetailsRepository businessDetailsRepository) {
+                           IdGenRepository idGenRepository, BusinessDetailsRepository businessDetailsRepository, Utils utils) {
         this.billingRepository = billingRepository;
         this.instrumentRepository = instrumentRepository;
         this.idGenRepository = idGenRepository;
         this.businessDetailsRepository = businessDetailsRepository;
+        this.utils = utils;
     }
 
     /**
@@ -165,6 +184,7 @@ public class ReceiptEnricher {
      * @param validatedBill
      */
     public void validateTaxAndPayment(Bill billFromRequest, Bill validatedBill) {
+    	
         Map<String, String> errorMap = new HashMap<>();
         Map<String, BigDecimal> mapOfBusinessSvcAndAmtPaid = billFromRequest.getTaxAndPayments().stream()
                 .collect(Collectors.toMap(TaxAndPayment::getBusinessService, TaxAndPayment::getAmountPaid));
@@ -190,6 +210,15 @@ public class ReceiptEnricher {
                         .compareTo(mapOfBusinessSvcAndTaxAmt.get(taxAndPayment.getBusinessService())) != 0) {
                     errorMap.put("INVALID_AMT_PAID_CODE", "Amount paid in the taxAndPayment array should be equal to Tax Amount!");
                 }
+                
+                mapOfBusinessSvcAndAmtPaid.entrySet().forEach( entryOfServiceAndAmtpaid -> {
+                	
+                	BigDecimal amtPaid = entryOfServiceAndAmtpaid.getValue();
+                	if(!utils.isPositiveInteger(amtPaid))
+        				errorMap.put("INVALID_PAID_AMOUNT",
+        						"Invalid paid amount! Amount paid should be greater than or Equal to 0 and " + "without fractions");
+                });
+                
             } else {
                 if (taxAndPayment.getAmountPaid().compareTo(BigDecimal.ZERO) < 0) {
                     errorMap.put("INVALID_AMT_PAID_NEG_CODE", "Amount paid in the taxAndPayment array cannot be less than zero");

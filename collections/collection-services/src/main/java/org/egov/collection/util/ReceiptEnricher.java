@@ -209,14 +209,6 @@ public class ReceiptEnricher {
                     errorMap.put("INVALID_AMT_PAID_CODE", "Amount paid in the taxAndPayment array should be equal to Tax Amount!");
                 }
                 
-                mapOfBusinessSvcAndAmtPaid.entrySet().forEach( entryOfServiceAndAmtpaid -> {
-                	
-                	BigDecimal amtPaid = entryOfServiceAndAmtpaid.getValue();
-                	if(!Utils.isPositiveInteger(amtPaid))
-        				errorMap.put("INVALID_PAID_AMOUNT",
-        						"Invalid paid amount! Amount paid should be greater than or Equal to 0 and " + "without fractions");
-                });
-                
             } else {
                 if (taxAndPayment.getAmountPaid().compareTo(BigDecimal.ZERO) < 0) {
                     errorMap.put("INVALID_AMT_PAID_NEG_CODE", "Amount paid in the taxAndPayment array cannot be less than zero");

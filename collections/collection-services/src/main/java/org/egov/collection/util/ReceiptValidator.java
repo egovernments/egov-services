@@ -114,6 +114,18 @@ public class ReceiptValidator {
 			errorMap.put(PAID_BY_MISSING_CODE, PAID_BY_MISSING_MESSAGE);
 
 		validateInstrument(receipt.getInstrument(), errorMap);
+		
+        Map<String, BigDecimal> mapOfBusinessSvcAndAmtPaid = receipt.getBill().get(0).getTaxAndPayments().stream()
+                .collect(Collectors.toMap(TaxAndPayment::getBusinessService, TaxAndPayment::getAmountPaid));
+        
+        mapOfBusinessSvcAndAmtPaid.entrySet().forEach( entryOfServiceAndAmtpaid -> {
+        	
+        	BigDecimal amtPaid = entryOfServiceAndAmtpaid.getValue();
+        	if(!Utils.isPositiveInteger(amtPaid))
+				errorMap.put("INVALID_PAID_AMOUNT",
+						"Invalid paid amount! Amount paid should be greater than or Equal to 0 and " + "without fractions");
+        });
+        
 
 		// Loop through all bill details [one for each service], and perform various
 		// validations

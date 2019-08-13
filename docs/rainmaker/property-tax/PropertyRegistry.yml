@@ -7,12 +7,66 @@ info:
     properties, changes to existing properties (Detail Updates, division of
     property, etc.),  search of required properties and property tax.
   contact:
-    name: Ghanshyam Rawat
-    email: ghanshyam.rawat@egovernments.org
+    name: Egovernments Foundation
+    email: contact@egovernments.org
 x-module: PT
 x-common-path: >-
   https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
 paths:
+  /property/_create:
+    post:
+      summary: Create new property.
+      description: API to create new property.
+      responses:
+        '201':
+          description: Property created sucessfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+        '400':
+          description: Property(s) creation failed
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Property
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+        description: Details for the new property + RequestInfo meta data.
+        required: true
+  /property/_update:
+    post:
+      summary: Update existing property.
+      description: Updates a given `Property` with newer details.
+      tags:
+        - Property
+      responses:
+        '200':
+          description: Update Property successful
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyResponse'
+        '400':
+          description: Update Property failed
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyRequest'
+        description: Request header for the property Request.
+        required: true
   /property/_search:
     post:
       summary: Get the list of properties defined in the system.
@@ -20,9 +74,9 @@ paths:
         Get the properties list based on the input parameters.
       parameters:
         - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/components/parameters/requestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-0-3.yml#/components/parameters/RequestInfo
         - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/components/parameters/tenantId
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-0-3.yml#/components/parameters/tenantId
         - name: name
           in: query
           description: Name of owner whose property is to be searched.
@@ -81,48 +135,21 @@ paths:
                   https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Property
-  /property/_create:
+  /property/_delete:
     post:
-      summary: Create new properties.
-      description: API to create new properties.
-      responses:
-        '201':
-          description: Property(s) created sucessfully
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PropertyResponse'
-        '400':
-          description: Property(s) creation failed
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-      tags:
-        - Property
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PropertyRequest'
-        description: Details for the new property + RequestInfo meta data.
-        required: true
-  /property/_update:
-    post:
-      summary: Update existing properties.
-      description: Updates a given `Property` with newer details.
+      summary: Delete existing property.
+      description: The API will delete the property associated with the given propertyId from the system  The API works in idempotent manner.
       tags:
         - Property
       responses:
         '200':
-          description: Update Property(s) successful
+          description: Deleted Property successful
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/PropertyResponse'
-        '400':
-          description: Update Property(s) failed
+                $ref: '#/components/schemas/PropertyDeleteResponse'
+        '404':
+          description: Delete Property failed
           content:
             '*/*':
               schema:
@@ -132,9 +159,37 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PropertyRequest'
-        description: Request header for the property Request.
-        required: true
+              $ref: '#/components/schemas/PropertyDeleteRequest'
+        description: Request header for the property delete Request.
+        required: true      
+  /property/_cancel:
+    post:
+      summary: deactivate/cancel an active property.
+      description: The API will deactivate/cancel the property associated with the given propertyId from the system. The API works in idempotent manner
+      tags:
+        - Property
+      responses:
+        '200':
+          description: Property deactivated successful
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PropertyDeleteResponse'
+        '404':
+          description: Property not found
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyDeleteRequest'
+        description: Request header for the property delete Request.
+        required: true              
+      
   /assessment/_search:
     post:
       summary: Get the list of Asssessments defined in the system.
@@ -190,17 +245,17 @@ paths:
         
   /assessment/_create:
     post:
-      summary: Create new assessments.
+      summary: Create new assessment.
       description: API to create new assessment.
       responses:
         '201':
-          description: Assessment(s) created sucessfully
+          description: Assessment created sucessfully
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/AssessmentResponse'
         '400':
-          description: Assessment(s) creation failed
+          description: Assessment creation failed
           content:
             '*/*':
               schema:
@@ -218,19 +273,19 @@ paths:
         
   /assessment/_update:
     post:
-      summary: Update existing asessments.
+      summary: Update existing asessment.
       description: Updates a given `assessment` with newer details.
       tags:
         - Assessment
       responses:
         '200':
-          description: Update assessment(s) successful
+          description: Update assessment successful
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/AssessmentResponse'
         '400':
-          description: Update assessment(s) failed
+          description: Update assessment failed
           content:
             '*/*':
               schema:
@@ -243,6 +298,61 @@ paths:
               $ref: '#/components/schemas/AssessmentRequest'
         description: Request header for the assessment Request.
         required: true
+  /assessment/_delete:
+    post:
+      summary: delete existing asessment
+      description: Deletes an assessment based on assessment number.
+      tags:
+        - Assessment
+      responses:
+        '200':
+          description: deleted assessment successful
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AssessmentDeleteResponse'
+        '404':
+          description: Assessment not found
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentDeleteRequest'
+        description: Request header for the assessment Request.
+        required: true
+  /assessment/_cancel:
+    post:
+      summary: Deactivates/Cancels existing asessments.
+      description: Deactivates/Cancels based on the given assessment number
+      tags:
+        - Assessment
+      responses:
+        '200':
+          description: Deactivates/Cancels assessment successful
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AssessmentDeleteResponse'
+        '400':
+          description: Update assessment(s) failed
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentDeleteRequest'
+        description: Request header for the assessment Request.
+        required: true
+        
 servers:
   - url: https://egov-micro-dev.egovernments.org
 components:
@@ -254,6 +364,12 @@ components:
         definitions needing property linking. Actual Property Object extends
         this to include more elaborate attributes of the property.
       properties:
+        id:
+          type: string
+          description: Unique Identifier of the Property for internal reference.
+          readOnly: true
+          minLength: 1
+          maxLength: 64
         propertyId:
           type: string
           description: Unique Identifier of the Property.
@@ -396,9 +512,9 @@ components:
           description: unique assesment number for each financial year.
           maxLength: 64
           readOnly: true
-        propertyId:
+        id:
           type: string
-          description: PropertyId with which the assessment is associated.
+          description: id of the property with which the assessment is associated.
           maxLength: 64
           readOnly: true
         assessmentDate:
@@ -664,16 +780,12 @@ components:
         RequestInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        Properties:
+        Property:
           description: Used for search result and create only
-          type: array
-          minimum: 1
-          maximum: 100
-          items:
-            $ref: '#/components/schemas/Property'
+          $ref: '#/components/schemas/Property'
     PropertyResponse:
       description: >-
-        Contract class to send response. Array of Property items  are used in
+        Contract class to send response.  Property items  is used in
         case of search results or response for create. Where as single Property
         item is used for update
       properties:
@@ -682,9 +794,36 @@ components:
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
         Properties:
           description: Used for search result and create only
-          type: array
           items:
             $ref: '#/components/schemas/Property'
+            
+    PropertyDeleteRequest:
+      description: Class to send the request body for property delete
+      properties:
+        RequestInfo:
+           $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        tenantId:
+          type: string
+          description: The tenantId of the property to be deleted
+        propertyId: 
+          type: string
+          description: The propertyId of the property to be deleted
+
+    PropertyDeleteResponse:
+      description: Class to send the request body for property delete
+      properties:
+        ResponseInfo:
+           $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        tenantId:
+          type: string
+          description: The tenantId of the property to be deleted
+        propertyId: 
+          type: string
+          description: The propertyId of the property to be deleted
+
+            
     AssessmentRequest:
       description: >-
         Contract class to receive request. Array of assessment items  are used
@@ -695,11 +834,7 @@ components:
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
         Assessments:
           description: Used for search result and create only
-          type: array
-          minimum: 1
-          maximum: 100
-          items:
-            $ref: '#/components/schemas/Assessment'
+          $ref: '#/components/schemas/Assessment'
     AssessmentResponse:
       description: >-
         Contract class to send response. Array of assessment items  are used in
@@ -714,3 +849,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Assessment'
+            
+    AssessmentDeleteRequest:
+      description: Class to send the request body for assessment delete
+      properties:
+        RequestInfo:
+           $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        tenantId:
+          type: string
+          description: The tenantId of the assessment to be deleted
+        assessmentNumber: 
+          type: string
+          description: The assessment number of the property to be deleted
+            
+    AssessmentDeleteResponse:
+      description: Class to send the request body for property delete
+      properties:
+        ResponseInfo:
+           $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        tenantId:
+          type: string
+          description: The tenantId of the assessment to be deleted
+        assessmentNumber: 
+          type: string
+          description: The assessment number of the property to be deleted

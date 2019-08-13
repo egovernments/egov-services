@@ -1,6 +1,8 @@
 package org.egov.demand.service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -104,8 +106,9 @@ public class ReceiptService {
 			 */ 
 			if(null == billAccDetail.getTaxHeadCode()) return;
 			
-			
 			List<DemandDetail> currentDetails = taxHeadCodeDemandDetailgroup.get(billAccDetail.getTaxHeadCode());
+			Collections.sort(currentDetails, Comparator.comparing(DemandDetail::getTaxAmount));
+					
 			int length = 0;
 			
 			if (!CollectionUtils.isEmpty(currentDetails))

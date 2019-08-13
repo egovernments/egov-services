@@ -16,11 +16,11 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
     var directArr = [];        
     // using jp-jsonpath because loadash can not handele '*'
     var objectOfDirectMapping = jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.direct.*");
-    objectOfDirectMapping=checkifNullAndSetValue(objectOfDirectMapping,[]);
+    objectOfDirectMapping=checkifNullAndSetValue(objectOfDirectMapping,[],"$.DataConfigs.mappings.*.mappings.*.direct.*");
     directArr = objectOfDirectMapping.map(item => {
       return {
         jPath: item.variable,
-        val: checkifNullAndSetValue(jp.query(req,item.value.path),"NA"),
+        val: checkifNullAndSetValue(jp.query(req,item.value.path),"NA",item.value.path),
         valJsonPath: item.value.path,
         type: item.type,
         format: item.format,
@@ -113,9 +113,9 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
       //setting value in pdf for no type direct mapping
       else 
       {
-        directArr[i].val=checkifNullAndSetValue(directArr[i].val,"NA");
-        if((directArr[i].val!=="NA")&&directArr[i].localisation && directArr[i].localisation.required && directArr[i].localisation.prefix)
-            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix+"_"+directArr[i].val,directArr[i].localisation.module,localisationModuleList);
+        directArr[i].val=checkifNullAndSetValue(directArr[i].val,"NA",directArr[i].valJsonPath);
+        if((directArr[i].val!=="NA")&&directArr[i].localisation && directArr[i].localisation.required)
+            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix,directArr[i].val,directArr[i].localisation.module,localisationModuleList,directArr[i].localisation.isCategoryRequired,directArr[i].localisation.isMainTypeRequired,directArr[i].localisation.isSubTypeNotRequired);
         else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
         {            
           let myDate = new Date(directArr[i].val[0]);

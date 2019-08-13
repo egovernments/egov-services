@@ -50,29 +50,37 @@
                      {
                         "variable": "variable6",
                         "value": {
-                             "path":"$.tradeLicenseDetail.tradeUnits[0].tradeType"                              
+                             "path":"$.tradeLicenseDetail.tradeUnits[*].tradeType"                              
                         },
                         "localisation":{
                            "required":true,
                            "prefix":"TRADELICENSE_TRADETYPE",
-                           "module":"rainmaker-tl"
+                           "module":"rainmaker-tl",
+                           "isCategoryRequired":true,
+                           "isSubTypeNotRequired":true
                         }
                      },
                      {
                         "variable": "variable7",
                         "value": {
-                             "path":"$.tradeLicenseDetail.tradeUnits[0].tradeType"                              
+                             "path":"$.tradeLicenseDetail.tradeUnits[*].tradeType"                              
                         },
                         "localisation":{
                            "required":true,
                            "prefix":"TRADELICENSE_TRADETYPE",   
-                           "module":"rainmaker-tl"
+                           "module":"rainmaker-tl",
+                           "isMainTypeRequired":true
                         }
                      },
                      {
                         "variable": "variable8",
                         "value": {
-                             "path":"$.tradeLicenseDetail.accessories[0].accessoryCategory"                              
+                             "path":"$.tradeLicenseDetail.accessories[*].accessoryCategory"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TRADELICENSE_ACCESSORIESCATEGORY",   
+                           "module":"rainmaker-tl"
                         }
                      },
                      {
@@ -110,18 +118,6 @@
                             "scema":["name","mobileNumber"]
                         } 
                      } 
-                   ]
-                },
-                {
-                   "derived": [
-                      {
-                         "variable": "$variable",
-                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      },
-                      {
-                         "variable": "$variable",
-                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      } 
                    ]
                 },
                 {
@@ -193,38 +189,6 @@
                               "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='TL_ADHOC_REBATE')].amount"
                            }
                         ]  
-                      }
-                   ]
-                },
-                {
-                   "mdmsDenormalization": [
-                      {
-                         "variable": "$variable",
-                         "moduleName": "common-masters",
-                         "masterName": "Department",
-                         "tenantId": "pb",
-                         "filter": "[?(@.code == $department)]",
-                         "filterMapping": [
-                            {
-                               "variable": "$department",
-                               "valueJsonpath": "$.department"
-                            }
-                         ],
-                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
-                      },
-                      {
-                         "variable": "$variable",
-                         "moduleName": "common-masters",
-                         "masterName": "Department",
-                         "tenantId": "pb",
-                         "filter": "[?(@.code == $department)]",
-                         "filterMapping": [
-                            {
-                               "variable": "$department",
-                               "valueJsonpath": "$.department"
-                            }
-                         ],
-                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
                       }
                    ]
                 }

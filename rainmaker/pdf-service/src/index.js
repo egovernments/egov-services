@@ -76,7 +76,6 @@ let borderLayout = {
     let listOfFilestoreIds=[];
     listDocDefinition.forEach(docDefinition =>
     {
-      console.log("filestore ",docDefinition["content"].length);
         const doc = printer.createPdfKitDocument(docDefinition);
         let fileNameAppend="-"+new Date().getTime();
         let filename="src/pdfs/"+key+" "+fileNameAppend+".pdf"
@@ -151,7 +150,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
     let formatObjectArrayObject=[];
     let formatConfigByFile=[];
     let countOfObjectsInCurrentFile=0;
-    let moduleObjectsArray=checkifNullAndSetValue(jp.query(req.body,baseKeyPath),[]);
+    let moduleObjectsArray=checkifNullAndSetValue(jp.query(req.body,baseKeyPath),[],baseKeyPath);
       if(moduleObjectsArray!==[])
       {
         for(var i=0, len=moduleObjectsArray.length; i < len; i++)
@@ -182,8 +181,6 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           countOfObjectsInCurrentFile++;
           if((countOfObjectsInCurrentFile==maxPagesAllowed)||((i+1)==len))
           {
-
-          console.log(formatObjectArrayObject.length+" | "+countOfObjectsInCurrentFile+"  "+maxPagesAllowed,(countOfObjectsInCurrentFile==maxPagesAllowed));
 
             let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
             formatconfigCopy["content"]=formatObjectArrayObject;
@@ -273,6 +270,7 @@ const updateBorderlayout=(formatconfig)=>{
  */
 export const fillValues=(variableTovalueMap,formatconfig)=>{
   let input=JSON.stringify(formatconfig);
+  // console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
   let output=JSON.parse(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\["));
   return output;
 } 
@@ -285,7 +283,7 @@ export const fillValues=(variableTovalueMap,formatconfig)=>{
 */
 const generateQRCodes=async(moduleObject,dataconfig,variableTovalueMap)=>{
 
-    let qrcodeMappings=checkifNullAndSetValue(jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.qrcodeConfig.*"),[]);
+    let qrcodeMappings=checkifNullAndSetValue(jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.qrcodeConfig.*"),[],"$.DataConfigs.mappings.*.mappings.*.qrcodeConfig.*");
 
     for(var i=0, len=qrcodeMappings.length; i < len; i++) 
     {

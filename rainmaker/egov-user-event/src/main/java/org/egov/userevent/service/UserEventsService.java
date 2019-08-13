@@ -49,6 +49,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.websocket.Util;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
@@ -190,7 +191,7 @@ public class UserEventsService {
 			counterEvent.setEventCategory(event.getEventCategory());
 			counterEvent.setEventDetails(event.getEventDetails());
 			counterEvent.setReferenceId(event.getId());
-			counterEvent.setName(event.getName());
+			counterEvent.setName(description);
 			counterEvent.setEventType(event.getEventType());
 			counterEvent.setRecepient(event.getRecepient());
 			counterEvent.setSource(event.getSource());
@@ -367,6 +368,9 @@ public class UserEventsService {
 			if(roles.contains("EMPLOYEE")) {
 				criteria.setIsCitizenSearch(false);
 				criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+				
+/*				if(!utils.doesTheEmployeeHaveAccessToThisTenant(criteria.getTenantId(), requestInfo.getUserInfo()))
+					criteria.setTenantId(requestInfo.getUserInfo().getTenantId());*/
 			}
 		}
 		if (CollectionUtils.isEmpty(criteria.getStatus())) {

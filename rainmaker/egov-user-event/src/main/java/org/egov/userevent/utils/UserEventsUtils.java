@@ -1,9 +1,14 @@
 package org.egov.userevent.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.userevent.model.RecepientEvent;
 import org.egov.userevent.web.contract.Event;
 import org.egov.userevent.web.contract.EventSearchCriteria;
@@ -110,6 +115,23 @@ public class UserEventsUtils {
 			recepientEventList.add(rcpntevent);
 		}
 
+	}
+	
+	
+	/**
+	 * Enhancement for multi-tenancy: Checks if the user trying to search the event has access to search events in that tenant or not.
+	 * 
+	 * @param tenantId
+	 * @param userInfo
+	 * @return
+	 */
+	public Boolean doesTheEmployeeHaveAccessToThisTenant(String tenantId, User userInfo) {
+		List<String> roles = userInfo.getRoles().stream().filter(obj -> obj.getCode().equals(tenantId)).map(Role :: getCode).collect(Collectors.toList());
+		for(String role: roles) {
+			Arrays.asList(UserEventsConstants.VALID_ROLES_FOR_SEARCH).contains(role);
+			return true;
+		}
+		return false;
 	}
 
 }

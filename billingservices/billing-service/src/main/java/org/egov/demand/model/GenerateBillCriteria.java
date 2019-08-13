@@ -39,6 +39,9 @@
  */
 package org.egov.demand.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
@@ -71,5 +74,23 @@ public class GenerateBillCriteria {
 	private String email;
 	
 	private String mobileNumber;
+	
+	public DemandCriteria toDemandCriteria() {
+		
+		Set<String> consumerCodeSet = new HashSet<>();
+		consumerCodeSet.add(consumerCode);
+		
+		Set<String> demandIdSet = new HashSet<>();
+		demandIdSet.add(demandId);
+		
+		return DemandCriteria.builder().businessService(businessService).consumerCode(consumerCodeSet)
+				.tenantId(tenantId).demandId(demandIdSet).email(email).mobileNumber(mobileNumber).build();
+	}
+	
+	public BillSearchCriteria toBillSearchCriteria() {
+
+		return BillSearchCriteria.builder().service(businessService).consumerCode(consumerCode).isOrderBy(true)
+				.mobileNumber(mobileNumber).email(email).tenantId(tenantId).build();
+	}
 
 }

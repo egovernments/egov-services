@@ -38,4 +38,3 @@ CREATE TABLE egbs_glcodemaster
   glcode character varying(64),
   CONSTRAINT pk_egbs_glcodemaster PRIMARY KEY (id, tenantid)
 );
-

@@ -41,24 +41,21 @@ package org.egov.demand.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
-import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.AuditDetails;
 import org.egov.demand.model.Bill;
-import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
-import org.egov.demand.model.CollectedReceipt;
 import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -67,42 +64,34 @@ import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandDue;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
-import org.egov.demand.model.Owner;
-import org.egov.demand.model.enums.Status;
 import org.egov.demand.producer.Producer;
 import org.egov.demand.repository.DemandRepository;
-import org.egov.demand.repository.OwnerRepository;
+import org.egov.demand.repository.ServiceRequestRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
-import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
 import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
-import org.egov.demand.web.contract.ReceiptRequest;
+import org.egov.demand.web.contract.User;
+import org.egov.demand.web.contract.UserResponse;
 import org.egov.demand.web.contract.UserSearchRequest;
 import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class DemandService {
-
-	private static final Logger logger = LoggerFactory.getLogger(DemandService.class);
-
-	@Autowired
-	private OwnerRepository ownerRepository;
-
-	@Autowired
-	private SequenceGenService sequenceGenService;
 
 	@Autowired
 	private DemandRepository demandRepository;
@@ -120,178 +109,230 @@ public class DemandService {
 	private DemandEnrichmentUtil demandEnrichmentUtil;
 	
 	@Autowired
+	private ServiceRequestRepository serviceRequestRepository;
+	
+	@Autowired
+	private ObjectMapper mapper;
+	
+	@Autowired
 	private Producer producer;
 	
+	@Autowired
+	private Util util;
+	
+	/**
+	 * Method to create new demand 
+	 * 
+	 * generates ids and saves to the repositroy
+	 * 
+	 * @param demandRequest
+	 * @return
+	 */
 	public DemandResponse create(DemandRequest demandRequest) {
 
-		logger.info("the demand service : " + demandRequest);
+		log.info("the demand request in create async : {}", demandRequest);
+
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
-		List<DemandDetail> demandDetails = new ArrayList<>();
-		AuditDetail auditDetail = getAuditDetail(demandRequest.getRequestInfo());
+		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
 
-		int currentDemandId = 0;
-		int demandsSize = demands.size();
-		List<String> demandIds = sequenceGenService.getIds(demandsSize, applicationProperties.getDemandSeqName());
+		generateAndSetIdsForNewDemands(demands, auditDetail);
+		save(demandRequest);
+		//producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
+		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
+	}
+
+	/**
+	 * Method to generate and set ids, Audit details to the demand 
+	 * and demand-detail object
+	 * 
+	 * @param demandRequest Demand request from the create/update flow
+	 */
+	private void generateAndSetIdsForNewDemands(List<Demand> demands, AuditDetails auditDetail) {
+
+		/*
+		 * looping demands to set ids and collect demand details in another list
+		 */
+		for (Demand demand : demands) {
+
+			String demandId = UUID.randomUUID().toString();
+			String tenantId = demand.getTenantId();
+			demand.setAuditDetails(auditDetail);
+			demand.setId(demandId);
+
+			for (DemandDetail demandDetail : demand.getDemandDetails()) {
+
+				if (Objects.isNull(demandDetail.getCollectionAmount()))
+					demandDetail.setCollectionAmount(BigDecimal.ZERO);
+				demandDetail.setId(UUID.randomUUID().toString());
+				demandDetail.setAuditDetails(auditDetail);
+				demandDetail.setTenantId(tenantId);
+				demandDetail.setDemandId(demandId);
+			}
+		}
+	}
+
+	
+	/**
+	 * Update method for demand flow 
+	 * 
+	 * updates the existing demands and inserts in case of new
+	 * 
+	 * @param demandRequest demand request object to be updated
+	 * @return
+	 */
+	public DemandResponse updateAsync(DemandRequest demandRequest) {
+
+		log.debug("the demand service : " + demandRequest);
+
+		RequestInfo requestInfo = demandRequest.getRequestInfo();
+		List<Demand> demands = demandRequest.getDemands();
+		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
+
+		List<Demand> newDemands = new ArrayList<>();
 
 		for (Demand demand : demands) {
-			String demandId = demandIds.get(currentDemandId++);
-			demand.setId(demandId);
-			if (demand.getMinimumAmountPayable() == null)
-				demand.setMinimumAmountPayable(BigDecimal.ZERO);
-			demand.setAuditDetail(auditDetail);
-			String tenantId = demand.getTenantId();
-			for (DemandDetail demandDetail : demand.getDemandDetails()) {
-				demandDetail.setDemandId(demandId);
-				demandDetail.setTenantId(tenantId);
-				demandDetail.setAuditDetail(auditDetail);
-				demandDetails.add(demandDetail);
+
+			String demandId = demand.getId();
+
+			if (StringUtils.isEmpty(demandId)) {
+				/*
+				 * If demand id is empty then gen new demand Id
+				 */
+				newDemands.add(demand);
+			} else {
+
+				demand.setAuditDetails(auditDetail);
+				for (DemandDetail detail : demand.getDemandDetails()) {
+
+					if (StringUtils.isEmpty(detail.getId())) {
+						/*
+						 * If id is empty for demand detail treat it as new
+						 */
+						detail.setId(UUID.randomUUID().toString());
+						detail.setCollectionAmount(BigDecimal.ZERO);
+					}
+					detail.setAuditDetails(auditDetail);
+					detail.setDemandId(demandId);
+					detail.setTenantId(demand.getTenantId());
+				}
 			}
 		}
 
-		int demandDetailsSize = demandDetails.size();
-		List<String> demandDetailIds = sequenceGenService.getIds(demandDetailsSize,
-				applicationProperties.getDemandDetailSeqName());
-		int currentDetailId = 0;
-		for (DemandDetail demandDetail : demandDetails) {
-			if (demandDetail.getCollectionAmount() == null)
-				demandDetail.setCollectionAmount(BigDecimal.ZERO);
-			demandDetail.setId(demandDetailIds.get(currentDetailId++));
-		}
-		save(demandRequest);
-		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
+		generateAndSetIdsForNewDemands(newDemands, auditDetail);
+
+		update(demandRequest);
+		//producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
-	
-	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest, Status status)
-	{
-	    BillRequest billRequest=new BillRequest();
-	    if(receiptRequest !=null && receiptRequest.getReceipt() !=null && !receiptRequest.getReceipt().isEmpty()){
-	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
-	    List<Bill> bills=receiptRequest.getReceipt().get(0).getBill();
-	    for(Bill bill:bills){
-	    	for(BillDetail billDetail: bill.getBillDetails())
-	    		billDetail.setStatus(status);
-	    }
-	    billRequest.setBills(bills);
-	    }
-	    return updateDemandFromBill(billRequest, false);
-	    
-	    
-	}
-	
-	
-	public DemandResponse updateDemandFromBill(BillRequest billRequest, Boolean isReceiptCancellation) {
-	    
-		log.info("THE recieved bill request object------"+billRequest);
-	    if(billRequest !=null && billRequest.getBills()!=null){
 
-		List<Bill> bills = billRequest.getBills();
-		RequestInfo requestInfo = billRequest.getRequestInfo();
-		String tenantId = bills.get(0).getTenantId();
-		Set<String> consumerCodes = new HashSet<>();
-		for (Bill bill : bills) {
-			for (BillDetail billDetail : bill.getBillDetails())
-				consumerCodes.add(billDetail.getConsumerCode());
-		}
-		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).receiptRequired(false).tenantId(tenantId).build();
-		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
-		log.info("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
-		Map<String, Demand> demandIdMap = demands.stream()
-				.collect(Collectors.toMap(Demand::getId, Function.identity()));
-		Map<String, List<Demand>> demandListMap = new HashMap<>();
-		for (Demand demand : demands) {
 
-			if (demandListMap.get(demand.getConsumerCode()) == null) {
-				List<Demand> demands2 = new ArrayList<>();
-				demands2.add(demand);
-				demandListMap.put(demand.getConsumerCode(), demands2);
-			} else
-				demandListMap.get(demand.getConsumerCode()).add(demand);
-		}
+	/**
+	 * Search method to fetch demands from DB
+	 * 
+	 * @param demandCriteria
+	 * @param requestInfo
+	 * @return
+	 */
+	public List<Demand> getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
+		
+		UserSearchRequest userSearchRequest = null;
+		List<User> payers = null;
+		List<Demand> demands = null;
+		
+		String userUri = applicationProperties.getUserServiceHostName()
+				.concat(applicationProperties.getUserServiceSearchPath());
+		
+		/*
+		 * user type is CITIZEN by default because only citizen can have demand or payer can be null
+		 */
+		String citizenTenantId = demandCriteria.getTenantId().split("\\.")[0];
+		
+		/*
+		 * If payer related data is provided first then user search has to be made first followed by demand search
+		 */
+		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
+			
+			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
+					.tenantId(citizenTenantId).emailId(demandCriteria.getEmail())
+					.mobileNumber(demandCriteria.getMobileNumber()).build();
+			
+			payers = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest), UserResponse.class).getUser();
+			
+			if(CollectionUtils.isEmpty(payers))
+				return new ArrayList<>();
+			
+			Set<String> ownerIds = payers.stream().map(User::getUuid).collect(Collectors.toSet());
+			demandCriteria.setPayer(ownerIds);
+			demands = demandRepository.getDemands(demandCriteria);
+			
+		} else {
+			
+			/*
+			 * If no payer related data given then search demand first then enrich payer(user) data
+			 */
+			demands = demandRepository.getDemands(demandCriteria);
+			if (!demands.isEmpty()) {
 
-		for (Bill bill : bills) {
-			for (BillDetail billDetail : bill.getBillDetails()) {
+				Set<String> payerUuids = demands.stream().filter(demand -> null != demand.getPayer())
+						.map(demand -> demand.getPayer().getUuid()).collect(Collectors.toSet());
 
-				List<Demand> demands2 = demandListMap.get(billDetail.getConsumerCode());
-				Map<String, List<DemandDetail>> detailsMap = new HashMap<>();
-				for (Demand demand : demands2) {
-					for (DemandDetail demandDetail : demand.getDemandDetails()) {
-						if (detailsMap.get(demandDetail.getTaxHeadMasterCode()) == null) {
-							List<DemandDetail> demandDetails = new ArrayList<>();
-							demandDetails.add(demandDetail);
-							detailsMap.put(demandDetail.getTaxHeadMasterCode(), demandDetails);
-						} else
-							detailsMap.get(demandDetail.getTaxHeadMasterCode()).add(demandDetail);
-					}
+				if (!CollectionUtils.isEmpty(payerUuids)) {
+
+					userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).uuid(payerUuids).build();
+
+					payers = mapper.convertValue(serviceRequestRepository.fetchResult(userUri, userSearchRequest),
+							UserResponse.class).getUser();
 				}
-					for (BillAccountDetail accountDetail : billDetail.getBillAccountDetails()) {
-
-						if (accountDetail.getAccountDescription() != null && accountDetail.getCreditAmount() != null) {
-							String[] array = accountDetail.getAccountDescription().split("-");
-							log.info("the string array of values--------" + array.toString());
-
-							List<String> accDescription = Arrays.asList(array);
-							String taxHeadCode = accDescription.get(0);
-							Long fromDate = Long.valueOf(accDescription.get(1));
-							Long toDate = Long.valueOf(accDescription.get(2));
-
-							for (DemandDetail demandDetail : detailsMap.get(taxHeadCode)) {
-								log.info("the current demand detail : " + demandDetail);
-								Demand demand = demandIdMap.get(demandDetail.getDemandId());
-								log.info("the respective deman" + demand);
-
-								if (fromDate.equals(demand.getTaxPeriodFrom())
-										&& toDate.equals(demand.getTaxPeriodTo())) {
-
-									BigDecimal collectedAmount = accountDetail.getCreditAmount();
-									log.info("the credit amt :" + collectedAmount);
-									//demandDetail.setTaxAmount(demandDetail.getTaxAmount().subtract(collectedAmount));
-									/*
-									 * If receipt cancellation is true, it will subtract the creditAmount from the collectionAmount
-									 */
-									if(isReceiptCancellation) {
-										demandDetail.setCollectionAmount(
-												demandDetail.getCollectionAmount().subtract(collectedAmount));
-									}else {
-										demandDetail.setCollectionAmount(
-												demandDetail.getCollectionAmount().add(collectedAmount));
-									}
-									log.info("the setTaxAmount ::: " + demandDetail.getTaxAmount());
-									log.info("the setCollectionAmount ::: " + demandDetail.getCollectionAmount());
-								}
-							}
-						}
-					}
-				}
+			}
 		}
 		
-		demandRepository.update(new DemandRequest(requestInfo,demands));
-	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
-                kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandResponse);
-                
-                kafkaTemplate.send(applicationProperties.getSaveCollectedReceipts(), billRequest);
-                
-		return demandResponse;
-	    }
-            return null;
-	}
-	
-	public void saveCollectedReceipts(BillRequest billRequest){
-		List<BillDetail> billDetails=new ArrayList<>();
-		for(Bill bill:billRequest.getBills()){
-			for(BillDetail detail:bill.getBillDetails())
-				billDetails.add(detail);
-		}
-		demandRepository.saveCollectedReceipts(billDetails,billRequest.getRequestInfo());
+		if (!CollectionUtils.isEmpty(demands) && !CollectionUtils.isEmpty(payers))
+			demands = demandEnrichmentUtil.enrichPayer(demands, payers);
+
+		return demands;
 	}
 
+	public void save(DemandRequest demandRequest) {
+		demandRepository.save(demandRequest);
+	}
+
+	public void update(DemandRequest demandRequest) {
+		demandRepository.update(demandRequest);
+	}
+	
+	/*
+	 * 
+	 * 
+	 * @deprecated methods
+	 * 
+	 * 
+	 * 
+	 */
+	
+	@Deprecated
+	public void saveCollectedReceipts(BillRequest billRequest) {
+		List<BillDetail> billDetails = new ArrayList<>();
+		for (Bill bill : billRequest.getBills()) {
+			for (BillDetail detail : bill.getBillDetails())
+				billDetails.add(detail);
+		}
+		demandRepository.saveCollectedReceipts(billDetails, billRequest.getRequestInfo());
+	}
+	
+	/**
+	 * Method to update only the collection amount in a demand
+	 * 
+	 * @param demandRequest
+	 * @return
+	 */
+	@Deprecated
 	public DemandResponse updateCollection(DemandRequest demandRequest) {
 
 		log.debug("the demand service : " + demandRequest);
 		RequestInfo requestInfo = demandRequest.getRequestInfo();
 		List<Demand> demands = demandRequest.getDemands();
-		AuditDetail auditDetail = getAuditDetail(requestInfo);
+		AuditDetails auditDetail = util.getAuditDetail(requestInfo);
 
 		Map<String, Demand> demandMap = demands.stream().collect(Collectors.toMap(Demand::getId, Function.identity()));
 		Map<String, DemandDetail> demandDetailMap = new HashMap<>();
@@ -301,11 +342,11 @@ public class DemandService {
 		}
 		DemandCriteria demandCriteria = DemandCriteria.builder().demandId(demandMap.keySet())
 				.tenantId(demands.get(0).getTenantId()).build();
-		List<Demand> existingDemands = demandRepository.getDemands(demandCriteria, null);
+		List<Demand> existingDemands = demandRepository.getDemands(demandCriteria);
 		 
 		for (Demand demand : existingDemands) {
 
-			AuditDetail demandAuditDetail = demand.getAuditDetail();
+			AuditDetails demandAuditDetail = demand.getAuditDetails();
 			demandAuditDetail.setLastModifiedBy(auditDetail.getLastModifiedBy());
 			demandAuditDetail.setLastModifiedTime(auditDetail.getLastModifiedTime());
 
@@ -317,7 +358,7 @@ public class DemandService {
 				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(demandDetail2.getCollectionAmount()));
 				}
 				
-				AuditDetail demandDetailAudit = demandDetail.getAuditDetail();
+				AuditDetails demandDetailAudit = demandDetail.getAuditDetails();
 				demandDetailAudit.setLastModifiedBy(auditDetail.getLastModifiedBy());
 				demandDetailAudit.setLastModifiedTime(auditDetail.getLastModifiedTime());
 			}
@@ -328,111 +369,21 @@ public class DemandService {
 				existingDemands);
 	}
 	
-	public DemandResponse updateAsync(DemandRequest demandRequest) {
-
-		log.debug("the demand service : " + demandRequest);
-		RequestInfo requestInfo = demandRequest.getRequestInfo();
-		List<Demand> demands = demandRequest.getDemands();
-		AuditDetail auditDetail = getAuditDetail(requestInfo);
-
-		List<Demand> newDemands = new ArrayList<>();
-		List<DemandDetail> newDemandDetails = new ArrayList<>();
-
-		for (Demand demand : demands) {
-			if (demand.getId() == null) {
-				String demandId = sequenceGenService.getIds(1, applicationProperties.getDemandSeqName()).get(0);
-				demand.setId(demandId);
-				demand.setAuditDetail(auditDetail);
-				newDemands.add(demand);
-				for (DemandDetail demandDetail : demand.getDemandDetails()) {
-					demandDetail.setDemandId(demandId);
-					demandDetail.setAuditDetail(auditDetail);
-					newDemandDetails.add(demandDetail);
-				}
-			} else {
-				AuditDetail auditDetailUpdate = demand.getAuditDetail();
-				auditDetailUpdate.setLastModifiedBy(auditDetail.getLastModifiedBy());
-				auditDetailUpdate.setLastModifiedTime(auditDetail.getLastModifiedTime());
-				for (DemandDetail demandDetail : demand.getDemandDetails()) {
-					if (demandDetail.getId() == null) {
-						demandDetail.setDemandId(demand.getId());
-						demandDetail.setAuditDetail(auditDetail);
-						newDemandDetails.add(demandDetail);
-					} else {
-						AuditDetail demandDetailAudit = demandDetail.getAuditDetail();
-						demandDetailAudit.setLastModifiedBy(auditDetail.getLastModifiedBy());
-						demandDetailAudit.setLastModifiedTime(auditDetail.getLastModifiedTime());
-					}
-				}
-			}
-		}
-		int demandSetailSize = newDemandDetails.size();
-		List<String> DemandDetailsId = sequenceGenService.getIds(demandSetailSize,
-				applicationProperties.getDemandDetailSeqName());
-		int i = 0;
-		for (DemandDetail demandDetail : newDemandDetails) {
-			demandDetail.setId(DemandDetailsId.get(i++));
-		}
-		update(demandRequest);
-		producer.push(applicationProperties.getDemandIndexTopic(), demandRequest);
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
-	}
-
-	public DemandResponse getDemands(DemandCriteria demandCriteria, RequestInfo requestInfo) {
-		
-		UserSearchRequest userSearchRequest = null;
-		List<Owner> owners = null;
-		List<Demand> demands = null;
-		List<CollectedReceipt> receipts=null;
-		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
-			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
-					.mobileNumber(demandCriteria.getMobileNumber()).pageSize(500).userType("CITIZEN").build();
-			// TODO GET PAGE SIZE VALUE FROM CONFIG DONT HARD CODE
-			owners = ownerRepository.getOwners(userSearchRequest);
-			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
-			demands = demandRepository.getDemands(demandCriteria, ownerIds);
-			demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
-		} else {
-			demands = demandRepository.getDemands(demandCriteria, null);
-			if (!demands.isEmpty()) {
-				demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
-				List<Long> ownerIds = new ArrayList<>(demands.stream().filter(demand -> null != demand.getOwner().getId())
-						.map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
-
-				if (!CollectionUtils.isEmpty(ownerIds)) {
-
-					userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
-							.tenantId(demandCriteria.getTenantId()).id(ownerIds).userType("CITIZEN").pageSize(500)
-							.build();
-					owners = ownerRepository.getOwners(userSearchRequest);
-				}
-			}
-		}
-		if (!CollectionUtils.isEmpty(demands) && !CollectionUtils.isEmpty(owners))
-			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
-		for (Demand demand : demands) {
-			demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
-		}
-		if (demandCriteria.getReceiptRequired())
-			receipts = demandRepository.getCollectedReceipts(demandCriteria);
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands, receipts);
-	}
-
+	@Deprecated
+	/**
+	 * Method to search only demand details
+	 * 
+	 * @param demandDetailCriteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public DemandDetailResponse getDemandDetails(DemandDetailCriteria demandDetailCriteria, RequestInfo requestInfo) {
 
 		return new DemandDetailResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),
 				demandRepository.getDemandDetails(demandDetailCriteria));
 	}
-
-	public void save(DemandRequest demandRequest) {
-		demandRepository.save(demandRequest);
-	}
-
-	public void update(DemandRequest demandRequest) {
-		demandRepository.update(demandRequest);
-	}
 	
+	@Deprecated
 	//Demand update consumer code (update mis)
 	public DemandResponse updateMISAsync(DemandUpdateMisRequest demandRequest) {
 
@@ -441,11 +392,13 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(new RequestInfo(), HttpStatus.CREATED), null);
 	}
 	
+	@Deprecated
 	//update mis update method calling from kafka
 	public void updateMIS(DemandUpdateMisRequest demandRequest){
 		demandRepository.updateMIS(demandRequest);
 	}
 	
+	@Deprecated
 	public DemandDueResponse getDues(DemandDueCriteria demandDueCriteria, RequestInfo requestInfo) {
 		
 		Long currDate = new Date().getTime();
@@ -458,7 +411,7 @@ public class DemandService {
 				.businessService(demandDueCriteria.getBusinessService())
 				.consumerCode(demandDueCriteria.getConsumerCode()).receiptRequired(false).build();
 		
-		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		List<Demand> demands = getDemands(demandCriteria, requestInfo);
 		for (Demand demand : demands) {
 			if (demand.getTaxPeriodFrom() <= currDate && currDate <= demand.getTaxPeriodTo()) {
 				for (DemandDetail detail : demand.getDemandDetails()) {
@@ -481,17 +434,5 @@ public class DemandService {
 		return new DemandDueResponse(responseInfoFactory.getResponseInfo(new RequestInfo(), HttpStatus.OK), due);
 	}
 	
-	private AuditDetail getAuditDetail(RequestInfo requestInfo) {
-
-		String userId = requestInfo.getUserInfo().getId().toString();
-		Long currEpochDate = new Date().getTime();
-
-		AuditDetail auditDetail = new AuditDetail();
-		auditDetail.setCreatedBy(userId);
-		auditDetail.setCreatedTime(currEpochDate);
-		auditDetail.setLastModifiedBy(userId);
-		auditDetail.setLastModifiedTime(currEpochDate);
-		return auditDetail;
-	}
 	
 }

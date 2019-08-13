@@ -5,6 +5,8 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
@@ -140,6 +142,13 @@ public class PaymentNotificationService {
             events.addAll(eventsForAProperty);
     	}
     	if(!CollectionUtils.isEmpty(events)) {
+    		Role role = new Role();
+    		List<Role> roles = new ArrayList<>(); roles.add(role);
+            User user = User.builder()
+            		.tenantId("tenantId")
+            		.uuid("uuid")
+            		.roles(roles).build();
+            requestInfo.setUserInfo(user);
         	EventRequest eventRequest = EventRequest.builder().requestInfo(requestInfo).events(events).build();
         	notificationService.sendEventNotification(eventRequest);
     	}

@@ -179,6 +179,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           formatObjectArrayObject.push(formatObject["content"]);
           //putting formatconfig in a file to check docdefinition on pdfmake playground online
           countOfObjectsInCurrentFile++;
+          console.log(countOfObjectsInCurrentFile+"  "+maxPagesAllowed,(countOfObjectsInCurrentFile==maxPagesAllowed));
           if((countOfObjectsInCurrentFile==maxPagesAllowed)||((i+1)==len))
           {
             let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));

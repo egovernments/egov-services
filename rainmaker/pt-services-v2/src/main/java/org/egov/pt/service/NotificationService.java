@@ -347,7 +347,6 @@ public class NotificationService {
      * @param request
      */
     public void sendEventNotification(EventRequest request) {
-    	log.info("Sending-EventNotif: "+request);
         producer.push(propertyConfiguration.getSaveUserEventsTopic(), request);
     }
     
@@ -363,7 +362,6 @@ public class NotificationService {
             if (CollectionUtils.isEmpty(smsRequestList))
                 log.info("Messages from localization couldn't be fetched!");
             for(SMSRequest smsRequest: smsRequestList) {
-            	log.info("Sending-SMS: "+smsRequest);
                 producer.push(propertyConfiguration.getSmsNotifTopic(), smsRequest);
             }
         }

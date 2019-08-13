@@ -235,10 +235,12 @@ public class ReceiptService {
 	private void updateDetailsForPayment(List<DemandDetail> demandDetails, BigDecimal amountPaid) {
 
 		for (DemandDetail detail : demandDetails) {
-
+			
 			if (amountPaid.compareTo(BigDecimal.ZERO) == 0)
 				return;
 
+			if(detail.getTaxAmount().compareTo(detail.getCollectionAmount()) == 0 || detail.getTaxAmount().compareTo(BigDecimal.ZERO) == 0)
+				continue;
 			/*
 			 * amount to be set in collectionAmount field of demandDetail after adjustments
 			 */

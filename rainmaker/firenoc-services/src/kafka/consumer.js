@@ -18,9 +18,9 @@ const consumer = new Consumer(
   client,
   [
     // { topic: "egov.collection.receipt-create", offset: 0 },
-    { topic: "save-fn-firenoc", offset: 0 },
-    { topic: "update-fn-firenoc", offset: 0 },
-    { topic: "update-fn-workflow", offset: 0 }
+    { topic: "save-fn-firenoc", offset: 0,time: Date.now(),maxNum: 1 },
+    { topic: "update-fn-firenoc", offset: 0,time: Date.now(),maxNum: 1 },
+    { topic: "update-fn-workflow", offset: 0,time: Date.now(),maxNum: 1 }
   ],
   {
     autoCommit: false

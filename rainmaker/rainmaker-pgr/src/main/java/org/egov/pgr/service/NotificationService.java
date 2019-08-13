@@ -128,12 +128,12 @@ public class NotificationService {
 		} catch (Exception e) {
 			log.error("Exception: ", e);
 		}
-		log.info("employeeDetails: "+employeeDetails);
 		return employeeDetails;
 	}
 
 	/**
-	 * An employee might belong to different departments, This method fetches all his departments and returns only that department to which is current assigned complaint belongs to.
+	 * An employee might belong to different departments, 
+	 * This method fetches all his departments and returns only that department to which the currently assigned complaint belongs to.
 	 *  
 	 * @param serviceReq
 	 * @param codes
@@ -182,6 +182,7 @@ public class NotificationService {
 		List<String> designations = null;
 		try {
 			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+			log.info("Desg search: "+result);
 			designations = JsonPath.read(result, PGRConstants.JSONPATH_DESIGNATIONS);
 			if (null == designations || designations.isEmpty())
 				return null;
@@ -233,8 +234,9 @@ public class NotificationService {
 	 * @param role
 	 * @return
 	 */
-	public String getPhoneNumberForNotificationService(RequestInfo requestInfo, String userId, String tenantId, String assignee, String role) {
+	public String getMobileAndIdForNotificationService(RequestInfo requestInfo, String userId, String tenantId, String assignee, String role) {
 		String phoneNumber = null;
+		String uuid = "uuid";
 		Object response = null;
 		ObjectMapper mapper = pGRUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
@@ -246,18 +248,19 @@ public class NotificationService {
 				if(null != response) {
 					UserResponse res = mapper.convertValue(response, UserResponse.class);
 					phoneNumber = res.getUser().get(0).getMobileNumber();
+					uuid = res.getUser().get(0).getUuid();
 				}
 			}catch(Exception e) {
 				log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 			}
-			return phoneNumber;
+			return phoneNumber + "|" + uuid;
 		}else if(role.equals(PGRConstants.ROLE_EMPLOYEE)) {
 			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
 			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
 				phoneNumber = employeeDetails.get("phone");
 			}
 		}
-		return phoneNumber;
+		return phoneNumber + "|" + uuid;
 	}
 	
 	/**
@@ -271,37 +274,17 @@ public class NotificationService {
 		ServiceReqSearchCriteria serviceReqSearchCriteria = ServiceReqSearchCriteria.builder().tenantId(serviceReq.getTenantId())
 				.serviceRequestId(Arrays.asList(serviceReq.getServiceRequestId())).build();
 		ServiceResponse response = (ServiceResponse) requestService.getServiceRequestDetails(requestInfo, serviceReqSearchCriteria);
-		List<ActionInfo> actions = response.getActionHistory().get(0).getActions().parallelStream()
-				.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
-		if(CollectionUtils.isEmpty(actions)) {
+		try {
+			List<ActionInfo> actions = response.getActionHistory().get(0).getActions().stream()
+					.filter(obj -> !StringUtils.isEmpty(obj.getAssignee())).collect(Collectors.toList());
+			if(CollectionUtils.isEmpty(actions))
+				return null;
+			return actions.get(0).getAssignee();
+		}catch(Exception e) {
 			return null;
 		}
-		return actions.get(0).getAssignee();
+
 	}
-	
-/*	public Map<String, Long> getSlaHours(RequestInfo requestInfo, String tenantId) {
-		StringBuilder uri = new StringBuilder();
-		MdmsCriteriaReq request = pGRUtils.prepareServiceDefSearchMdmsRequest(uri, tenantId, requestInfo);
-		Map<String, Long> mapOfServiceCodesAndSLA = new HashMap<>();
-		try {
-			Object response = serviceRequestRepository.fetchResult(uri, request);
-			if(null != response) {
-				List<String> serviceCodes = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.serviceCode");
-				List<Integer> slaHours = JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs.*.slaHours");
-				for(int i = 0; i < serviceCodes.size(); i++) {
-					Long epoch = pGRUtils.convertToMilliSec(slaHours.get(i));
-					mapOfServiceCodesAndSLA.put(serviceCodes.get(i), epoch);
-				}
-			}
-		}catch(Exception e) {
-			log.error("Exception while fetching service codes and respective sla: ",e);
-		}
-		if(CollectionUtils.isEmpty(mapOfServiceCodesAndSLA.keySet())) {
-			log.info("Returning default sla: "+egovDefaultServiceSla);
-			mapOfServiceCodesAndSLA.put("default", egovDefaultServiceSla);
-		}
-		return mapOfServiceCodesAndSLA;
-	}*/
 	
 	public Long getSlaHours() {
 		log.info("Returning default sla: "+egovDefaultServiceSla);

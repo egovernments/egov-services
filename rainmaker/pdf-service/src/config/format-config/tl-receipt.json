@@ -212,20 +212,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": 119.46719999999999,
-              "_minWidth": 55.1025390625,
-              "_maxWidth": 55.1025390625,
-              "_calcWidth": 119.46719999999999
-            },
-            {
-              "width": 378.3128,
-              "_minWidth": 43.369140625,
-              "_maxWidth": 77.4560546875,
-              "_calcWidth": 378.3128
-            }
-          ],
+          "widths": ["24%", "76%"],
           "body": [
             [
               {
@@ -280,32 +267,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 66.630859375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 101.0302734375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            }
-          ],
+          "widths": ["*", "*", "*", "*"],
           "body": [
             [
               {
@@ -398,34 +360,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths":[
-            
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 66.630859375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 101.0302734375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            }
-          
-        ],
+          "widths":["*", "*", "*", "*"],
           "body": ["{{#variable13}}[{\"text\":\"Owner Name\",\"border\":[true,true,false,true],\"style\":\"receipt-table-key\"},{\"text\":\"{{name}}","border\":[false,true,true,true]},{\"text\":\"Mobile No.\",\"border\":[true,true,false,true],\"style\":\"receipt-table-key\"},{\"text\":\"{{mobileNumber}}\",\"border\":[false,true,true,true]}]{{/variable13}}"]
         },
         "layout": {}
@@ -437,44 +372,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": "*",
-              "_minWidth": 34.6533203125,
-              "_maxWidth": 81.298828125,
-              "_calcWidth": 77.29666666666667
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.4130859375,
-              "_maxWidth": 33.4130859375,
-              "_calcWidth": 77.29666666666667
-            },
-            {
-              "width": "*",
-              "_minWidth": 31.337890625,
-              "_maxWidth": 31.337890625,
-              "_calcWidth": 77.29666666666667
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.4130859375,
-              "_maxWidth": 64.6826171875,
-              "_calcWidth": 77.29666666666667
-            },
-            {
-              "width": "*",
-              "_minWidth": 31.337890625,
-              "_maxWidth": 62.607421875,
-              "_calcWidth": 77.29666666666667
-            },
-            {
-              "width": "*",
-              "_minWidth": 22.4609375,
-              "_maxWidth": 22.4609375,
-              "_calcWidth": 77.29666666666667
-            }
-          ],
+          "widths": ["*", "*", "*", "*", "*", "*"],
           "body": [
             [
               {
@@ -659,32 +557,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 66.630859375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 101.0302734375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            }
-          ],
+          "widths": ["*", "*", "*", "*"],
           "body": [
             [
               {
@@ -733,26 +606,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": "*",
-              "_minWidth": 39.4970703125,
-              "_maxWidth": 67.4462890625,
-              "_calcWidth": 163.09333333333333
-            },
-            {
-              "width": "*",
-              "_minWidth": 124.8291015625,
-              "_maxWidth": 142.958984375,
-              "_calcWidth": 163.09333333333333
-            },
-            {
-              "width": "*",
-              "_minWidth": 31.435546875,
-              "_maxWidth": 94.375,
-              "_calcWidth": 163.09333333333333
-            }
-          ],
+          "widths": ["*", "*", "*"],
           "body": [
             [
               {
@@ -849,32 +703,7 @@
       {
         "style": "pt-reciept-citizen-table",
         "table": {
-          "widths": [
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 66.630859375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 33.7158203125,
-              "_maxWidth": 101.0302734375,
-              "_calcWidth": 120.195
-            },
-            {
-              "width": "*",
-              "_minWidth": 13.740234375,
-              "_maxWidth": 13.740234375,
-              "_calcWidth": 120.195
-            }
-          ],
+          "widths": ["*", "*", "*", "*"],
           "body": [
             [
               {

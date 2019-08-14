@@ -134,6 +134,63 @@ paths:
                   https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Users
+  /_delete:
+    post:
+      summary: Delete user API
+      description: >
+        The API will delete the user based on the given uuid
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDeleteResponse'
+        '400':
+          description: Failed to delete the user
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDeleteRequest'
+        description: Request header for the user to be deleted.
+        required: true
+  /_cancel:
+    post:
+      summary: Deactivates the user
+      description: >
+        This API will deactivate the user in the system based on the given uuid
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User deactivated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDeleteResponse'
+        '400':
+          description: Failed to deactivate the user
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDeleteRequest'
+        description: Request header for the user to be deactivated.
+        required: true
+      
   /password/_update:
     post:
       summary: The user can update his password after login
@@ -191,6 +248,91 @@ paths:
               $ref: '#/components/schemas/resetpasswordreq'
         description: Request header for the user with new of values.
         required: true
+  /_logout:
+    post:
+      summary: Logout a user based on access token auth
+      description: Logout a user based on access token auth
+      parameters:
+        - name: tenantId
+          in: query
+          required: true
+          description: The tenantId of the user
+          schema:
+            type: string
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User logged out successfully.
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        '400':
+          description: Logout Failed.
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        description: Request for logout using access token
+        required: true
+  /oauth/token:
+    post:
+      summary: >-
+        Login a user based on username and password auth and return oAuth
+        tokens.
+      description: >-
+        Login a user based on username and password auth and return oAuth
+        tokens.
+      parameters:
+        - name: tenantId
+          in: query
+          required: true
+          description: The tenantId of the user
+          schema:
+            type: string
+        - name: userName
+          in: query
+          required: true
+          description: The unique user name of the User.
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 64
+        - name: password
+          in: query
+          required: true
+          description: The password of the user name to login to the system.
+          schema:
+            type: string
+            format: password
+            minLength: 0
+            maxLength: 64
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User logged in.
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Could not login - Invalid Credentials.
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      
 servers:
   - url: /users/v110
 components:
@@ -568,3 +710,47 @@ components:
           maximum: 500
           items:
             $ref: '#/components/schemas/User'
+    
+    UserDeleteRequest:
+      type: object
+      properties:
+        RequestInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        uuid:
+          type: string
+          description: Unique identifier of the user
+          
+    UserDeleteResponse:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        uuid:
+          type: string
+          description: Unique identifier of the user
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: string
+        scope:
+          type: string
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        User:
+          $ref: '#/components/schemas/User'
+      required:
+        - accessToken
+        - tokenType
+        - refreshToken
+        - expiresIn
+        - scope          

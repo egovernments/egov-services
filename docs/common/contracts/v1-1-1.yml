@@ -345,6 +345,9 @@ components:
           minLength: 2
         locality:
           $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v11-0-0.yml#/definitions/Boundary
+      required: 
+        - tenantId
+        - locality
     AuditDetails:
       type: object
       description: Collection of audit related fields used by most models

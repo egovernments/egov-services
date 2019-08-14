@@ -142,7 +142,7 @@
                            },                           
                            {
                               "variable":"variable18",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].totalAmount"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='TL_TAX')].amount"
                            },
                            {
                               "variable":"variable19",
@@ -150,11 +150,11 @@
                            },
                            {
                               "variable":"variable20",
-                              "value":"xx"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
                            },
                            {
                               "variable":"variable21",
-                              "value":"$.Receipt[0].instrument.transactionType"
+                              "value":"$.Receipt[0].instrument.instrumentType.name"
                            },
                            {
                               "variable":"variable22",

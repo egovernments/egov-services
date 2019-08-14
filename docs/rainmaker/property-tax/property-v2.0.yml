@@ -15,8 +15,8 @@ x-common-path: >-
 paths:
   /property/_create:
     post:
-      summary: Create new property.
-      description: API to create new property.
+      summary: Creates new property.
+      description: Creates new property with basic information related to land and owner. Can be integrated with other modules like Water and Sewerage or Trade License to act as base entity against which water connection or trade license can be issued
       x-roles: PT_CEMP,CITIZEN
       responses:
         '201':
@@ -44,7 +44,7 @@ paths:
   /property/_update:
     post:
       summary: Update existing property.
-      description: Updates a given `Property` with newer details.
+      description: Updates a given `Property` with newer details. 
       x-roles: PT_CEMP,CITIZEN
       tags:
         - Property
@@ -636,7 +636,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PropertyInfo'
         - type: object
-          description: A Object holds the basic data for a property
+          description: Property object which will contain the most basic elements like address, landArea etc. 
           properties:
             acknowldgementNumber:
               type: string
@@ -729,8 +729,7 @@ components:
 
     Building:
       description: >-
-        Financial year wise construction details will be capture here. For each
-        financial year construction details may change.
+        Construction/Building details are captured here. Detail information of the building including floor wise usage and area are saved as seperate units .For each financial year construction details may change. Building object is required for tax calculation
       type: object
       properties:
         financialYear:
@@ -1156,7 +1155,7 @@ components:
           
     Assessment:
       type: object
-      description: Contains the assessment details of a building
+      description: Contains the assessment details of a building. Assessment refers to the calculation of  property tax for the given building number and financial year
       properties:
         tenantId:
           type: string

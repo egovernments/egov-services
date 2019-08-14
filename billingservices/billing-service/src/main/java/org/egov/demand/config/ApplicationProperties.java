@@ -40,6 +40,8 @@
 
 package org.egov.demand.config;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -64,12 +66,6 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.updateMIS.demand}")
 	private String updateMISTopicName;
 	
-	@Value("${egov.services.user_service.hostname}")
-	private String userServiceHostName;
-
-	@Value("${egov.services.user_service.searchpath}")
-	private String userServiceSearchPath;
-
 	private static final String SEARCH_PAGESIZE_DEFAULT = "search.pagesize.default";
 
 	@Autowired
@@ -188,6 +184,31 @@ public class ApplicationProperties {
 	@Value("${kafka.topics.demand.index.name}")
 	private String demandIndexTopic;
 	
+	
+	/*
+	 * billing service v1.1
+	 */
+	
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
+
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsEndpoint;
+    
+	@Value("${user.service.hostname}")
+	private String userServiceHostName;
+
+	@Value("${user.service.searchpath}")
+	private String userServiceSearchPath;
+
+	@Value("${bs.demand.audit.seq.name}")
+	private String demandAuditSeqName;
+
+	@Value("${bs.demanddetail.audit.seq.name}")
+	private String demandDetailAuditSeqName;
+	
+	@Value("#{${bs.businesscode.demand.updateurl}}")
+	private Map<String, String> businessCodeAndDemandUpdateUrlMap;
 	
 	public String commonsSearchPageSizeDefault() {
 		return environment.getProperty(SEARCH_PAGESIZE_DEFAULT);

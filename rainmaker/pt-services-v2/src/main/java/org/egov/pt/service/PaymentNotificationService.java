@@ -186,7 +186,7 @@ public class PaymentNotificationService {
             tenantId = documentContext.read("$.Transaction.tenantId");
             valMap.put("tenantId",tenantId);
 
-            moduleId = documentContext.read("$.Transaction.moduleId");
+            moduleId = documentContext.read("$.Transaction.consumerCode");
             valMap.put("moduleId",moduleId);
             valMap.put("propertyId",moduleId.split(":")[0]);
             valMap.put("assessmentNumber",moduleId.split(":")[1]);
@@ -194,7 +194,7 @@ public class PaymentNotificationService {
             mobileNumber = documentContext.read("$.Transaction.user.mobileNumber");
             valMap.put("mobileNumber",mobileNumber);
 
-            module = documentContext.read("$.Transaction.module");
+            module = documentContext.read("$.Transaction.taxAndPayments[0].businessService");
             valMap.put("module",module);
         }
         catch (Exception e)

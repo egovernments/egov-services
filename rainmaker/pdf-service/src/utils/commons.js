@@ -3,7 +3,6 @@ import logger from "../config/logger";
 import envVariables from "../EnvironmentVariables";
 
 let egovLocHost=envVariables.EGOV_LOCALISATION_HOST;
-let localisationEndpoint=envVariables.EGOV_LOCALISATION_SERVICE_ENDPOINT;
 export const getTransformedLocale = label => {
     return label.toUpperCase().replace(/[.:-\s\/]/g, "_");
   };
@@ -37,7 +36,7 @@ export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,prefix
 
     if(!localisationModuleList.includes(moduleName)){
       var res = await httpRequest(
-          `${egovLocHost}${localisationEndpoint}?locale=en_IN&tenantId=pb&module=${moduleName}`,
+          `${egovLocHost}/localization/messages/v1/_search?locale=en_IN&tenantId=pb&module=${moduleName}`,
           {"RequestInfo":requestInfo}
           ); 
       res.messages.map(

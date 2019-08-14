@@ -16,7 +16,23 @@
                         "value": {
                              "path":"$.propertyDetails[0].financialYear"                              
                         }
-                     },                      
+                     },        
+                     {
+                        "variable": "variable35",
+                        "value": {
+                             "path":"$.tenantId"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TENANT_TENANTS",   
+                           "module":"rainmaker-common"
+                        },
+                        "isUpperCaseRequired":true 
+                     },  
+                     {
+                        "variable": "variable36", 
+                        "type":"citizen-employee-title"
+                     },            
                      {
                         "variable":"variable2",
                         "value":{
@@ -68,7 +84,12 @@
                      {
                        "variable": "variable10",
                        "value":{
-                            "path":"$.propertyDetails[0].propertyType"                           
+                            "path":"$.propertyDetails[0].propertySubType"                           
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"PROPERTYTAX_BILLING_SLAB",   
+                           "module":"rainmaker-pt"
                         } 
                      },
                      {
@@ -79,7 +100,13 @@
                         "type":"array",
                         "format":{                            
                            "type":"string",
-                           "scema":["name","fatherOrHusbandName"]
+                           "scema":[
+                              {
+                                 "key":"name"
+                              },
+                              {
+                                 "key":"fatherOrHusbandName"
+                              }]
                        } 
                     },
                     {
@@ -90,21 +117,46 @@
                         "type":"array-column",
                         "format":{                            
                            "type":"string",
-                           "scema":["floorNo","usageCategoryMajor","usageCategoryDetail","occupancyType","unitArea"]
+                           "scema":[
+                              {
+                                 "key":"floorNo",
+                                 "localisation":{
+                                    "required":true,
+                                    "prefix":"PROPERTYTAX_FLOOR",   
+                                    "module":"rainmaker-pt"
+                                 }
+                                 
+                              },
+                              {
+                                 "key":"usageCategoryMajor",
+                                 "localisation":{
+                                    "required":true,
+                                    "prefix":"PROPERTYTAX_BILLING_SLAB",   
+                                    "module":"rainmaker-pt"
+                                 }
+                                 
+                              },
+                              {
+                                 "key":"usageCategoryDetail",
+                                 "localisation":{
+                                    "required":true,
+                                    "prefix":"PROPERTYTAX_BILLING_SLAB",   
+                                    "module":"rainmaker-pt"
+                                 }
+                              },
+                              {   
+                                 "key":"occupancyType",
+                                 "localisation":{
+                                    "required":true,
+                                    "prefix":"PROPERTYTAX_OCCUPANCYTYPE",   
+                                    "module":"rainmaker-pt"
+                                 }
+                              },
+                              {
+                                 "key":"unitArea"
+                              }]
                        } 
                     } 
-                  ]
-               },
-               {
-                  "derived": [
-                     {
-                        "variable": "$variable",
-                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                     },
-                     {
-                        "variable": "$variable",
-                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                     }
                   ]
                },
                {
@@ -192,41 +244,9 @@
                         },
                         {
                            "variable":"variable34",
-                           "value":"$.Receipt[0].instrument.amount"
+                           "value":"$.Receipt[0].Bill[0].billDetails[0].totalAmount"
                         }
                       ]  
-                     }
-                  ]
-               },
-               {
-                  "mdmsDenormalization": [
-                     {
-                        "variable": "$variable",
-                        "moduleName": "common-masters",
-                        "masterName": "Department",
-                        "tenantId": "pb",
-                        "filter": "[?(@.code == $department)]",
-                        "filterMapping": [
-                           {
-                              "variable": "$department",
-                              "valueJsonpath": "$.department"
-                           }
-                        ],
-                        "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
-                     },
-                     {
-                        "variable": "$variable",
-                        "moduleName": "common-masters",
-                        "masterName": "Department",
-                        "tenantId": "pb",
-                        "filter": "[?(@.code == $department)]",
-                        "filterMapping": [
-                           {
-                              "variable": "$department",
-                              "valueJsonpath": "$.department"
-                           }
-                        ],
-                        "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
                      }
                   ]
                }

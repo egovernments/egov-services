@@ -24,6 +24,22 @@
                         }
                      },
                      {
+                        "variable": "variable30",
+                        "value": {
+                             "path":"$.tenantId"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TENANT_TENANTS",   
+                           "module":"rainmaker-common"
+                        },
+                        "isUpperCaseRequired":true 
+                     },
+                     {
+                        "variable": "variable31", 
+                        "type":"citizen-employee-title"
+                     },  
+                     {
                         "variable": "variable2",
                         "value": {
                              "path":"$.oldLicenseNumber"                              
@@ -115,7 +131,13 @@
                          "type":"array",
                          "format":{                            
                             "type":"string",
-                            "scema":["name","mobileNumber"]
+                            "scema":[
+                               {
+                                  "key":"name"
+                               },
+                               {
+                                 "key":"mobileNumber"
+                               }]
                         } 
                      } 
                    ]
@@ -150,7 +172,7 @@
                            },
                            {
                               "variable":"variable20",
-                              "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
+                              "value":"xx"
                            },
                            {
                               "variable":"variable21",

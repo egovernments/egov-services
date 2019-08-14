@@ -18,6 +18,18 @@
                          }
                       },
                       {
+                        "variable": "variable20",
+                        "value": {
+                             "path":"$.tenantId"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"TENANT_TENANTS",   
+                           "module":"rainmaker-common"
+                        },
+                        "isUpperCaseRequired":true 
+                      },
+                      {
                         "variable": "variable2",
                         "value": {
                              "path":"$.fireNOCDetails.applicantDetails.owners[0].name"                              
@@ -32,18 +44,18 @@
                    ]
                 },
                 {
-                   "derived": [
-                      {
-                         "variable": "$variable",
-                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      },
-                      {
-                         "variable": "$variable",
-                         "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                      }
-                   ]
-                },
-                {
+                  "derived": [
+                     {
+                        "variable": "$variable",
+                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                     },
+                     {
+                        "variable": "$variable",
+                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                     }
+                  ]
+               },
+               {
                    "externalAPI": [
                      
                       {
@@ -116,38 +128,38 @@
                         "value":"Application: {{variable1}}, Receipt number: {{variable15}}, Date of payment: {{variable16}}, Fees Paid: {{variable17}}, Payment mode: {{variable18}}, Transaction ID: {{variable19}}"
                      }
                   ]
-                },
-                {
-                   "mdmsDenormalization": [
-                      {
-                         "variable": "$variable",
-                         "moduleName": "common-masters",
-                         "masterName": "Department",
-                         "tenantId": "pb",
-                         "filter": "[?(@.code == $department)]",
-                         "filterMapping": [
-                            {
-                               "variable": "$department",
-                               "valueJsonpath": "$.department"
-                            }
-                         ],
-                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
-                      },
-                      {
-                         "variable": "$variable",
-                         "moduleName": "common-masters",
-                         "masterName": "Department",
-                         "tenantId": "pb",
-                         "filter": "[?(@.code == $department)]",
-                         "filterMapping": [
-                            {
-                               "variable": "$department",
-                               "valueJsonpath": "$.department"
-                            }
-                         ],
-                         "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
-                      }
-                   ]
+               },
+                  {
+                     "mdmsDenormalization": [
+                        {
+                           "variable": "$variable",
+                           "moduleName": "common-masters",
+                           "masterName": "Department",
+                           "tenantId": "pb",
+                           "filter": "[?(@.code == $department)]",
+                           "filterMapping": [
+                              {
+                                 "variable": "$department",
+                                 "valueJsonpath": "$.department"
+                              }
+                           ],
+                           "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                        },
+                        {
+                           "variable": "$variable",
+                           "moduleName": "common-masters",
+                           "masterName": "Department",
+                           "tenantId": "pb",
+                           "filter": "[?(@.code == $department)]",
+                           "filterMapping": [
+                              {
+                                 "variable": "$department",
+                                 "valueJsonpath": "$.department"
+                              }
+                           ],
+                           "valueJsonPath": "$.TenantBoundary[0].boundary[0].name"
+                        }
+                     ]
                 }
              ]
           }

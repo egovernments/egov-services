@@ -20,17 +20,29 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
     directArr = objectOfDirectMapping.map(item => {
       return {
         jPath: item.variable,
-        val: checkifNullAndSetValue(jp.query(req,item.value.path),"NA",item.value.path),
-        valJsonPath: item.value.path,
+        val: item.value && checkifNullAndSetValue(jp.query(req,item.value.path),"NA",item.value.path),
+        valJsonPath: item.value && item.value.path,
         type: item.type,
         format: item.format,
-        localisation: item.localisation
+        localisation: item.localisation,
+        uCaseNeeded: item.isUpperCaseRequired
       };
     });
   
     for (var i = 0; i < directArr.length; i++) {
       //for array type direct mapping
-      if (directArr[i].type == "array") {   
+      if(directArr[i].type == "citizen-employee-title")
+      {
+          if(get(requestInfo,"userInfo.type","NA").toUpperCase()=="EMPLOYEE")
+          {
+            variableTovalueMap[directArr[i].jPath]="Employee Copy";
+          }
+          else
+          {
+            variableTovalueMap[directArr[i].jPath]="Citizen Copy";
+          }
+      }
+      else if (directArr[i].type == "array") {   
         let arrayOfOwnerObject = [];
         // let ownerObject = JSON.parse(JSON.stringify(get(formatconfig, directArr[i].jPath + "[0]", [])));
         
@@ -42,24 +54,31 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
           // var x = 1;
           let ownerObject={}
           for (let k = 0; k < scema.length; k++) {
-            let fieldValue= get(val[j], scema[k], "NA");
-            if(scema[k].toLowerCase().search("date")!="-1")
+            let fieldValue= get(val[j], scema[k].key, "NA")||"NA";
+            if(scema[k].key && scema[k].key.toLowerCase().search("date")!="-1")
             {            
               let myDate = new Date(fieldValue);
               if(isNaN(myDate)||(fieldValue===0))
               {
-                ownerObject[scema[k]]="NA";
+                ownerObject[scema[k].key]="NA";
               }
               else
               {
                 let replaceValue=getDateInRequiredFormat(fieldValue);      
                 // set(formatconfig,externalAPIArray[i].jPath[j].variable,replaceValue);
-                ownerObject[scema[k]]=replaceValue;
+                ownerObject[scema[k].key]=replaceValue;
               }
             }
             else
-              ownerObject[scema[k]]=fieldValue;
-            // set(ownerObject[x], "text", get(val[j], scema[k], ""));
+            {
+              if((fieldValue!=="NA")&&scema[k].localisation && scema[k].localisation.required)
+              {
+                let loc=scema[k].localisation;
+                fieldValue= await findAndUpdateLocalisation(requestInfo,localisationMap,loc.prefix,fieldValue,loc.module,localisationModuleList,loc.isCategoryRequired,loc.isMainTypeRequired,loc.isSubTypeRequired,loc.delimiter);
+              }
+              ownerObject[scema[k].key]=fieldValue;
+            }
+            // set(ownerObject[x], "text", get(val[j], scema[k].key, ""));
             // x += 2;
           }
           arrayOfOwnerObject.push(ownerObject);
@@ -81,8 +100,8 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
         {
           let arrayOfItems=[];
           for(let k=0;k<scema.length;k++){
-              let fieldValue=get(val[j], scema[k], "NA");
-              if(scema[k].toLowerCase().search("date")!="-1")
+              let fieldValue=get(val[j], scema[k].key, "NA")||"NA";
+              if(scema[k].key && scema[k].key.toLowerCase().search("date")!="-1")
               {            
                 let myDate = new Date(fieldValue);
                 if(isNaN(myDate)||(fieldValue===0))
@@ -97,7 +116,14 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
                 }
               }
               else
+              {
+                if((fieldValue!=="NA")&&scema[k].localisation && scema[k].localisation.required)
+                {
+                  let loc=scema[k].localisation;
+                  fieldValue= await findAndUpdateLocalisation(requestInfo,localisationMap,loc.prefix,fieldValue,loc.module,localisationModuleList,loc.isCategoryRequired,loc.isMainTypeRequired,loc.isSubTypeRequired,loc.delimiter);
+                }
                 arrayOfItems.push(fieldValue);
+              }
           }
           
           arrayOfBuiltUpDetails.push(arrayOfItems);
@@ -116,7 +142,7 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
         directArr[i].val=checkifNullAndSetValue(directArr[i].val,"NA",directArr[i].valJsonPath);
         if((directArr[i].val!=="NA")&&directArr[i].localisation && directArr[i].localisation.required)
             variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix,directArr[i].val,directArr[i].localisation.module,localisationModuleList,directArr[i].localisation.isCategoryRequired,directArr[i].localisation.isMainTypeRequired,directArr[i].localisation.isSubTypeRequired,directArr[i].localisation.delimiter);
-        else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
+        else if(directArr[i].valJsonPath && directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
         {            
           let myDate = new Date(directArr[i].val[0]);
           if(isNaN(myDate)||(directArr[i].val[0]===0))
@@ -132,6 +158,14 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
         }
         else
             variableTovalueMap[directArr[i].jPath]=directArr[i].val;
+        if(directArr[i].uCaseNeeded)
+        {
+          let currentValue=variableTovalueMap[directArr[i].jPath];
+          // handle case ['value']
+          if(((typeof currentValue)=='object')&&(currentValue.length>0))
+            currentValue=currentValue[0];
+          variableTovalueMap[directArr[i].jPath]=currentValue.toUpperCase();
+        }
       }
           // set(formatconfig, directArr[i].jPath, directArr[i].val);
     }

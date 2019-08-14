@@ -127,13 +127,13 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
    let tenantId=req.query.tenantId;
    let requestInfo=get(req.body,"RequestInfo");
    let errorMessage="";
-   if((key===undefined)||(key.trim()==="")){
+   if((key==undefined)||(key.trim()==="")){
     errorMessage+=" key is missing,";
    }
-   if((tenantId===undefined)||(tenantId.trim()==="")){
+   if((tenantId==undefined)||(tenantId.trim()==="")){
     errorMessage+=" tenantId is missing,";
    }
-   if(requestInfo===undefined){
+   if(requestInfo==undefined){
     errorMessage+=" requestInfo is missing,";
    }
    if(errorMessage!==""){
@@ -148,6 +148,10 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
     var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
     var dataconfig=require("./config/data-config/"+key);  
     var baseKeyPath=get(dataconfig,"DataConfigs.baseKeyPath");
+    if(baseKeyPath==null)
+    {
+      throw {message:`baseKeyPath is absent in config`};
+    }
     let isCommonTableBorderRequired=get(dataconfig,"DataConfigs.isCommonTableBorderRequired");
     let formatObjectArrayObject=[];
     let formatConfigByFile=[];

@@ -25,11 +25,11 @@
               {
                 "stack": [
                   {
-                    "text": "AMRITSAR Nagar Panchayat",
+                    "text": "{{variable30}} Nagar Panchayat",
                     "style": "receipt-logo-header"
                   },
                   {
-                    "text": "Trade License Payment Receipt (Citizen Copy)",
+                    "text": "Trade License Payment Receipt ({{variable31}})",
                     "style": "receipt-logo-sub-header"
                   }
                 ],

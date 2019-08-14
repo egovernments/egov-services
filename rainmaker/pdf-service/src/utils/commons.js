@@ -24,7 +24,11 @@ export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,prefix
     let keyArray=[];
     let localisedLabels=[]
     let isArray=false;
-    if((typeof key)=="string")
+    if(key==null)
+    {
+      return key;
+    }
+    else if((typeof key)=="string")
     {
       keyArray.push(key);
     }
@@ -123,7 +127,7 @@ export const getDateInRequiredFormat = et => {
   export const checkifNullAndSetValue=(value,setTo,path)=>{
     if((value==undefined)||(value==null)||(value.length===0)||((value.length===1)&&(value[0]===null)))
    {
-    logger.error(`no value found for path: ${path}`);
+    // logger.error(`no value found for path: ${path}`);
     return setTo;
    }
     else

@@ -197,7 +197,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
       }
     
     
-    logger.info(`Success:Applied templating engine on ${formatConfigByFile.length} objects`);
+    logger.info(`Success:Applied templating engine on ${moduleObjectsArray.length} objects output will be in ${formatConfigByFile.length} files`);
   
     // var util = require('util');
     // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');

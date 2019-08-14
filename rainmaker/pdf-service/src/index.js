@@ -2,6 +2,7 @@
 import http from "http";
 import request from "request";
 import express from "express";
+import logger from "./config/logger";
 import path from "path";
 import fs, { exists } from "fs";
 import cors from "cors";
@@ -93,11 +94,12 @@ let borderLayout = {
               if(listOfFilestoreIds.length===noOfDefinitions)
               {
                 // insertStoreIds("",);
+                logger.info(`PDF successfully created and stored filestoreIds: ${listOfFilestoreIds}`);
                 successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
               }
           }).catch(err=>{
             fs.unlink(filename,()=>{});
-            console.log(err);
+            logger.error(err.stack);
             errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
           });
         }
@@ -114,7 +116,7 @@ let borderLayout = {
         doc.end();
     });
   } catch (err) {
-    console.log(err);
+    logger.error(err.stack);
     errorCallback({message:" error occured while creating pdf: "+((typeof err)==='string')?err:err.message});
   }
 }
@@ -225,7 +227,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
 }
 catch(error)
 {
-  console.log(error);
+  logger.error(error.stack);
   res.status(500);
   res.json({
     status: 500,
@@ -244,7 +246,7 @@ catch(error)
 
 
 app.listen(serverport, () => {
-  console.log(`Server running at http:${serverport}/`);
+  logger.info(`Server running at http:${serverport}/`);
 });
 
 /**

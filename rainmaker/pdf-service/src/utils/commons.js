@@ -1,5 +1,5 @@
 import { httpRequest } from "../api/api";
-
+import logger from "../config/logger";
 import envVariables from "../EnvironmentVariables";
 
 let egovLocHost=envVariables.EGOV_LOCALISATION_HOST;
@@ -94,7 +94,7 @@ const getLocalisationLabel=(key,localisationMap,prefix)=>{
       return localisationMap[key];
   } 
   else{
-    console.log("no localisation value found for key",key);
+    logger.error(`no localisation value found for key ${key}`);
       return "NA";
   }
 }
@@ -124,7 +124,7 @@ export const getDateInRequiredFormat = et => {
   export const checkifNullAndSetValue=(value,setTo,path)=>{
     if((value==undefined)||(value==null)||(value.length===0)||((value.length===1)&&(value[0]===null)))
    {
-    console.log("no value found for path",path);
+    logger.error(`no value found for path: ${path}`);
     return setTo;
    }
     else

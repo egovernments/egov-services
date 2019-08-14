@@ -17,11 +17,11 @@ export const getTransformedLocale = label => {
  * @param {*} key - key to fetch localisation
  * @param {*} moduleName - "module name for fetching localisation"
  * @param {*} localisationModuleList - "list of modules for which localisation was already fetched"
- * @param {*} isCategoryRequired - ex:- "GOODS_RETAIL_TST-1" = get "GOODS"
- * @param {*} isMainTypeRequired  - ex:- "GOODS_RETAIL_TST-1" = get "RETAIL"
- * @param {*} isSubTypeNotRequired  - ignore fetching localisation from full key
+ * @param {*} isCategoryRequired - ex:- "GOODS_RETAIL_TST-1" = get localisation for "GOODS"
+ * @param {*} isMainTypeRequired  - ex:- "GOODS_RETAIL_TST-1" = get localisation for "RETAIL"
+ * @param {*} isSubTypeRequired  - - ex:- "GOODS_RETAIL_TST-1" = get localisation for "GOODS_RETAIL_TST-1"
  */
-export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,prefix,key,moduleName,localisationModuleList,isCategoryRequired,isMainTypeRequired,isSubTypeNotRequired)=>{
+export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,prefix,key,moduleName,localisationModuleList,isCategoryRequired,isMainTypeRequired,isSubTypeRequired,delimiter=" / ")=>{
     let keyArray=[];
     let localisedLabels=[]
     let isArray=false;
@@ -60,17 +60,21 @@ export const  findAndUpdateLocalisation=async(requestInfo,localisationMap,prefix
       if(isMainTypeRequired)
       {
         if(isCategoryRequired)
-          labelFromKey=`${labelFromKey} / `;
+          labelFromKey=`${labelFromKey}${delimiter}`;
         labelFromKey=getLocalisationLabel(item.split(".")[1],localisationMap,prefix);
       }
       
-      if(isSubTypeNotRequired!=true)
+      if(isSubTypeRequired)
       {
           if(isMainTypeRequired || isCategoryRequired)
-            labelFromKey=`${labelFromKey} / `;
+            labelFromKey=`${labelFromKey}${delimiter}`;
           labelFromKey=`${labelFromKey}${getLocalisationLabel(item,localisationMap,prefix)}`;
       }
 
+      if((!isCategoryRequired)&&(!isMainTypeRequired)&&(!isSubTypeRequired))
+      {
+        labelFromKey=getLocalisationLabel(item,localisationMap,prefix);
+      }
       localisedLabels.push(labelFromKey===""?"NA":labelFromKey);
     });
     if(isArray)

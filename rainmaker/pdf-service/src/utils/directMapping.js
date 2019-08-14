@@ -115,7 +115,7 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
       {
         directArr[i].val=checkifNullAndSetValue(directArr[i].val,"NA",directArr[i].valJsonPath);
         if((directArr[i].val!=="NA")&&directArr[i].localisation && directArr[i].localisation.required)
-            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix,directArr[i].val,directArr[i].localisation.module,localisationModuleList,directArr[i].localisation.isCategoryRequired,directArr[i].localisation.isMainTypeRequired,directArr[i].localisation.isSubTypeNotRequired);
+            variableTovalueMap[directArr[i].jPath]= await findAndUpdateLocalisation(requestInfo,localisationMap,directArr[i].localisation.prefix,directArr[i].val,directArr[i].localisation.module,localisationModuleList,directArr[i].localisation.isCategoryRequired,directArr[i].localisation.isMainTypeRequired,directArr[i].localisation.isSubTypeRequired,directArr[i].localisation.delimiter);
         else if(directArr[i].valJsonPath.toLowerCase().search("date")!="-1")
         {            
           let myDate = new Date(directArr[i].val[0]);

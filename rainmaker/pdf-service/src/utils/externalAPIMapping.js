@@ -125,7 +125,7 @@ else
         let replaceValue=checkifNullAndSetValue(jp.query(res,externalAPIArray[i].jPath[j].value),"NA",externalAPIArray[i].jPath[j].value);
         let loc=externalAPIArray[i].jPath[j].localisation;
         if((replaceValue!=="NA")&&externalAPIArray[i].jPath[j].localisation && externalAPIArray[i].jPath[j].localisation.required && externalAPIArray[i].jPath[j].localisation.prefix)
-          variableTovalueMap[externalAPIArray[i].jPath[j].variable]= await findAndUpdateLocalisation(requestInfo,localisationMap,loc.prefix,replaceValue,loc.module,localisationModuleList,loc.isCategoryRequired,loc.isMainTypeRequired,loc.isSubTypeNotRequired);
+          variableTovalueMap[externalAPIArray[i].jPath[j].variable]= await findAndUpdateLocalisation(requestInfo,localisationMap,loc.prefix,replaceValue,loc.module,localisationModuleList,loc.isCategoryRequired,loc.isMainTypeRequired,loc.isSubTypeRequired,loc.delimiter);
         else if((externalAPIArray[i].jPath[j].value).toLowerCase().search("date")!="-1")
         {         
           let myDate = new Date(replaceValue[0]);

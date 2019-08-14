@@ -841,6 +841,9 @@ components:
           type: string
           maxLength: 64
           description: Designation of the person creating/updating building details on behalf of the institution
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated by model'
 
    
     OwnerInfo:
@@ -901,6 +904,10 @@ components:
             enum:
               - FATHER
               - HUSBAND
+          additionalDetails:
+            type: object
+            description: 'Json object to capture any extra information which is not accommodated of model'
+
       required:
           - name
           - mobileNumber
@@ -929,6 +936,10 @@ components:
             locality:
               $ref: >-
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v11-0-0.yml#/definitions/Boundary
+            additionalDetails:
+              type: object
+              description: 'Json object to capture any extra information which is not accommodated of model'
+
           required: 
             - locality
     
@@ -954,6 +965,10 @@ components:
           type: string
           maxLength: 64
           description: 'The unique id(Pancard Number,Adhar etc.) of the given Document.'
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated by model'
+
     Unit:
       type: object
       properties:
@@ -1005,6 +1020,10 @@ components:
           type: number
           format: double
           description: 'Annual rental value(arv), if occupancy type is Tenant.'
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated by model'
+  
     PropertyRequest:
       description: >-
         Contract class to receive request. Array of Property items  are used in
@@ -1077,7 +1096,7 @@ components:
       properties:
         RequestInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
         Buildings:
           description: Used for search result and create only
           $ref: '#/components/schemas/Building'
@@ -1154,6 +1173,9 @@ components:
         financialYear:
           type: string
           description: The financialYear of the assessmnet
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated of model'
       required:
         - tenantId
         - buildingNumber

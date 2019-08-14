@@ -309,7 +309,7 @@ components:
           type: string
         type:
           type: string
-          description: Blood group of the user.
+          description: Type of address.
           items:
             type: string
             enum:

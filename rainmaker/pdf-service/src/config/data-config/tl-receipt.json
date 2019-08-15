@@ -172,7 +172,7 @@
                            },
                            {
                               "variable":"variable20",
-                              "value":"xx"
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].amountPaid"
                            },
                            {
                               "variable":"variable21",

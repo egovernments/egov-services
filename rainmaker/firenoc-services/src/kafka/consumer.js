@@ -22,10 +22,10 @@ var options = {
 };
 
 var consumerGroup = new kafka.ConsumerGroup(options, [
-  "save-fn-firenoc",
-  "update-fn-firenoc",
-  "update-fn-workflow",
-  "egov.collection.receipt-create"
+  envVariables.KAFKA_TOPICS_FIRENOC_CREATE,
+  envVariables.KAFKA_TOPICS_FIRENOC_UPDATE,
+  envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW,
+  envVariables.KAFKA_TOPICS_RECEIPT_CREATE
 ]);
 
 console.log("Consumer ");
@@ -36,23 +36,75 @@ consumerGroup.on("message", function(message) {
   const value = JSON.parse(message.value);
 
   let payloads = [];
-  const topic = "egov.core.notification.sms";
+  const topic = envVariables.KAFKA_TOPICS_NOTIFICATION;
   let smsRequest = {};
 
   const getInitializedSMSRequest = (firenoc = {}) => {
+    let firenocType =
+      get(firenoc, "fireNOCDetails.fireNOCType") === "NEW"
+        ? "new"
+        : "provision";
     return {
-      mobileNumber: get(firenoc, "fireNOCDetails.owners.0.mobileNumber"),
+      mobileNumber: get(
+        firenoc,
+        "fireNOCDetails.applicantDetails.owners.0.mobileNumber"
+      ),
       message: `Dear ${get(
         firenoc,
-        "fireNOCDetails.owners.0.name"
-      )},Your application for ${get(
-        firenoc,
-        "fireNOCDetails.fireNOCType"
-      )} has been generated. Your application no. is ${get(
+        "fireNOCDetails.applicantDetails.owners.0.name"
+      )},Your application for ${firenocType} has been generated. Your application no. is ${get(
         firenoc,
         "fireNOCDetails.applicationNumber"
       )}.`
     };
+  };
+
+  const sendWorkFlowSMSRequest = FireNOCs => {
+    for (let i = 0; i < FireNOCs.length; i++) {
+      smsRequest["mobileNumber"] = get(
+        FireNOCs[i],
+        "fireNOCDetails.applicantDetails.owners.0.mobileNumber"
+      );
+      let firenocType =
+        get(FireNOCs[i], "fireNOCDetails.fireNOCType") === "NEW"
+          ? "new"
+          : "provision";
+
+      let ownerName=get(FireNOCs[i],"fireNOCDetails.applicantDetails.owners.0.name");
+      let applicationNumber=get(FireNOCs[i],"fireNOCDetails.applicationNumber");
+      let fireNOCNumber=get(FireNOCs[i],"fireNOCNumber");
+      let validTo=get(FireNOCs[i],"fireNOCDetails.validTo");
+      switch (FireNOCs[i].fireNOCDetails.status) {
+        case "INITIATED":
+          smsRequest = getInitializedSMSRequest(FireNOCs[i]);
+          break;
+        case "PENDINGPAYMENT":
+          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} has been submitted. Your application no. is ${applicationNumber}. Please pay your NoC Fees online or at your applicable fire office`;
+          break;
+        case "DOCUMENTVERIFY":
+          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for field inpsection.`;
+          break;
+        case "FIELDINSPECTION":
+          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for document verifier.`;
+          break;
+        case "PENDINGAPPROVAL":
+          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for approver.`;
+          break;
+        case "APPROVED":
+          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} is approved.And your fire NoC has been generated.Your Fire NoC No. is ${fireNOCNumber}. It is valid till ${validTo}`;
+          break;
+        case "REJECTED":
+          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been rejected.To know more details please contact your applicable fire office`;
+          break;
+        // case "CANCELLED":
+        //   break;
+        default:
+      }
+      payloads.push({
+        topic,
+        messages: JSON.stringify(smsRequest)
+      });
+    }
   };
 
   switch (message.topic) {
@@ -71,38 +123,19 @@ consumerGroup.on("message", function(message) {
     case envVariables.KAFKA_TOPICS_FIRENOC_UPDATE:
       {
         const { FireNOCs } = value;
-        for (let i = 0; i < FireNOCs.length; i++) {
-          if (FireNOCs[i].fireNOCDetails.status == "INITIATED") {
-            smsRequest = getInitializedSMSRequest(FireNOCs[i]);
-          } else {
-            smsRequest = {
-              mobileNumber: get(
-                FireNOCs[i],
-                "fireNOCDetails.owners.0.mobileNumber"
-              ),
-              message: `Dear ${get(
-                FireNOCs[i],
-                "fireNOCDetails.owners.0.name"
-              )},
-                  Your application for ${get(
-                    FireNOCs[i],
-                    "fireNOCDetails.fireNOCType"
-                  )} has been submitted. Your application no. is ${get(
-                FireNOCs[i],
-                "fireNOCDetails.fireNOCType"
-              )}. Please pay your NoC Fees online or at your applicable fire office`
-            };
-          }
-          payloads.push({
-            topic,
-            messages: JSON.stringify(smsRequest)
-          });
-        }
+        sendWorkFlowSMSRequest(FireNOCs);
       }
       break;
     case envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW:
       {
-        console.log("workflow hit");
+        const { FireNOCs } = value;
+        sendWorkFlowSMSRequest(FireNOCs);
+      }
+      break;
+
+    case envVariables.KAFKA_TOPICS_RECEIPT_CREATE:
+      {
+        console.log("reciept hit");
       }
       break;
   }

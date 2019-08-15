@@ -24,7 +24,7 @@ const envVariables = {
   KAFKA_TOPICS_RECEIPT_CREATE:
     process.env.KAFKA_TOPICS_RECEIPT_CREATE || "egov.collection.receipt-create",
   KAFKA_TOPICS_NOTIFICATION:
-    process.env.KAFKA_TOPICS_NOTIFICATION || "notification.sms",
+    process.env.KAFKA_TOPICS_NOTIFICATION || "egov.core.notification.sms",
 
   //tracer configurations
   TRACER_ENABLE_REQUEST_LOGGING:

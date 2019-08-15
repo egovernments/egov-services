@@ -70,31 +70,61 @@ consumerGroup.on("message", function(message) {
           ? "new"
           : "provision";
 
-      let ownerName=get(FireNOCs[i],"fireNOCDetails.applicantDetails.owners.0.name");
-      let applicationNumber=get(FireNOCs[i],"fireNOCDetails.applicationNumber");
-      let fireNOCNumber=get(FireNOCs[i],"fireNOCNumber");
-      let validTo=get(FireNOCs[i],"fireNOCDetails.validTo");
+      let ownerName = get(
+        FireNOCs[i],
+        "fireNOCDetails.applicantDetails.owners.0.name"
+      );
+      let applicationNumber = get(
+        FireNOCs[i],
+        "fireNOCDetails.applicationNumber"
+      );
+      let fireNOCNumber = get(FireNOCs[i], "fireNOCNumber");
+      let validTo = get(FireNOCs[i], "fireNOCDetails.validTo");
       switch (FireNOCs[i].fireNOCDetails.status) {
         case "INITIATED":
           smsRequest = getInitializedSMSRequest(FireNOCs[i]);
           break;
         case "PENDINGPAYMENT":
-          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} has been submitted. Your application no. is ${applicationNumber}. Please pay your NoC Fees online or at your applicable fire office`;
+          smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} has been submitted. Your application no. is ${applicationNumber}. Please pay your NoC Fees online or at your applicable fire office`;
           break;
         case "DOCUMENTVERIFY":
-          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for field inpsection.`;
+          smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for field inpsection.`;
           break;
         case "FIELDINSPECTION":
-          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for document verifier.`;
+          smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for document verifier.`;
           break;
         case "PENDINGAPPROVAL":
-          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for approver.`;
+          smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been forwarded for approver.`;
           break;
         case "APPROVED":
-          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} is approved.And your fire NoC has been generated.Your Fire NoC No. is ${fireNOCNumber}. It is valid till ${validTo}`;
+          var currentDate = new Date(validTo);
+          var date = currentDate.getDate();
+          var month = currentDate.getMonth(); //Be careful! January is 0 not 1
+          var year = currentDate.getFullYear();
+
+          var dateString =
+            date +
+            "-" +
+            (month + 1 > 9 ? month + 1 : `0${month + 1}`) +
+            "-" +
+            year;
+
+          smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} is approved.And your fire NoC has been generated.Your Fire NoC No. is ${fireNOCNumber}. It is valid till ${dateString}`;
           break;
         case "REJECTED":
-          smsRequest["message"] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been rejected.To know more details please contact your applicable fire office`;
+          smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} with application no. is ${applicationNumber} has been rejected.To know more details please contact your applicable fire office`;
           break;
         // case "CANCELLED":
         //   break;

@@ -4,7 +4,7 @@ import producer from "./producer";
 import get from "lodash/get";
 var options = {
   // connect directly to kafka broker (instantiates a KafkaClient)
-  kafkaHost: "127.0.0.1:9092",
+  kafkaHost: envVariables.KAFKA_BROKER_HOST,
   groupId: "firenoc-consumer-grp",
   autoCommit: true,
   autoCommitIntervalMs: 5000,

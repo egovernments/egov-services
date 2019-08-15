@@ -11,8 +11,8 @@ var jp = require('jsonpath');
  * @param {*} localisationMap - Map to store localisation key, value pair
  * @param {*} requestInfo - request info from request body
  */
-export const directMapping=async(req,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList)=>{    
-    
+export const directMapping=async(req,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList)=>{
+      
     var directArr = [];        
     // using jp-jsonpath because loadash can not handele '*'
     var objectOfDirectMapping = jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.direct.*");
@@ -41,6 +41,10 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
           {
             variableTovalueMap[directArr[i].jPath]="Citizen Copy";
           }
+      }
+      else if (directArr[i].type == "function") {
+        var fun = Function("type",directArr[i].format);
+        variableTovalueMap[directArr[i].jPath]=fun(directArr[i].val[0]); 
       }
       else if (directArr[i].type == "array") {   
         let arrayOfOwnerObject = [];

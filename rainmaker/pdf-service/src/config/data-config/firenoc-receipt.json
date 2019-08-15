@@ -18,6 +18,67 @@
                          }
                       },
                       {
+                        "variable": "variable3",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.ownerShipType"                              
+                        },
+                        "type":"function",
+                        "format":"return type.startsWith('INSTITUTION')" 
+                      },
+                      {
+                        "variable": "variable21",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.ownerShipType"                              
+                        },
+                        "localisation":{
+                           "required":true,
+                           "prefix":"COMMON_MASTERS_OWNERSHIPCATEGORY",   
+                           "module":"rainmaker-common"
+                        }
+                     },
+                     {
+                        "variable": "variable22",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.additionalDetail.institutionName"                              
+                        }
+                     },
+                     {
+                        "variable": "variable23",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.additionalDetail.telephoneNumber"                              
+                        }
+                     },
+                     {
+                        "variable": "variable24",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.owners[0].name"                              
+                        }
+                     },
+                     {
+                        "variable": "variable25",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.additionalDetail.institutionDesignation"                              
+                        }
+                     },
+                     {
+                        "variable": "variable26",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.owners[0].mobileNumber"                              
+                        }
+                     },
+                     {
+                        "variable": "variable27",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.owners[0].emailId"                              
+                        }
+                     },
+                     {
+                        "variable": "variable28",
+                        "value": {
+                             "path":"$.fireNOCDetails.applicantDetails.owners[0].correspondenceAddress"                              
+                        }
+                     },
+                     {
                         "variable": "variable20",
                         "value": {
                              "path":"$.tenantId"                              
@@ -30,17 +91,22 @@
                         "isUpperCaseRequired":true 
                       },
                       {
-                        "variable": "variable2",
-                        "value": {
-                             "path":"$.fireNOCDetails.applicantDetails.owners[0].name"                              
-                        }
-                      },
-                      {
-                       "variable": "variable3",
-                       "value": {
-                            "path":"$.fireNOCDetails.applicantDetails.owners[0].mobileNumber"                              
-                        }
-                      }
+                        "variable": "variable2",                        
+                        "value":{
+                             "path":"$.fireNOCDetails.applicantDetails.owners.*"                          
+                         },
+                         "type":"array",
+                         "format":{                            
+                            "type":"string",
+                            "scema":[
+                               {
+                                  "key":"name"
+                               },
+                               {
+                                 "key":"mobileNumber"
+                               }]
+                        } 
+                     }
                    ]
                 },
                 {

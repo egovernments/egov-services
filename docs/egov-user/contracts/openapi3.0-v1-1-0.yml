@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.0.0-oas3"
+  version: "1.0.0"
   title: User Service
   description: >-
     User services APIs - to create, update and search users. All individuals
@@ -10,7 +10,7 @@ info:
     name: eGov
     email: info@egovernments.org
 x-common-path: >-
-  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
+  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml
 x-api-id: org.egov.users
 paths:
   /_create:
@@ -34,6 +34,7 @@ paths:
         create a non authenticated user (without password) and after
         verification (using OTP) other user details (including password) can be
         updated using update user API to complete the user registration process.
+      x-roles: CITIZEN,EMPLOYEE
       tags:
         - Users
       responses:
@@ -49,7 +50,7 @@ paths:
             '*/*':
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
       requestBody:
         content:
           application/json:
@@ -67,6 +68,7 @@ paths:
           2. Password can only be updated by the user itself (CITIZEN or EMPLOYEE) using reissue OTP issued to them
           3. User can self update mobile number/email by doing OTP verification with old phone/email
           4. An employee can reset another user mobile number/email after OTP/other necessary validation (need specific privilege)
+      x-roles: CITIZEN,EMPLOYEE
       tags:
         - Users
       responses:
@@ -82,7 +84,7 @@ paths:
             '*/*':
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
       requestBody:
         content:
           application/json:
@@ -102,13 +104,14 @@ paths:
 
 
         By default results will be sorted by UserName
+      x-roles: CITIZEN,EMPLOYEE
       parameters:
         - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/components/parameters/requestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
         - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/components/parameters/tenantId
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId
         - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/components/parameters/lastChangedSince
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/lastChangedSince
         - $ref: '#/components/parameters/userName'
         - $ref: '#/components/parameters/active'
         - $ref: '#/components/parameters/id'
@@ -118,20 +121,33 @@ paths:
         - $ref: '#/components/parameters/pageSize'
         - $ref: '#/components/parameters/pageNumber'
         - $ref: '#/components/parameters/sortUser'
+        - name: fromDate
+          in: query
+          description: Fetches users with created time after fromDate.
+          required: false
+          schema:
+            type: number
+        - name: toDate
+          in: query
+          description: Fetches users with created time till toDate.
+          required: false
+          schema:
+            type: number
+      
       responses:
         '200':
           description: Successful response
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/UserRes'
+                $ref: '#/components/schemas/UserSearchRes'
         '400':
           description: Invalid input.
           content:
             '*/*':
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
       tags:
         - Users
   /_delete:
@@ -139,6 +155,7 @@ paths:
       summary: Delete user API
       description: >
         The API will delete the user based on the given uuid
+      x-roles: ADMIN
       tags:
         - Users
       responses:
@@ -154,7 +171,7 @@ paths:
             '*/*':
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
       requestBody:
         content:
           application/json:
@@ -167,6 +184,7 @@ paths:
       summary: Deactivates the user
       description: >
         This API will deactivate the user in the system based on the given uuid
+      x-roles: ADMIN
       tags:
         - Users
       responses:
@@ -182,7 +200,7 @@ paths:
             '*/*':
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
       requestBody:
         content:
           application/json:
@@ -191,99 +209,6 @@ paths:
         description: Request header for the user to be deactivated.
         required: true
       
-  /password/_update:
-    post:
-      summary: The user can update his password after login
-      description: |
-        This API used for update the password after login
-      tags:
-        - Update password
-      responses:
-        '200':
-          description: Updated password successful
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PasswordRes'
-        '400':
-          description: Updated password failed
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/updatePasswordReq'
-        description: Request header for the user with new of values.
-        required: true
-  /password/nologin/_update:
-    post:
-      summary: This API act as reset password or forgot password before login
-      description: >
-        This API used for reset the password when user forgot his password   by
-        getting otp Reference through registerd mobile number,
-      tags:
-        - Update password
-      responses:
-        '200':
-          description: Updated password successful
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PasswordRes'
-        '400':
-          description: Updated password failed
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/resetpasswordreq'
-        description: Request header for the user with new of values.
-        required: true
-  /_logout:
-    post:
-      summary: Logout a user based on access token auth
-      description: Logout a user based on access token auth
-      parameters:
-        - name: tenantId
-          in: query
-          required: true
-          description: The tenantId of the user
-          schema:
-            type: string
-      tags:
-        - Users
-      responses:
-        '200':
-          description: User logged out successfully.
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        '400':
-          description: Logout Failed.
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        description: Request for logout using access token
-        required: true
   /oauth/token:
     post:
       summary: >-
@@ -292,6 +217,7 @@ paths:
       description: >-
         Login a user based on username and password auth and return oAuth
         tokens.
+      x-roles: CITIZEN,EMPLOYEE
       parameters:
         - name: tenantId
           in: query
@@ -331,7 +257,104 @@ paths:
             '*/*':
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
+  /_logout:
+    post:
+      summary: Logout a user based on access token auth
+      description: Logout a user based on access token auth
+      x-roles: CITIZEN,EMPLOYEE
+      parameters:
+        - name: tenantId
+          in: query
+          required: true
+          description: The tenantId of the user
+          schema:
+            type: string
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User logged out successfully.
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
+        '400':
+          description: Logout Failed.
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
+        description: Request for logout using access token
+        required: true
+  /password/_update:
+    post:
+      summary: The user can update his password after login
+      description: |
+        This API used for update the password after login
+      x-roles: CITIZEN,EMPLOYEE
+      tags:
+        - Update password
+      responses:
+        '200':
+          description: Updated password successful
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PasswordRes'
+        '400':
+          description: Updated password failed
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updatePasswordReq'
+        description: Request header for the user with new of values.
+        required: true
+  /password/nologin/_update:
+    post:
+      summary: This API act as reset password or forgot password before login
+      description: >
+        This API used for reset the password when user forgot his password   by
+        getting otp Reference through registerd mobile number,
+      x-roles: CITIZEN,EMPLOYEE
+      tags:
+        - Update password
+      responses:
+        '200':
+          description: Updated password successful
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PasswordRes'
+        '400':
+          description: Updated password failed
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/resetpasswordreq'
+        description: Request header for the user with new of values.
+        required: true
+
       
 servers:
   - url: /users/v110
@@ -445,7 +468,7 @@ components:
       properties:
         RequestInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
         otpReference:
           type: string
           description: otp reference number which sent to registered mobile
@@ -468,7 +491,7 @@ components:
       properties:
         RequestInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
         existingPassword:
           type: string
           description: Existing password
@@ -487,7 +510,7 @@ components:
       properties:
         ResponseInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
     User:
       type: object
       properties:
@@ -581,12 +604,12 @@ components:
           description: List of roles that are attached to the user.
           items:
             $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Role
+              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/Role
         userDetails:
           $ref: '#/components/schemas/UserDetails'
         auditDetails:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/AuditDetails
       required:
         - userName
         - name
@@ -689,22 +712,28 @@ components:
       properties:
         RequestInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        Users:
-          type: array
-          minimum: 1
-          maximum: 100
-          items:
-            $ref: '#/components/schemas/User'
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
+        User:
+          type: object
+          $ref: '#/components/schemas/User'
       required:
         - RequestInfo
-        - Users
+        - User
     UserRes:
       type: object
       properties:
         ResponseInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
+        User:
+          $ref: '#/components/schemas/User'
+
+    UserSearchRes:
+      type: object
+      properties:
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
         Users:
           type: array
           maximum: 500
@@ -716,17 +745,19 @@ components:
       properties:
         RequestInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
         uuid:
           type: string
           description: Unique identifier of the user
-          
+      required:
+        - RequestInfo
+        - uuid
     UserDeleteResponse:
       type: object
       properties:
         ResponseInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
         uuid:
           type: string
           description: Unique identifier of the user
@@ -745,7 +776,7 @@ components:
           type: string
         ResponseInfo:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
         User:
           $ref: '#/components/schemas/User'
       required:
@@ -753,4 +784,4 @@ components:
         - tokenType
         - refreshToken
         - expiresIn
-        - scope          
+        - scope

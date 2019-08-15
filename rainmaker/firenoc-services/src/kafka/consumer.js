@@ -2,32 +2,35 @@ const kafka = require("kafka-node");
 import envVariables from "../envVariables";
 import producer from "./producer";
 import get from "lodash/get";
+var options = {
+  // connect directly to kafka broker (instantiates a KafkaClient)
+  kafkaHost: "127.0.0.1:9092",
+  groupId: "firenoc-consumer-grp",
+  autoCommit: true,
+  autoCommitIntervalMs: 5000,
+  sessionTimeout: 15000,
+  fetchMaxBytes: 10 * 1024 * 1024, // 10 MB
+  // An array of partition assignment protocols ordered by preference. 'roundrobin' or 'range' string for
+  // built ins (see below to pass in custom assignment protocol)
+  protocol: ["roundrobin"],
+  // Offsets to use for new groups other options could be 'earliest' or 'none'
+  // (none will emit an error if no offsets were saved) equivalent to Java client's auto.offset.reset
+  fromOffset: "latest",
+  // how to recover from OutOfRangeOffset error (where save offset is past server retention)
+  // accepts same value as fromOffset
+  outOfRangeOffset: "earliest"
+};
 
-const Consumer = kafka.Consumer;
-let client;
+var consumerGroup = new kafka.ConsumerGroup(options, [
+  "save-fn-firenoc",
+  "update-fn-firenoc",
+  "update-fn-workflow",
+  "egov.collection.receipt-create"
+]);
 
-if (process.env.NODE_ENV === "development") {
-  client = new kafka.KafkaClient();
-  console.log("local Consumer- ");
-} else {
-  client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });
-  console.log("cloud Consumer- ");
-}
+console.log("Consumer ");
 
-const consumer = new Consumer(
-  client,
-  [
-    // { topic: "egov.collection.receipt-create", offset: 0 },
-    { topic: "save-fn-firenoc" },
-    { topic: "update-fn-firenoc" },
-    { topic: "update-fn-workflow" }
-  ],
-  {
-    autoCommit: false
-  }
-);
-// ,time: Date.now(),maxNum: 1
-consumer.on("message", function(message) {
+consumerGroup.on("message", function(message) {
   console.log("consumer-topic", message.topic);
   console.log("consumer-value", JSON.parse(message.value));
   const value = JSON.parse(message.value);
@@ -113,12 +116,12 @@ consumer.on("message", function(message) {
   });
 });
 
-consumer.on("error", function(err) {
+consumerGroup.on("error", function(err) {
   console.log("Error:", err);
 });
 
-consumer.on("offsetOutOfRange", function(err) {
+consumerGroup.on("offsetOutOfRange", function(err) {
   console.log("offsetOutOfRange:", err);
 });
 
-export default consumer;
+export default consumerGroup;

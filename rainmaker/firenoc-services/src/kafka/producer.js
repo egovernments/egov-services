@@ -5,7 +5,7 @@ const Producer = kafka.Producer;
 let client;
 
 if (process.env.NODE_ENV === "development") {
-  client = new kafka.Client();
+  client = new kafka.KafkaClient();
   console.log("local Producer- ");
 } else {
   client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });

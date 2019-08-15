@@ -7,7 +7,7 @@ const Consumer = kafka.Consumer;
 let client;
 
 if (process.env.NODE_ENV === "development") {
-  client = new kafka.Client();
+  client = new kafka.KafkaClient();
   console.log("local Consumer- ");
 } else {
   client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });
@@ -18,15 +18,15 @@ const consumer = new Consumer(
   client,
   [
     // { topic: "egov.collection.receipt-create", offset: 0 },
-    { topic: "save-fn-firenoc", offset: 0,time: Date.now(),maxNum: 1 },
-    { topic: "update-fn-firenoc", offset: 0,time: Date.now(),maxNum: 1 },
-    { topic: "update-fn-workflow", offset: 0,time: Date.now(),maxNum: 1 }
+    { topic: "save-fn-firenoc" },
+    { topic: "update-fn-firenoc" },
+    { topic: "update-fn-workflow" }
   ],
   {
     autoCommit: false
   }
 );
-
+// ,time: Date.now(),maxNum: 1
 consumer.on("message", function(message) {
   console.log("consumer-topic", message.topic);
   console.log("consumer-value", JSON.parse(message.value));

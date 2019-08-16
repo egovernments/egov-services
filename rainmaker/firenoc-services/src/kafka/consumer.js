@@ -2,6 +2,8 @@ const kafka = require("kafka-node");
 import envVariables from "../envVariables";
 import producer from "./producer";
 import get from "lodash/get";
+// import { httpRequest } from "../api";
+
 var options = {
   // connect directly to kafka broker (instantiates a KafkaClient)
   kafkaHost: envVariables.KAFKA_BROKER_HOST,
@@ -38,28 +40,34 @@ consumerGroup.on("message", function(message) {
   let payloads = [];
   const topic = envVariables.KAFKA_TOPICS_NOTIFICATION;
   let smsRequest = {};
+  let events = [];
+  let { RequestInfo } = value;
 
-  const getInitializedSMSRequest = (firenoc = {}) => {
-    let firenocType =
-      get(firenoc, "fireNOCDetails.fireNOCType") === "NEW"
-        ? "new"
-        : "provision";
-    return {
-      mobileNumber: get(
-        firenoc,
-        "fireNOCDetails.applicantDetails.owners.0.mobileNumber"
-      ),
-      message: `Dear ${get(
-        firenoc,
-        "fireNOCDetails.applicantDetails.owners.0.name"
-      )},Your application for ${firenocType} has been generated. Your application no. is ${get(
-        firenoc,
-        "fireNOCDetails.applicationNumber"
-      )}.`
+  const sendEventNotificaiton = () => {
+    let requestPayload = {
+      // RequestInfo,
+      events
     };
+
+    payloads.push({
+      topic:envVariables.KAFKA_TOPICS_EVENT_NOTIFICATION,
+      messages: JSON.stringify(requestPayload)
+    });
+    // httpRequest({
+    //   hostURL: envVariables.EGOV_EVENT_HOST,
+    //   endPoint: `${envVariables.EGOV_EVENT_CONTEXT_PATH}${envVariables.EGOV_EVENT_CREATE_ENPOINT}`,
+    //   requestPayload
+    // }).then(
+    //   function(response) {
+    //     console.log(response);
+    //   },
+    //   function(error) {
+    //     console.log(error);
+    //   }
+    // );
   };
 
-  const sendWorkFlowSMSRequest = FireNOCs => {
+  const sendFireNOCSMSRequest = FireNOCs => {
     for (let i = 0; i < FireNOCs.length; i++) {
       smsRequest["mobileNumber"] = get(
         FireNOCs[i],
@@ -74,15 +82,22 @@ consumerGroup.on("message", function(message) {
         FireNOCs[i],
         "fireNOCDetails.applicantDetails.owners.0.name"
       );
+      let uuid = get(
+        FireNOCs[i],
+        "fireNOCDetails.applicantDetails.owners.0.uuid"
+      );
       let applicationNumber = get(
         FireNOCs[i],
         "fireNOCDetails.applicationNumber"
       );
-      let fireNOCNumber = get(FireNOCs[i], "fireNOCNumber");
+      let fireNOCNumber = get(FireNOCs[i], "fireNOCDetails.validTo");
       let validTo = get(FireNOCs[i], "fireNOCDetails.validTo");
+      let tenantId = get(FireNOCs[i], "tenantId");
       switch (FireNOCs[i].fireNOCDetails.status) {
         case "INITIATED":
-          smsRequest = getInitializedSMSRequest(FireNOCs[i]);
+          smsRequest = smsRequest[
+            "message"
+          ] = `Dear ${ownerName},Your application for ${firenocType} has been generated. Your application no. is ${applicationNumber}.`;
           break;
         case "PENDINGPAYMENT":
           smsRequest[
@@ -134,6 +149,21 @@ consumerGroup.on("message", function(message) {
         topic,
         messages: JSON.stringify(smsRequest)
       });
+      if (smsRequest.message) {
+        events.push({
+          tenantId: tenantId,
+          eventType: "SYSTEMGENERATED",
+          description: smsRequest.message,
+          name: "Firenoc notification",
+          source: "webapp",
+          recepient: {
+            toUsers: [uuid]
+          }
+        });
+      }
+    }
+    if (events.length > 0) {
+      sendEventNotificaiton();
     }
   };
 
@@ -141,25 +171,19 @@ consumerGroup.on("message", function(message) {
     case envVariables.KAFKA_TOPICS_FIRENOC_CREATE:
       {
         const { FireNOCs } = value;
-        for (let i = 0; i < FireNOCs.length; i++) {
-          smsRequest = getInitializedSMSRequest(FireNOCs[i]);
-          payloads.push({
-            topic,
-            messages: JSON.stringify(smsRequest)
-          });
-        }
+        sendFireNOCSMSRequest(FireNOCs);
       }
       break;
     case envVariables.KAFKA_TOPICS_FIRENOC_UPDATE:
       {
         const { FireNOCs } = value;
-        sendWorkFlowSMSRequest(FireNOCs);
+        sendFireNOCSMSRequest(FireNOCs);
       }
       break;
     case envVariables.KAFKA_TOPICS_FIRENOC_WORKFLOW:
       {
         const { FireNOCs } = value;
-        sendWorkFlowSMSRequest(FireNOCs);
+        sendFireNOCSMSRequest(FireNOCs);
       }
       break;
 

@@ -25,6 +25,8 @@ const envVariables = {
     process.env.KAFKA_TOPICS_RECEIPT_CREATE || "egov.collection.receipt-create",
   KAFKA_TOPICS_NOTIFICATION:
     process.env.KAFKA_TOPICS_NOTIFICATION || "egov.core.notification.sms",
+  KAFKA_TOPICS_EVENT_NOTIFICATION:
+    process.env.KAFKA_TOPICS_EVENT_NOTIFICATION || "persist-events-async",
 
   //tracer configurations
   TRACER_ENABLE_REQUEST_LOGGING:
@@ -38,8 +40,7 @@ const envVariables = {
     process.env.HTTP_CLIENT_DETAILED_LOGGING_ENABLED || false,
 
   //workflow service configurations
-  EGOV_WORKFLOW_HOST:
-    process.env.EGOV_WORKFLOW_HOST || "http://localhost:8089",
+  EGOV_WORKFLOW_HOST: process.env.EGOV_WORKFLOW_HOST || "http://localhost:8089",
   // "https://egov-micro-dev.egovernments.org",
   EGOV_WORKFLOW_TRANSITION_ENDPOINT:
     process.env.EGOV_WORKFLOW_TRANSITION_PATH ||
@@ -47,8 +48,7 @@ const envVariables = {
   BUSINESS_SERVICE: process.env.BUSINESS_SERVICE || "FIRENOC",
 
   //location service configurations
-  EGOV_LOCATION_HOST:
-    process.env.EGOV_LOCATION_HOST || "http://localhost:8090",
+  EGOV_LOCATION_HOST: process.env.EGOV_LOCATION_HOST || "http://localhost:8090",
   EGOV_LOCATION_CONTEXT_PATH:
     process.env.EGOV_LOCATION_CONTEXT_PATH || "/egov-location/location/v11/",
   EGOV_LOCATION_SEARCH_ENDPOINT:
@@ -75,7 +75,8 @@ const envVariables = {
   EGOV_IDGEN_GENERATE_ENPOINT:
     process.env.EGOV_IDGEN_GENERATE_ENPOINT || "/id/_generate",
   EGOV_IDGEN_FN_APPLICATION_NO_NAME:
-    process.env.EGOV_IDGEN_FN_APPLICATION_NO_NAME || "fn.fireNOCDetails.applicationNumber",
+    process.env.EGOV_IDGEN_FN_APPLICATION_NO_NAME ||
+    "fn.fireNOCDetails.applicationNumber",
   EGOV_IDGEN_FN_CERTIFICATE_NO_NAME:
     process.env.EGOV_IDGEN_FN_CERTIFICATE_NO_NAME || "fn.fireNOCNumber",
   EGOV_APPLICATION_FORMATE:
@@ -90,7 +91,15 @@ const envVariables = {
     process.env.EGOV_MDMS_CONTEXT_PATH || "/egov-mdms-service/v1",
   EGOV_MDMS_SEARCH_ENPOINT: process.env.EGOV_MDMS_SEARCH_ENPOINT || "/_search",
 
-  //mdms service configurations
+  //event service configurations
+  EGOV_EVENT_HOST:
+    process.env.EGOV_EVENT_HOST || "https://egov-micro-dev.egovernments.org",
+  EGOV_EVENT_CONTEXT_PATH:
+    process.env.EGOV_EVENT_CONTEXT_PATH || "/egov-user-event/v1/events",
+  EGOV_EVENT_CREATE_ENPOINT:
+    process.env.EGOV_EVENT_CREATE_ENPOINT || "/_create",
+
+  //firenoc calcultor service configurations
   EGOV_FN_CALCULATOR_HOST:
     process.env.EGOV_FN_CALCULATOR_HOST || "http://localhost:8083",
   EGOV_FN_CALCULATOR_CONTEXT_PATH:
@@ -120,7 +129,7 @@ const envVariables = {
     process.env.EGOV_LOCALIZATION_STATE_LEVEL || true,
 
   // default state // IDEA:
-  EGOV_DEFAULT_STATE_ID:process.env.EGOV_DEFAULT_STATE_ID || "pb",
+  EGOV_DEFAULT_STATE_ID: process.env.EGOV_DEFAULT_STATE_ID || "pb",
 
   //pagination configurations
   EGOV_FN_DEFAULT_OFFSET: process.env.EGOV_FN_DEFAULT_OFFSET || 0,

@@ -128,7 +128,7 @@
                                  
                               },
                               {
-                                 "key":"usageCategoryMajor",
+                                 "key":"usageCategoryMinor",
                                  "localisation":{
                                     "required":true,
                                     "prefix":"PROPERTYTAX_BILLING_SLAB",   

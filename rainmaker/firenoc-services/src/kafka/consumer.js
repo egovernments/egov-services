@@ -95,7 +95,7 @@ consumerGroup.on("message", function(message) {
       let tenantId = get(FireNOCs[i], "tenantId");
       switch (FireNOCs[i].fireNOCDetails.status) {
         case "INITIATED":
-          smsRequest = smsRequest[
+          smsRequest[
             "message"
           ] = `Dear ${ownerName},Your application for ${firenocType} has been generated. Your application no. is ${applicationNumber}.`;
           break;
@@ -149,6 +149,7 @@ consumerGroup.on("message", function(message) {
         topic,
         messages: JSON.stringify(smsRequest)
       });
+      // console.log("smsRequest",smsRequest);
       if (smsRequest.message) {
         events.push({
           tenantId: tenantId,
@@ -162,6 +163,7 @@ consumerGroup.on("message", function(message) {
         });
       }
     }
+    // console.log("events",events);
     if (events.length > 0) {
       sendEventNotificaiton();
     }

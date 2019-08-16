@@ -75,46 +75,44 @@ let borderLayout = {
     const printer =  new pdfMakePrinter(fontDescriptors);
     let noOfDefinitions=listDocDefinition.length;
     let listOfFilestoreIds=[];
-    listDocDefinition.forEach(docDefinition =>
+    if(noOfDefinitions==0)
     {
-        const doc = printer.createPdfKitDocument(docDefinition);
-        let fileNameAppend="-"+new Date().getTime();
-        let filename="src/pdfs/"+key+" "+fileNameAppend+".pdf"
-        //reference link
-        //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
-    
-        //storing file on local computer/server
-        doc.pipe(
-          fs.createWriteStream(filename).on("error", err => {
-            errorCallback({message:"error occurred while writing pdf: "+((typeof err)==='string')?err:err.message});
-          }).on("close", () => {
-              fileStoreAPICall(filename,tenantId).then((result)=>{
-              fs.unlink(filename,()=>{});
-              listOfFilestoreIds.push(result);
-              if(listOfFilestoreIds.length===noOfDefinitions)
-              {
-                // insertStoreIds("",);
-                logger.info(`PDF successfully created and stored filestoreIds: ${listOfFilestoreIds}`);
-                successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
-              }
-          }).catch(err=>{
-            fs.unlink(filename,()=>{});
-            logger.error(err.stack);
-            errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
-          });
-        }
-        ));
-      //   doc.on("end", () => {
-      //     //filestore API call to store file on S3    
-  //     //filestore API call to store file on S3    
-      //     //filestore API call to store file on S3    
-      //     fileStoreAPICall(key,fileNameAppend,function(result) {
-      //     successCallback({message:"PDF successfully created and stored",filestoreId:result});
-      //  });
-          
-      //   });
-        doc.end();
-    });
+      errorCallback({message:" error: no file generated for pdf"});
+    }
+    else
+    {
+      listDocDefinition.forEach(docDefinition =>
+        {
+            const doc = printer.createPdfKitDocument(docDefinition);
+            let fileNameAppend="-"+new Date().getTime();
+            let filename="src/pdfs/"+key+" "+fileNameAppend+".pdf"
+            //reference link
+            //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
+        
+            //storing file on local computer/server
+            doc.pipe(
+              fs.createWriteStream(filename).on("error", err => {
+                errorCallback({message:"error occurred while writing pdf: "+((typeof err)==='string')?err:err.message});
+              }).on("close", () => {
+                  fileStoreAPICall(filename,tenantId).then((result)=>{
+                  fs.unlink(filename,()=>{});
+                  listOfFilestoreIds.push(result);
+                  if(listOfFilestoreIds.length===noOfDefinitions)
+                  {
+                    // insertStoreIds("",);
+                    logger.info(`PDF successfully created and stored filestoreIds: ${listOfFilestoreIds}`);
+                    successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
+                  }
+              }).catch(err=>{
+                fs.unlink(filename,()=>{});
+                logger.error(err.stack);
+                errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
+              });
+            }
+            ));
+            doc.end();
+        });
+    }
   } catch (err) {
     logger.error(err.stack);
     errorCallback({message:" error occured while creating pdf: "+((typeof err)==='string')?err:err.message});
@@ -157,7 +155,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
     let formatConfigByFile=[];
     let countOfObjectsInCurrentFile=0;
     let moduleObjectsArray=checkifNullAndSetValue(jp.query(req.body,baseKeyPath),[],baseKeyPath);
-      if(moduleObjectsArray!==[])
+      if(Array.isArray(moduleObjectsArray) && (moduleObjectsArray.length>0))
       {
         for(var i=0, len=moduleObjectsArray.length; i < len; i++)
         {
@@ -197,7 +195,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
         }
       }
       else{
-        throw {message:`could not find propery in request body with name ${baseKeyPath}`}; 
+        throw {message:`could not find property of type array in request body with name ${baseKeyPath}`}; 
       }
     
     

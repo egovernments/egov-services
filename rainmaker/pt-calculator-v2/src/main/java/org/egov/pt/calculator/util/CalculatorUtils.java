@@ -432,8 +432,10 @@ public class CalculatorUtils {
 		List<BillAccountDetail> billAccountDetails = receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails();
 		for (BillAccountDetail detail : billAccountDetails) {
 			if (CalculatorConstants.TAXES_TO_BE_CONSIDERD.contains(detail.getTaxHeadCode()))
+			{
 				taxAmt = taxAmt.add(detail.getAmount());
-		    	amtPaid = amtPaid.add(detail.getAdjustedAmount());
+				amtPaid = amtPaid.add(detail.getAdjustedAmount());
+			}
 		}
 		return taxAmt.subtract(amtPaid);
 	}

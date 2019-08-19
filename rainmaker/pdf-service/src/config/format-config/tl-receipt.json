@@ -590,7 +590,7 @@
                 "style": "receipt-table-key"
               },
               {
-                "text": "NA",
+                "text": "{{variable32}}",
                 "border": [
                   false,
                   true,

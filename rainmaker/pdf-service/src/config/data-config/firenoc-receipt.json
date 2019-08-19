@@ -112,12 +112,8 @@
                 {
                   "derived": [
                      {
-                        "variable": "$variable",
-                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
-                     },
-                     {
-                        "variable": "$variable",
-                        "formula": "$.Data.value + ($.Data.value1 * $.Data.value2) - $.Data.value3"
+                        "variable": "variable31",
+                        "formula": "{{variable29}}+{{variable30}}"
                      }
                   ]
                },
@@ -146,6 +142,14 @@
                            {
                               "variable":"variable9",
                               "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='FIRENOC_TAXES')].amount"
+                           },
+                           {
+                              "variable":"variable29",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='FIRENOC_ADHOC_PENALTY')].amount"
+                           },
+                           {
+                              "variable":"variable30",
+                              "value":"$.Receipt[0].Bill[0].billDetails[0].billAccountDetails[?(@.taxHeadCode=='FIRENOC_ADHOC_REBATE')].amount"
                            },
                            {
                               "variable":"variable10",

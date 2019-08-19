@@ -176,7 +176,8 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           externalAPIMapping(key,moduleObject,dataconfig,variableTovalueMap,localisationMap,requestInfo,localisationModuleList),
             ]);
           
-          await generateQRCodes(moduleObject,dataconfig,variableTovalueMap)
+          await generateQRCodes(moduleObject,dataconfig,variableTovalueMap);
+          handleDerivedMapping(dataconfig,variableTovalueMap);
           formatObject=fillValues(variableTovalueMap,formatObject);
           if(isCommonTableBorderRequired===true)
             formatObject=updateBorderlayout(formatObject);
@@ -299,5 +300,18 @@ const generateQRCodes=async(moduleObject,dataconfig,variableTovalueMap)=>{
         variableTovalueMap[varname]=qrCodeImage;
     }
 }
+
+const handleDerivedMapping=(dataconfig,variableTovalueMap)=>
+{
+  let derivedMappings=checkifNullAndSetValue(jp.query(dataconfig, "$.DataConfigs.mappings.*.mappings.*.derived.*"),[],"$.DataConfigs.mappings.*.mappings.*.derived.*");
+
+  for(var i=0, len=derivedMappings.length; i < len; i++) 
+  {
+      let mapping=derivedMappings[i];
+      let expression=mustache.render(mapping.formula, variableTovalueMap).replace(/NA/g,"0");
+      variableTovalueMap[mapping.variable]=eval(expression);
+  }
+}
+
 export default app;
 

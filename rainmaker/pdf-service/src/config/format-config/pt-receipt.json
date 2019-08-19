@@ -527,7 +527,7 @@
               "style": "receipt-table-key"
             },
             {
-              "text": "NA ",
+              "text": "{{variable37}}",
               "border": [
                 false,
                 true,

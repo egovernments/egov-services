@@ -160,6 +160,14 @@
                   ]
                },
                {
+                  "derived": [
+                     {
+                        "variable": "variable37",
+                        "formula": "{{variable34}}-{{variable27}}"
+                     }
+                  ]
+               },
+               {
                   "externalAPI": [     
                     {                         
                        "path": "http://collection-services:8080/collection-services/receipts/_search",

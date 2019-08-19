@@ -189,7 +189,7 @@
                 "alignment": "center"
               },
               {
-                "text": "NA",
+                "text": "{{variable31}}",
                 "border": [
                   true,
                   true,

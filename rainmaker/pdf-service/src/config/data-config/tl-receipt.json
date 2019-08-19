@@ -143,6 +143,14 @@
                    ]
                 },
                 {
+                  "derived": [
+                     {
+                        "variable": "variable32",
+                        "formula": "{{variable19}}-{{variable20}}"
+                     }
+                  ]
+               },
+                {
                    "externalAPI": [
                      
                       {

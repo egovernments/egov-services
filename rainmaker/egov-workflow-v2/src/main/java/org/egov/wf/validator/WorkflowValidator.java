@@ -50,7 +50,7 @@ public class WorkflowValidator {
      * @param requestInfo The RequestInfo of the search request
      * @param processStateAndActions The ProcessStateAndAction object of the search result
      */
-    public void validateSearch(RequestInfo requestInfo, List<ProcessStateAndAction> processStateAndActions){
+/*    public void validateSearch(RequestInfo requestInfo, List<ProcessStateAndAction> processStateAndActions){
         Map<String,String> errorMap = new HashMap<>();
         Set<String> businessIds = util.getBusinessIds(processStateAndActions);
         businessIds.forEach(businessId -> {
@@ -64,7 +64,7 @@ public class WorkflowValidator {
         });
         if(!errorMap.isEmpty())
             throw new CustomException(errorMap);
-    }
+    }*/
 
 
 
@@ -92,8 +92,10 @@ public class WorkflowValidator {
      */
     private void validateAction(RequestInfo requestInfo,List<ProcessStateAndAction> processStateAndActions
             ,BusinessService businessService){
-        List<Role> roles = requestInfo.getUserInfo().getRoles();
+        Map<String,List<String>> tenantIdToRoles = util.getTenantIdToUserRolesMap(requestInfo);
         for(ProcessStateAndAction processStateAndAction : processStateAndActions){
+            String tenantId= processStateAndAction.getProcessInstanceFromRequest().getTenantId();
+            List<String> roles = tenantIdToRoles.get(tenantId);
             Action action = processStateAndAction.getAction();
             if(action==null && !processStateAndAction.getCurrentState().getIsTerminateState())
                 throw new CustomException("INVALID ACTION","Action not found for businessIds: "+
@@ -140,7 +142,7 @@ public class WorkflowValidator {
             List<Role> assigneeRoles;
             if(isStateChanging && processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null){
                 assigneeRoles = processStateAndAction.getProcessInstanceFromRequest().getAssignee().getRoles();
-                Boolean isRoleAvailableInNextState = util.isRoleAvailable(assigneeRoles,nextStateRoles);
+                Boolean isRoleAvailableInNextState = util.isRoleAvailable(tenantId,assigneeRoles,nextStateRoles);
                 if(!isRoleAvailableInNextState)
                     throw new CustomException("INVALID ASSIGNEE","Cannot assign to the user: "+ processStateAndAction.getProcessInstanceFromRequest().getAssignee().getUuid());
             }

@@ -19,8 +19,8 @@ public class BusinessServiceSearchCriteria {
 
 
     @NotNull
-    @JsonProperty("tenantId")
-    private String tenantId;
+    @JsonProperty("tenantIds")
+    private List<String> tenantIds;
 
     @JsonProperty("businessServices")
     private List<String> businessServices;
@@ -33,7 +33,7 @@ public class BusinessServiceSearchCriteria {
 
 
     public BusinessServiceSearchCriteria(BusinessServiceSearchCriteria criteria) {
-        this.tenantId = criteria.getTenantId();
+        this.tenantIds = criteria.getTenantIds();
         this.businessServices = criteria.getBusinessServices();
         this.stateUuids = criteria.getStateUuids();
         this.actionUuids = criteria.getActionUuids();

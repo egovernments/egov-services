@@ -47,6 +47,8 @@ public class WorkflowUtil {
     public Boolean isRoleAvailable(String tenantId,List<Role> userRoles, List<String> actionRoles){
         Boolean flag = false;
  //       List<String> allowedRoles = Arrays.asList(actionRoles.get(0).split(","));
+        if(CollectionUtils.isEmpty(userRoles))
+            return false;
         for(Role role : userRoles) {
             if(role.getTenantId().equalsIgnoreCase(tenantId)){
                 if (actionRoles.contains(role.getCode()) || actionRoles.contains("*")) {
@@ -68,6 +70,9 @@ public class WorkflowUtil {
     public Boolean isRoleAvailable(List<String> userRoles, List<String> actionRoles){
         Boolean flag = false;
         //       List<String> allowedRoles = Arrays.asList(actionRoles.get(0).split(","));
+        if(CollectionUtils.isEmpty(userRoles))
+            return false;
+
         for(String role : userRoles) {
             if (actionRoles.contains(role) || actionRoles.contains("*")) {
                 flag = true;

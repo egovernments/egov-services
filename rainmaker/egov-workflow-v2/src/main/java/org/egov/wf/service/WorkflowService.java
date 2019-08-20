@@ -96,7 +96,16 @@ public class WorkflowService {
     private List<ProcessInstance> getUserBasedProcessInstances(RequestInfo requestInfo,
                                        ProcessInstanceSearchCriteria criteria){
         BusinessServiceSearchCriteria businessServiceSearchCriteria = new BusinessServiceSearchCriteria();
-        businessServiceSearchCriteria.setTenantIds(util.getTenantIds(requestInfo.getUserInfo()));
+
+        /*
+        * If tenantId is sent in query param processInstances only for that tenantId is returned
+        * else all tenantIds for which the user has roles are returned
+        * */
+        if(criteria.getTenantId()!=null)
+            businessServiceSearchCriteria.setTenantIds(Collections.singletonList(criteria.getTenantId()));
+        else
+            businessServiceSearchCriteria.setTenantIds(util.getTenantIds(requestInfo.getUserInfo()));
+
         List<BusinessService> businessServices = businessServiceRepository.getBusinessServices(businessServiceSearchCriteria);
         List<String> actionableStatuses = util.getActionableStatusesForRole(requestInfo,businessServices);
         criteria.setAssignee(requestInfo.getUserInfo().getUuid());

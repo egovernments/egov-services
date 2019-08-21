@@ -19,7 +19,7 @@ public class BusinessServiceSearchCriteria {
 
 
     @NotNull
-    @JsonProperty("tenantIds")
+    @JsonProperty("tenantId")
     private List<String> tenantIds;
 
     @JsonProperty("businessServices")

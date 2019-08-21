@@ -162,7 +162,7 @@ public class WorkflowUtil {
         for(Map.Entry<String,Set<String>> entry : stateToRoleMap.entrySet()){
             tenantId = stateUuidToTenantIdMap.get(entry.getKey());
             userRoleCodes = tenantIdToUserRolesMap.get(tenantId);
-            if(!Collections.disjoint(userRoleCodes,entry.getValue())){
+            if(!CollectionUtils.isEmpty(userRoleCodes) && !Collections.disjoint(userRoleCodes,entry.getValue())){
                 actionableStatuses.add(entry.getKey());
             }
         }

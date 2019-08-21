@@ -155,7 +155,7 @@
                      
                       {
                          
-                         "path": "https://egov-micro-dev.egovernments.org/collection-services/receipts/_search",
+                         "path": "http://collection-services:8080/collection-services/receipts/_search",
                          "queryParam": "consumerCode=$.applicationNumber",
                          
                          

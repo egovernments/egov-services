@@ -1,50 +1,57 @@
 package org.egov.tlcalculator.web.models.demand;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.*;
 import org.egov.tlcalculator.web.models.enums.Purpose;
 
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
+/**
+ * BillAccountDetail
+ */
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class BillAccountDetail {
 
-	private String id;
+    @JsonProperty("id")
+    private String id = null;
 
-	private String tenantId;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	private String billDetail;
-	
-	private String glcode;
+    @JsonProperty("billDetail")
+    private String billDetail = null;
 
-	private Integer order;
+    @JsonProperty("demandDetailId")
+    private String demandDetailId = null;
 
-	private String accountDescription;
-	
-	@Default
-	private BigDecimal crAmountToBePaid = BigDecimal.ZERO;
+    @JsonProperty("order")
+    private Integer order = null;
 
-	@Default
-	private BigDecimal creditAmount = BigDecimal.ZERO;
+    @JsonProperty("amount")
+    private BigDecimal amount = null;
 
-	@Default
-	private BigDecimal debitAmount = BigDecimal.ZERO;
+    @JsonProperty("adjustedAmount")
+    private BigDecimal adjustedAmount = null;
 
-	private Boolean isActualDemand;
+    @JsonProperty("isActualDemand")
+    private Boolean isActualDemand = null;
 
-	private Purpose purpose;
-	
-	public String getTaxHeadCode() {
-		if(!StringUtils.isEmpty(this.accountDescription))
-			return this.accountDescription.split("[-]")[0];
-		else
-			return null;
-	}
+    @JsonProperty("glcode")
+    private String glcode = null;
+
+    @JsonProperty("taxHeadCode")
+    private String taxHeadCode = null;
+
+    @JsonProperty("additionalDetails")
+    private JsonNode additionalDetails = null;
+
+    @JsonProperty("purpose")
+    private Purpose purpose = null;
 }

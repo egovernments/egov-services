@@ -1,7 +1,6 @@
 package org.egov.search.controller;
 
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -42,21 +41,21 @@ public class SearchController {
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,
 			@PathVariable("searchName") String searchName,
-			@RequestBody @Valid final SearchRequest searchRequest) {
-		
-		long startTime = new Date().getTime();
+			@RequestBody @Valid final SearchRequest searchRequest) {		
+		Object searchResult = null;
 		try {
 			searchReqValidator.validate(searchRequest, moduleName, searchName);
-			Object searchResult = searchService.searchData(searchRequest,moduleName,searchName);
+			searchResult = searchService.searchData(searchRequest,moduleName,searchName);
 		    Type type = new TypeToken<Map<String, Object>>() {}.getType();
 			Gson gson = new Gson();
 			Map<String, Object> data = gson.fromJson(searchResult.toString(), type);
-			long endTime = new Date().getTime();
-			logger.info(" the time taken for search in controller in ms : "+(endTime-startTime));
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch(Exception e){
 			logger.error("Exception while searching for result: ",e);
-			throw e;
+			if(null != searchResult)
+				return new ResponseEntity<>(searchResult, HttpStatus.OK);
+			else
+				throw e;
 		}
 	}
 

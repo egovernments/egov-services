@@ -66,25 +66,12 @@ public class TLNotificationService {
                 if(owner.getMobileNumber()!=null)
                     mobileNumberToOwner.put(owner.getMobileNumber(),owner.getName());
             });
-            smsRequests.addAll(createSMSRequest(message,mobileNumberToOwner));
+            smsRequests.addAll(util.createSMSRequest(message,mobileNumberToOwner));
         }
     }
 
 
-    /**
-     * Creates sms request for the each owners
-     * @param message The message for the specific tradeLicense
-     * @param mobileNumberToOwnerName Map of mobileNumber to OwnerName
-     * @return List of SMSRequest
-     */
-    private List<SMSRequest> createSMSRequest(String message,Map<String,String> mobileNumberToOwnerName){
-        List<SMSRequest> smsRequest = new LinkedList<>();
-        for(Map.Entry<String,String> entryset : mobileNumberToOwnerName.entrySet()) {
-            String customizedMsg = message.replace("<1>",entryset.getValue());
-            smsRequest.add(new SMSRequest(entryset.getKey(),customizedMsg));
-        }
-            return smsRequest;
-    }
+
 
 
 

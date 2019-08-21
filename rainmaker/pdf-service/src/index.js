@@ -90,6 +90,17 @@ let borderLayout = {
             //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
         
             //storing file on local computer/server
+
+
+            // doc.on('data', function (chunk) {
+            //   chunks.push(chunk);
+            //   });
+            //   doc.on('end', function () {
+            //     // console.log("enddddd "+cr++);
+            //   result = Buffer.concat(chunks);
+            //   result='data:application/pdf;base64,' + result.toString('base64');
+
+
             doc.pipe(
               fs.createWriteStream(filename).on("error", err => {
                 errorCallback({message:"error occurred while writing pdf: "+((typeof err)==='string')?err:err.message});
@@ -308,8 +319,8 @@ const handleDerivedMapping=(dataconfig,variableTovalueMap)=>
   for(var i=0, len=derivedMappings.length; i < len; i++) 
   {
       let mapping=derivedMappings[i];
-      let expression=mustache.render(mapping.formula, variableTovalueMap).replace(/NA/g,"0");
-      variableTovalueMap[mapping.variable]=eval(expression);
+      let expression=mustache.render(mapping.formula.replace(/-/g," - ").replace(/\+/g," + "), variableTovalueMap).replace(/NA/g,"0");
+      variableTovalueMap[mapping.variable]=eval(expression);     
   }
 }
 

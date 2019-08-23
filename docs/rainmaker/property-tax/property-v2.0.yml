@@ -39,7 +39,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PropertyRequest'
-        description: Details for the new property + RequestInfo meta data.
+        description: Details for the new property + RequestHeader meta data.
         required: true
   /property/_update:
     post:
@@ -77,7 +77,7 @@ paths:
       x-roles: PT_CEMP,CITIZEN
       parameters:
         - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/RequestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/RequestHeader
         - $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId
         - name: name
@@ -95,10 +95,10 @@ paths:
           schema:
             type: string
             format: varchar
-        - name: buildingNumbers
+        - name: constructionDetailNumbers
           in: query
           required: false
-          description: List of buildingNumbers to search.
+          description: List of constructionDetailNumbers to search.
           schema:
             type: string
             exclusiveMinimum: true
@@ -159,13 +159,27 @@ paths:
       x-roles: PT_ADMIN
       tags:
         - Property
+      parameters: 
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId
+        - name: propertyId
+          in: query
+          required: true
+          description: The properrtyId to be deactivated
+          schema:
+            type: string
+            exclusiveMinimum: true
+            exclusiveMaximum: false
+            minLength: 4
+            maxLength: 128
       responses:
         '200':
           description: Deleted Property successful
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/PropertyDeleteResponse'
+                $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
+                
         '404':
           description: Delete Property failed
           content:
@@ -177,7 +191,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PropertyDeleteRequest'
+              $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
         description: Request header for the property delete Request.
         required: true      
   /property/_cancel:
@@ -187,13 +202,37 @@ paths:
       x-roles: PT_ADMIN
       tags:
         - Property
+      parameters: 
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId
+        - name: propertyId
+          in: query
+          required: true
+          description: The properrtyId to be deactivated
+          schema:
+            type: string
+            exclusiveMinimum: true
+            exclusiveMaximum: false
+            minLength: 4
+            maxLength: 128
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
+        description: Request header for the property delete Request.
+        required: true      
+        
       responses:
         '200':
           description: Property deactivated successful
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/PropertyDeleteResponse'
+                $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
         '404':
           description: Property not found
           content:
@@ -201,194 +240,12 @@ paths:
               schema:
                 $ref: >-
                   https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PropertyDeleteRequest'
-        description: Request header for the property delete Request.
-        required: true              
-      
-  /building/_create:
-    post:
-      summary: Create new building object.
-      description: API to create new building object to capture the construction details of the property .
-      x-roles: PT_CEMP,CITIZEN
-      responses:
-        '201':
-          description: Building created sucessfully
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/BuildingResponse'
-        '400':
-          description: Building creation failed
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
-      tags:
-        - Building
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BuildingRequest'
-        description: Details for the new building + RequestInfo meta data.
-        required: true
-  /building/_update:
-    post:
-      summary: Update existing building.
-      description: Updates a given building with newer details.
-      x-roles: PT_CEMP,CITIZEN
-      tags:
-        - Building
-      responses:
-        '200':
-          description: Building details updated successfully
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/BuildingResponse'
-        '400':
-          description: Failed to update Building details
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BuildingRequest'
-        description: Request header for the building Request.
-        required: true
-  /building/_search:
-    post:
-      summary: Get the list of Buildings defined in the system.
-      description: |
-        Get the building list based on the input parameters.
-      x-roles: PT_CEMP,CITIZEN
-      parameters:
-        - $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo
-        - $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId
-        - name: propertyIds
-          in: query
-          description: List of system generated ids of properties.
-          required: false
-          schema:
-            type: string
-            format: varchar
-        - name: buildingNumbers
-          in: query
-          required: false
-          description: List of buildingNumbers to search.
-          schema:
-            type: string
-            exclusiveMinimum: true
-            exclusiveMaximum: false
-            minLength: 4
-            maxLength: 128
-        - name: fromDate
-          in: query
-          description: Fetches building with created time after fromDate.
-          required: false
-          schema:
-            type: number
-        - name: toDate
-          in: query
-          description: Fetches building with created time till toDate.
-          required: false
-          schema:
-            type: number
 
-      responses:
-        '200':
-          description: Successful response
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/BuildingSearchResponse'
-        '400':
-          description: Invalid input.
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
-      tags:
-        - Building
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
-        description: Details for the new building + RequestInfo meta data.
-        required: true
-  /building/_delete:
-    post:
-      summary: Delete existing building details
-      description: Deletes  building detials  based on building number from the system.
-      x-roles: PT_ADMIN
-      tags:
-        - Building
-      responses:
-        '200':
-          description: deleted building detials successful
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/BuildingDeleteResponse'
-        '404':
-          description: Building details not found
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BuildingDeleteRequest'
-        description: Request header for the building Request.
-        required: true
-  /building/_cancel:
-    post:
-      summary: Deactivates/Cancels existing building.
-      description: Deactivates/Cancels based on the given building number
-      x-roles: PT_ADMIN
-      tags:
-        - Building
-      responses:
-        '200':
-          description: Deactivates/Cancels building successful
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/BuildingDeleteResponse'
-        '400':
-          description: Deactivation of building failed
-          content:
-            '*/*':
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BuildingDeleteRequest'
-        description: Request header for the building cancel/deactivate Request.
-        required: true
-  
+
   /assessment/_create:
     post:
       summary: Creates assessment object.
-      description: API to create assessment for the given buildingNumber and financialYear. Creating assessment will result in generation of demand for the given financial year
+      description: API to create assessment for the given constructionDetailNumber and financialYear. Creating assessment will result in generation of demand for the given financial year
       x-roles: PT_CEMP,CITIZEN
       responses:
         '201':
@@ -411,12 +268,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AssessmentRequest'
-        description: Details for the new assessment + RequestInfo meta data.
+        description: Details for the new assessment + RequestHeader meta data.
         required: true
   /assessment/_update:
     post:
       summary: Updates existing assessment.
-      description: The update API is used to reassess the building for the given financial year. Updating assessment will update the demand for the given financial year
+      description: The update API is used to reassess the constructionDetail for the given financial year. Updating assessment will update the demand for the given financial year
       x-roles: PT_CEMP,CITIZEN
       tags:
         - Assessment
@@ -448,7 +305,7 @@ paths:
         Get the assessment list based on the input parameters.
       x-roles: PT_CEMP,CITIZEN
       parameters:
-        - $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
+        - $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
         - $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId
           required: true  
@@ -459,10 +316,10 @@ paths:
           schema:
             type: string
             format: varchar
-        - name: buildingNumbers
+        - name: constructionDetailNumbers
           in: query
           required: false
-          description: List of buildingNumbers to search.
+          description: List of constructionDetailNumbers to search.
           schema:
             type: string
             exclusiveMinimum: true
@@ -516,8 +373,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
-        description:  RequestInfo meta data.
+              $ref: https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
+        description:  RequestHeader meta data.
         required: true
   /assessment/_delete:
     post:
@@ -578,6 +435,9 @@ paths:
         
         
 servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/egovernmets-faoundat/PT-2.0/1.0.0
   - url: https://egov-micro-dev.egovernments.org
 components:
   schemas:
@@ -598,6 +458,11 @@ components:
           type: string
           description: Unique Identifier of the Property.
           readOnly: true
+          minLength: 1
+          maxLength: 64
+        linkPropertyId:
+          type: string
+          description: Unique Identifier of the Property.
           minLength: 1
           maxLength: 64
         tenantId:
@@ -653,7 +518,6 @@ components:
                 Central Government etc.
               maxLength: 64
               example: VACANT
-              
             ownershipCategory:
               type: string
               description: The type of ownership of the property.
@@ -664,11 +528,8 @@ components:
               items:
                 $ref: '#/components/schemas/OwnerInfo'
             institution:
-              description: >-
-                The details of institution if the ownershipCategory is
-                institutional
-              items:
-                $ref: '#/components/schemas/Institution'
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/Institution
                 
             creationReason:
               type: string
@@ -679,18 +540,6 @@ components:
               enum:
                 - NEWPROPERTY
                 - SUBDIVISION
-            occupancyDate:
-              type: integer
-              format: int64
-              description: >-
-                Property is constructed but the tax will be applicable only from
-                the occupation date (time in epoch). System capture that date
-                here.
-            constructionDate:
-              type: integer
-              format: int64
-              description: >-
-                The date when the property was constructed
             noOfFloors:
               type: integer
               format: int64
@@ -702,117 +551,82 @@ components:
             source:
               type: string
               description: >-
-                Source of a property data. The properties will be created in a
-                system by different mboules
+                Source of a constructionDetail data. The constructionDetail will be created in a
+                system based on the data avaialble in their manual records or during
+                field survey. There can be more from client to client.
               enum:
-                - PT
-                - TL
-                - WAS
-                - DATA_MIGRATION
-            documents:
+                - MUNICIPAL_RECORDS
+                - FIELD_SURVEY
+            channel:
+              type: string
               description: >-
-                The documents attached during property create, modification or any
-                transaction happened on the property.
+                constructionDetail details can be created from different channels Eg. System
+                (properties created by ULB officials), CFC Counter (From citizen
+                faciliation counters) etc. Here we are defining some known channels,
+                there can be more client to client.
+              enum:
+                - SYSTEM
+                - CFC_COUNTER
+                - CITIZEN
+                - DATA_ENTRY
+                - MIGRATION
+            documents:
+              description: The documents attached by owner for exemption.
               type: array
               items:
-                $ref: '#/components/schemas/Document'
+                $ref: >-
+                  https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/Document
             additionalDetails:
               type: object
               description: 'The json (array of ''#/definitions/Factor'')'
           required:
             - propertyType
-            - landArea
             - source
             - address
             - owners
             - tenantId
 
-    Building:
+    ConstructionDetail:
       description: >-
-        Construction/Building details are captured here. Detail information of the building including floor wise usage and area are saved as seperate units .For each financial year construction details may change. Building object is required for tax calculation
+        Construction/constructionDetail details are captured here. Detail information of the constructionDetail including floor wise usage and area are saved as seperate units .For each financial year construction details may change. constructionDetail object is required for tax calculation
       type: object
       properties:
-        financialYear:
-          type: string
-          description: Latest tax paid year.
-          example: 2019-20
-        buildingNumber:
-          type: string
-          description: unique building number to identify the construction details.
-          maxLength: 64
-          readOnly: true
         id:
           type: string
-          description: id of the property with which the building is associated.
+          description: id of the property with which the constructionDetail is associated.
           maxLength: 64
           readOnly: true
-        buildingApprovalDate:
-          type: number
-          description: >-
-            There will be work flow to create a new building in a system. The
-            building date is the final approval and UPIC no generation date.
-        status:
-          type: string
-          description: status of the Building
-          enum:
-            - ACTIVE
-            - INACTIVE
-            
-        usageCategory:
-          type: string
-          description: >-
-            This is about the usage of the property like Residential,
-            Non-residential, Mixed(Property which is getting used for
-            Residential, Non-residential purpose)
-          maxLength: 64
-          example: RESIDENTIAL
-        source:
-          type: string
-          description: >-
-            Source of a building data. The building will be created in a
-            system based on the data avaialble in their manual records or during
-            field survey. There can be more from client to client.
-          enum:
-            - MUNICIPAL_RECORDS
-            - FIELD_SURVEY
-        buildUpArea:
+        builtUpArea:
           type: number
           format: float
-          description: Total built up area in sq ft
+          description: Total built up area in sq ft(built-up area = carpet area + areas covered by walls)
+        carpetArea:
+          type: number
+          format: float
+          description: Total built up area in sq ft(built-up area = carpet area + areas covered by walls)
+        superBuiltUpArea:
+          type: number
+          format: float
+          description: Total built up area in sq ft((built-up area + Common area = Super built-up area))
+        constructionType:
+          type: string
+          description: Construction type is defined in MDMS ConstructionTypeMaster.
+          maxLength: 64
+          minLength: 1
+        constructionDate:
+          type: integer
+          format: int64
+          description: >-
+            The date when the property was constructed
+        dimensions:
+          $ref: '#/components/schemas/Dimensions'
         auditDetails:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/AuditDetails
-        units:
-          description: >-
-            List of Units in the property. E.g. A property might have 2 units in
-            ground floor and 1 ion first floor. Unit can be Room, floor or any
-            bounded area with a defined usage.
-          type: array
-          items:
-            $ref: '#/components/schemas/Unit'
-        documents:
-          description: >-
-            The documents attached during building detail modification or any
-            transaction happened on the property.
-          type: array
-          items:
-            $ref: '#/components/schemas/Document'
         additionalDetails:
           type: object
           description: 'The json (array of ''#/definitions/Factor'')'
-        channel:
-          type: string
-          description: >-
-            Building details can be created from different channels Eg. System
-            (properties created by ULB officials), CFC Counter (From citizen
-            faciliation counters) etc. Here we are defining some known channels,
-            there can be more client to client.
-          enum:
-            - SYSTEM
-            - CFC_COUNTER
-            - CITIZEN
-            - DATA_ENTRY
-            - MIGRATION
+        
       required: 
           - financialYear
           - status
@@ -821,30 +635,6 @@ components:
           - buildUpArea
           
             
-    Institution:
-      type: object
-      properties:
-        id:
-          type: string
-          maxLength: 64
-          description: Unique Identifier of the Institution(UUID).
-        tenantId:
-          type: string
-          description: tenant id of the Property
-          maxLength: 256
-        type:
-          type: string
-          description: Institution type.
-          maxLength: 64
-        designation:
-          type: string
-          maxLength: 64
-          description: Designation of the person creating/updating building details on behalf of the institution
-        additionalDetails:
-          type: object
-          description: 'Json object to capture any extra information which is not accommodated by model'
-
-   
     OwnerInfo:
       type: object
       properties:
@@ -896,7 +686,8 @@ components:
             description: The documents attached by owner for exemption.
             type: array
             items:
-              $ref: '#/components/schemas/Document'
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/Document
           relationship:
             type: string
             description: The relationship of gaurdian.
@@ -922,9 +713,9 @@ components:
         - type: object
           description: Address of the property.
           properties:
-            buildingName:
+            constructionDetailName:
               type: string
-              description: Name of the building
+              description: Name of the constructionDetail
               maxLength: 64
               minLength: 2
             street:
@@ -932,41 +723,9 @@ components:
               description: Street Name
               maxLength: 64
               minLength: 2
-            locality:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v11-0-0.yml#/definitions/Boundary
-            additionalDetails:
-              type: object
-              description: 'Json object to capture any extra information which is not accommodated of model'
-
           required: 
             - locality
     
-    Document:
-      type: object
-      description: >-
-        This object holds list of documents attached during the transaciton for
-        a property
-      properties:
-        id:
-          type: string
-          maxLength: 64
-          description: system id of the Document.
-        documentType:
-          type: string
-          description: >-
-            unique document type code, should be validated with document type
-            master
-        fileStore:
-          type: string
-          description: File store reference key.
-        documentUid:
-          type: string
-          maxLength: 64
-          description: 'The unique id(Pancard Number,Adhar etc.) of the given Document.'
-        additionalDetails:
-          type: object
-          description: 'Json object to capture any extra information which is not accommodated by model'
 
     Unit:
       type: object
@@ -1010,15 +769,10 @@ components:
           type: number
           format: int64
           description: Date on which unit is occupied.
-        constructionType:
-          type: string
-          description: Construction type is defined in MDMS ConstructionTypeMaster.
-          maxLength: 64
-          minLength: 1
-        arv:
-          type: number
-          format: double
-          description: 'Annual rental value(arv), if occupancy type is Tenant.'
+        constructionDetail:
+          $ref: '#/components/schemas/ConstructionDetail'
+        dimensions:
+          $ref: '#/components/schemas/Dimensions'
         additionalDetails:
           type: object
           description: 'Json object to capture any extra information which is not accommodated by model'
@@ -1028,19 +782,19 @@ components:
         Contract class to receive request. Array of Property items  are used in
         case of create . Where as single Property item is used for update
       properties:
-        RequestInfo:
+        RequestHeader:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
         Property:
           description: Used for search result and create only
           $ref: '#/components/schemas/Property'
     PropertyResponse:
       description: >-
-        Contains the ResponseInfo and the created/updated property
+        Contains the ResponseHeader and the created/updated property
       properties:
-        ResponseInfo:
+        ResponseHeader:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
         Property:
           description: Used for update and create only
           $ref: '#/components/schemas/Property'
@@ -1049,9 +803,9 @@ components:
         Contract class to send response.  Property items  is used in
         case of search results or response for search. 
       properties:
-        ResponseInfo:
+        ResponseHeader:
           $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
+            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
         Properties:
           description: Used for search result and create only
           items:
@@ -1060,9 +814,9 @@ components:
     PropertyDeleteRequest:
       description: Class to send the request body for property delete
       properties:
-        RequestInfo:
+        RequestHeader:
            $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
+              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
         tenantId:
           type: string
           description: The tenantId of the property to be deleted
@@ -1070,16 +824,16 @@ components:
           type: string
           description: The propertyId of the property to be deleted
       required:
-        - RequestInfo
+        - RequestHeader
         - tenantId
         - propertyId
 
     PropertyDeleteResponse:
       description: Class to send the request body for property delete
       properties:
-        ResponseInfo:
+        ResponseHeader:
            $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
+              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
         tenantId:
           type: string
           description: The tenantId of the property to be deleted
@@ -1087,88 +841,23 @@ components:
           type: string
           description: The propertyId of the property to be deleted
 
-            
-    BuildingRequest:
-      description: >-
-        Contract class to receive request. Array of building items  are used
-        in case of create . Where as single building item is used for update
-      properties:
-        RequestInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
-        Buildings:
-          description: Used for search result and create only
-          $ref: '#/components/schemas/Building'
-    BuildingResponse:
-      description: >-
-        Contract class to send response. Array of building items  are used in
-        case of search results or response for create. Where as single
-        building item is used for update
-      properties:
-        ResponseInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
-        Buildings:
-          description: Used for update and create only
-          $ref: '#/components/schemas/Building'
-    BuildingSearchResponse:
-      description: >-
-        Contains the ResponseInfo and list of buildings returned by system
-      properties:
-        ResponseInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
-        Buildings:
-          description: Used for search result and create only
-          type: array
-          items:
-            $ref: '#/components/schemas/Building'
-            
-    BuildingDeleteRequest:
-      description: Class to send the request body for building delete
-      properties:
-        RequestInfo:
-           $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
-        tenantId:
-          type: string
-          description: The tenantId of the building to be deleted
-        buildingNumber: 
-          type: string
-          description: The building number of the building to be deleted
-      required:
-        - RequestInfo
-        - tenantId
-        - buildingNumber
-    BuildingDeleteResponse:
-      description: Class to send the request body for property delete
-      properties:
-        ResponseInfo:
-           $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
-        tenantId:
-          type: string
-          description: The tenantId of the building to be deleted
-        buildingNumber: 
-          type: string
-          description: The buidling number of the building to be deleted
           
     Assessment:
       type: object
-      description: Contains the assessment details of a building. Assessment refers to the calculation of  property tax for the given building number and financial year
+      description: Contains the assessment details of a constructionDetail. Assessment refers to the calculation of  property tax for the given constructionDetail number and financial year
       properties:
         tenantId:
           type: string
-          description: The tenantId of the building for which assessment is done
+          description: The tenantId of the constructionDetail for which assessment is done
         assessmentNumber:
           type: string
           description: The assessment number generated by the system for the given assessment details
         propertyId:
           type: string
           description: The propertyId against which assessment is done
-        buildingNumber:
+        constructionDetailNumber:
           type: string
-          description: The building number for which assessment is done
+          description: The constructionDetail number for which assessment is done
         financialYear:
           type: string
           description: The financialYear of the assessmnet
@@ -1177,24 +866,28 @@ components:
           description: 'Json object to capture any extra information which is not accommodated of model'
       required:
         - tenantId
-        - buildingNumber
+        - constructionDetailNumber
         - financialYear
         
     AssessmentRequest:
-      description: The request to create or update an assessment. Contains the RequestInfo and the assessment details
+      description: The request to create or update an assessment. Contains the RequestHeader and the assessment details
       properties:
-         RequestInfo:
+         RequestHeader:
            $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestInfo
+              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
          Assessment:
-          description: The assessment details of the building
+          description: The assessment details of the constructionDetail
           $ref: '#/components/schemas/Assessment'
     AssessmentResponse:
-      description: The response of create or update of assessment. Contains the ResponseInfo and created/updated assessment
+      description: The response of create or update of assessment. Contains the ResponseHeader and created/updated assessment
       properties:
-         RequestInfo:
+         RequestHeader:
              $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseInfo
+              https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
          Assessment:
-          description: The assessment details of the building
+          description: The assessment details of the constructionDetail
           $ref: '#/components/schemas/Assessment'
+    Dimensions:
+      type: object
+      description: The dimensions of the plot or building or any unit
+          

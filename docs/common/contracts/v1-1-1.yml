@@ -396,4 +396,56 @@ components:
           description: The id of the device which is trying to accessed
         signature:
           type: string
-          description: The electronic signature of the device
+          description: The electronic signature of the device          
+    Document:
+      type: object
+      description: >-
+        This object holds list of documents attached during the transaciton for
+        a property
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          description: system id of the Document.
+        documentType:
+          type: string
+          description: >-
+            unique document type code, should be validated with document type
+            master
+        fileStore:
+          type: string
+          description: File store reference key.
+        documentUid:
+          type: string
+          maxLength: 64
+          description: 'The unique id(Pancard Number,Adhar etc.) of the given Document.'
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated by model'
+    Institution:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 64
+          description: Unique Identifier of the Institution(UUID).
+        tenantId:
+          type: string
+          description: tenant id of the Property
+          maxLength: 256
+        type:
+          type: string
+          description: Institution type.
+          maxLength: 64
+        designation:
+          type: string
+          maxLength: 64
+          description: Designation of the person creating/updatingentity on behalf of the institution
+        nameOfAuthorizedPerson:
+          type: string
+          maxLength: 256
+          description: Name of the person who is taking action on behalf of institution
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated by model'
+          

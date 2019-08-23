@@ -38,13 +38,13 @@ components:
         type: integer
         format: int64
   schemas:
-    RequestInfo:
+    RequestHeader:
       type: object
-      description: RequestInfo should be used to carry meta information about the requests
+      description: RequestHeader should be used to carry meta information about the requests
         to the server as described in the fields below. All eGov APIs will use
-        requestinfo as a part of the request body to carry this meta
+        requestHeader as a part of the request body to carry this meta
         information. Some of this information will be returned back from the
-        server as part of the ResponseInfo in the response body to ensure
+        server as part of the ResponseHeader in the response body to ensure
         correlation.
       properties:
         apiInfo:
@@ -84,7 +84,7 @@ components:
           readOnly: true
         signature:
           type: string
-          description: Hash describing the current RequestInfo
+          description: Hash describing the current RequestHeader
       required:
         - apiId
         - ver
@@ -137,7 +137,7 @@ components:
       type: object
       description: >
         minimal representation of the Roles in the system to be carried along in
-        UserInfo with RequestInfo meta data. Actual authorization service to
+        UserInfo with RequestHeader meta data. Actual authorization service to
         extend this to have more role related attributes
       properties:
         name:
@@ -148,11 +148,16 @@ components:
           type: string
           description: Unique code of the role
           maxLength: 64
+        tenantId:
+          type: string
+          description: The tenantId for which the role is available
+          maxLength: 64
         description:
           type: string
           description: brief description of the role
       required:
-        - name
+        - code
+        - tenantId
     TenantRole:
       type: object
       description: User role carries the tenant related role information for the user. A
@@ -170,13 +175,13 @@ components:
       required:
         - tenantId
         - roles
-    ResponseInfo:
+    ResponseHeader:
       type: object
       readOnly: true
-      description: ResponseInfo should be used to carry metadata information about the
-        response from the server. apiId, ver and msgId in ResponseInfo should
+      description: ResponseHeader should be used to carry metadata information about the
+        response from the server. apiId, ver and msgId in ResponseHeader should
         always correspond to the same values in respective request's
-        RequestInfo.
+        RequestHeader.
       properties:
         ts:
           type: integer
@@ -200,7 +205,7 @@ components:
             - FAILED
         signature:
           type: string
-          description: Hash describing the current ResponseInfo
+          description: Hash describing the current ResponseHeader
         error:
           type: object
           $ref: 
@@ -223,8 +228,8 @@ components:
     Error:
       type: object
       description: Error object will be returned as a part of reponse body in conjunction
-        with ResponseInfo as part of ErrorResponse whenever the request
-        processing status in the ResponseInfo is FAILED. HTTP return in this
+        with ResponseHeader as part of ErrorResponse whenever the request
+        processing status in the ResponseHeader is FAILED. HTTP return in this
         scenario will usually be HTTP 400.
       properties:
         code:
@@ -264,12 +269,12 @@ components:
     ErrorRes:
       type: object
       description: All APIs will return ErrorRes in case of failure which will carry
-        ResponseInfo as metadata and Error object as actual representation of
+        ResponseHeader as metadata and Error object as actual representation of
         error. In case of bulk apis, some apis may chose to return the array of
         Error objects to indicate individual failure.
       properties:
-        ResponseInfo:
-          $ref: "#/components/schemas/ResponseInfo"
+        ResponseHeader:
+          $ref: "#/components/schemas/ResponseHeader"
         Errors:
           description: Error response array corresponding to Request Object array. In case
             of single object submission or _search related paths this may be an
@@ -279,7 +284,7 @@ components:
           items:
             $ref: "#/components/schemas/Error"
       required:
-        - ResponseInfo
+        - ResponseHeader
     Address:
       type: object
       description: >
@@ -292,45 +297,35 @@ components:
         doorNo:
           type: string
           description: House number or door number.
-        latitude:
-          type: number
-          format: double
-          description: latitude of the address
-        longitude:
-          type: number
-          format: double
-          description: longitude of the address
-        addressId:
+        plotNo:
+          type: string
+          description: Plot number of the house.
+        id:
           type: string
           description: System generated id for the address
           readOnly: true
-        addressNumber:
-          description: House, Door, Building number in the address
-          type: string
-        type:
-          type: string
-          description: Type of address.
-          items:
-            type: string
-            enum:
-              - PERMANENT
-              - CORRESPONDENCE
-        addressLine1:
-          description: Apartment, Block, Street of the address
-          type: string
-        addressLine2:
-          description: Locality, Area, Zone, Ward of the address
-          type: string
         landmark:
           description: additional landmark to help locate the address
           type: string
         city:
           description: City of the address. Can be represented by the tenantid itself
           type: string
+        district:
+          description: The district in which the property is located
+          type: string
+        region:
+          description: The Region in which the property is located
+          type: string
+        state:
+          description: The State in which the property is located
+          type: string
+        country:
+          description: The country in which the property is located
+          type: string
         pincode:
           type: string
           description: PIN code of the address. Indian pincodes will usually be all numbers.
-        detail:
+        additionDetails:
           type: string
           description: more address detail as may be needed
         buildingName:
@@ -345,6 +340,8 @@ components:
           minLength: 2
         locality:
           $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v11-0-0.yml#/definitions/Boundary
+        geoLocation:
+          $ref: '#/components/schemas/GeoLocation'
       required: 
         - tenantId
         - locality
@@ -448,4 +445,18 @@ components:
         additionalDetails:
           type: object
           description: 'Json object to capture any extra information which is not accommodated by model'
+    GeoLocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+          description: latitude of the address
+        longitude:
+          type: number
+          format: double
+          description: longitude of the address
+        additionalDetails:
+          type: object
+          description: 'Json object to capture any extra information which is not accommodated by model'          
           

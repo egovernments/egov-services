@@ -596,6 +596,11 @@ components:
           description: id of the property with which the constructionDetail is associated.
           maxLength: 64
           readOnly: true
+        totalUnitArea:
+          type: number
+          format: float
+          description: Area of the defined Unit.
+          nullable: false
         builtUpArea:
           type: number
           format: float
@@ -633,7 +638,6 @@ components:
           - usageCategory
           - source
           - buildUpArea
-          
             
     OwnerInfo:
       type: object
@@ -704,7 +708,6 @@ components:
           - gender
           - fatherOrHusbandName
           - relationship
-
    
     Address:
       allOf:
@@ -726,7 +729,6 @@ components:
           required: 
             - locality
     
-
     Unit:
       type: object
       properties:
@@ -744,11 +746,11 @@ components:
           maxLength: 64
           minLength: 1
           nullable: false
-        unitArea:
-          type: number
-          format: float
-          description: Area of the defined Unit.
-          nullable: false
+        unitType:
+          type: string
+          description: | 
+            Unit type is master data.
+          example: Building, Room, Kitchen etc.
         usageCategory:
           type: string
           description: >-
@@ -771,8 +773,6 @@ components:
           description: Date on which unit is occupied.
         constructionDetail:
           $ref: '#/components/schemas/ConstructionDetail'
-        dimensions:
-          $ref: '#/components/schemas/Dimensions'
         additionalDetails:
           type: object
           description: 'Json object to capture any extra information which is not accommodated by model'
@@ -876,7 +876,6 @@ components:
            $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader
          Assessment:
-          description: The assessment details of the constructionDetail
           $ref: '#/components/schemas/Assessment'
     AssessmentResponse:
       description: The response of create or update of assessment. Contains the ResponseHeader and created/updated assessment
@@ -885,7 +884,6 @@ components:
              $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ResponseHeader
          Assessment:
-          description: The assessment details of the constructionDetail
           $ref: '#/components/schemas/Assessment'
     Dimensions:
       type: object

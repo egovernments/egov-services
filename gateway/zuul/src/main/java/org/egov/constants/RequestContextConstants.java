@@ -5,6 +5,10 @@ public class RequestContextConstants {
     public static final String AUTH_TOKEN_KEY = "authToken";
     public static final String ERROR_MESSAGE_KEY = "error.message";
     public static final String ERROR_CODE_KEY = "error.status_code";
+    public static final String CURRENT_REQUEST_TENANTID = "request.tenant_id";
+    public static final String CURRENT_REQUEST_SANITIZED_BODY = "request.body.sanitized";
+    public static final String CURRENT_REQUEST_START_TIME = "request.time.start";
+    public static final String CURRENT_REQUEST_END_TIME = "request.time.end";
     public static final String GET = "GET";
     public static final String POST = "POST";
     public static final String FILESTORE_REGEX = "^/filestore/.*";

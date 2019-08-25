@@ -69,9 +69,8 @@ paths:
       summary: Get the list of properties defined in the system.
       description: |
         Get the properties list based on the input parameters.
-      x-roles: 'PT_CEMP,CITIZEN'
+      x-roles: 'PT_CEMP,CITIZEN'      
       parameters:
-        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/RequestHeader'
         - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId'
         - name: name
           in: query
@@ -142,6 +141,13 @@ paths:
                 $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/ErrorRes'
       tags:
         - Property
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader'
+        description: RequestHeader meta data.
+        required: true        
   /property/_delete:
     post:
       summary: Delete existing property.

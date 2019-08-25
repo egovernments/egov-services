@@ -72,7 +72,6 @@ paths:
         Get the assessment list based on the input parameters.
       x-roles: 'PT_CEMP,CITIZEN'
       parameters:
-        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/RequestHeader'
         - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/parameters/tenantId'
         - name: propertyIds
           in: query

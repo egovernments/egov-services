@@ -219,8 +219,9 @@ components:
         status:
           type: string
           enum:
-            - Active
-            - Inactive
+            - ACTIVE
+            - INACTIVE
+            - CANCELED
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/AuditDetails'
       required:

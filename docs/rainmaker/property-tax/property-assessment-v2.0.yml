@@ -10,7 +10,6 @@ info:
 x-module: PT
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml'
 paths:
-  
   /assessment/_create:
     post:
       summary: Creates assessment object.
@@ -217,6 +216,13 @@ components:
         additionalDetails:
           type: object
           description: Json object to capture any extra information which is not accommodated of model
+        status:
+          type: string
+          enum:
+            - Active
+            - Inactive
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/PT_APPLY_PAY/docs/common/contracts/v1-1-1.yml#/components/schemas/AuditDetails'
       required:
         - tenantId
         - constructionDetailNumber

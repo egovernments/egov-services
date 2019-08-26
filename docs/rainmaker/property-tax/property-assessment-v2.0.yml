@@ -213,6 +213,13 @@ components:
         financialYear:
           type: string
           description: The financialYear of the assessmnet
+        totalAmount:
+          description: Total taxable amount for that assessment year.
+          type: number
+          format: float
+        demandId:
+          type: string
+          description: Id of the demand, against which bill will be generated.
         additionalDetails:
           type: object
           description: Json object to capture any extra information which is not accommodated of model

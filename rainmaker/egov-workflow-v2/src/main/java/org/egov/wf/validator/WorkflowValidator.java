@@ -97,7 +97,7 @@ public class WorkflowValidator {
             String tenantId= processStateAndAction.getProcessInstanceFromRequest().getTenantId();
             List<String> roles = tenantIdToRoles.get(tenantId);
             if(CollectionUtils.isEmpty(roles)){
-                roles = tenantIdToRoles.get(tenantId.split(".")[0]);
+                roles = tenantIdToRoles.get(tenantId.split("\\.")[0]);
             }
             Action action = processStateAndAction.getAction();
             if(action==null && !processStateAndAction.getCurrentState().getIsTerminateState())

@@ -163,7 +163,7 @@ public class WorkflowUtil {
             tenantId = stateUuidToTenantIdMap.get(entry.getKey());
             userRoleCodes = tenantIdToUserRolesMap.get(tenantId);
             if(CollectionUtils.isEmpty(userRoleCodes)){
-                userRoleCodes = tenantIdToUserRolesMap.get(tenantId.split(".")[0]);
+                userRoleCodes = tenantIdToUserRolesMap.get(tenantId.split("\\.")[0]);
             }
             if(!CollectionUtils.isEmpty(userRoleCodes) && !Collections.disjoint(userRoleCodes,entry.getValue())){
                 actionableStatuses.add(entry.getKey());

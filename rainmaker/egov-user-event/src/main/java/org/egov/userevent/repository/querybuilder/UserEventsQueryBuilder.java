@@ -24,7 +24,7 @@ public class UserEventsQueryBuilder {
 	
 	public static final String COUNT_OF_NOTIFICATION_QUERY = "SELECT (SELECT COUNT(*) as total FROM eg_usrevents_events WHERE id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE recepient IN (:recepients))), "
 			+ "COUNT(*) as unread FROM eg_usrevents_events WHERE id IN (SELECT eventid FROM eg_usrevents_recepnt_event_registry WHERE recepient IN (:recepients)) AND "
-			+ "lastmodifiedtime > (SELECT lastaccesstime FROM eg_usrevents_user_lat WHERE userid IN (:userid))";
+			+ "lastmodifiedtime > (SELECT lastaccesstime FROM eg_usrevents_user_lat WHERE userid IN (:userid)) AND status != :status";
 	
 	/**
 	 * Returns query for search events
@@ -78,6 +78,7 @@ public class UserEventsQueryBuilder {
 		queryBuilder.append(query);
 		preparedStatementValues.put("recepients", criteria.getRecepients());
 		preparedStatementValues.put("userid", criteria.getUserids());
+		preparedStatementValues.put("status", "CANCELLED");
 		
 		return queryBuilder.toString();
 

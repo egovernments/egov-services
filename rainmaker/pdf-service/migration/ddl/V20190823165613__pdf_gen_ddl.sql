@@ -1,9 +1,9 @@
-CREATE TABLE egov-pdf-gen
+CREATE TABLE egov_pdf_gen
 (
-  jobid character varying(50) NOT NULL,
-  tenantid character varying(20),
-  createdtime character varying(20),
+  jobid character varying(100) NOT NULL,
+  tenantid character varying(50),
+  createdtime bigint,
   filestoreids json,
-  endtime character varying(20),
-  CONSTRAINT egov-pdf-gen-pkey PRIMARY KEY (jobid)
+  endtime bigint,
+  CONSTRAINT egov_pdf_gen_pkey PRIMARY KEY (jobid)
 )

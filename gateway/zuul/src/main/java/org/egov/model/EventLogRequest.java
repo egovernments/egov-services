@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.egov.Utils.Utils;
 import org.egov.contract.User;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -63,8 +64,7 @@ public class EventLogRequest {
 
         if (isJsonResponse(ctx)) {
             try {
-                responseBody = IOUtils.toString(ctx.getResponseDataStream());
-                ctx.setResponseBody((String)responseBody);
+                responseBody = Utils.getResponseBody(ctx);
                 responseBody = objectMapper.readValue((String)responseBody,
                     new TypeReference<HashMap<String, Object>>() {
                     });

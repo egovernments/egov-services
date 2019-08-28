@@ -221,8 +221,9 @@ public class UserEventsService {
 		if (!isUpdate)
 			enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
-		if(criteria.getIsCitizenSearch()) {
-			events = citizenSearchPostProcessor(events);
+		if(null != criteria.getIsCitizenSearch()) {
+			if(criteria.getIsCitizenSearch())
+				events = citizenSearchPostProcessor(events);
 		}
 		return EventResponse.builder().responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();

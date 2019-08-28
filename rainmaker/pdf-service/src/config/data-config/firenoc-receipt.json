@@ -1,4 +1,5 @@
 {
+    "key":"firenoc-receipt",
     "DataConfigs": {
        "serviceName": "rainmaker-noc",
        "version": "1.0.0",

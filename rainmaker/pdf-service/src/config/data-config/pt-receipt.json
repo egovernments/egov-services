@@ -1,4 +1,6 @@
 {
+
+   "key":"pt-receipt",
    "DataConfigs": {
       "serviceName": "rainmaker-pt",
       "version": "1.0.0",

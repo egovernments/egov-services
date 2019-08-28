@@ -1,4 +1,6 @@
 {
+  "key":"firenoc-receipt",
+  "config":{
     "content": [
       {
         "style": "noc-head",
@@ -435,3 +437,4 @@
       }
     }
   }
+}

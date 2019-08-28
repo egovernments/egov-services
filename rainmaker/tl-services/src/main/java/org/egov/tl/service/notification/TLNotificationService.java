@@ -125,6 +125,7 @@ public class TLNotificationService {
     		}
             Map<String,String > mobileNumberToMsg = smsRequests.stream().collect(Collectors.toMap(SMSRequest::getMobileNumber, SMSRequest::getMessage));		
             for(String mobile: mobileNumbers) {
+            	log.info("MSEVA:Mobile: "+mobile);
     			if(null == mapOfPhnoAndUUIDs.get(mobile) || null == mobileNumberToMsg.get(mobile)) {
     				log.error("No UUID/SMS for mobile {} skipping event", mobile);
     				continue;
@@ -132,15 +133,20 @@ public class TLNotificationService {
     			List<String> toUsers = new ArrayList<>();
     			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
     			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
-    			
     			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
     			Action action = null;
+    			log.info("MSEVA:payTriggerList: "+payTriggerList);
     			if(payTriggerList.contains(license.getStatus())) {
                     List<ActionItem> items = new ArrayList<>();
+        			log.info("MSEVA:license.getApplicationNumber(): "+license.getApplicationNumber());
+        			log.info("MSEVA:license.getTenantId(): "+license.getTenantId());
+        			log.info("MSEVA:config.getPayLink(): "+config.getPayLink());
         			String actionLink = config.getPayLink().replace("$mobile", mobile)
         						.replace("$applicationNo", license.getApplicationNumber())
         						.replace("$tenantId", license.getTenantId());
+        			log.info("MSEVA:actionLinkBefore: "+actionLink);
         			actionLink = config.getUiAppHost() + actionLink;
+        			log.info("MSEVA:actionLink: "+actionLink);
         			ActionItem item = ActionItem.builder().actionUrl(actionLink).code(config.getPayCode()).build();
         			items.add(item);
         			action = Action.builder().actionUrls(items).build();

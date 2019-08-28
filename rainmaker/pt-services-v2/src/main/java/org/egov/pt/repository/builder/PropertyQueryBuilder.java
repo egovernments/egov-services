@@ -24,7 +24,8 @@ public class PropertyQueryBuilder {
 			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
 			+ "ownerdoc.documentuid as ownerdocuid,ptdl.additionalDetails as ptdl_additionalDetails,"
 			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
-			+ "ptdl.lastModifiedTime as assesslastModifiedTime,unit.occupancyDate as unitoccupancyDate,"
+			+ "ptdl.lastModifiedTime as assesslastModifiedTime,"
+			+ "ptdl.status as propertydetailstatus, unit.occupancyDate as unitoccupancyDate,"
 			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId,"
 			+ "ownerdoc.userid as docuserid,ownerdoc.propertydetail as docassessmentnumber,"
 			+ "unit.usagecategorymajor as unitusagecategorymajor,unit.usagecategoryminor as unitusagecategoryminor"
@@ -44,7 +45,8 @@ public class PropertyQueryBuilder {
 			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
 			+ "ownerdoc.documentuid as ownerdocuid,"
 			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
-			+ "ptdl.lastModifiedTime as assesslastModifiedTime,unit.occupancyDate as unitoccupancyDate,"
+			+ "ptdl.lastModifiedTime as assesslastModifiedTime,"
+			+ "ptdl.status as propertydetailstatus, unit.occupancyDate as unitoccupancyDate,"
 			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId,"
 			+ "ownerdoc.userid as docuserid,ownerdoc.propertydetail as docassessmentnumber,"
 			+ "unit.usagecategorymajor as unitusagecategorymajor,unit.usagecategoryminor as unitusagecategoryminor"
@@ -120,6 +122,14 @@ public class PropertyQueryBuilder {
 			builder.append(" and ptdl.accountid = ? ");
 			preparedStmtList.add(criteria.getAccountId());
 			return builder.toString();
+		}
+		
+		if (criteria.getPropertyDetailStatus() != null) {
+			builder.append(" and ptdl.status = ? ");
+			preparedStmtList.add(criteria.getPropertyDetailStatus());
+			return builder.toString();
+		}else {
+			builder.append(" and ptdl.status = 'ACTIVE' ");
 		}
 
 		builder.append(" and pt.tenantid=? ");

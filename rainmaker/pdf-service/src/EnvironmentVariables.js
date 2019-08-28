@@ -4,8 +4,8 @@ const envVariables={
     EGOV_FILESTORE_SERVICE_HOST: process.env.EGOV_FILESTORE_SERVICE_HOST || "http://egov-filestore:8080",
     SERVER_PORT: process.env.SERVER_PORT || 8080,
 
-    KAFKA_BROKER_HOST: process.KAFKA_BROKER_HOST || "localhost:9092",
-    KAFKA_CREATE_JOB_TOPIC: process.KAFKA_CREATE_JOB_TOPIC || "PDF_GEN_CREATE",
+    KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092",
+    KAFKA_CREATE_JOB_TOPIC: process.env.KAFKA_CREATE_JOB_TOPIC || "PDF_GEN_CREATE",
 
     DB_USERNAME: process.env.DB_USERNAME || "postgres",
     DB_PASSWORD: process.env.DB_PASSWORD || "postgres",

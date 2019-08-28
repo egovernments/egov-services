@@ -103,12 +103,12 @@ public class UserEventsValidator {
 			}
 			if(null != event.getEventDetails()) {
 				if(null != dBEventsMap.get(event.getId()).getEventDetails()) {
-					if(event.getEventDetails().getFromDate() != dBEventsMap.get(event.getId()).getEventDetails().getFromDate()) {
+					if(!event.getEventDetails().getFromDate().equals(dBEventsMap.get(event.getId()).getEventDetails().getFromDate())) {
 						if(event.getEventDetails().getFromDate() < new Date().getTime()) {
 							errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
 						}
 					}
-					if(event.getEventDetails().getToDate() != dBEventsMap.get(event.getId()).getEventDetails().getToDate()) {
+					if(!event.getEventDetails().getToDate().equals(dBEventsMap.get(event.getId()).getEventDetails().getToDate())) {
 						if(event.getEventDetails().getToDate() < new Date().getTime()) {
 							errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
 						}	

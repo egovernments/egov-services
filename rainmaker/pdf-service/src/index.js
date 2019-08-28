@@ -5,6 +5,7 @@ import express from "express";
 import logger from "./config/logger";
 import path from "path";
 import fs, { exists } from "fs";
+import axios from 'axios';
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
@@ -21,7 +22,7 @@ import { externalAPIMapping } from "./utils/externalAPIMapping";
 import envVariables from "./EnvironmentVariables";
 import QRCode from "qrcode";
 import {checkifNullAndSetValue} from "./utils/commons";
-// import {getFileStoreIds,insertStoreIds} from "./queries";
+import {getFileStoreIds,insertStoreIds} from "./queries";
 var jp = require('jsonpath');
 //create binary
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -36,6 +37,15 @@ app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 
 let maxPagesAllowed=envVariables.MAX_NUMBER_PAGES;
 let serverport=envVariables.SERVER_PORT;
+
+let dataConfigUrls=envVariables.DATA_CONFIG_URLS;
+let formatConfigUrls=envVariables.FORMAT_CONFIG_URLS;
+
+let dataConfigMap={};
+let formatConfigMap={};
+
+
+
 let mustache = require('mustache');
 mustache.escape = function(text) {return text;};
 let borderLayout = {
@@ -61,7 +71,7 @@ let borderLayout = {
  * @param {*} errorCallback - callback when error
  * @param {*} tenantId - tenantID
  */
- function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId) {
+ function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId,starttime) {
    try {
     var fontDescriptors = {
       Roboto: {
@@ -77,6 +87,7 @@ let borderLayout = {
     let listOfFilestoreIds=[];
     if(noOfDefinitions==0)
     {
+      logger.error("no file generated for pdf");
       errorCallback({message:" error: no file generated for pdf"});
     }
     else
@@ -85,42 +96,55 @@ let borderLayout = {
         {
             const doc = printer.createPdfKitDocument(docDefinition);
             let fileNameAppend="-"+new Date().getTime();
-            let filename="src/pdfs/"+key+" "+fileNameAppend+".pdf"
+            // let filename="src/pdfs/"+key+" "+fileNameAppend+".pdf"
+            let filename=key+""+fileNameAppend+".pdf"
             //reference link
             //https://medium.com/@kainikhil/nodejs-how-to-generate-and-properly-serve-pdf-6835737d118e#d8e5
         
             //storing file on local computer/server
 
-
-            // doc.on('data', function (chunk) {
-            //   chunks.push(chunk);
-            //   });
-            //   doc.on('end', function () {
-            //     // console.log("enddddd "+cr++);
-            //   result = Buffer.concat(chunks);
-            //   result='data:application/pdf;base64,' + result.toString('base64');
-
-
-            doc.pipe(
-              fs.createWriteStream(filename).on("error", err => {
-                errorCallback({message:"error occurred while writing pdf: "+((typeof err)==='string')?err:err.message});
-              }).on("close", () => {
-                  fileStoreAPICall(filename,tenantId).then((result)=>{
-                  fs.unlink(filename,()=>{});
-                  listOfFilestoreIds.push(result);
-                  if(listOfFilestoreIds.length===noOfDefinitions)
-                  {
-                    // insertStoreIds("",);
-                    logger.info(`PDF successfully created and stored filestoreIds: ${listOfFilestoreIds}`);
-                    successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
-                  }
-              }).catch(err=>{
-                fs.unlink(filename,()=>{});
-                logger.error(err.stack);
-                errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
+            var chunks=[];
+            doc.on('data', function (chunk) {
+              chunks.push(chunk);
               });
-            }
-            ));
+              doc.on('end', function () {
+                // console.log("enddddd "+cr++);
+              var data = Buffer.concat(chunks);
+              fileStoreAPICall(filename,tenantId,data).then((result)=>{
+                listOfFilestoreIds.push(result);
+                if(listOfFilestoreIds.length===noOfDefinitions)
+                {
+                  // insertStoreIds("",);
+                  var jobid=`${key}${fileNameAppend}`;
+
+                  logger.info("PDF successfully uploaded to filestore");
+                  insertStoreIds(jobid,listOfFilestoreIds,tenantId,starttime,successCallback,errorCallback);
+                }
+                }).catch(err=>{
+                    logger.error(err.stack);
+                    errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
+                  });
+              });
+            // doc.pipe(
+            //   fs.createWriteStream(filename).on("error", err => {
+            //     errorCallback({message:"error occurred while writing pdf: "+((typeof err)==='string')?err:err.message});
+            //   }).on("close", () => {
+            //       fileStoreAPICall(filename,tenantId).then((result)=>{
+            //       fs.unlink(filename,()=>{});
+            //       listOfFilestoreIds.push(result);
+            //       if(listOfFilestoreIds.length===noOfDefinitions)
+            //       {
+            //         // insertStoreIds("",);
+            //         logger.info(`PDF successfully created and stored filestoreIds: ${listOfFilestoreIds}`);
+            //         successCallback({message:"PDF successfully created and stored",filestoreId:listOfFilestoreIds});
+            //       }
+            //   }).catch(err=>{
+            //     fs.unlink(filename,()=>{});
+            //     logger.error(err.stack);
+            //     errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
+            //   });
+            // }
+            // ));
             doc.end();
         });
     }
@@ -131,10 +155,12 @@ let borderLayout = {
 }
 
 app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> { 
+  let requestInfo;
   try{
+   var starttime=new Date().getTime();
    let key=req.query.key;
    let tenantId=req.query.tenantId;
-   let requestInfo=get(req.body,"RequestInfo");
+   requestInfo=get(req.body,"RequestInfo");
    let errorMessage="";
    if((key==undefined)||(key.trim()==="")){
     errorMessage+=" key is missing,";
@@ -148,17 +174,20 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
    if(errorMessage!==""){
     res.status(400);
     res.json({
-      status: 400,
-      data: errorMessage
+      message: errorMessage,
+      ResponseInfo:requestInfo
     });
    }
    else
    {
-    var formatconfig=JSON.parse(JSON.stringify(require("./config/format-config/"+key)));
-    var dataconfig=require("./config/data-config/"+key);  
-    var baseKeyPath=get(dataconfig,"DataConfigs.baseKeyPath");
-    if(baseKeyPath==null)
+
+    var formatconfig = formatConfigMap[key];
+    var dataconfig = dataConfigMap[key];  
+    
+    var baseKeyPath = get(dataconfig,"DataConfigs.baseKeyPath");
+    if(baseKeyPath == null)
     {
+      logger.error("baseKeyPath is absent in config");
       throw {message:`baseKeyPath is absent in config`};
     }
     let isCommonTableBorderRequired=get(dataconfig,"DataConfigs.isCommonTableBorderRequired");
@@ -197,7 +226,6 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           countOfObjectsInCurrentFile++;
           if((countOfObjectsInCurrentFile==maxPagesAllowed)||((i+1)==len))
           {
-
             let formatconfigCopy=JSON.parse(JSON.stringify(formatconfig));
             formatconfigCopy["content"]=formatObjectArrayObject;
             formatConfigByFile.push(formatconfigCopy);
@@ -207,11 +235,12 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
         }
       }
       else{
+        logger.error(`could not find property of type array in request body with name ${baseKeyPath}`);
         throw {message:`could not find property of type array in request body with name ${baseKeyPath}`}; 
       }
     
     
-    logger.info(`Success:Applied templating engine on ${moduleObjectsArray.length} objects output will be in ${formatConfigByFile.length} files`);
+    logger.info(`Applied templating engine on ${moduleObjectsArray.length} objects output will be in ${formatConfigByFile.length} files`);
   
     // var util = require('util');
     // fs.writeFileSync('./data.txt', util.inspect(JSON.stringify(formatconfig)) , 'utf-8');
@@ -223,19 +252,23 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
         // doc successfully created
         res.status(201);
         res.json({
-          status: 201,
-          data: response.message,
-          filestoreId:response.filestoreId
+          ResponseInfo:requestInfo,
+          message: response.message,
+          filestoreIds:response.filestoreIds,
+          jobid:response.jobid,
+          starttime:response.starttime,
+          endtime:response.endtime,
+          tenantid:response.tenantid
         });
       },
       error => {
         res.status(500);
         // doc creation error
         res.json({
-          status: 500,
-          data: "error in createPdfBinary"+error.message
+          ResponseInfo:requestInfo,
+          message: "error in createPdfBinary "+error.message
         });
-      },tenantId
+      },tenantId,starttime
     );
    }
 }
@@ -244,20 +277,118 @@ catch(error)
   logger.error(error.stack);
   res.status(500);
   res.json({
-    status: 500,
-    data: "some unknown error: "+error.message
+    ResponseInfo:requestInfo,
+    message: "some unknown error while creating: "+error.message
   });
 }
   
 }));
 
 
-// app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> { 
-//   let jobid=req.query.jobid;
-//   let tenantId=req.query.tenantId;
-//   getFileStoreIds(jobid,tenantId,res);
-// }));
+app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> { 
+  let requestInfo;
+  try{
 
+    let tenantid=req.query.tenantid;
+    let jobid=req.query.jobid;
+    requestInfo=get(req.body,"RequestInfo");
+    if((jobid==undefined)||(jobid.trim()==="")){
+      res.status(400);
+      res.json({
+        ResponseInfo:requestInfo,
+        message: "job id is missing"
+      });
+    }
+    else
+    {
+      if(jobid.includes(","))
+      {
+        jobid=jobid.split(',');
+      }
+      else
+      {
+        jobid=[jobid];
+      }
+      getFileStoreIds(jobid,tenantid,responseBody => {
+        // doc successfully created
+        res.status(responseBody.status);
+        delete responseBody.status;
+        res.json({ResponseInfo:requestInfo,...responseBody});
+      });
+    }
+  }
+  catch(error)
+  {
+    logger.error(error.stack);
+    res.status(500);
+    res.json({
+      ResponseInfo:requestInfo,
+      message: "some unknown error on while searching: "+error.message
+    });
+  }
+}));
+
+
+dataConfigUrls.split(",").map(
+  item =>{
+    item=item.trim();
+    if(item.includes("file://"))
+    {
+      item=item.replace("file://","");
+      fs.readFile(item,'utf8', function (err, data) {
+        if (err) {
+          logger.error(err.stack);
+        }
+        data=JSON.parse(data);
+        dataConfigMap[data.key]=data;
+        logger.info("loaded dataconfig: file:///"+item);
+      });
+    }
+    else
+    {
+      axios.get(item)
+      .then((response) => {
+          dataConfigMap[response.data.key]=response.data;
+          logger.info("loaded dataconfig: "+item);
+        
+      })
+      .catch((error) => {
+        logger.error(error.stack);
+      });
+    }
+
+  }
+);
+
+formatConfigUrls.split(",").map(
+  item =>{
+    item=item.trim();
+    if(item.includes("file://"))
+    {
+      item=item.replace("file://","");
+      fs.readFile(item,'utf8', function (err, data) {
+        if (err) {
+          logger.error(err.stack);
+        }
+        data=JSON.parse(data);
+        formatConfigMap[data.key]=data.config;
+        logger.info("loaded formatconfig: file:///"+item);
+      });
+    }
+    else
+    {
+      axios.get(item)
+      .then((response) => {
+         formatConfigMap[response.data.key]=response.data.config;
+         logger.info("loaded formatconfig: "+item);
+      })
+      .catch((error) => {
+        logger.error(error.stack);
+      });
+    }
+
+  }
+);
 
 app.listen(serverport, () => {
   logger.info(`Server running at http:${serverport}/`);
@@ -323,6 +454,7 @@ const handleDerivedMapping=(dataconfig,variableTovalueMap)=>
       variableTovalueMap[mapping.variable]=eval(expression);     
   }
 }
+
 
 export default app;
 

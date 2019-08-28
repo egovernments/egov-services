@@ -13,10 +13,14 @@ let egovFileHost=envVariables.EGOV_FILESTORE_SERVICE_HOST;
  * @param {*} filename -name of localy stored temporary file
  * @param {*} tenantId - tenantID
  */
-export const fileStoreAPICall=async function(filename,tenantId){
+export const fileStoreAPICall=async function(filename,tenantId,fileData){
     var url =`${egovFileHost}/filestore/v1/files?tenantId=${tenantId}&module=pdfgen&tag=00040-2017-QR`;
       var form = new FormData();
-      form.append("file", fs.createReadStream(filename));
+      form.append('file',fileData , {
+        filename: filename,
+        contentType: 'application/pdf'
+      });
+      // form.append("file", fs.createReadStream(filename));
       let response=await axios.post(url, form,  {headers: {
         ...form.getHeaders(),
       }});

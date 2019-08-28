@@ -141,8 +141,9 @@ public class UserEventsService {
 			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE) 
 					&& (null == event.getGenerateCounterEvent() || event.getGenerateCounterEvent())) {
 				Event counterEvent = buildCounterEvents(request.getRequestInfo(), event, isCounterEventReq);
-				if(null != counterEvent)
+				if(null != counterEvent) {
 					counterEvents.add(counterEvent);
+				}
 			}
 		});
 		if (!CollectionUtils.isEmpty(counterEvents)) {
@@ -197,7 +198,7 @@ public class UserEventsService {
 			counterEvent.setSource(event.getSource());
 			counterEvent.setTenantId(event.getTenantId());
 			counterEvent.setRecepientEventMap(event.getRecepientEventMap());
-			counterEvent.setDescription(description);
+			counterEvent.setDescription(event.getDescription());
 		}
 		else {
 			counterEvent = null;
@@ -220,9 +221,28 @@ public class UserEventsService {
 		if (!isUpdate)
 			enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
-		
+		if(criteria.getIsCitizenSearch()) {
+			events = citizenSearchPostProcessor(events);
+		}
 		return EventResponse.builder().responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();
+	}
+	
+	/**
+	 * Deduplicates all the EVENTSONGROUND which have a counter event generated.
+	 * 
+	 * @param events
+	 * @param criteria
+	 */
+	public List<Event> citizenSearchPostProcessor(List<Event> events) {
+		List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
+		List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
+		events.forEach(event -> {
+			if(!refIds.contains(event.getId()))
+				counterEvents.add(event);
+		});
+		
+		return counterEvents;
 	}
 
 	/**
@@ -367,10 +387,6 @@ public class UserEventsService {
 			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
 			if(roles.contains("EMPLOYEE")) {
 				criteria.setIsCitizenSearch(false);
-				criteria.setTenantId(requestInfo.getUserInfo().getTenantId());
-				
-/*				if(!utils.doesTheEmployeeHaveAccessToThisTenant(criteria.getTenantId(), requestInfo.getUserInfo()))
-					criteria.setTenantId(requestInfo.getUserInfo().getTenantId());*/
 			}
 		}
 		if (CollectionUtils.isEmpty(criteria.getStatus())) {

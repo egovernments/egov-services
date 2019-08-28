@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -93,11 +94,31 @@ public class UserEventsValidator {
 		if (responseFromDB.size() != request.getEvents().size()) {
 			errorMap.put(ErrorConstants.MEN_UPDATE_MISSING_EVENTS_CODE, ErrorConstants.MEN_UPDATE_MISSING_EVENTS_MSG);
 		}
+		Map<String, Event> dBEventsMap = responseFromDB.stream().collect(Collectors.toMap(Event::getId, Function.identity()));
 		for (Event event : request.getEvents()) {
 			if (!StringUtils.isEmpty(event.getReferenceId()))
 				errorMap.put(ErrorConstants.MEN_UPDATE_COUNTEREVENT_CODE, ErrorConstants.MEN_UPDATE_COUNTEREVENT_MSG);
 			if (null == event.getStatus()) {
 				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE, ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
+			}
+			if(null != event.getEventDetails()) {
+				if(null != dBEventsMap.get(event.getId()).getEventDetails()) {
+					if(event.getEventDetails().getFromDate() != dBEventsMap.get(event.getId()).getEventDetails().getFromDate()) {
+						if(event.getEventDetails().getFromDate() < new Date().getTime()) {
+							errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+						}
+					}
+					if(event.getEventDetails().getToDate() != dBEventsMap.get(event.getId()).getEventDetails().getToDate()) {
+						if(event.getEventDetails().getToDate() < new Date().getTime()) {
+							errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+						}	
+					}
+				}else {
+					if(event.getEventDetails().getFromDate() < new Date().getTime() 
+							|| event.getEventDetails().getToDate() < new Date().getTime()) {
+						errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+					}
+				}
 			}
 		}
 		validateActions(request.getEvents(), responseFromDB, errorMap);

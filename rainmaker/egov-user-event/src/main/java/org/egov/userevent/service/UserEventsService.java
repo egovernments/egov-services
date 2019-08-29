@@ -219,13 +219,17 @@ public class UserEventsService {
 	public EventResponse searchEvents(RequestInfo requestInfo, EventSearchCriteria criteria, Boolean isUpdate) {
 		validator.validateSearch(requestInfo, criteria);
 		log.info("Searching events......");
-		if (!isUpdate)
+		List<Event> events = new ArrayList<>();
+		if (!isUpdate) {
 			enrichSearchCriteria(requestInfo, criteria);
-		List<Event> events = repository.fetchEvents(criteria);
-		searchPostProcessor(requestInfo, events);
-		if(null != criteria.getIsCitizenSearch()) {
-			if(criteria.getIsCitizenSearch())
-				events = citizenSearchPostProcessor(events);
+			events = repository.fetchEvents(criteria);
+			searchPostProcessor(requestInfo, events);
+			if(null != criteria.getIsCitizenSearch()) {
+				if(criteria.getIsCitizenSearch())
+					events = citizenSearchPostProcessor(events);
+			}
+		}else {
+			events = repository.fetchEvents(criteria);
 		}
 		return EventResponse.builder().responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();

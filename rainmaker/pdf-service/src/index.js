@@ -171,6 +171,9 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
    if(requestInfo==undefined){
     errorMessage+=" requestInfo is missing,";
    }
+   if((formatConfigMap[key]==undefined)||(dataConfigMap[key]==undefined)){
+    errorMessage+=` no config found for key ${key}`;
+   }
    if(errorMessage!==""){
     res.status(400);
     res.json({

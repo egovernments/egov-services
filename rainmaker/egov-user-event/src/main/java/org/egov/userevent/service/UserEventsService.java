@@ -70,7 +70,6 @@ import org.egov.userevent.web.contract.EventResponse;
 import org.egov.userevent.web.contract.EventSearchCriteria;
 import org.egov.userevent.web.contract.NotificationCountResponse;
 import org.egov.userevent.web.validator.UserEventsValidator;
-import org.linkedin.util.collections.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

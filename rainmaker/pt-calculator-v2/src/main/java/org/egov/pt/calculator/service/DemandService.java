@@ -71,6 +71,9 @@ public class DemandService {
 	@Autowired
 	private CalculationValidator validator;
 
+	@Autowired
+	private MasterDataService mDataService;
+
 	/**
 	 * Generates and persists the demand to billing service for the given property
 	 * 
@@ -87,11 +90,17 @@ public class DemandService {
 		List<Demand> demands = new ArrayList<>();
 		List<String> lesserAssessments = new ArrayList<>();
 		Map<String, String> consumerCodeFinYearMap = new HashMap<>();
-		
-		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request);
+		Map<String,Object> masterMap = mDataService.getMasterMap(request);
+
+
+		Map<String, Calculation> propertyCalculationMap = estimationService.getEstimationPropertyMap(request,masterMap);
 		for (CalculationCriteria criteria : criterias) {
 
-			PropertyDetail detail = criteria.getProperty().getPropertyDetails().get(0);
+			Property property = criteria.getProperty();
+
+			PropertyDetail detail = property.getPropertyDetails().get(0);
+
+			Calculation calculation = propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber());
 			
 			String assessmentNumber = detail.getAssessmentNumber();
 
@@ -103,16 +112,15 @@ public class DemandService {
 			if(advanceCarryforwardEstimate.isPresent())
 				newTax = advanceCarryforwardEstimate.get().getEstimateAmount();
 
+			Demand oldDemand = utils.getLatestDemandForCurrentFinancialYear(request.getRequestInfo(),criteria);
+
 			// true represents that the demand should be updated from this call
 			BigDecimal carryForwardCollectedAmount = getCarryForwardAndCancelOldDemand(newTax, criteria,
-					request.getRequestInfo(), true);
+					request.getRequestInfo(),oldDemand, true);
 
 			if (carryForwardCollectedAmount.doubleValue() >= 0.0) {
-				Property property = criteria.getProperty();
 
-				Demand demand = prepareDemand(property,
-						propertyCalculationMap.get(property.getPropertyDetails().get(0).getAssessmentNumber()),
-						request.getRequestInfo());
+				Demand demand = prepareDemand(property, calculation ,oldDemand);
 
 				demands.add(demand);
 				consumerCodeFinYearMap.put(demand.getConsumerCode(), detail.getFinancialYear());
@@ -261,7 +269,7 @@ public class DemandService {
 	 * @return
 	 */
 	protected BigDecimal getCarryForwardAndCancelOldDemand(BigDecimal newTax, CalculationCriteria criteria, RequestInfo requestInfo
-			, boolean cancelDemand) {
+			,Demand demand, boolean cancelDemand) {
 
 		Property property = criteria.getProperty();
 
@@ -270,7 +278,7 @@ public class DemandService {
 
 		if(null == property.getPropertyId()) return carryForward;
 
-		Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+	//	Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
 		
 		if(null == demand) return carryForward;
 
@@ -285,11 +293,7 @@ public class DemandService {
 		log.debug("The new tax amount in string : " + newTax.toPlainString());
 		
 		if (oldTaxAmt.compareTo(newTax) > 0) {
-			boolean isDepreciationAllowed = utils.isAssessmentDepreciationAllowed(
-					criteria.getAssessmentYear(),
-					property.getTenantId(),
-					property.getPropertyId(),
-					new RequestInfoWrapper(requestInfo));
+			boolean isDepreciationAllowed = utils.isAssessmentDepreciationAllowed(demand,new RequestInfoWrapper(requestInfo));
 			if (!isDepreciationAllowed)
 				carryForward = BigDecimal.valueOf(-1);
 		}
@@ -304,11 +308,12 @@ public class DemandService {
 		return carryForward;
 	}
 
-	/**
+/*	*//**
 	 * @param requestInfo
 	 * @param property
 	 * @return
-	 */
+	 *//*
+	@Deprecated
 	public Demand getLatestDemandForCurrentFinancialYear(RequestInfo requestInfo, Property property) {
 		
 		Assessment assessment = Assessment.builder().propertyId(property.getPropertyId())
@@ -327,7 +332,11 @@ public class DemandService {
 				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
 				DemandResponse.class);
 		return res.getDemands().get(0);
-	}
+	}*/
+
+
+
+
 
 	/**
 	 * Prepares Demand object based on the incoming calculation object and property
@@ -336,7 +345,7 @@ public class DemandService {
 	 * @param calculation
 	 * @return
 	 */
-	private Demand prepareDemand(Property property, Calculation calculation, RequestInfo requestInfo) {
+	private Demand prepareDemand(Property property, Calculation calculation,Demand demand) {
 
 		String tenantId = property.getTenantId();
 		PropertyDetail detail = property.getPropertyDetails().get(0);
@@ -348,7 +357,7 @@ public class DemandService {
 		else
 			owner = detail.getOwners().iterator().next();
 		
-		Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
+	//	Demand demand = getLatestDemandForCurrentFinancialYear(requestInfo, property);
 
 		List<DemandDetail> details = new ArrayList<>();
 
@@ -386,8 +395,7 @@ public class DemandService {
 		/*
 		 * method to get the latest collected time from the receipt service
 		 */
-		List<Receipt> receipts = rcptService.getReceiptsFromConsumerCode(taxPeriod.getFinancialYear(), demand,
-				requestInfoWrapper);
+		List<Receipt> receipts = rcptService.getReceiptsFromDemand(demand,requestInfoWrapper);
 
 		BigDecimal taxAmtForApplicableGeneration = utils.getTaxAmtFromDemandForApplicablesGeneration(demand);
 		BigDecimal collectedApplicableAmount = BigDecimal.ZERO;

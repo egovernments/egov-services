@@ -46,6 +46,10 @@ public class CalculationCriteria   {
         @JsonProperty("tenantId")
         private String tenantId;
 
+        @JsonProperty("fromDate")
+        private Long fromDate;
 
+        @JsonProperty("toDate")
+        private Long toDate;
 }
 

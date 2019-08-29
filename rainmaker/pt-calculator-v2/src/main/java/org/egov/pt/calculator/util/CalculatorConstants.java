@@ -137,6 +137,14 @@ public class CalculatorConstants {
 
 	public static final String STARTING_DATE_APPLICABLES = "startingDay";
 
+    public static final String RECEIPT_START_DATE_PARAM = "fromDate=";
+
+    public static final String RECEIPT_END_DATE_PARAM = "toDate=";
+
+    public static final String DEMAND_START_DATE_PARAM = "periodFrom=";
+
+    public static final String DEMAND_END_DATE_PARAM = "periodTo=";
+
 	/*
 	 * special characters
 	 */

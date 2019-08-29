@@ -32,5 +32,9 @@ public class GetBillCriteria {
 	private String billId;
 
 	private List<String> consumerCodes;
+
+	private Long fromDate;
+
+	private Long toDate;
 	
 }

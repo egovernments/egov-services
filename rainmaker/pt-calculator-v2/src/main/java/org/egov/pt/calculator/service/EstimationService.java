@@ -7,17 +7,13 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pt.calculator.util.CalculatorConstants;
+import org.egov.pt.calculator.util.CalculatorUtils;
 import org.egov.pt.calculator.util.Configurations;
 import org.egov.pt.calculator.util.PBFirecessUtils;
 import org.egov.pt.calculator.validator.CalculationValidator;
-import org.egov.pt.calculator.web.models.BillingSlab;
-import org.egov.pt.calculator.web.models.BillingSlabSearchCriteria;
-import org.egov.pt.calculator.web.models.Calculation;
-import org.egov.pt.calculator.web.models.CalculationCriteria;
-import org.egov.pt.calculator.web.models.CalculationReq;
-import org.egov.pt.calculator.web.models.CalculationRes;
-import org.egov.pt.calculator.web.models.TaxHeadEstimate;
+import org.egov.pt.calculator.web.models.*;
 import org.egov.pt.calculator.web.models.demand.Category;
+import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.TaxHeadMaster;
 import org.egov.pt.calculator.web.models.property.OwnerInfo;
 import org.egov.pt.calculator.web.models.property.Property;
@@ -58,6 +54,12 @@ public class EstimationService {
 	@Autowired
 	CalculationValidator calcValidator;
 
+	@Autowired
+    private EnrichmentService enrichmentService;
+
+	@Autowired
+	private CalculatorUtils utils;
+
 	@Value("${customization.pbfirecesslogic:false}")
 	Boolean usePBFirecessLogic;
 
@@ -70,19 +72,18 @@ public class EstimationService {
 	 * @param request incoming calculation request containing the criteria.
 	 * @return Map<String, Calculation> key of assessment number and value of calculation object.
 	 */
-	public Map<String, Calculation> getEstimationPropertyMap(CalculationReq request) {
+	public Map<String, Calculation> getEstimationPropertyMap(CalculationReq request,Map<String,Object> masterMap) {
 
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<CalculationCriteria> criteriaList = request.getCalculationCriteria();
-		Map<String,Object> masterMap = mDataService.getMasterMap(request);
 		Map<String, Calculation> calculationPropertyMap = new HashMap<>();
 		for (CalculationCriteria criteria : criteriaList) {
 			Property property = criteria.getProperty();
 			PropertyDetail detail = property.getPropertyDetails().get(0);
 			calcValidator.validatePropertyForCalculation(detail);
 			String assessmentNumber = detail.getAssessmentNumber();
-			Calculation calculation = getCalculation(requestInfo, criteria, getEstimationMap(criteria, requestInfo),masterMap);
-			calculation.setServiceNumber(assessmentNumber);
+			Calculation calculation = getCalculation(requestInfo, criteria,masterMap);
+			calculation.setServiceNumber(property.getPropertyId());
 			calculationPropertyMap.put(assessmentNumber, calculation);
 		}
 		return calculationPropertyMap;
@@ -102,8 +103,7 @@ public class EstimationService {
         PropertyDetail detail = property.getPropertyDetails().get(0);
         calcValidator.validatePropertyForCalculation(detail);
         Map<String,Object> masterMap = mDataService.getMasterMap(request);
-        return new CalculationRes(new ResponseInfo(), Collections.singletonList(getCalculation(request.getRequestInfo(), criteria,
-                getEstimationMap(criteria, request.getRequestInfo()),masterMap)));
+        return new CalculationRes(new ResponseInfo(), Collections.singletonList(getCalculation(request.getRequestInfo(), criteria, masterMap)));
     }
 
 	/**
@@ -114,7 +114,7 @@ public class EstimationService {
      * @param requestInfo request info from incoming request.
 	 * @return Map<String, Double>
 	 */
-	private Map<String,List> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo) {
+	private Map<String,List> getEstimationMap(CalculationCriteria criteria, RequestInfo requestInfo, Map<String, Object> masterMap) {
 
 		BigDecimal taxAmt = BigDecimal.ZERO;
 		BigDecimal usageExemption = BigDecimal.ZERO;
@@ -123,7 +123,10 @@ public class EstimationService {
 		String assessmentYear = detail.getFinancialYear();
 		String tenantId = property.getTenantId();
 
-		List<BillingSlab> filteredBillingSlabs = getSlabsFiltered(property, requestInfo);
+		if(criteria.getFromDate()==null || criteria.getToDate()==null)
+            enrichmentService.enrichDemandPeriod(criteria,assessmentYear,masterMap);
+
+        List<BillingSlab> filteredBillingSlabs = getSlabsFiltered(property, requestInfo);
 
 		Map<String, Map<String, List<Object>>> propertyBasedExemptionMasterMap = new HashMap<>();
 		Map<String, JSONArray> timeBasedExemptionMasterMap = new HashMap<>();
@@ -368,8 +371,9 @@ public class EstimationService {
 	 * @param requestInfo request info from incoming request.
 	 * @return Calculation object constructed based on the resulting tax amount and other applicables(rebate/penalty)
 	 */
-    private Calculation getCalculation(RequestInfo requestInfo, CalculationCriteria criteria,
-									   Map<String,List> estimatesAndBillingSlabs,Map<String,Object> masterMap) {
+    private Calculation getCalculation(RequestInfo requestInfo, CalculationCriteria criteria,Map<String,Object> masterMap) {
+
+        Map<String,List> estimatesAndBillingSlabs = getEstimationMap(criteria, requestInfo,masterMap);
 
 		List<TaxHeadEstimate> estimates = estimatesAndBillingSlabs.get("estimates");
 		List<String> billingSlabIds = estimatesAndBillingSlabs.get("billingSlabIds");
@@ -380,11 +384,7 @@ public class EstimationService {
         String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssesmentNumber();
         String tenantId = null != property.getTenantId() ? property.getTenantId() : criteria.getTenantId();
 
-		Map<String,Map<String, Object>> financialYearMaster = (Map<String,Map<String, Object>>)masterMap.get(FINANCIALYEAR_MASTER_KEY);
 
-		Map<String, Object> finYearMap = financialYearMaster.get(assessmentYear);
-		Long fromDate = (Long) finYearMap.get(FINANCIAL_YEAR_STARTING_DATE);
-		Long toDate = (Long) finYearMap.get(FINANCIAL_YEAR_ENDING_DATE);
 		Map<String, Category> taxHeadCategoryMap = ((List<TaxHeadMaster>)masterMap.get(TAXHEADMASTER_MASTER_KEY)).stream()
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getCategory));
 
@@ -436,7 +436,8 @@ public class EstimationService {
 
 		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption);
 		// false in the argument represents that the demand shouldn't be updated from this call
-		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(ptTax, criteria, requestInfo, false);
+		Demand oldDemand = utils.getLatestDemandForCurrentFinancialYear(requestInfo,criteria);
+		BigDecimal collectedAmtForOldDemand = demandService.getCarryForwardAndCancelOldDemand(ptTax, criteria, requestInfo,oldDemand, false);
 
 		if(collectedAmtForOldDemand.compareTo(BigDecimal.ZERO) > 0)
 			estimates.add(TaxHeadEstimate.builder()
@@ -451,10 +452,10 @@ public class EstimationService {
 				.penalty(penalty)
 				.exemption(exemption)
 				.rebate(rebate)
-				.fromDate(fromDate)
-				.toDate(toDate)
+				.fromDate(criteria.getFromDate())
+				.toDate(criteria.getToDate())
 				.tenantId(tenantId)
-				.serviceNumber(assessmentNumber)
+				.serviceNumber(property.getPropertyId())
 				.taxHeadEstimates(estimates)
 				.billingSlabIds(billingSlabIds)
 				.build();

@@ -132,7 +132,6 @@ public class TLNotificationService {
     			List<String> toUsers = new ArrayList<>();
     			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
     			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
-    			
     			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
     			Action action = null;
     			if(payTriggerList.contains(license.getStatus())) {

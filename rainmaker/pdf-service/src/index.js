@@ -117,7 +117,7 @@ let borderLayout = {
                   // insertStoreIds("",);
                   var jobid=`${key}${fileNameAppend}`;
 
-                  logger.info("PDF successfully uploaded to filestore");
+                  logger.info("PDF uploaded to filestore");
                   insertStoreIds(jobid,listOfFilestoreIds,tenantId,starttime,successCallback,errorCallback);
                 }
                 }).catch(err=>{
@@ -329,7 +329,7 @@ app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> {
 }));
 
 
-dataConfigUrls.split(",").map(
+dataConfigUrls && dataConfigUrls.split(",").map(
   item =>{
     item=item.trim();
     if(item.includes("file://"))
@@ -339,9 +339,12 @@ dataConfigUrls.split(",").map(
         if (err) {
           logger.error(err.stack);
         }
-        data=JSON.parse(data);
-        dataConfigMap[data.key]=data;
-        logger.info("loaded dataconfig: file:///"+item);
+        else
+        {
+          data=JSON.parse(data);
+          dataConfigMap[data.key]=data;
+          logger.info("loaded dataconfig: file:///"+item);
+        }
       });
     }
     else
@@ -360,7 +363,7 @@ dataConfigUrls.split(",").map(
   }
 );
 
-formatConfigUrls.split(",").map(
+formatConfigUrls && formatConfigUrls.split(",").map(
   item =>{
     item=item.trim();
     if(item.includes("file://"))
@@ -370,9 +373,12 @@ formatConfigUrls.split(",").map(
         if (err) {
           logger.error(err.stack);
         }
-        data=JSON.parse(data);
-        formatConfigMap[data.key]=data.config;
-        logger.info("loaded formatconfig: file:///"+item);
+        else
+        {
+          data=JSON.parse(data);
+          formatConfigMap[data.key]=data.config;
+          logger.info("loaded formatconfig: file:///"+item);
+        }
       });
     }
     else

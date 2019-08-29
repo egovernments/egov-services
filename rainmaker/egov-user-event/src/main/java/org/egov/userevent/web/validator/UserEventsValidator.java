@@ -98,9 +98,7 @@ public class UserEventsValidator {
 		for (Event event : request.getEvents()) {
 			if (null == event.getStatus()) {
 				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE, ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
-			}
-			log.info("event: "+event);
-			log.info("dbEvent: "+dBEventsMap.get(event.getId()));
+			}			
 			if(null != event.getEventDetails()) {
 				if(null != dBEventsMap.get(event.getId()).getEventDetails()) {
 					if(!event.getEventDetails().getFromDate().equals(dBEventsMap.get(event.getId()).getEventDetails().getFromDate())) {

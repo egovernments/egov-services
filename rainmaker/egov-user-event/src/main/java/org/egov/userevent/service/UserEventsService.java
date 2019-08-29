@@ -406,6 +406,7 @@ public class UserEventsService {
 	 * @param criteria
 	 */
 	private void enrichSearchCriteria(RequestInfo requestInfo, EventSearchCriteria criteria) {
+		log.info("Search Criteria: "+criteria);
 		List<String> statuses = new ArrayList<>();
 		if (requestInfo.getUserInfo().getType().equals("CITIZEN")) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()))
@@ -420,19 +421,16 @@ public class UserEventsService {
 			criteria.setUserids(userIds);
 			criteria.setRoles(roles);
 			criteria.setIsCitizenSearch(true);
-			if (CollectionUtils.isEmpty(criteria.getStatus()))
-				statuses.add("ACTIVE");
+			statuses.add("ACTIVE");
 		}else {
 			criteria.setIsCitizenSearch(false);
 			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
-			if(roles.contains("EMPLOYEE")) {
-				if (CollectionUtils.isEmpty(criteria.getStatus())) {
-					statuses.add("ACTIVE");
-					statuses.add("INACTIVE");
-				}
-			}
+			statuses.add("ACTIVE");
+			if(roles.contains("EMPLOYEE"))
+				statuses.add("INACTIVE");
 		}
-		criteria.setStatus(statuses);
+		if (CollectionUtils.isEmpty(criteria.getStatus()))
+			criteria.setStatus(statuses);
 
 		if(criteria.getIsCitizenSearch()) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles())

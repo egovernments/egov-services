@@ -5,8 +5,8 @@ import envVariables from "../EnvironmentVariables";
 const Producer = kafka.Producer;
 let client;
 // if (process.env.NODE_ENV === "development") {
-  client = new kafka.Client();
-  // client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });
+  // client = new kafka.Client();
+  client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });
 //   console.log("local - ");
 // } else {
 //   client = new kafka.KafkaClient({ kafkaHost: envVariables.KAFKA_BROKER_HOST });

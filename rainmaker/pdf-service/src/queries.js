@@ -4,7 +4,7 @@ import producer from "./kafka/producer";
 import envVariables from "./EnvironmentVariables";
 
   const pool = new Pool({
-  user: envVariables.DB_USERNAME,
+  user: envVariables.DB_USER,
   host: envVariables.DB_HOST,
   database: envVariables.DB_NAME,
   password: envVariables.DB_PASSWORD,

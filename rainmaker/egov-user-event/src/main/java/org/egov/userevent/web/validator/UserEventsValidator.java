@@ -96,8 +96,6 @@ public class UserEventsValidator {
 		}
 		Map<String, Event> dBEventsMap = responseFromDB.stream().collect(Collectors.toMap(Event::getId, Function.identity()));
 		for (Event event : request.getEvents()) {
-			if (!StringUtils.isEmpty(event.getReferenceId()))
-				errorMap.put(ErrorConstants.MEN_UPDATE_COUNTEREVENT_CODE, ErrorConstants.MEN_UPDATE_COUNTEREVENT_MSG);
 			if (null == event.getStatus()) {
 				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE, ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
 			}

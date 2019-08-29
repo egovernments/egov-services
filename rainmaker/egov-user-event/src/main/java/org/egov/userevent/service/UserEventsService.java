@@ -70,6 +70,7 @@ import org.egov.userevent.web.contract.EventResponse;
 import org.egov.userevent.web.contract.EventSearchCriteria;
 import org.egov.userevent.web.contract.NotificationCountResponse;
 import org.egov.userevent.web.validator.UserEventsValidator;
+import org.linkedin.util.collections.CollectionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -222,6 +223,7 @@ public class UserEventsService {
 		if (!isUpdate)
 			enrichSearchCriteria(requestInfo, criteria);
 		List<Event> events = repository.fetchEvents(criteria);
+		searchPostProcessor(requestInfo, events);
 		if(null != criteria.getIsCitizenSearch()) {
 			if(criteria.getIsCitizenSearch())
 				events = citizenSearchPostProcessor(events);
@@ -245,6 +247,34 @@ public class UserEventsService {
 		});
 		Collections.sort(counterEvents, Collections.reverseOrder()); //descending
 		return counterEvents;
+	}
+	
+	/**
+	 * This method performs certain post processing activities on the searc result:
+	 * 1. Finds all the events in the search result that have toDate prior to currentDate and marks them inactive
+	 * 2. The inactive marking is done through an update call just before returning the search result.
+	 * 3. Uses lazy update logic instead of a cron job to set events to inactive when they have already occured.
+	 * 
+	 * @param requestInfo
+	 * @param events
+	 * @return
+	 */
+	public void searchPostProcessor(RequestInfo requestInfo, List<Event> events){
+		List<Event> eventsTobeUpdated = new ArrayList<>();
+		events.forEach(event -> {
+			if(null != event.getEventDetails()) {
+				if(null != event.getEventDetails().getToDate()) {
+					if(event.getEventDetails().getToDate() < new Date().getTime() && event.getStatus().equals(Status.ACTIVE)) {
+						event.setStatus(Status.INACTIVE);
+						eventsTobeUpdated.add(event);
+					}
+				}
+			}
+		});
+		if(!CollectionUtils.isEmpty(eventsTobeUpdated)) {
+			EventRequest request = EventRequest.builder().requestInfo(requestInfo).events(eventsTobeUpdated).build();
+			updateEvents(request);
+		}
 	}
 
 	/**
@@ -372,6 +402,7 @@ public class UserEventsService {
 	 * @param criteria
 	 */
 	private void enrichSearchCriteria(RequestInfo requestInfo, EventSearchCriteria criteria) {
+		List<String> statuses = new ArrayList<>();
 		if (requestInfo.getUserInfo().getType().equals("CITIZEN")) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()))
 				criteria.getUserids().clear();
@@ -385,17 +416,19 @@ public class UserEventsService {
 			criteria.setUserids(userIds);
 			criteria.setRoles(roles);
 			criteria.setIsCitizenSearch(true);
+			if (CollectionUtils.isEmpty(criteria.getStatus()))
+				statuses.add("ACTIVE");
 		}else {
+			criteria.setIsCitizenSearch(false);
 			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
 			if(roles.contains("EMPLOYEE")) {
-				criteria.setIsCitizenSearch(false);
+				if (CollectionUtils.isEmpty(criteria.getStatus())) {
+					statuses.add("ACTIVE");
+					statuses.add("INACTIVE");
+				}
 			}
 		}
-		if (CollectionUtils.isEmpty(criteria.getStatus())) {
-			List<String> statuses = new ArrayList<>();
-			statuses.add("ACTIVE");
-			criteria.setStatus(statuses);
-		}
+		criteria.setStatus(statuses);
 
 		if(criteria.getIsCitizenSearch()) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles())

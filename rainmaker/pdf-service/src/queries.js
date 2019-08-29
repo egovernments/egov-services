@@ -40,6 +40,7 @@ export const getFileStoreIds = (jobid,tenantId,callback) => {
             searchresult.push({filestoreids:crow.filestoreids,jobid:crow.jobid,tenantid:crow.tenantid,createdtime:crow.createdtime,endtime:crow.endtime})
           }
           );
+          logger.info(results.rows.length+" matching records found in search");
           callback({status:200,message:"Success",searchresult});
         }
         else

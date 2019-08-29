@@ -99,16 +99,18 @@ public class UserEventsValidator {
 			if (null == event.getStatus()) {
 				errorMap.put(ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_CODE, ErrorConstants.MEN_UPDATE_STATUS_NOTNULL_MSG);
 			}
+			log.info("event: "+event);
+			log.info("dbEvent: "+dBEventsMap.get(event.getId()));
 			if(null != event.getEventDetails()) {
 				if(null != dBEventsMap.get(event.getId()).getEventDetails()) {
 					if(!event.getEventDetails().getFromDate().equals(dBEventsMap.get(event.getId()).getEventDetails().getFromDate())) {
 						if(event.getEventDetails().getFromDate() < new Date().getTime()) {
-							errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+							errorMap.put(ErrorConstants.INVALID_FROM_DATE_CODE, ErrorConstants.INVALID_FROM_DATE_MSG);
 						}
 					}
 					if(!event.getEventDetails().getToDate().equals(dBEventsMap.get(event.getId()).getEventDetails().getToDate())) {
 						if(event.getEventDetails().getToDate() < new Date().getTime()) {
-							errorMap.put(ErrorConstants.INVALID_FROM_TO_DATE_CODE, ErrorConstants.INVALID_FROM_TO_DATE_MSG);
+							errorMap.put(ErrorConstants.INVALID_TO_DATE_CODE, ErrorConstants.INVALID_TO_DATE_MSG);
 						}	
 					}
 				}else {

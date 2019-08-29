@@ -21,6 +21,12 @@ public class ErrorConstants {
 	public static final String INVALID_EVENT_DATE_CODE = "MEN_INVALID_EVENT_DATE";
 	public static final String INVALID_EVENT_DATE_MSG = "Date invalid, fromDate cannot be greater than toDate";
 	
+	public static final String INVALID_FROM_DATE_CODE = "MEN_INVALID_FROM_DATE";
+	public static final String INVALID_FROM_DATE_MSG = "Date invalid, fromDate cannot be prior to the currentDate";
+	
+	public static final String INVALID_TO_DATE_CODE = "MEN_INVALID_TO_DATE";
+	public static final String INVALID_TO_DATE_MSG = "Date invalid, toDate cannot be prior to the currentDate";
+	
 	public static final String INVALID_FROM_TO_DATE_CODE = "MEN_INVALID_FROM_TO_DATE";
 	public static final String INVALID_FROM_TO_DATE_MSG = "Date invalid, fromDate and toDate cannot be prior to the currentDate";
 

@@ -267,7 +267,7 @@ public class UserEventsService {
 		events.forEach(event -> {
 			if(null != event.getEventDetails()) {
 				if(null != event.getEventDetails().getToDate()) {
-					if(event.getEventDetails().getToDate() < new Date().getTime() && event.getStatus().equals(Status.ACTIVE)) {
+					if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
 						event.setStatus(Status.INACTIVE);
 						eventsTobeUpdated.add(event);
 					}
@@ -276,6 +276,7 @@ public class UserEventsService {
 		});
 		if(!CollectionUtils.isEmpty(eventsTobeUpdated)) {
 			EventRequest request = EventRequest.builder().requestInfo(requestInfo).events(eventsTobeUpdated).build();
+			log.info("Updating events...");
 			updateEvents(request);
 		}
 	}

@@ -50,7 +50,7 @@ public class WorkflowUtil {
         if(CollectionUtils.isEmpty(userRoles))
             return false;
         for(Role role : userRoles) {
-            if(role.getTenantId().equalsIgnoreCase(tenantId)){
+            if(role.getTenantId()!=null && role.getTenantId().equalsIgnoreCase(tenantId)){
                 if (actionRoles.contains(role.getCode()) || actionRoles.contains("*")) {
                     flag = true;
                     break;

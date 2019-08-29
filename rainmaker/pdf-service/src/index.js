@@ -292,7 +292,7 @@ app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> {
     let tenantid=req.query.tenantid;
     let jobid=req.query.jobid;
     requestInfo=get(req.body,"RequestInfo");
-    if((jobid==undefined)||(jobid.trim()==="")){
+    if((jobid==undefined)||(jobid.trim()=="")){
       res.status(400);
       res.json({
         ResponseInfo:requestInfo,
@@ -309,7 +309,7 @@ app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> {
       {
         jobid=[jobid];
       }
-      getFileStoreIds(jobid,tenantid,responseBody => {
+        getFileStoreIds(jobid,tenantid,responseBody => {
         // doc successfully created
         res.status(responseBody.status);
         delete responseBody.status;
@@ -323,7 +323,7 @@ app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> {
     res.status(500);
     res.json({
       ResponseInfo:requestInfo,
-      message: "some unknown error on while searching: "+error.message
+      message: "some unknown error while searching: "+error.message
     });
   }
 }));

@@ -110,8 +110,9 @@ public class UserEventsService {
 	 * @param request
 	 * @return
 	 */
-	public EventResponse createEvents(EventRequest request) {
-		validator.validateCreateEvent(request, true);
+	public EventResponse createEvents(EventRequest request, Boolean isCounterEvent) {
+		if(!isCounterEvent)
+			validator.validateCreateEvent(request, true);
 		log.info("enriching and storing the event......");
 		enrichCreateEvent(request);
 		producer.push(properties.getSaveEventsPersisterTopic(), request);
@@ -150,7 +151,7 @@ public class UserEventsService {
 			EventRequest req = EventRequest.builder().requestInfo(request.getRequestInfo()).events(counterEvents)
 					.build();
 			log.info("Generating counter events.....");
-			createEvents(req);
+			createEvents(req, true);
 		}
 		producer.push(properties.getUpdateEventsPersisterTopic(), request);
 		request.getEvents().forEach(event -> {
@@ -242,7 +243,7 @@ public class UserEventsService {
 			if(!refIds.contains(event.getId()))
 				counterEvents.add(event);
 		});
-		Collections.sort(counterEvents); 
+		Collections.sort(counterEvents, Collections.reverseOrder()); //descending
 		return counterEvents;
 	}
 

@@ -41,7 +41,7 @@ public class UserEventsConsumer {
 		try {
 			EventRequest eventReq = objectMapper.convertValue(record, EventRequest.class);
 			if(topic.equals(props.getSaveEventsTopic())) {
-				service.createEvents(eventReq);
+				service.createEvents(eventReq, false);
 			}else if(topic.equals(props.getUpdateEventsTopic())) {
 				service.updateEvents(eventReq);
 			}

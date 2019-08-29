@@ -77,7 +77,7 @@ public class UserEventsController {
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid EventRequest request) {
-		EventResponse response = service.createEvents(request);
+		EventResponse response = service.createEvents(request, false);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

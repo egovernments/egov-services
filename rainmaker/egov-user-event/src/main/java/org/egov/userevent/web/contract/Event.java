@@ -33,7 +33,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Event {
+public class Event implements Comparable<Event> {
 	
 	@NotNull
 	private String tenantId;
@@ -73,5 +73,14 @@ public class Event {
 	private List<RecepientEvent> recepientEventMap;
 	
 	private Boolean generateCounterEvent;
+	
+
+	@Override
+	/**
+	 * Comparator to sort on lastModifiedTime
+	 */
+	public int compareTo(Event obj) {
+		return this.getAuditDetails().getLastModifiedTime().compareTo(obj.getAuditDetails().getLastModifiedTime());
+	}
 
 }

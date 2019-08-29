@@ -42,6 +42,7 @@ package org.egov.userevent.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.websocket.Util;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
@@ -61,9 +61,9 @@ import org.egov.userevent.model.RecepientEvent;
 import org.egov.userevent.model.enums.Status;
 import org.egov.userevent.producer.UserEventsProducer;
 import org.egov.userevent.repository.UserEventRepository;
-import org.egov.userevent.utils.UserEventsUtils;
 import org.egov.userevent.utils.ResponseInfoFactory;
 import org.egov.userevent.utils.UserEventsConstants;
+import org.egov.userevent.utils.UserEventsUtils;
 import org.egov.userevent.web.contract.Event;
 import org.egov.userevent.web.contract.EventRequest;
 import org.egov.userevent.web.contract.EventResponse;
@@ -242,7 +242,7 @@ public class UserEventsService {
 			if(!refIds.contains(event.getId()))
 				counterEvents.add(event);
 		});
-		
+		Collections.sort(counterEvents); 
 		return counterEvents;
 	}
 

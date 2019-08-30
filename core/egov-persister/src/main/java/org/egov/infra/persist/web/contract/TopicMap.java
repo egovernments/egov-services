@@ -1,10 +1,10 @@
 package org.egov.infra.persist.web.contract;
 
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.Map;
 
 @Setter
 @Getter

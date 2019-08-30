@@ -1,18 +1,13 @@
 package org.egov;
 
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.infra.persist.web.contract.Mapping;
 import org.egov.infra.persist.web.contract.Service;
 import org.egov.infra.persist.web.contract.TopicMap;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -21,83 +16,68 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @Slf4j
 public class EgovPersistApplication {
 
-	@Autowired
-	public ResourceLoader resourceLoader;
-	
-	/*@Value("egov.persist.yaml.path")
-	public String yamlPath;*/
-	
-	@Value("${egov.persist.yml.repo.path}")
-	public String ymlRepoPaths;
-	
-	
-	public static void main(String[] args) {
-		SpringApplication.run(EgovPersistApplication.class, args);
-	}
-	
-	@PostConstruct
-	@Bean
-	public TopicMap loadYaml() {
-		TopicMap topicMap = new TopicMap();
-		Map<String, Mapping> mappingsMap = new HashMap<>();
+    @Autowired
+    private ResourceLoader resourceLoader;
 
-		log.info("EgovPersistApplication loadYaml");
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		Service service = null;
-		
-			try{
-				List<String> ymlUrlS = Arrays.asList(ymlRepoPaths.split(","));
-				for(String yamlLocation : ymlUrlS){
-					if(yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
-						log.info("Reading....: "+yamlLocation);
-						URL yamlFile = new URL(yamlLocation);
-						try{
-						    service = mapper.readValue(new InputStreamReader(yamlFile.openStream()), Service.class);
-						} catch(Exception e) {
-							log.error("Exception while fetching service map for: "+yamlLocation+" = ",e);
-							continue;
-						}
-						log.info("Parsed to object: "+service);
-						int i=0;
-						for(Mapping mapping: (service.getServiceMaps().getMappings())){
-							
-							mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
-						}
-						
-					} else /*if(yamlLocation.startsWith("file://"))*/{
-						log.info("Reading....: "+yamlLocation);
-						Resource resource = resourceLoader.getResource("classpath:"+yamlLocation);
-							File file = resource.getFile();
-							try{
-								service = mapper.readValue(file, Service.class);
-							 } catch(Exception e) {
-									log.error("Exception while fetching service map for: "+yamlLocation);
-									continue;
-							}
-							log.info("Parsed to object: "+service);
-							int i=0;
-							for(Mapping mapping: (service.getServiceMaps().getMappings())){
-								mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
-							}
-					}
-				}
-			}catch(Exception e){
-				log.error("Exception while loading yaml files: ",e);
-			}
-		
-		topicMap.setTopicMap(mappingsMap);
-		log.info("topicMap:"+topicMap);
-		log.info("mappingsMap.size():"+mappingsMap.size());
-		
-		return topicMap;
-	}
+    @Value("${egov.persist.yml.repo.path}")
+    private String configPaths;
+
+
+    public static void main(String[] args) {
+        SpringApplication.run(EgovPersistApplication.class, args);
+    }
+
+    @PostConstruct
+    @Bean
+    public TopicMap loadConfigs() {
+        TopicMap topicMap = new TopicMap();
+        Map<String, Mapping> mappingsMap = new HashMap<>();
+        Map<String, String> errorMap = new HashMap<>();
+
+        log.info("====================== EGOV PERSISTER ======================");
+        log.info("LOADING CONFIGS: "+ configPaths);
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+
+        String[] yamlUrls = configPaths.split(",");
+        for (String conifgPath : yamlUrls) {
+            try {
+                log.info("Attempting to load config: "+conifgPath);
+                Resource resource = resourceLoader.getResource(conifgPath);
+                Service service = mapper.readValue(resource.getInputStream(), Service.class);
+
+                for (Mapping mapping : service.getServiceMaps().getMappings()) {
+                    if(mappingsMap.containsKey(mapping.getFromTopic()))
+                        log.warn("OVERWRITING CONFIG!! Config for topic {} already exists", mapping.getFromTopic());
+
+                    mappingsMap.put(mapping.getFromTopic(), mapping);
+                }
+            }
+            catch (JsonParseException e){
+                log.error("Failed to parse yaml file: " + conifgPath, e);
+                errorMap.put("PARSE_FAILED", conifgPath);
+            }
+            catch (IOException e) {
+                log.error("Exception while fetching service map for: " + conifgPath, e);
+                errorMap.put("FAILED_TO_FETCH_FILE", conifgPath);
+            }
+        }
+
+        if( !  errorMap.isEmpty())
+            throw new CustomException(errorMap);
+        else
+            log.info("====================== CONFIGS LOADED SUCCESSFULLY! ====================== ");
+
+        topicMap.setTopicMap(mappingsMap);
+
+        return topicMap;
+    }
 }

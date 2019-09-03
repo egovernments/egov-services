@@ -209,7 +209,7 @@ ServiceMaps:
   - topic: pgr-service-legacyindex
     configKey: LEGACYINDEX
     indexes:
-    - name: pgrindex-v1
+    - name: pgrindex-v2
       type: grievances
       id: $.serviceRequestId, $.tenantId
       isBulk: true

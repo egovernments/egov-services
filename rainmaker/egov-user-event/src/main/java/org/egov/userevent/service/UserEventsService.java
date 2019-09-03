@@ -210,6 +210,7 @@ public class UserEventsService {
 
 	/**
 	 * Service method to search all the events.
+	 * This method is used to perform normal search and also as a helper method during validation of the upate flow.
 	 * 
 	 * @param requestInfo
 	 * @param criteria
@@ -226,7 +227,7 @@ public class UserEventsService {
 			searchPostProcessor(requestInfo, events);
 			if(null != criteria.getIsCitizenSearch()) {
 				if(criteria.getIsCitizenSearch())
-					events = citizenSearchPostProcessor(events);
+					events = citizenSearchPostProcessor(events, criteria);
 			}
 		}else {
 			events = repository.fetchEvents(criteria);
@@ -237,19 +238,26 @@ public class UserEventsService {
 	
 	/**
 	 * Deduplicates all the EVENTSONGROUND which have a counter event generated.
+	 * However, if the request is specifically for EVENTSONGROUND, then all the events and counter-events are returned.
 	 * 
 	 * @param events
 	 * @param criteria
 	 */
-	public List<Event> citizenSearchPostProcessor(List<Event> events) {
-		List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
-		List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
-		events.forEach(event -> {
-			if(!refIds.contains(event.getId()))
-				counterEvents.add(event);
-		});
-		Collections.sort(counterEvents, Collections.reverseOrder()); //descending
-		return counterEvents;
+	public List<Event> citizenSearchPostProcessor(List<Event> events, EventSearchCriteria criteria) {
+		if(!criteria.getEventTypes().contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
+			List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
+			List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
+			events.forEach(event -> {
+				if(!refIds.contains(event.getId()))
+					counterEvents.add(event);
+			});
+			events = counterEvents;	
+		}
+		events = events.stream().filter(obj -> obj.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList()); //only active events will be returned for citizen.
+		Collections.sort(events, Collections.reverseOrder()); //descending
+		
+		return events;
+
 	}
 	
 	/**
@@ -266,6 +274,12 @@ public class UserEventsService {
 		List<Event> eventsTobeUpdated = new ArrayList<>();
 		events.forEach(event -> {
 			if(null != event.getEventDetails()) {
+				if(null != event.getEventDetails().getFromDate()) {
+					if((event.getEventDetails().getFromDate() >= new Date().getTime()) && event.getStatus().equals(Status.INACTIVE)) {
+						event.setStatus(Status.ACTIVE);
+						eventsTobeUpdated.add(event);
+					}
+				}
 				if(null != event.getEventDetails().getToDate()) {
 					if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
 						event.setStatus(Status.INACTIVE);
@@ -327,12 +341,18 @@ public class UserEventsService {
 				event.getActions().setEventId(event.getId());
 				event.getActions().setTenantId(event.getTenantId());
 			}
+			if (null == event.getStatus())
+				event.setStatus(Status.ACTIVE);
+			
 			if (null != event.getEventDetails()) {
 				event.getEventDetails().setId(UUID.randomUUID().toString());
 				event.getEventDetails().setEventId(event.getId());
+				if(null != event.getEventDetails().getFromDate()) {
+					if(event.getEventDetails().getFromDate() > new Date().getTime()) {
+						event.setStatus(Status.INACTIVE);
+					}
+				}
 			}
-			if (null == event.getStatus())
-				event.setStatus(Status.ACTIVE);
 			
 			List<RecepientEvent> recepientEventList = new ArrayList<>();
 			utils.manageRecepients(event, recepientEventList);

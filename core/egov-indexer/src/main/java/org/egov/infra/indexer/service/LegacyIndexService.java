@@ -203,13 +203,6 @@ public class LegacyIndexService {
 							} else {
 								List<Object> searchResponse = JsonPath.read(response,
 										legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								if(searchResponse.size() < size) {
-									for(long i = 0; i < 10000000; i++) {i = i;}
-									log.info("Retrying Offset: "+offset+" and Size: "+size);
-									response = restTemplate.postForObject(uri, request, Map.class);
-									searchResponse = JsonPath.read(response,
-											legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								}
 								if (!CollectionUtils.isEmpty(searchResponse)) {
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();

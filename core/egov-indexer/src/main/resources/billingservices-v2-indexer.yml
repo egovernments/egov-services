@@ -5,7 +5,7 @@ ServiceMaps:
   - topic: create-demand-index
     configKey: INDEX
     indexes:
-    - name: demandindex-v2
+    - name: billingservice
       type: demand
       id: $.id, $.tenantId
       isBulk: true
@@ -15,7 +15,7 @@ ServiceMaps:
   - topic: demand-reindex
     configKey: REINDEX
     indexes:
-    - name: demandindex-v2
+    - name: billingservice
       type: demand
       id: $.id, $.tenantId
       isBulk: true
@@ -25,7 +25,7 @@ ServiceMaps:
   - topic: demand-service-legacyindex
     configKey: LEGACYINDEX
     indexes:
-    - name: demandindex-v2
+    - name: billingservice
       type: demand
       id: $.id, $.tenantid
       isBulk: true

@@ -48,7 +48,14 @@ public class PropertyConfiguration {
 
     @Value("${persister.update.property.topic}")
     private String updatePropertyTopic;
-    
+
+    @Value("${persister.cancel.property.topic}")
+    private String cancelPropertyTopic;
+
+    @Value("${persister.cancel.property.assessment.topic}")
+    private String cancelPropertyAssessmentTopic;
+
+
     @Value("${persister.save.drafts.topic}")
     private String saveDraftsTopic;
 

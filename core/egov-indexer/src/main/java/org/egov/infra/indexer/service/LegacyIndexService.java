@@ -204,11 +204,14 @@ public class LegacyIndexService {
 								List<Object> searchResponse = JsonPath.read(response,
 										legacyIndexRequest.getApiDetails().getResponseJsonPath());
 								if (!CollectionUtils.isEmpty(searchResponse)) {
+
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
 									count += size;
 									log.info("Size of res: " + searchResponse.size() + " and Count: " + count
 											+ " and offset: " + offset);
+									log.info("messageeeeeeeee",mapper.writeValueAsString(response));
+									log.info("searchhhhhhhhhmessageeeeeeeee",mapper.writeValueAsString(searchResponse));
 								} else {
 									log.info("Request: " + request);
 									log.info("URI: " + uri);

@@ -302,6 +302,7 @@ public class LegacyIndexService {
 						}
 					}
 				} catch (Exception e) {
+						log.error("Child thread Exception: ", e);
 					threadRun = false;
 				}
 				threadRun = false;

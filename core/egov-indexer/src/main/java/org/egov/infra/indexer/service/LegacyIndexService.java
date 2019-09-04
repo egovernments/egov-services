@@ -290,9 +290,10 @@ public class LegacyIndexService {
 					try {
 
 					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
+
+						hh=mapper.writeValueAsString(response);
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
-						hh=mapper.writeValueAsString(serviceResponse);
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
 					} else {

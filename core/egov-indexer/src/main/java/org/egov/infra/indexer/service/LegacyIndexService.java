@@ -285,11 +285,14 @@ public class LegacyIndexService {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
 			public void run() {
-				if (threadRun) {									
+				if (threadRun) {
+					String hh="";
 					try {
+
 					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
+						hh=mapper.writeValueAsString(serviceResponse);
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
 					} else {
@@ -303,6 +306,7 @@ public class LegacyIndexService {
 					}
 				} catch (Exception e) {
 						log.error("Child thread Exception: ", e);
+						log.info("Child thread info: ", hh);
 					threadRun = false;
 				}
 				threadRun = false;

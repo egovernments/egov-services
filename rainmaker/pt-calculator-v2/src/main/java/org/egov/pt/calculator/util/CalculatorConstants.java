@@ -190,6 +190,8 @@ public class CalculatorConstants {
 
 	public static final String SEPARATER = "&";
 
+	public static final String ASSESSMENTNUMBER_FIELD_SEARCH = "propertyDetailids=";
+
 	public static final String MDMS_FINACIALYEAR_PATH = "$.MdmsRes.egf-master.FinancialYear[?(@.code==\"{}\")]";
 
 	public static final String FINANCIALYEAR_MASTER_KEY = "FINANCIALYEAR";

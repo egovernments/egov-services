@@ -58,11 +58,26 @@ public class EstimationService {
     private EnrichmentService enrichmentService;
 
 	@Autowired
+	private AssessmentService assessmentService;
+
+	@Autowired
 	private CalculatorUtils utils;
 
 	@Value("${customization.pbfirecesslogic:false}")
 	Boolean usePBFirecessLogic;
 
+
+
+	/**
+	 * Calculates tax and creates demand for the given assessment number
+	 * @param calculationReq The calculation request object containing the calculation criteria
+	 * @return Map of assessment number to Calculation
+	 */
+	public Map<String, Calculation> calculateAndCreateDemand(CalculationReq calculationReq){
+		assessmentService.enrichAssessment(calculationReq);
+		Map<String,Calculation> res = demandService.generateDemands(calculationReq);
+		return res;
+	}
 
 	/**
 	 * Generates a map with assessment-number of property as key and estimation
@@ -381,7 +396,7 @@ public class EstimationService {
         Property property = criteria.getProperty();
         PropertyDetail detail = property.getPropertyDetails().get(0);
         String assessmentYear = detail.getFinancialYear();
-        String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssesmentNumber();
+        String assessmentNumber = null != detail.getAssessmentNumber() ? detail.getAssessmentNumber() : criteria.getAssessmentNumber();
         String tenantId = null != property.getTenantId() ? property.getTenantId() : criteria.getTenantId();
 
 

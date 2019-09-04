@@ -21,6 +21,7 @@ import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.demand.DemandResponse;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
+import org.egov.pt.calculator.web.models.property.PropertyRequest;
 import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -151,10 +152,10 @@ public class CalculatorUtils {
     public StringBuilder getTaxHeadSearchUrl(String tenantId) {
 
         return new StringBuilder().append(configurations.getBillingServiceHost())
-                .append(configurations.getTaxheadsSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
-                .append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
-                .append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
+                .append(configurations.getTaxheadsSearchEndpoint()).append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+                .append(SEPARATER).append(SERVICE_FIELD_FOR_SEARCH_URL)
+                .append(SERVICE_FIELD_VALUE_PT);
     }
 
     /**
@@ -167,10 +168,10 @@ public class CalculatorUtils {
     public StringBuilder getTaxPeriodSearchUrl(String tenantId) {
 
         return new StringBuilder().append(configurations.getBillingServiceHost())
-                .append(configurations.getTaxPeriodSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
-                .append(CalculatorConstants.SEPARATER).append(CalculatorConstants.SERVICE_FIELD_FOR_SEARCH_URL)
-                .append(CalculatorConstants.SERVICE_FIELD_VALUE_PT);
+                .append(configurations.getTaxPeriodSearchEndpoint()).append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+                .append(SEPARATER).append(SERVICE_FIELD_FOR_SEARCH_URL)
+                .append(SERVICE_FIELD_VALUE_PT);
     }
 
     /**
@@ -203,9 +204,9 @@ public class CalculatorUtils {
 
 
         return new StringBuilder().append(configurations.getCollectionServiceHost())
-                .append(configurations.getReceiptSearchEndpoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(criteria.getTenantId())
-                .append(CalculatorConstants.SEPARATER).append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
+                .append(configurations.getReceiptSearchEndpoint()).append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(criteria.getTenantId())
+                .append(SEPARATER).append(CONSUMER_CODE_SEARCH_FIELD_NAME)
                 .append(criteria.getPropertyId())
                 .append(SEPARATER).append(RECEIPT_START_DATE_PARAM)
                 .append(criteria.getFromDate())
@@ -225,16 +226,16 @@ public class CalculatorUtils {
 
         if (CollectionUtils.isEmpty(getBillCriteria.getConsumerCodes()))
             return new StringBuilder().append(configurations.getBillingServiceHost())
-                    .append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                    .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
-                    .append(CalculatorConstants.SEPARATER)
-                    .append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId() + CalculatorConstants.PT_CONSUMER_CODE_SEPARATOR + getBillCriteria.getAssessmentNumber());
+                    .append(configurations.getDemandSearchEndPoint()).append(URL_PARAMS_SEPARATER)
+                    .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
+                    .append(SEPARATER)
+                    .append(CONSUMER_CODE_SEARCH_FIELD_NAME).append(getBillCriteria.getPropertyId() + PT_CONSUMER_CODE_SEPARATOR + getBillCriteria.getAssessmentNumber());
 
         else return new StringBuilder().append(configurations.getBillingServiceHost())
-                .append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
-                .append(CalculatorConstants.SEPARATER)
-                .append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(StringUtils.join(getBillCriteria.getConsumerCodes(), ","));
+                .append(configurations.getDemandSearchEndPoint()).append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(getBillCriteria.getTenantId())
+                .append(SEPARATER)
+                .append(CONSUMER_CODE_SEARCH_FIELD_NAME).append(StringUtils.join(getBillCriteria.getConsumerCodes(), ","));
 
 
     }
@@ -264,13 +265,13 @@ public class CalculatorUtils {
     public StringBuilder getDemandSearchUrl(DemandSearchCriteria criteria) {
 
         return new StringBuilder().append(configurations.getBillingServiceHost())
-                .append(configurations.getDemandSearchEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(criteria.getTenantId())
-                .append(CalculatorConstants.SEPARATER)
-                .append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(criteria.getPropertyId())
-                .append(CalculatorConstants.SEPARATER)
+                .append(configurations.getDemandSearchEndPoint()).append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(criteria.getTenantId())
+                .append(SEPARATER)
+                .append(CONSUMER_CODE_SEARCH_FIELD_NAME).append(criteria.getPropertyId())
+                .append(SEPARATER)
                 .append(DEMAND_START_DATE_PARAM).append(criteria.getFromDate())
-                .append(CalculatorConstants.SEPARATER)
+                .append(SEPARATER)
                 .append(DEMAND_END_DATE_PARAM).append(criteria.getToDate());
     }
 
@@ -326,13 +327,13 @@ public class CalculatorUtils {
      */
     public StringBuilder getBillGenUrl(String tenantId, String demandId, String consumerCode) {
         return new StringBuilder().append(configurations.getBillingServiceHost())
-                .append(configurations.getBillGenEndPoint()).append(CalculatorConstants.URL_PARAMS_SEPARATER)
-                .append(CalculatorConstants.TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
-                .append(CalculatorConstants.SEPARATER).append(CalculatorConstants.DEMAND_ID_SEARCH_FIELD_NAME)
-                .append(demandId).append(CalculatorConstants.SEPARATER)
-                .append(CalculatorConstants.BUSINESSSERVICE_FIELD_FOR_SEARCH_URL)
-                .append(CalculatorConstants.PROPERTY_TAX_SERVICE_CODE).append(CalculatorConstants.SEPARATER)
-                .append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME).append(consumerCode);
+                .append(configurations.getBillGenEndPoint()).append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+                .append(SEPARATER).append(DEMAND_ID_SEARCH_FIELD_NAME)
+                .append(demandId).append(SEPARATER)
+                .append(BUSINESSSERVICE_FIELD_FOR_SEARCH_URL)
+                .append(PROPERTY_TAX_SERVICE_CODE).append(SEPARATER)
+                .append(CONSUMER_CODE_SEARCH_FIELD_NAME).append(consumerCode);
     }
 
     /**
@@ -425,7 +426,7 @@ public class CalculatorUtils {
         for (DemandDetail detail : demand.getDemandDetails()) {
 
             carryForward = carryForward.add(detail.getCollectionAmount());
-            if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_ADVANCE_CARRYFORWARD))
+            if (detail.getTaxHeadMasterCode().equalsIgnoreCase(PT_ADVANCE_CARRYFORWARD))
                 carryForward = carryForward.add(detail.getTaxAmount());
         }
         return carryForward;
@@ -483,7 +484,7 @@ public class CalculatorUtils {
         BigDecimal amtPaid = BigDecimal.ZERO;
         List<BillAccountDetail> billAccountDetails = receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails();
         for (BillAccountDetail detail : billAccountDetails) {
-            if (CalculatorConstants.TAXES_TO_BE_CONSIDERD.contains(detail.getTaxHeadCode())) {
+            if (TAXES_TO_BE_CONSIDERD.contains(detail.getTaxHeadCode())) {
                 taxAmt = taxAmt.add(detail.getAmount());
                 amtPaid = amtPaid.add(detail.getAdjustedAmount());
             }
@@ -552,6 +553,51 @@ public class CalculatorUtils {
     }
 
 
+    /**
+     * Creates search query for PT based on tenantId and list of assessment numbers
+     * @param tenantId TenantId of the properties
+     * @param assessmentNumbers List of assessmentNumbers to search
+     * @return List of properties
+     */
+    public StringBuilder getPTSearchQuery(String tenantId,List<String> assessmentNumbers){
+
+        StringBuilder url = new StringBuilder(configurations.getPtHost());
+        url.append(configurations.getPtSearchEndpoint())
+                .append(URL_PARAMS_SEPARATER)
+                .append(TENANT_ID_FIELD_FOR_SEARCH_URL).append(tenantId)
+                .append(SEPARATER)
+                .append(ASSESSMENTNUMBER_FIELD_SEARCH)
+                .append(StringUtils.join(assessmentNumbers,","));
+
+        return url;
+
+    }
+
+
+    /**
+     * Creates CalculationRequest from PropertyRequest
+     * @param request PropertyRequest for which calculation has to be done
+     * @return Calculation Request based on PropertyRequest
+     */
+    public CalculationReq createCalculationReq(PropertyRequest request){
+
+        String tenantId = request.getProperties().get(0).getTenantId();
+        RequestInfo requestInfo = request.getRequestInfo();
+        List<CalculationCriteria> calculationCriterias = new LinkedList<>();
+
+        request.getProperties().forEach(property -> {
+            CalculationCriteria criteria = new CalculationCriteria();
+            criteria.setTenantId(tenantId);
+            criteria.setProperty(property);
+            calculationCriterias.add(criteria);
+        });
+
+        CalculationReq calculationReq = new CalculationReq();
+        calculationReq.setRequestInfo(requestInfo);
+        calculationReq.setCalculationCriteria(calculationCriterias);
+
+        return calculationReq;
+    }
 
 
 }

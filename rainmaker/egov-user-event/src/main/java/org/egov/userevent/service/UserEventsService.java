@@ -244,14 +244,16 @@ public class UserEventsService {
 	 * @param criteria
 	 */
 	public List<Event> citizenSearchPostProcessor(List<Event> events, EventSearchCriteria criteria) {
-		if(!criteria.getEventTypes().contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
-			List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
-			List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
-			events.forEach(event -> {
-				if(!refIds.contains(event.getId()))
-					counterEvents.add(event);
-			});
-			events = counterEvents;	
+		if(!CollectionUtils.isEmpty(criteria.getEventTypes())) {
+			if(!criteria.getEventTypes().contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
+				List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
+				List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
+				events.forEach(event -> {
+					if(!refIds.contains(event.getId()))
+						counterEvents.add(event);
+				});
+				events = counterEvents;	
+			}
 		}
 		events = events.stream().filter(obj -> obj.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList()); //only active events will be returned for citizen.
 		Collections.sort(events, Collections.reverseOrder()); //descending

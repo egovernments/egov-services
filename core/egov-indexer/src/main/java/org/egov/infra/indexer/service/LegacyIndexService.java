@@ -186,6 +186,7 @@ public class LegacyIndexService {
 								request = map;
 							}
 							Object response = restTemplate.postForObject(uri, request, Map.class);
+							log.info("rppppppppppsopnseeeee: " + response);
 							if (null == response) {
 								log.info("Request: " + request);
 								log.info("URI: " + uri);
@@ -210,8 +211,10 @@ public class LegacyIndexService {
 									count += size;
 									log.info("Size of res: " + searchResponse.size() + " and Count: " + count
 											+ " and offset: " + offset);
-									log.info("messageeeeeeeee",mapper.writeValueAsString(response));
-									log.info("searchhhhhhhhhmessageeeeeeeee",mapper.writeValueAsString(searchResponse));
+									log.info("messageeeeeeeee");
+									log.info(mapper.writeValueAsString(response));
+									log.info("searchhhhhhhhhmessageeeeeeeee");
+									log.info(mapper.writeValueAsString(searchResponse));
 								} else {
 									log.info("Request: " + request);
 									log.info("URI: " + uri);

@@ -349,9 +349,11 @@ public class UserEventsService {
 			if (null != event.getEventDetails()) {
 				event.getEventDetails().setId(UUID.randomUUID().toString());
 				event.getEventDetails().setEventId(event.getId());
-				if(null != event.getEventDetails().getFromDate()) {
-					if(event.getEventDetails().getFromDate() > new Date().getTime()) {
-						event.setStatus(Status.INACTIVE);
+				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
+					if(null != event.getEventDetails().getFromDate()) {
+						if(event.getEventDetails().getFromDate() > new Date().getTime()) {
+							event.setStatus(Status.INACTIVE);
+						}
 					}
 				}
 			}

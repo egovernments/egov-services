@@ -1,0 +1,1 @@
+ALTER TABLE eg_pgr_service ALTER COLUMN description TYPE character varying(2000);

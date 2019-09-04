@@ -4,6 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.egov.pgr.model.user.Citizen;
 import org.hibernate.validator.constraints.Email;
@@ -47,6 +48,7 @@ public class Service   {
   private String serviceRequestId;
 
   @JsonProperty("description")
+  @Size(max=2000)  
   private String description;
 
   @JsonProperty("lat")

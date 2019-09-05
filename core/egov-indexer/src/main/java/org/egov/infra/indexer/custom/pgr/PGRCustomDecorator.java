@@ -48,7 +48,7 @@ public class PGRCustomDecorator {
 		PGRIndexObject indexObject = new PGRIndexObject();
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		List<ServiceIndexObject> indexObjects = new ArrayList<>();
-		if(!CollectionUtils.isEmpty(serviceResponse.getServices()) && !CollectionUtils.isEmpty(serviceResponse.getActionHistory())){
+		if(!CollectionUtils.isEmpty(serviceResponse.getServices()) && !CollectionUtils.isEmpty(serviceResponse.getActionHistory()) && (serviceResponse.getActionHistory()!=null)){
 			for(int i = 0; i < serviceResponse.getServices().size(); i++) {
 				ServiceIndexObject object = new ServiceIndexObject();
 				object = mapper.convertValue(serviceResponse.getServices().get(i), ServiceIndexObject.class);

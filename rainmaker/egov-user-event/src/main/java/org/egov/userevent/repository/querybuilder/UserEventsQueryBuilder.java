@@ -158,7 +158,7 @@ public class UserEventsQueryBuilder {
     		queryBuilder.append(" )");
 		}
 		
-		queryBuilder.append(" ORDER BY lastmodifiedtime DESC");
+		queryBuilder.append(" ORDER BY createdtime DESC"); //default ordering on the platform.
 		queryBuilder.append(" OFFSET :offset");
 		preparedStatementValues.put("offset", null == criteria.getOffset() ? properties.getDefaultOffset() : criteria.getOffset());		
 		queryBuilder.append(" LIMIT :limit");

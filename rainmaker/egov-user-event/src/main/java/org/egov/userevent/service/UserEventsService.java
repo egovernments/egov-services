@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -239,24 +240,29 @@ public class UserEventsService {
 	/**
 	 * Deduplicates all the EVENTSONGROUND which have a counter event generated.
 	 * However, if the request is specifically for EVENTSONGROUND, then all the events and counter-events are returned.
+	 * Sort on fromDate for EVENTSONGROUND, for others sort on createddate.
 	 * 
 	 * @param events
 	 * @param criteria
 	 */
 	public List<Event> citizenSearchPostProcessor(List<Event> events, EventSearchCriteria criteria) {
 		if(!CollectionUtils.isEmpty(criteria.getEventTypes())) {
-			if(!criteria.getEventTypes().contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
-				List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
-				List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
-				events.forEach(event -> {
-					if(!refIds.contains(event.getId()))
-						counterEvents.add(event);
-				});
-				events = counterEvents;	
-			}
+			Set<String> types = criteria.getEventTypes().stream().collect(Collectors.toSet());
+			if(types.size() == 1 && types.contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
+				Collections.sort(events, Collections.reverseOrder()); //descending on fromDate - custom comparator.
+			}//searching for only EVENTSONGROUND which returns events and their counter-events with a different sorted order.	
 		}
+		else {
+			List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
+			List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
+			events.forEach(event -> {
+				if(!refIds.contains(event.getId()))
+					counterEvents.add(event);
+			});
+			events = counterEvents;	
+		}//default CITIZEN search which de-duplicates and returns in default sort order.
+		
 		events = events.stream().filter(obj -> obj.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList()); //only active events will be returned for citizen.
-		Collections.sort(events, Collections.reverseOrder()); //descending
 		
 		return events;
 
@@ -276,12 +282,15 @@ public class UserEventsService {
 		List<Event> eventsTobeUpdated = new ArrayList<>();
 		events.forEach(event -> {
 			if(null != event.getEventDetails()) {
-				if(null != event.getEventDetails().getFromDate()) {
-					if((event.getEventDetails().getFromDate() >= new Date().getTime()) && event.getStatus().equals(Status.INACTIVE)) {
-						event.setStatus(Status.ACTIVE);
-						eventsTobeUpdated.add(event);
+				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
+					if(null != event.getEventDetails().getFromDate()) {
+						if((event.getEventDetails().getFromDate() <= new Date().getTime()) && event.getStatus().equals(Status.INACTIVE)) {
+							event.setStatus(Status.ACTIVE);
+							eventsTobeUpdated.add(event);
+						}
 					}
-				}
+				}// BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
+				
 				if(null != event.getEventDetails().getToDate()) {
 					if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
 						event.setStatus(Status.INACTIVE);
@@ -355,7 +364,7 @@ public class UserEventsService {
 							event.setStatus(Status.INACTIVE);
 						}
 					}
-				}
+				} // BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
 			}
 			
 			List<RecepientEvent> recepientEventList = new ArrayList<>();

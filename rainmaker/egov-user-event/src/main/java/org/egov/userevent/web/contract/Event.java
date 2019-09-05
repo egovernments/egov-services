@@ -77,10 +77,10 @@ public class Event implements Comparable<Event> {
 
 	@Override
 	/**
-	 * Comparator to sort on lastModifiedTime
+	 * Comparator to sort on fromDate of EVENTSONGROUND only.
 	 */
 	public int compareTo(Event obj) {
-		return this.getAuditDetails().getLastModifiedTime().compareTo(obj.getAuditDetails().getLastModifiedTime());
+		return this.getEventDetails().getFromDate().compareTo(obj.getEventDetails().getFromDate());
 	}
 
 }

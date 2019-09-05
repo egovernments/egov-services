@@ -246,11 +246,11 @@ public class UserEventsService {
 	 * @param criteria
 	 */
 	public List<Event> citizenSearchPostProcessor(List<Event> events, EventSearchCriteria criteria) {
+		events = events.stream().filter(obj -> obj.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList()); //only active events will be returned for citizen.
 		if(!CollectionUtils.isEmpty(criteria.getEventTypes())) {
 			Set<String> types = criteria.getEventTypes().stream().collect(Collectors.toSet());
 			if(types.size() == 1 && types.contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
 				Collections.sort(events, Event.getFromDateComparatorForEvents()); // on fromDate - custom comparator.
-				Collections.sort(events, Collections.reverseOrder()); //descending 
 			}//searching for only EVENTSONGROUND which returns events and their counter-events with a different sorted order.	
 		}
 		else {
@@ -262,11 +262,8 @@ public class UserEventsService {
 			});
 			events = counterEvents;	
 			Collections.sort(events, Event.getCreatedDateComparator()); // on createdDate - custom comparator.
-			Collections.sort(events, Collections.reverseOrder()); //descending 
 		}//default CITIZEN search which de-duplicates and returns in default sort order.
-		
-		events = events.stream().filter(obj -> obj.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList()); //only active events will be returned for citizen.
-		
+				
 		return events;
 
 	}

@@ -92,6 +92,9 @@ public class UserEventsValidator {
 		criteria.setIds(ids);
 		List<Event> responseFromDB = service.searchEvents(request.getRequestInfo(), criteria, true).getEvents();
 		if (responseFromDB.size() != request.getEvents().size()) {
+			log.info("responseFromDB: "+responseFromDB.stream().map(Event::getId).collect(Collectors.toList()));
+			log.info("request.getEvents(): "+request.getEvents().stream().map(Event::getId).collect(Collectors.toList()));
+			
 			errorMap.put(ErrorConstants.MEN_UPDATE_MISSING_EVENTS_CODE, ErrorConstants.MEN_UPDATE_MISSING_EVENTS_MSG);
 		}
 		Map<String, Event> dBEventsMap = responseFromDB.stream().collect(Collectors.toMap(Event::getId, Function.identity()));

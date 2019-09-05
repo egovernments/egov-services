@@ -281,20 +281,25 @@ public class UserEventsService {
 	public void searchPostProcessor(RequestInfo requestInfo, List<Event> events){
 		List<Event> eventsTobeUpdated = new ArrayList<>();
 		events.forEach(event -> {
+			Boolean isAdded = false;
 			if(null != event.getEventDetails()) {
 				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
 					if(null != event.getEventDetails().getFromDate()) {
 						if((event.getEventDetails().getFromDate() <= new Date().getTime()) && event.getStatus().equals(Status.INACTIVE)) {
 							event.setStatus(Status.ACTIVE);
 							eventsTobeUpdated.add(event);
+							isAdded = true;
 						}
 					}
 				}// BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
 				
-				if(null != event.getEventDetails().getToDate()) {
-					if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
-						event.setStatus(Status.INACTIVE);
-						eventsTobeUpdated.add(event);
+				if(!isAdded) {
+					if(null != event.getEventDetails().getToDate()) {
+						if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
+							event.setStatus(Status.INACTIVE);
+							eventsTobeUpdated.add(event);
+							isAdded = true;
+						}
 					}
 				}
 			}

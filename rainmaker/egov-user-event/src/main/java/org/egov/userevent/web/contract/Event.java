@@ -1,21 +1,16 @@
 package org.egov.userevent.web.contract;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.userevent.model.AuditDetails;
 import org.egov.userevent.model.RecepientEvent;
 import org.egov.userevent.model.enums.Source;
 import org.egov.userevent.model.enums.Status;
+import org.springframework.validation.annotation.Validated;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,54 +28,75 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Event implements Comparable<Event> {
-	
+public class Event {
+
 	@NotNull
 	private String tenantId;
-	
+
 	private String id;
-	
+
 	private String referenceId;
-	
+
 	@NotNull
 	private String eventType;
-	
+
 	private String eventCategory;
-	
+
 	@NotNull
 	@Size(max = 65)
 	private String name;
-	
+
 	@NotNull
 	@Size(max = 500)
 	private String description;
-	
+
 	private Status status;
-	
+
 	@NotNull
 	private Source source;
-	
+
 	private String postedBy;
-	
+
 	private Recepient recepient;
-	
+
 	private Action actions;
-	
+
 	private EventDetails eventDetails;
-		
+
 	private AuditDetails auditDetails;
-	
+
 	private List<RecepientEvent> recepientEventMap;
-	
+
 	private Boolean generateCounterEvent;
 	
+	
 
-	@Override
 	/**
-	 * Comparator to sort on fromDate of EVENTSONGROUND only.
+	 * Comparator for fromDate based sorting of EVENTSONGROUND
+	 * 
+	 * @return
 	 */
-	public int compareTo(Event obj) {
-		return this.getEventDetails().getFromDate().compareTo(obj.getEventDetails().getFromDate());
+	public static Comparator<Event> getFromDateComparatorForEvents() {
+		return new Comparator<Event>() {
+			@Override
+			public int compare(Event o1, Event o2) {
+				return o1.getEventDetails().getFromDate().compareTo(o2.getEventDetails().getFromDate());
+			}
+		};
+	}
+
+	/**
+	 * Comparator for createdDate based sorting of all the events.
+	 * 
+	 * @return
+	 */
+	public static Comparator<Event> getCreatedDateComparator() {
+		return new Comparator<Event>() {
+			@Override
+			public int compare(Event o1, Event o2) {
+				return o1.getAuditDetails().getCreatedTime().compareTo(o2.getAuditDetails().getCreatedTime());
+			}
+		};
 	}
 
 }

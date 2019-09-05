@@ -48,21 +48,23 @@ public class PGRCustomDecorator {
 		PGRIndexObject indexObject = new PGRIndexObject();
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		List<ServiceIndexObject> indexObjects = new ArrayList<>();
-		if((!CollectionUtils.isEmpty(serviceResponse.getServices()))&&(!CollectionUtils.isEmpty(serviceResponse.getActionHistory()))){
+		if(!CollectionUtils.isEmpty(serviceResponse.getServices()) && !CollectionUtils.isEmpty(serviceResponse.getActionHistory())){
 			for(int i = 0; i < serviceResponse.getServices().size(); i++) {
 				ServiceIndexObject object = new ServiceIndexObject();
 				object = mapper.convertValue(serviceResponse.getServices().get(i), ServiceIndexObject.class);
 				object.setActionHistory(serviceResponse.getActionHistory().get(i));
-				for (ActionInfo action : serviceResponse.getActionHistory().get(i).getActions()) {
-					if (!StringUtils.isEmpty(action.getBy())) {
-						if (action.getBy().contains("Grievance Routing Officer") || action.getBy().contains("Department Grievance Routing Officer")) {
-							object.setGro(action.getBy().split(":")[0]);
-							if (!StringUtils.isEmpty(action.getAssignee())) {
-								object.setAssignee(action.getAssignee());
+				if(serviceResponse.getActionHistory().get(i)!=null){
+					for (ActionInfo action : serviceResponse.getActionHistory().get(i).getActions()) {
+						if (!StringUtils.isEmpty(action.getBy())) {
+							if (action.getBy().contains("Grievance Routing Officer") || action.getBy().contains("Department Grievance Routing Officer")) {
+								object.setGro(action.getBy().split(":")[0]);
+								if (!StringUtils.isEmpty(action.getAssignee())) {
+									object.setAssignee(action.getAssignee());
+								}
+								break;
+							} else if (action.getBy().contains("Employee")) {
+								object.setAssignee(action.getBy().split(":")[0]);
 							}
-							break;
-						} else if (action.getBy().contains("Employee")) {
-							object.setAssignee(action.getBy().split(":")[0]);
 						}
 					}
 				}

@@ -205,16 +205,16 @@ public class LegacyIndexService {
 								List<Object> searchResponse = JsonPath.read(response,
 										legacyIndexRequest.getApiDetails().getResponseJsonPath());
 								if (!CollectionUtils.isEmpty(searchResponse)) {
+									log.info("messageeeeeeeee");
+									log.info(mapper.writeValueAsString(response));
+									log.info("searchhhhhhhhhmessageeeeeeeee");
+									log.info(mapper.writeValueAsString(searchResponse));
 
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
 									count += size;
 									log.info("Size of res: " + searchResponse.size() + " and Count: " + count
 											+ " and offset: " + offset);
-									log.info("messageeeeeeeee");
-									log.info(mapper.writeValueAsString(response));
-									log.info("searchhhhhhhhhmessageeeeeeeee");
-									log.info(mapper.writeValueAsString(searchResponse));
 								} else {
 									log.info("Request: " + request);
 									log.info("URI: " + uri);
@@ -296,10 +296,9 @@ public class LegacyIndexService {
 					try {
 
 					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
-
-						hh=mapper.writeValueAsString(response);
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
+						log.info("serviceResponse: "+mapper.writeValueAsString(serviceResponse));
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
 						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
 					} else {

@@ -213,7 +213,7 @@ ServiceMaps:
       type: grievances
       id: $.serviceRequestId, $.tenantId
       isBulk: true
-      jsonPath: $.servicerequests
+      jsonPath: $.serviceRequests
       fieldsToBeMasked: ["$.phone", "$.citizen.mobileNumber", "$.citizen.address", "$.citizen.aadhaarNumber", "$.citizen.pan", "$.citizen.emailId", "$.citizen.password"]
       timeStampField: $.auditDetails.createdTime
       customJsonMapping:

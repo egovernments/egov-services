@@ -186,7 +186,6 @@ public class LegacyIndexService {
 								request = map;
 							}
 							Object response = restTemplate.postForObject(uri, request, Map.class);
-							log.info("rppppppppppsopnseeeee: " + response);
 							if (null == response) {
 								log.info("Request: " + request);
 								log.info("URI: " + uri);
@@ -205,10 +204,6 @@ public class LegacyIndexService {
 								List<Object> searchResponse = JsonPath.read(response,
 										legacyIndexRequest.getApiDetails().getResponseJsonPath());
 								if (!CollectionUtils.isEmpty(searchResponse)) {
-									log.info("messageeeeeeeee");
-									log.info(mapper.writeValueAsString(response));
-									log.info("searchhhhhhhhhmessageeeeeeeee");
-									log.info(mapper.writeValueAsString(searchResponse));
 
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
@@ -298,9 +293,9 @@ public class LegacyIndexService {
 					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
-						log.info("serviceResponse: "+mapper.writeValueAsString(serviceResponse));
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
+						if(!CollectionUtils.isEmpty(indexObject.getServiceRequests()))
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
 					} else {
 						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
 							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response), PropertyResponse.class);
@@ -312,8 +307,6 @@ public class LegacyIndexService {
 					}
 				} catch (Exception e) {
 						log.error("Child thread Exception: ", e);
-						log.info("Child thread info: ");
-						log.info(hh);
 					threadRun = false;
 				}
 				threadRun = false;

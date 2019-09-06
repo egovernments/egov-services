@@ -15,7 +15,8 @@ public class UserEventsConstants {
 
 	
 	public static final String MEN_MDMS_EVENTSONGROUND_CODE = "EVENTSONGROUND";	
-	public static final String MEN_MDMS_BROADCAST_CODE = "BROADCAST";	
+	public static final String MEN_MDMS_BROADCAST_CODE = "BROADCAST";
+	public static final String MEN_MDMS_SYSTEMGENERATED_CODE = "SYSTEMGENERATED";	
 	
 	public static final String[] VALID_ROLES_FOR_SEARCH = {"EMPLOYEE"};
 

@@ -97,22 +97,22 @@ public class UserEventsService {
 
 	@Autowired
 	private UserEventRepository repository;
-	
+
 	@Autowired
 	private UserEventsUtils utils;
-	
+
 	@Autowired
 	private LocalizationService localizationService;
 
 	/**
-	 * Service method to create events
-	 * Enriches the request and produces it on the queue for persister to pick.
+	 * Service method to create events Enriches the request and produces it on the
+	 * queue for persister to pick.
 	 * 
 	 * @param request
 	 * @return
 	 */
 	public EventResponse createEvents(EventRequest request, Boolean isCounterEvent) {
-		if(!isCounterEvent)
+		if (!isCounterEvent)
 			validator.validateCreateEvent(request, true);
 		log.info("enriching and storing the event......");
 		enrichCreateEvent(request);
@@ -124,11 +124,11 @@ public class UserEventsService {
 	}
 
 	/**
-	 * Service method to update the events.
-	 * Enriches the request and produces it on the queue for persister to pick.
-	 * This method also creates counter events the following scenario:
-	 * 1. When an ACTIVE event is made INACTIVE or CANCELLED. (Counter event on delete)
-	 * 2. When details an event irrespective of what status does it have, are updated. (Counter event on update)
+	 * Service method to update the events. Enriches the request and produces it on
+	 * the queue for persister to pick. This method also creates counter events the
+	 * following scenario: 1. When an ACTIVE event is made INACTIVE or CANCELLED.
+	 * (Counter event on delete) 2. When details an event irrespective of what
+	 * status does it have, are updated. (Counter event on update)
 	 * 
 	 * @param request
 	 * @return
@@ -140,10 +140,10 @@ public class UserEventsService {
 		List<Event> counterEvents = new ArrayList<>();
 		request.getEvents().forEach(event -> {
 			Boolean isCounterEventReq = true;
-			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE) 
+			if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)
 					&& (null == event.getGenerateCounterEvent() || event.getGenerateCounterEvent())) {
 				Event counterEvent = buildCounterEvents(request.getRequestInfo(), event, isCounterEventReq);
-				if(null != counterEvent) {
+				if (null != counterEvent) {
 					counterEvents.add(counterEvent);
 				}
 			}
@@ -156,15 +156,15 @@ public class UserEventsService {
 		}
 		producer.push(properties.getUpdateEventsPersisterTopic(), request);
 		request.getEvents().forEach(event -> {
-			event.setRecepientEventMap(null); event.setGenerateCounterEvent(null);
+			event.setRecepientEventMap(null);
+			event.setGenerateCounterEvent(null);
 		});
-		
+
 		return EventResponse.builder()
 				.responseInfo(responseInfo.createResponseInfoFromRequestInfo(request.getRequestInfo(), true))
 				.events(request.getEvents()).build();
 	}
-	
-	
+
 	/**
 	 * Builds counter event on update or delete of an event.
 	 * 
@@ -177,19 +177,23 @@ public class UserEventsService {
 	private Event buildCounterEvents(RequestInfo requestInfo, Event event, Boolean isCounterEventReq) {
 		String description = null;
 		Event counterEvent = new Event();
-		String tenanId = properties.getIsLocalizationStateLevel() ? event.getTenantId().split("\\.")[0] : event.getTenantId();
-		Map<String, String> localisedMsgs = localizationService.getLocalisedMessages(requestInfo, tenanId, "en_IN", UserEventsConstants.LOCALIZATION_MODULE_NAME);
+		String tenanId = properties.getIsLocalizationStateLevel() ? event.getTenantId().split("\\.")[0]
+				: event.getTenantId();
+		Map<String, String> localisedMsgs = localizationService.getLocalisedMessages(requestInfo, tenanId, "en_IN",
+				UserEventsConstants.LOCALIZATION_MODULE_NAME);
 		if (event.getStatus().equals(Status.INACTIVE) || event.getStatus().equals(Status.CANCELLED)) {
 			if (null != event.getEventDetails().getFromDate()
 					&& new Date().getTime() < event.getEventDetails().getFromDate()) {
-				description = localisedMsgs.get(UserEventsConstants.LOCALIZATION_COUNTEREVENT_ONDELETE_CODE).replace("<event_name>", event.getName());
-			}else {
+				description = localisedMsgs.get(UserEventsConstants.LOCALIZATION_COUNTEREVENT_ONDELETE_CODE)
+						.replace("<event_name>", event.getName());
+			} else {
 				isCounterEventReq = false;
 			}
 		} else {
-			description = localisedMsgs.get(UserEventsConstants.LOCALIZATION_COUNTEREVENT_ONUPDATE_CODE).replace("<event_name>", event.getName());
+			description = localisedMsgs.get(UserEventsConstants.LOCALIZATION_COUNTEREVENT_ONUPDATE_CODE)
+					.replace("<event_name>", event.getName());
 		}
-		if(isCounterEventReq) {
+		if (isCounterEventReq) {
 			counterEvent.setActions(event.getActions());
 			counterEvent.setEventCategory(event.getEventCategory());
 			counterEvent.setEventDetails(event.getEventDetails());
@@ -201,17 +205,17 @@ public class UserEventsService {
 			counterEvent.setTenantId(event.getTenantId());
 			counterEvent.setRecepientEventMap(event.getRecepientEventMap());
 			counterEvent.setDescription(event.getDescription());
-		}
-		else {
+		} else {
 			counterEvent = null;
 		}
-		
+
 		return counterEvent;
 	}
 
 	/**
-	 * Service method to search all the events.
-	 * This method is used to perform normal search and also as a helper method during validation of the upate flow.
+	 * Service method to search all the events. This method is used to perform
+	 * normal search and also as a helper method during validation of the upate
+	 * flow.
 	 * 
 	 * @param requestInfo
 	 * @param criteria
@@ -226,48 +230,56 @@ public class UserEventsService {
 			enrichSearchCriteria(requestInfo, criteria);
 			events = repository.fetchEvents(criteria);
 			searchPostProcessor(requestInfo, events);
-			if(null != criteria.getIsCitizenSearch()) {
-				if(criteria.getIsCitizenSearch())
+			if (null != criteria.getIsCitizenSearch()) {
+				if (criteria.getIsCitizenSearch())
 					events = citizenSearchPostProcessor(events, criteria);
 			}
-		}else {
+		} else {
 			events = repository.fetchEvents(criteria);
 		}
 		return EventResponse.builder().responseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true))
 				.events(events).build();
 	}
-	
+
 	/**
 	 * Deduplicates all the EVENTSONGROUND which have a counter event generated.
-	 * However, if the request is specifically for EVENTSONGROUND, then all the events and counter-events are returned.
-	 * Sort on fromDate for EVENTSONGROUND, for others sort on createddate.
+	 * However, if the request is specifically for EVENTSONGROUND, then all the
+	 * events and counter-events are returned. Sort on fromDate for EVENTSONGROUND,
+	 * for others sort on createddate.
 	 * 
 	 * @param events
 	 * @param criteria
 	 */
 	public List<Event> citizenSearchPostProcessor(List<Event> events, EventSearchCriteria criteria) {
-		events = events.stream().filter(obj -> obj.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList()); //only active events will be returned for citizen.
-		if(!CollectionUtils.isEmpty(criteria.getEventTypes())) {
+		events = events.stream()
+				.filter(obj -> (obj.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)
+						&& obj.getStatus().equals(Status.ACTIVE))
+						|| (obj.getEventType().equals(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)
+								|| obj.getEventType().equals(UserEventsConstants.MEN_MDMS_SYSTEMGENERATED_CODE)))
+				.collect(Collectors.toList()); // Everything except inactive BROADCASTs by default.
+
+		if (!CollectionUtils.isEmpty(criteria.getEventTypes())) {
 			Set<String> types = criteria.getEventTypes().stream().collect(Collectors.toSet());
-			if(types.size() == 1 && types.contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
+			if (types.size() == 1 && types.contains(UserEventsConstants.MEN_MDMS_EVENTSONGROUND_CODE)) {
 				Collections.sort(events, Event.getFromDateComparatorForEvents()); // on fromDate - custom comparator.
-			}//searching for only EVENTSONGROUND which returns events and their counter-events with a different sorted order.	
-		}
-		else {
-			List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId())).collect(Collectors.toList());
-			List<String> refIds = counterEvents.stream().map(Event :: getReferenceId).collect(Collectors.toList());
+			} // searching for only EVENTSONGROUND which returns events and their
+				// counter-events with a different sorted order.
+		} else {
+			List<Event> counterEvents = events.stream().filter(obj -> !StringUtils.isEmpty(obj.getReferenceId()))
+					.collect(Collectors.toList());
+			List<String> refIds = counterEvents.stream().map(Event::getReferenceId).collect(Collectors.toList());
 			events.forEach(event -> {
-				if(!refIds.contains(event.getId()))
+				if (!refIds.contains(event.getId()))
 					counterEvents.add(event);
 			});
-			events = counterEvents;	
+			events = counterEvents;
 			Collections.sort(events, Event.getCreatedDateComparator()); // on createdDate - custom comparator.
-		}//default CITIZEN search which de-duplicates and returns in default sort order.
-				
+		} // default CITIZEN search which de-duplicates and returns in default sort order.
+
 		return events;
 
 	}
-	
+
 	/**
 	 * This method performs certain post processing activities on the searc result:
 	 * 1. Finds all the events in the search result that have toDate prior to currentDate and marks them inactive
@@ -281,27 +293,25 @@ public class UserEventsService {
 	public void searchPostProcessor(RequestInfo requestInfo, List<Event> events){
 		List<Event> eventsTobeUpdated = new ArrayList<>();
 		events.forEach(event -> {
-			Boolean isAdded = false;
+			Boolean tobeAdded = false;
 			if(null != event.getEventDetails()) {
 				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
 					if(null != event.getEventDetails().getFromDate()) {
 						if((event.getEventDetails().getFromDate() <= new Date().getTime()) && event.getStatus().equals(Status.INACTIVE)) {
 							event.setStatus(Status.ACTIVE);
-							eventsTobeUpdated.add(event);
-							isAdded = true;
+							tobeAdded = true;
 						}
 					}
 				}// BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
 				
-				if(!isAdded) {
-					if(null != event.getEventDetails().getToDate()) {
-						if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
-							event.setStatus(Status.INACTIVE);
-							eventsTobeUpdated.add(event);
-							isAdded = true;
-						}
+				if(null != event.getEventDetails().getToDate()) {
+					if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
+						event.setStatus(Status.INACTIVE);
+						tobeAdded = true;
 					}
 				}
+				if(tobeAdded)
+					eventsTobeUpdated.add(event);
 			}
 		});
 		if(!CollectionUtils.isEmpty(eventsTobeUpdated)) {
@@ -312,7 +322,7 @@ public class UserEventsService {
 	}
 
 	/**
-	 * Service method to fetch count of events as per criteria. 
+	 * Service method to fetch count of events as per criteria.
 	 * 
 	 * @param requestInfo
 	 * @param criteria
@@ -325,7 +335,7 @@ public class UserEventsService {
 		response.setResponseInfo(responseInfo.createResponseInfoFromRequestInfo(requestInfo, true));
 		return response;
 	}
-	
+
 	/**
 	 * Service method used to persist the lastaccesstime of the user.
 	 * 
@@ -337,15 +347,15 @@ public class UserEventsService {
 				.lastAccessTime(new Date().getTime()).build();
 		LATWrapper wrapper = LATWrapper.builder().lastAccessDetails(loginDetails).build();
 		producer.push(properties.getLatDetailsTopic(), wrapper);
-		
+
 		return responseInfo.createResponseInfoFromRequestInfo(requestInfo, true);
-		
+
 	}
-	
 
 	/**
 	 * Method to enrich the create request by setting ids, status, auditDetails etc.
-	 * This method also populates a field called recepientEventMap, which is a mapping between the particular event and its recipients in a specific format.
+	 * This method also populates a field called recepientEventMap, which is a
+	 * mapping between the particular event and its recipients in a specific format.
 	 * 
 	 * @param request
 	 */
@@ -359,28 +369,29 @@ public class UserEventsService {
 			}
 			if (null == event.getStatus())
 				event.setStatus(Status.ACTIVE);
-			
+
 			if (null != event.getEventDetails()) {
 				event.getEventDetails().setId(UUID.randomUUID().toString());
 				event.getEventDetails().setEventId(event.getId());
-				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
-					if(null != event.getEventDetails().getFromDate()) {
-						if(event.getEventDetails().getFromDate() > new Date().getTime()) {
+				if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
+					if (null != event.getEventDetails().getFromDate()) {
+						if (event.getEventDetails().getFromDate() > new Date().getTime()) {
 							event.setStatus(Status.INACTIVE);
 						}
 					}
-				} // BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
+				} // BROADCASTs are ACTIVE only between the given from and to date, they're
+					// INACTIVE beyond that.
 			}
-			
+
 			List<RecepientEvent> recepientEventList = new ArrayList<>();
 			utils.manageRecepients(event, recepientEventList);
 			event.setRecepientEventMap(recepientEventList);
-			
-			if(!StringUtils.isEmpty(event.getPostedBy())) {
-				if(!Arrays.asList(UserEventsConstants.INTEGRATED_MODULES).contains(event.getPostedBy())) {
+
+			if (!StringUtils.isEmpty(event.getPostedBy())) {
+				if (!Arrays.asList(UserEventsConstants.INTEGRATED_MODULES).contains(event.getPostedBy())) {
 					event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
 				}
-			}else {
+			} else {
 				event.setPostedBy(request.getRequestInfo().getUserInfo().getUuid());
 			}
 
@@ -396,7 +407,8 @@ public class UserEventsService {
 
 	/**
 	 * Method to enrich the update request by setting ids, status, auditDetails etc.
-	 * This method also populates a field called recepientEventMap, which is a mapping between the particular event and its recipients in a specific format.
+	 * This method also populates a field called recepientEventMap, which is a
+	 * mapping between the particular event and its recipients in a specific format.
 	 * 
 	 * @param request
 	 */
@@ -430,21 +442,22 @@ public class UserEventsService {
 	}
 
 	/**
-	 * Method to enrich search criteria based on role as follows:
-	 * 1. Incase of CITIZEN, criteria is enriched using the userInfo present in RI.
-	 * 2. For EMPLOYEE, events posted in his tenant will be returned by default. 
-	 * Note - the filter on tenantId will mean as:
-	 * 'Events addressed to this tenant' in case of CITIZEN search.
-	 * 'Events created through this tenant' in case of EMPLOYEE search.
+	 * Method to enrich search criteria based on role as follows: 1. Incase of
+	 * CITIZEN, criteria is enriched using the userInfo present in RI. 2. For
+	 * EMPLOYEE, events posted in his tenant will be returned by default. Note - the
+	 * filter on tenantId will mean as: 'Events addressed to this tenant' in case of
+	 * CITIZEN search. 'Events created through this tenant' in case of EMPLOYEE
+	 * search.
 	 * 
-	 * This method also derives a list of recipients in a specified format from the criteria to build search clause for the query.
+	 * This method also derives a list of recipients in a specified format from the
+	 * criteria to build search clause for the query.
 	 * 
 	 * 
 	 * @param requestInfo
 	 * @param criteria
 	 */
 	private void enrichSearchCriteria(RequestInfo requestInfo, EventSearchCriteria criteria) {
-		log.info("Search Criteria: "+criteria);
+		log.info("Search Criteria: " + criteria);
 		List<String> statuses = new ArrayList<>();
 		if (requestInfo.getUserInfo().getType().equals("CITIZEN")) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()))
@@ -460,26 +473,25 @@ public class UserEventsService {
 			criteria.setRoles(roles);
 			criteria.setIsCitizenSearch(true);
 			statuses.add("ACTIVE");
-		}else {
+		} else {
 			criteria.setIsCitizenSearch(false);
-			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role :: getCode).collect(Collectors.toList());
+			List<String> roles = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
+					.collect(Collectors.toList());
 			statuses.add("ACTIVE");
-			if(roles.contains("EMPLOYEE"))
+			if (roles.contains("EMPLOYEE"))
 				statuses.add("INACTIVE");
 		}
 		if (CollectionUtils.isEmpty(criteria.getStatus()))
 			criteria.setStatus(statuses);
 
-		if(criteria.getIsCitizenSearch()) {
+		if (criteria.getIsCitizenSearch()) {
 			if (!CollectionUtils.isEmpty(criteria.getUserids()) || !CollectionUtils.isEmpty(criteria.getRoles())
-				|| !StringUtils.isEmpty(criteria.getTenantId())) {
-				utils.buildRecepientListForSearch(criteria); 
+					|| !StringUtils.isEmpty(criteria.getTenantId())) {
+				utils.buildRecepientListForSearch(criteria);
 			}
 		}
 
 		log.info("recepeients: " + criteria.getRecepients());
 	}
-
-
 
 }

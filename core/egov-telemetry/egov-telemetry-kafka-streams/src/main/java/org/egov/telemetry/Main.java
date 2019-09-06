@@ -13,11 +13,12 @@ import org.egov.telemetry.formatchecker.TelemetryFormatChecker;
 import org.egov.telemetry.sink.TelemetryFinalStream;
 import org.egov.telemetry.unbundle.TelemetryUnbundleBatches;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Main {
@@ -71,24 +72,39 @@ public class Main {
         int numPartitions = appProperties.getNumberOfPartitions();
         short replicationFactor = appProperties.getReplicationFactor();
 
-        List<NewTopic> newTopicList = new ArrayList<>();
-
-        newTopicList.add(new NewTopic(appProperties.getTelemetryRawInput(), numPartitions, replicationFactor));
-        newTopicList.add(new NewTopic(appProperties.getTelemetryValidatedMessages(), numPartitions, replicationFactor));
-        newTopicList.add(new NewTopic(appProperties.getTelemetryDedupedMessages(), numPartitions, replicationFactor));
-        newTopicList.add(new NewTopic(appProperties.getTelemetryUnbundledMessages(), numPartitions, replicationFactor));
-        newTopicList.add(new NewTopic(appProperties.getTelemetryEnrichedMessages(), numPartitions, replicationFactor));
-        newTopicList.add(new NewTopic(appProperties.getTelemetrySecorFinalMessages(), numPartitions, replicationFactor));
-        newTopicList.add(new NewTopic(appProperties.getTelemetryElasticsearchFinalMessages(), numPartitions, replicationFactor));
-
         Properties properties = new Properties();
         properties.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, appProperties.getKafkaBootstrapServerConfig());
 
         AdminClient adminClient = KafkaAdminClient.create(properties);
-        CreateTopicsResult createTopicsResult = adminClient.createTopics(newTopicList);
+
+        Set<String> telemetryTopics = new HashSet<>();
+        telemetryTopics.add(appProperties.getTelemetryRawInput());
+        telemetryTopics.add(appProperties.getTelemetryValidatedMessages());
+        telemetryTopics.add(appProperties.getTelemetryDedupedMessages());
+        telemetryTopics.add(appProperties.getTelemetryUnbundledMessages());
+        telemetryTopics.add(appProperties.getTelemetryEnrichedMessages());
+        telemetryTopics.add(appProperties.getTelemetrySecorFinalMessages());
+        telemetryTopics.add(appProperties.getTelemetryElasticsearchFinalMessages());
+
+        Set<String> allTopics;
+        try {
+            ListTopicsResult listTopicsResult = adminClient.listTopics();
+            allTopics = listTopicsResult.names().get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error fetching topic names from KafkaAdmin");
+            log.error(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
+        }
+
+        telemetryTopics.removeAll(allTopics);
+
+        Set<NewTopic> newTopics = telemetryTopics.stream()
+                .map(topic -> new NewTopic(topic, numPartitions, replicationFactor)).collect(Collectors.toSet());
+
+        CreateTopicsResult createTopicsResult = adminClient.createTopics(newTopics);
 
         Map<String, KafkaFuture<Void>> kafkaFutures = createTopicsResult.values();
-        for(NewTopic newTopic : newTopicList) {
+        for(NewTopic newTopic : newTopics) {
             try {
                 kafkaFutures.get(newTopic.name()).get();
                 log.info("Topic created : " + newTopic.name());

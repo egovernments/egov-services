@@ -26,18 +26,20 @@ public class PersistService {
 	@Transactional
 	public void persist(String topic, String json) {
 
-		Map<String, Mapping> map = topicMap.getTopicMap();
-		Mapping mapping = map.get(topic);
+		Map<String, List<Mapping>> map = topicMap.getTopicMap();
 
-		List<QueryMap> queryMaps = mapping.getQueryMaps();
-		for (QueryMap queryMap : queryMaps) {
-			String query = queryMap.getQuery();
-			List<JsonMap> jsonMaps = queryMap.getJsonMaps();
-			String basePath = queryMap.getBasePath();
-			persistRepository.persist(query, jsonMaps, json, basePath);
+		for (Mapping mapping : map.get(topic)) {
+
+			List<QueryMap> queryMaps = mapping.getQueryMaps();
+			for (QueryMap queryMap : queryMaps) {
+				String query = queryMap.getQuery();
+				List<JsonMap> jsonMaps = queryMap.getJsonMaps();
+				String basePath = queryMap.getBasePath();
+				persistRepository.persist(query, jsonMaps, json, basePath);
+
+			}
 
 		}
-
 	}
 
 }

@@ -38,8 +38,8 @@ public class PGRCustomIndexMessageListener implements MessageListener<String, St
 		log.info("Topic: " + data.topic());
 		ObjectMapper mapper = indexerUtils.getObjectMapper();
 		try {
-			ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
-			PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
+//			ServiceResponse serviceResponse = mapper.readValue(data.value(), ServiceResponse.class);
+			PGRIndexObject indexObject = mapper.readValue(data.value(), PGRIndexObject.class);
 			indexerService.esIndexer(data.topic(), mapper.writeValueAsString(indexObject));
 		} catch (Exception e) {
 			log.error("Couldn't parse pgrindex request: ", e);

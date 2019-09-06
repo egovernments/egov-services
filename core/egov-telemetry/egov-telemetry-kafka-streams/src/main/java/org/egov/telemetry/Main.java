@@ -92,8 +92,7 @@ public class Main {
             try {
                 kafkaFutures.get(newTopic.name()).get();
                 log.info("Topic created : " + newTopic.name());
-            } catch (InterruptedException e) {
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 if (e.getCause() instanceof TopicExistsException) {
                     log.info("Topic already exists : " + newTopic.name());
                 } else {

@@ -297,19 +297,28 @@ public class UserEventsService {
 			if(null != event.getEventDetails()) {
 				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
 					if(null != event.getEventDetails().getFromDate()) {
-						if((event.getEventDetails().getFromDate() <= new Date().getTime()) && event.getStatus().equals(Status.INACTIVE)) {
+						if((event.getEventDetails().getFromDate() <= utils.getTomorrowsEpoch())) {
 							event.setStatus(Status.ACTIVE);
+							tobeAdded = true;
+						}
+					}
+					if(null != event.getEventDetails().getToDate()) {
+						if((event.getEventDetails().getToDate() < utils.getTomorrowsEpoch())) {
+							event.setStatus(Status.INACTIVE);
 							tobeAdded = true;
 						}
 					}
 				}// BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
 				
-				if(null != event.getEventDetails().getToDate()) {
-					if((event.getEventDetails().getToDate() < new Date().getTime()) && event.getStatus().equals(Status.ACTIVE)) {
-						event.setStatus(Status.INACTIVE);
-						tobeAdded = true;
+				else {
+					if(null != event.getEventDetails().getToDate()) {
+						if((event.getEventDetails().getToDate() < new Date().getTime())) {
+							event.setStatus(Status.INACTIVE);
+							tobeAdded = true;
+						}
 					}
 				}
+				
 				if(tobeAdded)
 					eventsTobeUpdated.add(event);
 			}
@@ -375,12 +384,11 @@ public class UserEventsService {
 				event.getEventDetails().setEventId(event.getId());
 				if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
 					if (null != event.getEventDetails().getFromDate()) {
-						if (event.getEventDetails().getFromDate() > new Date().getTime()) {
+						if (event.getEventDetails().getFromDate() > utils.getTomorrowsEpoch()) {
 							event.setStatus(Status.INACTIVE);
 						}
 					}
-				} // BROADCASTs are ACTIVE only between the given from and to date, they're
-					// INACTIVE beyond that.
+				} // BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
 			}
 
 			List<RecepientEvent> recepientEventList = new ArrayList<>();
@@ -427,6 +435,13 @@ public class UserEventsService {
 					event.getEventDetails().setId(UUID.randomUUID().toString());
 					event.getEventDetails().setEventId(event.getId());
 				}
+				if (event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {
+					if (null != event.getEventDetails().getFromDate()) {
+						if (event.getEventDetails().getFromDate() > utils.getTomorrowsEpoch()) {
+							event.setStatus(Status.INACTIVE);
+						}
+					}
+				} // BROADCASTs are ACTIVE only between the given from and to date, they're INACTIVE beyond that.
 			}
 			List<RecepientEvent> recepientEventList = new ArrayList<>();
 			utils.manageRecepients(event, recepientEventList);

@@ -2,6 +2,8 @@ package org.egov.userevent.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -132,6 +134,21 @@ public class UserEventsUtils {
 			return true;
 		}
 		return false;
+	}
+	
+	
+	/**
+	 * When it comes to BROADCAST, we have to consider the next day for validation.
+	 * This method returns epoch of the 24hrs later from the current instance.
+	 * 
+	 * @return
+	 */
+	public Long getTomorrowsEpoch() {
+	    Calendar calendar = Calendar.getInstance();	    	 
+	    calendar.add(Calendar.DAY_OF_YEAR, 1);
+	    Date tomorrow = calendar.getTime();
+	    
+	    return tomorrow.getTime();
 	}
 
 }

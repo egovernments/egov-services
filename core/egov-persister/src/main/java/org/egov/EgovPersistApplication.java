@@ -18,7 +18,9 @@ import org.springframework.core.io.ResourceLoader;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
@@ -40,7 +42,7 @@ public class EgovPersistApplication {
     @Bean
     public TopicMap loadConfigs() {
         TopicMap topicMap = new TopicMap();
-        Map<String, Mapping> mappingsMap = new HashMap<>();
+        Map<String, List<Mapping>> mappingsMap = new HashMap<>();
         Map<String, String> errorMap = new HashMap<>();
 
         log.info("====================== EGOV PERSISTER ======================");
@@ -48,26 +50,31 @@ public class EgovPersistApplication {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         String[] yamlUrls = configPaths.split(",");
-        for (String conifgPath : yamlUrls) {
+        for (String configPath : yamlUrls) {
             try {
-                log.info("Attempting to load config: "+conifgPath);
-                Resource resource = resourceLoader.getResource(conifgPath);
+                log.info("Attempting to load config: "+configPath);
+                Resource resource = resourceLoader.getResource(configPath);
                 Service service = mapper.readValue(resource.getInputStream(), Service.class);
 
                 for (Mapping mapping : service.getServiceMaps().getMappings()) {
-                    if(mappingsMap.containsKey(mapping.getFromTopic()))
-                        log.warn("OVERWRITING CONFIG!! Config for topic {} already exists", mapping.getFromTopic());
+                    if(mappingsMap.containsKey(mapping.getFromTopic())){
+                        mappingsMap.get(mapping.getFromTopic()).add(mapping);
+                    }
+                    else{
+                        List<Mapping> mappings = new ArrayList<>();
+                        mappings.add(mapping);
+                        mappingsMap.put(mapping.getFromTopic(), mappings);
+                    }
 
-                    mappingsMap.put(mapping.getFromTopic(), mapping);
                 }
             }
             catch (JsonParseException e){
-                log.error("Failed to parse yaml file: " + conifgPath, e);
-                errorMap.put("PARSE_FAILED", conifgPath);
+                log.error("Failed to parse yaml file: " + configPath, e);
+                errorMap.put("PARSE_FAILED", configPath);
             }
             catch (IOException e) {
-                log.error("Exception while fetching service map for: " + conifgPath, e);
-                errorMap.put("FAILED_TO_FETCH_FILE", conifgPath);
+                log.error("Exception while fetching service map for: " + configPath, e);
+                errorMap.put("FAILED_TO_FETCH_FILE", configPath);
             }
         }
 

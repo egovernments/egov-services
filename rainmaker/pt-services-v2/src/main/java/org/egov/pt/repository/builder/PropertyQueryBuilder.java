@@ -40,9 +40,9 @@ public class PropertyQueryBuilder {
 
 	private static final String LIKE_QUERY = "SELECT pt.*,ptdl.*,address.*,owner.*,doc.*,unit.*,insti.*,"
 			+ " pt.propertyid as propid,ptdl.assessmentnumber as propertydetailid,doc.id as documentid,unit.id as unitid,"
-			+ "address.id as addresskeyid,insti.id as instiid,"
+			+ "address.id as addresskeyid,insti.id as instiid,pt.additionalDetails as pt_additionalDetails,"
 			+ "ownerdoc.id as ownerdocid,ownerdoc.documenttype as ownerdocType,ownerdoc.filestore as ownerfileStore,"
-			+ "ownerdoc.documentuid as ownerdocuid,"
+			+ "ownerdoc.documentuid as ownerdocuid, ptdl.additionalDetails as ptdl_additionalDetails,"
 			+ "ptdl.createdby as assesscreatedby,ptdl.lastModifiedBy as assesslastModifiedBy,ptdl.createdTime as assesscreatedTime,"
 			+ "ptdl.lastModifiedTime as assesslastModifiedTime,unit.occupancyDate as unitoccupancyDate,"
 			+ "insti.name as institutionname,insti.type as institutiontype,insti.tenantid as institenantId,"

@@ -95,12 +95,8 @@ public class ExceptionUtils {
                     _setExceptionBody(HttpStatus.NOT_FOUND, getErrorInfoObject("ResourceNotFoundException",
                         "The resource - " + ctx.getRequest().getRequestURI() + " not found", null));
                 } else if (ctx.getResponseStatusCode() == HttpStatus.BAD_REQUEST.value()) {
-                    String existingResponse = ctx.getResponseBody();
-                    if (existingResponse == null)
-                    {
-                        existingResponse = IOUtils.toString(ctx.getResponseDataStream());
-                        ctx.setResponseBody(existingResponse);
-                    }
+                    String existingResponse = Utils.getResponseBody(ctx);
+
                     if (existingResponse != null && existingResponse.contains("InvalidAccessTokenException"))
                         _setExceptionBody(HttpStatus.UNAUTHORIZED, existingResponse);
                 }

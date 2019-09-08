@@ -1,15 +1,12 @@
 package org.egov.infra.persist.consumer;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.infra.persist.web.contract.Mapping;
 import org.egov.infra.persist.web.contract.TopicMap;
+import org.egov.tracer.KafkaConsumerErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -22,7 +19,10 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.PostConstruct;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 @Configuration
@@ -30,9 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 @PropertySource("classpath:application.properties")
 @Slf4j
 public class PersisterConsumerConfig {
-
-	@Value("${spring.kafka.bootstrap.servers}")
-    private String brokerAddress;
         
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
@@ -42,35 +39,27 @@ public class PersisterConsumerConfig {
     
     @Autowired
     private TopicMap topicMap;
+
+    @Autowired
+    private KafkaProperties kafkaProperties;
+
+    @Autowired
+    private KafkaConsumerErrorHandler kafkaConsumerErrorHandler;
+
+    private Set<String> topics = new HashSet<>();
     
-    public String[] topics = {};
-    
-    @Bean 
-    public String setTopics(){
-    	Map<String, Mapping> mappings = topicMap.getTopicMap();
-    	String[] topics = new String[mappings.size()];
-    	int i = 0;
-    	for(Map.Entry<String, Mapping> map: mappings.entrySet()){
-    		topics[i] = map.getKey();
-    		i++;
-    	}
-    	this.topics = topics;  
-    	
-    	log.info("Topics intialized..");
-    	return topics.toString();
+    @PostConstruct
+    public void setTopics(){
+    	topics = topicMap.getTopicMap().keySet();
+    	log.info("Topics subscribed!");
     }
     
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.brokerAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "egov-infra-persist");
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
-        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "15000");
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, HashMapDeserializer.class);
         
         return new DefaultKafkaConsumerFactory<>(props);
     }
@@ -90,27 +79,17 @@ public class PersisterConsumerConfig {
 
     @Bean 
     public KafkaMessageListenerContainer<String, String> container() throws Exception { 
-    	 ContainerProperties properties = new ContainerProperties(this.topics); // set more properties
+    	 ContainerProperties properties = new ContainerProperties(this.topics.toArray(new String[topics.size()]));
+    	 // set more properties
     	 properties.setPauseEnabled(true);
     	 properties.setPauseAfter(0);
+    	 properties.setGenericErrorHandler(kafkaConsumerErrorHandler);
     	 properties.setMessageListener(indexerMessageListener);
     	 
          log.info("Custom KafkaListenerContainer built...");
 
          return new KafkaMessageListenerContainer<>(consumerFactory(), properties); 
     }
-    
-    
- /*   @Bean 
-    public QueueChannel received() { return new QueueChannel(); }
-    
-    @Bean 
-    public KafkaMessageDrivenChannelAdapter<String, String> adapter(KafkaMessageListenerContainer<String, String> container) {
-      KafkaMessageDrivenChannelAdapter<String, String> kafkaMessageDrivenChannelAdapter = 
-    		  new KafkaMessageDrivenChannelAdapter<>(container, ListenerMode.record);
-      kafkaMessageDrivenChannelAdapter.setOutputChannel(received()); 
-      return kafkaMessageDrivenChannelAdapter; 
-    }    */
     
     @Bean
     public boolean startContainer(){

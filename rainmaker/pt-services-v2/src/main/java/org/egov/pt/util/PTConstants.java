@@ -59,6 +59,10 @@ public class PTConstants {
 
     public static final String NOTIFICATION_OLDPROPERTYID_ABSENT = "pt.oldpropertyid.absent";
 
+    
+	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String  USREVENTS_EVENT_NAME = "Property Tax";
+	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-PT";
 
 
 

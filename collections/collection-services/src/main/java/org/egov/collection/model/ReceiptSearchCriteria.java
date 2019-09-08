@@ -49,6 +49,7 @@ import java.util.Set;
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 public class ReceiptSearchCriteria {
@@ -87,15 +88,16 @@ public class ReceiptSearchCriteria {
     private String sortOrder;
 
     private String transactionId;
+    
+    private List<String> payerIds;
 
     private List<String> manualReceiptNumbers;
 
     private List<String> billIds;
 
     private boolean receiptDetailsRequired;
-
-    //Deprecated
-//    private Integer pageSize;
+    
+    private String mobileNo;
 
     private Integer offset;
 

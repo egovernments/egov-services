@@ -1,11 +1,6 @@
 package org.egov.wf.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
@@ -77,7 +72,7 @@ public class EnrichmentService {
             enrichAndUpdateSlaForTransition(processStateAndAction,isStateChanging);
             setNextActions(requestInfo,processStateAndActions,true);
         });
-        enrichUsers(processStateAndActions);
+        enrichUsers(requestInfo,processStateAndActions);
     }
 
 
@@ -104,15 +99,18 @@ public class EnrichmentService {
                         nextAction.add(action);
                 });
             }
+            if(!CollectionUtils.isEmpty(nextAction))
+                nextAction.sort(Comparator.comparing(Action::getAction));
             processStateAndAction.getProcessInstanceFromRequest().setNextActions(nextAction);
         });
     }
 
     /**
      * Enriches the assignee and assigner user object from user search response
+     * @param requestInfo The RequestInfo of the request
      * @param processStateAndActions The List of ProcessStateAndAction containing processInstanceFromRequest to be enriched
      */
-    public void enrichUsers(List<ProcessStateAndAction> processStateAndActions){
+    public void enrichUsers(RequestInfo requestInfo,List<ProcessStateAndAction> processStateAndActions){
         List<String> uuids = new LinkedList<>();
         processStateAndActions.forEach(processStateAndAction -> {
             if(processStateAndAction.getProcessInstanceFromRequest().getAssignee()!=null)
@@ -120,7 +118,7 @@ public class EnrichmentService {
             uuids.add(processStateAndAction.getProcessInstanceFromRequest().getAssigner().getUuid());
         });
 
-        Map<String,User> idToUserMap = userService.searchUser(uuids);
+        Map<String,User> idToUserMap = userService.searchUser(requestInfo,uuids);
         Map<String,String> errorMap = new HashMap<>();
         processStateAndActions.forEach(processStateAndAction -> {
             User assignee=null,assigner;
@@ -143,14 +141,14 @@ public class EnrichmentService {
      * Enriches processInstanceFromRequest from the search response
      * @param processInstances The list of processInstances from search
      */
-    public void enrichUsersFromSearch(List<ProcessInstance> processInstances){
+    public void enrichUsersFromSearch(RequestInfo requestInfo,List<ProcessInstance> processInstances){
         List<String> uuids = new LinkedList<>();
         processInstances.forEach(processInstance -> {
             if(processInstance.getAssignee()!=null)
                 uuids.add(processInstance.getAssignee().getUuid());
             uuids.add(processInstance.getAssigner().getUuid());
         });
-        Map<String,User> idToUserMap = userService.searchUser(uuids);
+        Map<String,User> idToUserMap = userService.searchUser(requestInfo,uuids);
         Map<String,String> errorMap = new HashMap<>();
         processInstances.forEach(processInstance -> {
             User assignee=null,assigner;
@@ -222,7 +220,6 @@ public class EnrichmentService {
         * */
 
         businessServices.forEach(businessService -> {
-            businessService.setUuid(UUID.randomUUID().toString());
             businessService.setAuditDetails(audit);
             businessService.getStates().forEach(state -> {
                 if (state.getUuid() == null) {
@@ -341,6 +338,26 @@ public class EnrichmentService {
             requests.add(new ProcessInstanceRequest(requestInfo,value));
         });
         return requests;
+    }
+
+
+    /**
+     * Sets tenantId when stateLevel flag is on
+     * @param tenantId The tenantId of the request
+     * @param businessServices The businessService returned for stateLevel
+     */
+    public void enrichTenantIdForStateLevel(String tenantId,List<BusinessService> businessServices){
+        businessServices.forEach(businessService -> {
+            businessService.setTenantId(tenantId);
+            businessService.getStates().forEach(state -> {
+                state.setTenantId(tenantId);
+                if(!CollectionUtils.isEmpty(state.getActions())){
+                    state.getActions().forEach(action -> {
+                        action.setTenantId(tenantId);
+                    });
+                }
+            });
+        });
     }
 
 

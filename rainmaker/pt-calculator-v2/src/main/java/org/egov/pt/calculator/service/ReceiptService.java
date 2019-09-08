@@ -1,7 +1,6 @@
 package org.egov.pt.calculator.service;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.egov.pt.calculator.repository.Repository;
@@ -40,6 +39,24 @@ public class ReceiptService {
 	private static final String CONSUMERCODEQUERYFORCURRENTFINANCIALYEAR = "SELECT CONCAT(propertyid,':',assessmentnumber) "
 			+ "FROM eg_pt_assessment where assessmentyear=? AND propertyId=?";
 
+
+	/**
+	 * Gets all receipts corresponding to the given demand
+	 * @param assessmentYear
+	 * @param demand
+	 * @param requestInfoWrapper
+	 * @return
+	 */
+	public List<Receipt> getReceiptsFromConsumerCode(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
+		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, demand.getConsumerCode().split(":")[0]);
+		List<Receipt> receipts = new LinkedList<>();
+		if(!CollectionUtils.isEmpty(consumercodes))
+			receipts = getReceipts(demand.getTenantId(), consumercodes, requestInfoWrapper);
+		return receipts;
+	}
+
+
+
 	/**
 	 * searches the latest collected date of the particular demand 
 	 * 
@@ -76,7 +93,7 @@ public class ReceiptService {
 	 * @param demand
 	 * @param requestInfoWrapper
 	 */
-	private List<Receipt> getReceipts(String tenantId,List<String> consumerCodes, RequestInfoWrapper requestInfoWrapper) {
+	private List<Receipt> 	getReceipts(String tenantId,List<String> consumerCodes, RequestInfoWrapper requestInfoWrapper) {
 
 		StringBuilder url = utils.getReceiptSearchUrl(tenantId, consumerCodes);
 		return mapper.convertValue(repository.fetchResult(url, requestInfoWrapper), ReceiptRes.class).getReceipts();

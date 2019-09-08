@@ -42,6 +42,7 @@ public class PropertyDetail   {
    * Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
    */
 
+        @Valid
         @JsonProperty("institution")
         private Institution institution;
 
@@ -49,6 +50,7 @@ public class PropertyDetail   {
         @JsonProperty("tenantId")
         private String tenantId;
 
+        @Valid
         @JsonProperty("citizenInfo")
         private OwnerInfo citizenInfo;
 
@@ -56,7 +58,8 @@ public class PropertyDetail   {
         public enum SourceEnum {
     MUNICIPAL_RECORDS("MUNICIPAL_RECORDS"),
     
-    FIELD_SURVEY("FIELD_SURVEY");
+    FIELD_SURVEY("FIELD_SURVEY"),
+    LEGACY_RECORD("LEGACY_RECORD");
 
     private String value;
 
@@ -97,6 +100,7 @@ public class PropertyDetail   {
         @JsonProperty("buildUpArea")
         private Float buildUpArea;
 
+        @Valid
         @JsonProperty("units")
         private List<Unit> units;
 

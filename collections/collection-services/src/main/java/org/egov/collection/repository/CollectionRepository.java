@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -29,10 +30,10 @@ public class CollectionRepository {
     private CollectionResultSetExtractor collectionResultSetExtractor;
 
 
+    @Transactional
     public void saveReceipt(Receipt receipt){
         Bill bill = receipt.getBill().get(0);
         try {
-
             namedParameterJdbcTemplate.update(INSERT_INSTRUMENT_HEADER_SQL, getParametersForInstrumentHeader(receipt
                     .getInstrument(), receipt.getAuditDetails()));
 
@@ -58,12 +59,13 @@ public class CollectionRepository {
 
         }catch (Exception e){
             log.error("Failed to persist receipt to database", e);
-            throw new CustomException("RECEIPT_CREATION_FAILED", "Unable to create receipt");
+            throw new CustomException("RECEIPT_CREATION_FAILED", e.getMessage());
         }
     }
     
     public void updateReceipt(List<Receipt> receipts){
         List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
+        List<MapSqlParameterSource> receiptDetailSource = new ArrayList<>();
         List<MapSqlParameterSource> instrumentHeaderSource = new ArrayList<>();
         try {
 
@@ -71,10 +73,15 @@ public class CollectionRepository {
             for (Receipt receipt : receipts) {
                 BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
                 receiptHeaderSource.add(getParametersForReceiptHeaderUpdate(receipt, billDetail));
+                for (BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
+                    receiptDetailSource.add(getParametersForReceiptDetails(billAccountDetail, billDetail.getId()));
+                }
                 instrumentHeaderSource.add(getParametersForInstrumentHeaderUpdate(receipt.getInstrument(),
                         receipt.getAuditDetails()));
             }
-
+            namedParameterJdbcTemplate.batchUpdate(COPY_RCPT_HEADER_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(COPY_RCPT_DETALS_SQL, receiptDetailSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(COPY_INSTRUMENT_HEADER_SQL, instrumentHeaderSource.toArray(new MapSqlParameterSource[0]));
             namedParameterJdbcTemplate.batchUpdate(UPDATE_RECEIPT_HEADER_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
             namedParameterJdbcTemplate.batchUpdate(UPDATE_INSTRUMENT_HEADER_SQL, instrumentHeaderSource.toArray(new MapSqlParameterSource[0]));
 
@@ -86,16 +93,23 @@ public class CollectionRepository {
 
     public void updateStatus(List<Receipt> receipts){
         List<MapSqlParameterSource> receiptHeaderSource = new ArrayList<>();
+        List<MapSqlParameterSource> receiptDetailSource = new ArrayList<>();
         List<MapSqlParameterSource> instrumentHeaderSource = new ArrayList<>();
         try {
 
             for(Receipt receipt : receipts){
                 BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
                 receiptHeaderSource.add(getParametersForReceiptStatusUpdate(billDetail, receipt.getAuditDetails()));
+                for (BillAccountDetail billAccountDetail : billDetail.getBillAccountDetails()) {
+                    receiptDetailSource.add(getParametersForReceiptDetails(billAccountDetail, billDetail.getId()));
+                }
                 instrumentHeaderSource.add(getParametersForInstrumentStatusUpdate(receipt.getInstrument(), receipt.getAuditDetails
                         ()));
             }
 
+            namedParameterJdbcTemplate.batchUpdate(COPY_RCPT_HEADER_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(COPY_RCPT_DETALS_SQL, receiptDetailSource.toArray(new MapSqlParameterSource[0]));
+            namedParameterJdbcTemplate.batchUpdate(COPY_INSTRUMENT_HEADER_SQL, instrumentHeaderSource.toArray(new MapSqlParameterSource[0]));
             namedParameterJdbcTemplate.batchUpdate(UPDATE_RECEIPT_STATUS_SQL, receiptHeaderSource.toArray(new MapSqlParameterSource[0]));
             namedParameterJdbcTemplate.batchUpdate(UPDATE_INSTRUMENT_STATUS_SQL, instrumentHeaderSource.toArray(new MapSqlParameterSource[0]));
         }

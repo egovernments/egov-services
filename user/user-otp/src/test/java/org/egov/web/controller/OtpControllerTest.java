@@ -1,6 +1,7 @@
 package org.egov.web.controller;
 
 import org.egov.Resources;
+import org.egov.TestConfiguration;
 import org.egov.domain.exception.*;
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.OtpRequestType;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OtpController.class)
+@Import(TestConfiguration.class)
 public class OtpControllerTest {
 
 	private final static String TENANT_ID = "tenantId";

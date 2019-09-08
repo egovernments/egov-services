@@ -94,16 +94,17 @@ public class SearchUtils {
 				logger.debug("param: " + param.getName());
 				String operator = (null != param.getOperator() && !param.getOperator().isEmpty()) ? param.getOperator()
 						: "=";
+				
 				if (operator.equals("GE"))
 					operator = ">=";
 				if (operator.equals("LE"))
 					operator = "<=";
-				if (operator.equals("LIKE")) {
+				if (operator.equals("NE"))
+					operator = "!=";
+				if (operator.equals("LIKE"))
 					paramValue = "%" + paramValue + "%";
-					whereClause.append(param.getName()).append(" " + operator + " ").append("'" + paramValue + "'");
-				} else {
-					whereClause.append(param.getName()).append(" " + operator + " ").append("'" + paramValue + "'");
-				}
+				
+				whereClause.append(param.getName()).append(" " + operator + " ").append("'" + paramValue + "'");
 			}
 			whereClause.append(" " + condition + " ");
 		}

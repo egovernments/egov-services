@@ -2,30 +2,17 @@ package org.egov.tl.service.notification;
 
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
-import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.util.NotificationUtil;
 import org.egov.tl.util.TLConstants;
-import org.egov.tl.web.models.Action;
-import org.egov.tl.web.models.ActionItem;
-import org.egov.tl.web.models.Event;
-import org.egov.tl.web.models.EventRequest;
-import org.egov.tl.web.models.Recepient;
-import org.egov.tl.web.models.SMSRequest;
-import org.egov.tl.web.models.Source;
-import org.egov.tl.web.models.TradeLicense;
-import org.egov.tl.web.models.TradeLicenseRequest;
-import org.json.JSONObject;
+import org.egov.tl.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -129,7 +116,6 @@ public class TLNotificationService {
     			List<String> toUsers = new ArrayList<>();
     			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
     			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
-    			
     			List<String> payTriggerList = Arrays.asList(config.getPayTriggers().split("[,]"));
     			Action action = null;
     			if(payTriggerList.contains(license.getStatus())) {

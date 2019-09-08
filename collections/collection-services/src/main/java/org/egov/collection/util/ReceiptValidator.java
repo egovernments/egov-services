@@ -30,9 +30,10 @@ import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.egov.collection.config;
+import static org.egov.collection.config.CollectionServiceConstants.*;
 import static org.egov.collection.model.enums.ReceiptStatus.APPROVALPENDING;
 import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
+import static org.egov.collection.model.enums.ReceiptStatus.REMITTED;
 import static org.egov.collection.util.Utils.jsonMerge;
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -239,11 +240,11 @@ public class ReceiptValidator {
 				// API
 
 				if (!isEmpty(billDetail.getStatus())
-						&& billDetail.getStatus().equalsIgnoreCase(ReceiptStatus.REMITTED.toString())) {
+						&& billDetail.getStatus().equalsIgnoreCase(REMITTED.toString())) {
 					ReceiptStatus receiptStatusInDb = ReceiptStatus.fromValue(billDetailFromDb.getStatus());
-					if (!isNull(receiptStatusInDb) && !receiptStatusInDb.equals(ReceiptStatus.REMITTED)) {
+					if (!isNull(receiptStatusInDb) && !receiptStatusInDb.equals(REMITTED)) {
 						if (receiptStatusInDb.isCategory(ReceiptStatus.Category.OPEN)) {
-							billDetailFromDb.setStatus(ReceiptStatus.REMITTED.toString());
+							billDetailFromDb.setStatus(REMITTED.toString());
 							billDetailFromDb.setVoucherHeader(billDetail.getVoucherHeader());
 							receiptFromDb.getInstrument().setInstrumentStatus(InstrumentStatusEnum.DEPOSITED);
 						} else {

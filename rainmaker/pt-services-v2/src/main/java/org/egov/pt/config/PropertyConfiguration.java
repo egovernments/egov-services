@@ -1,9 +1,6 @@
 package org.egov.pt.config;
 
-import java.util.TimeZone;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
 
 
 @Import({TracerConfiguration.class})
@@ -48,12 +46,27 @@ public class PropertyConfiguration {
 
     @Value("${persister.update.property.topic}")
     private String updatePropertyTopic;
-    
+
+    @Value("${persister.cancel.property.topic}")
+    private String cancelPropertyTopic;
+
+    @Value("${persister.cancel.property.assessment.topic}")
+    private String cancelPropertyAssessmentTopic;
+
+
     @Value("${persister.save.drafts.topic}")
     private String saveDraftsTopic;
 
     @Value("${persister.update.drafts.topic}")
     private String updateDraftsTopic;
+    
+    
+    //USER
+    @Value("${egov.user.host}")
+    private String userHost;
+    
+    @Value("${egov.user.search.path}")
+    private String userSearchEndpoint;
 
 
     //IDGEN
@@ -121,16 +134,7 @@ public class PropertyConfiguration {
 
     @Value("${egov.localization.search.endpoint}")
     private String localizationSearchEndpoint;
-    
-    
-    //User Service
-	@Value("${egov.user.host}")
-	private String userHost;
-    
-	@Value("${egov.user.search.path}")
-	private String userSearchEndpoint;
-    
-    
+
     //USER EVENTS
 	@Value("${egov.ui.app.host}")
 	private String uiAppHost;
@@ -146,7 +150,6 @@ public class PropertyConfiguration {
 	
 	@Value("${egov.user.event.notification.enabled}")
 	private Boolean isUserEventsNotificationEnabled;
-    
 
 
 }

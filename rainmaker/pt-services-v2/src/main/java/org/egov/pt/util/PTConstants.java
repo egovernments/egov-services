@@ -63,10 +63,6 @@ public class PTConstants {
 	public static final String  USREVENTS_EVENT_NAME = "Property Tax";
 	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-PT";
 
-    
-    
-
-
 
 
 }

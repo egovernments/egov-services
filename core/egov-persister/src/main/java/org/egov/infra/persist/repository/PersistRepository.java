@@ -1,15 +1,11 @@
 package org.egov.infra.persist.repository;
 
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.infra.persist.web.contract.JsonMap;
 import org.egov.infra.persist.web.contract.TypeEnum;
@@ -17,334 +13,243 @@ import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
+import static java.util.Objects.isNull;
 
 @Repository
 @Slf4j
 public class PersistRepository {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	public void persist(String query, List<JsonMap> jsonMaps, String jsonData, String basePath) {
-		Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonData);
+    @Autowired
+    private ObjectMapper objectMapper;
 
-		if (basePath != null && basePath.contains("*"))
-			persistList(query, jsonMaps, basePath, document);
-		else
-			persistObject(query, jsonMaps, jsonData, document);
 
-	}
+    public void persist(String query, List<JsonMap> jsonMaps, String jsonData, String baseJsonPath) {
+        Object document = Configuration.defaultConfiguration().jsonProvider().parse(jsonData);
 
-	public void persistList(String query, List<JsonMap> jsonMaps, String basePath, Object document) {
-		
-		String basePathForNullCheck = null;
-		
-		if(!basePath.endsWith("*")) {
-			basePathForNullCheck = new String();
-			basePathForNullCheck = basePathForNullCheck.concat(basePath);
-			log.info("basePathForNullCheck before Substr::"+basePathForNullCheck);
-			basePathForNullCheck = basePathForNullCheck.substring(basePath.lastIndexOf("*.")+2, basePathForNullCheck.length());
-			log.info("basePathForNullCheck after Substr::"+basePathForNullCheck);
-		}
-		
-		
-		log.debug("persistList arrObjJsonPath:" + basePath);
-		basePath=basePath.substring(0, basePath.lastIndexOf(".*")+2);
-		log.debug("basePath::"+basePath);
-		List<LinkedHashMap<String, Object>> list = null;
-		if (basePath != null && basePath.length() != 0)
-			list = JsonPath.read(document, basePath);
+        List<LinkedHashMap<String, Object>> dataSource = extractData(baseJsonPath, document);
 
-		log.debug("persistList list::" + list);
+        List<Object[]> rows = new ArrayList<>();
 
-		Object[] obj = null;
-		List<Object[]> dbObjArray = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			obj = new Object[jsonMaps.size()];
-			LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) list.get(i);
-			if(linkedHashMap == null) 
-				continue;
-			
-			boolean isChildObjNull = false;
-			if(basePathForNullCheck != null) {
-				String [] baseObjectsForNullCheck = basePathForNullCheck.split("\\.");
-				LinkedHashMap<String, Object> mapOfData = new LinkedHashMap<>();
-				mapOfData.putAll(linkedHashMap);
-				for(String baseObjectForNullCheck : baseObjectsForNullCheck) {
-					mapOfData = (LinkedHashMap<String, Object>)mapOfData.get(baseObjectForNullCheck);
-					if(mapOfData == null) {
-						isChildObjNull = true;
-						break;
-					}
-				}
-			}
-			if(isChildObjNull) 
-				continue;
-			
-			log.info("i:" + i + "linkedHashMap:" + linkedHashMap);
-			for (int j = 0; j < jsonMaps.size(); j++) {
-				JsonMap jsonMap = jsonMaps.get(j);
-				String jsonPath = jsonMap.getJsonPath();
-				TypeEnum type = jsonMap.getType();
-				TypeEnum dbType = jsonMap.getDbType();
-				System.out.println("jsonPath:" + jsonPath);
-				boolean isJsonPathList = false;
-				Object value = null;
-				log.debug("type:" + type + " dbType:" + dbType);
-				
-				if(type == null) {
-					type = TypeEnum.STRING;
-				}
+        for (int i = 0; i < dataSource.size(); i++) {
+            LinkedHashMap<String, Object> rawDataRecord = dataSource.get(i);
 
-				if (jsonPath != null && jsonPath.contains("{")) {
-					//String parentPath = jsonMap.getJsonPath()()
-					String attribute = jsonPath.substring(jsonPath.indexOf("{") + 1, jsonPath.indexOf("}"));
-					log.info("persistList atribute:" + attribute);
-					jsonPath = jsonPath.replace("{".concat(attribute).concat("}"),"\""+linkedHashMap.get(attribute).toString()+"\"");
-					log.info("persistList parentPath:" + jsonPath);
-					JSONArray jsonArray = JsonPath.read(document, jsonPath);
-					log.info("ParentPath jsonArray:" + jsonArray);
-					obj[j] = jsonArray.get(0);
-					/*String[] objDepth = jsonPath.split("\\.");
-					value = filterList.get(0).get(objDepth[objDepth.length-1]);
-					//value = documentContext.read(jsonPath);
-					log.info("ParentPath value:" + value);*/
-					continue;
-					
-				} else if ((type.toString().equals(TypeEnum.ARRAY.toString()))
-						&& dbType.toString().equals(TypeEnum.STRING.toString())) {
-					List<Object> list1 = JsonPath.read(document, jsonPath);
-					value = StringUtils.join(list1.get(i), ",");
-					value=value.toString().substring(2, value.toString().lastIndexOf("]")-1).replace("\"", "");
-				} else if (type.toString().equals(TypeEnum.CURRENTDATE.toString())) {
-					if (dbType.toString().equals(TypeEnum.DATE.toString()))
-						obj[j] = new Date();
-					else if (dbType.toString().equals(TypeEnum.LONG.toString()))
-						obj[j] = new Date().getTime();
-					continue;
-				} else if (jsonPath.contains("*.")) {
-					jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
-					log.info("jsonPath.contains(*) jsonpath:" + jsonPath);
-					isJsonPathList = true;
-				} else if (!(type.toString().equals(TypeEnum.CURRENTDATE.toString())
-						|| jsonPath.startsWith("default"))) {
-					value = JsonPath.read(document, jsonPath);
-					log.debug("else block value:" + value);
-				}
+            if (rawDataRecord == null)
+                continue;
 
-				log.debug("substring jsonPath:" + jsonPath);
-				String[] objDepth = jsonPath.split("\\.");
-				log.debug("objDepth:" + Arrays.toString(objDepth));
-				LinkedHashMap<String, Object> linkedHashMap1 = null;
+            if (isChildObjectEmpty(baseJsonPath, rawDataRecord))
+                continue;
 
-				if (isJsonPathList && value == null) {
-					for (int k = 0; k < objDepth.length; k++) {
-						log.debug("k:" + k + "linkedHashMap1:" + linkedHashMap1);
 
-						if (objDepth.length > 1 && k != objDepth.length - 1) {
-							log.info("objDepth[k]"+objDepth[k]);
-							if(linkedHashMap1 == null)
-								linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap.get(objDepth[k]);
-							else
-								linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap1.get(objDepth[k]);	
-							log.debug("k:" + k + "linkedHashMap1>>>" + linkedHashMap1);
-							if(linkedHashMap1 == null){
-								value = null;
-								break;
-							}
-								
-						}
+            List<Object> row = new ArrayList<>();
+            for (JsonMap jsonMap : jsonMaps) {
+                String jsonPath = jsonMap.getJsonPath();
+                TypeEnum type = jsonMap.getType();
+                TypeEnum dbType = jsonMap.getDbType();
+                Object value = null;
 
-						if (k == objDepth.length - 1) {
-							log.debug("if block :");
-							if (linkedHashMap1 != null)
-								value = linkedHashMap1.get(objDepth[k]);
-							else
-								value = linkedHashMap.get(objDepth[k]);
-						}
-						log.debug("value::" + value);
-					}
-				}
+//                if(isNull(jsonPath))
+//                    throw new NullPointerException("JSON Path is null: "+jsonMap);
 
-				if (jsonPath.startsWith("default"))
-					obj[j] = null;
-				else if (type.toString().equals(TypeEnum.JSON.toString())
-						&& dbType.toString().equals(TypeEnum.STRING.toString())) {
-					ObjectMapper mapper = new ObjectMapper();
-					try {
-						String json = mapper.writeValueAsString(value);
-						log.debug("JSON = " + json);
-						obj[j] = json;
-					} catch (JsonProcessingException e) {
-						e.printStackTrace();
-					}
-				} else if (type.toString().equals(TypeEnum.JSON.toString())
-						&& dbType.toString().equals(TypeEnum.JSONB.toString())) {
-					ObjectMapper mapper = new ObjectMapper();
-					try {
-						String json = mapper.writeValueAsString(value);
-						// DocumentContext documentContext = JsonPath.parse(json);
-						PGobject factorsObject = new PGobject();
-						factorsObject.setType("jsonb");
-						factorsObject.setValue(json);
-						obj[j] = factorsObject;
-					} catch (JsonProcessingException e) {
-						e.printStackTrace();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else if (type.toString().equals(TypeEnum.LONG.toString())) {
-					if (dbType == null)
-						obj[j] = value;
-					else if (dbType.equals(TypeEnum.DATE))
-						obj[j] = new java.sql.Date(Long.parseLong(value.toString()));
-				} else if (type.toString().equals(TypeEnum.DATE.toString()) & value!= null) {
-					
-					String date = value.toString();
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					java.util.Date startDate = null;
-					try {
-						startDate = df.parse(date);
-						String newDateString = df.format(startDate);
-						log.debug("newDateString:" + newDateString);
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					obj[j] = startDate;
-				} else
-					obj[j] = value;
 
-			}
-			log.debug("Obj>>>" + Arrays.toString(obj));
-			dbObjArray.add(obj);
-		}
+                if (type == null) {
+                    type = TypeEnum.STRING;
+                }
 
-		try {
-			log.debug("query:" + query + ",object:" + dbObjArray.toString());
-			jdbcTemplate.batchUpdate(query, dbObjArray);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+                if (jsonPath.contains("{")) {
+                    String attribute = jsonPath.substring(jsonPath.indexOf("{") + 1, jsonPath.indexOf("}"));
+                    jsonPath = jsonPath.replace("{".concat(attribute).concat("}"), "\"" + rawDataRecord.get(attribute).toString() + "\"");
+                    JSONArray jsonArray = JsonPath.read(document, jsonPath);
+                    row.add(jsonArray.get(0));
 
-	}
+                    continue;
 
-	public void persistObject(String query, List<JsonMap> jsonMaps, String jsonData, Object document) {
+                }
 
-		Object[] obj = new Object[jsonMaps.size()];
-		List<Object[]> dbObjArray = new ArrayList<>();
-		for (int j = 0; j < jsonMaps.size(); j++) {
-			JsonMap jsonMap = jsonMaps.get(j);
-			String jsonPath = jsonMap.getJsonPath();
-			TypeEnum type = jsonMap.getType();
-			TypeEnum dbType = jsonMap.getDbType();
-			log.debug("jsonPath:" + jsonPath);
-			boolean isJsonPathList = false;
-			Object value = null;
-			
-			if(type == null) {
-				type = TypeEnum.STRING;
-			}
+                else if (type.equals(TypeEnum.CURRENTDATE)) {
+                    if (dbType.equals(TypeEnum.DATE))
+                        row.add(new Date());
+                    else if (dbType.equals(TypeEnum.LONG))
+                        row.add(new Date().getTime());
+                    continue;
+                }
 
-			if (type.toString().equals(TypeEnum.CURRENTDATE.toString())) {
-				log.debug("CURRENTDATE type:" + type + "," + "dbtype:" + dbType);
-				if (dbType.toString().equals(TypeEnum.DATE))
-					obj[j] = new Date();
-				else if (dbType.toString().equals(TypeEnum.LONG.toString()))
-					obj[j] = new Date().getTime();
+                else if ((type.equals(TypeEnum.ARRAY)) && dbType.equals(TypeEnum.STRING)) {
+                    List<Object> list1 = JsonPath.read(document, jsonPath);
+                    value = StringUtils.join(list1.get(i), ",");
+                    value = value.toString().substring(2, value.toString().lastIndexOf("]") - 1).replace("\"", "");
+                }
 
-				continue;
-			}
-			if (jsonPath.contains("*.")) {
-				jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
-				isJsonPathList = true;
-				log.debug("jsonPath:" + jsonPath);
-			} else if (!(type.toString().equals(TypeEnum.CURRENTDATE.toString()) || jsonPath.startsWith("default"))) {
-				value = JsonPath.read(document, jsonPath);
-				log.debug("else block value:" + value);
-			}
+                else if (jsonPath.contains("*.")) {
+                    jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
+                    value = extractValueFromTree(rawDataRecord, jsonPath);
+                }
 
-			System.out.println("substring jsonPath:" + jsonPath);
+                else if (!(type.equals(TypeEnum.CURRENTDATE) || jsonPath.startsWith("default"))) {
+                    value = JsonPath.read(document, jsonPath);
+                }
 
-			if ((type.toString().equals(TypeEnum.ARRAY.toString()))
-					&& dbType.toString().equals(TypeEnum.STRING.toString())) {
-				List<Object> list1 = JsonPath.read(document, jsonPath);
-				obj[j] = StringUtils.join(list1, ",");
-				log.debug("value::"+value);
-			}else if (type.toString().equals(TypeEnum.JSON.toString())
-					&& dbType.toString().equals(TypeEnum.STRING.toString())) {
-				ObjectMapper mapper = new ObjectMapper();
-				try {
-					String json = mapper.writeValueAsString(value);
-					log.debug("JSON = " + json);
-					obj[j] = json;
-				} catch (JsonProcessingException e) {
-					e.printStackTrace();
-				}
-			} else if (type.toString().equals(TypeEnum.JSON.toString())
-					&& dbType.toString().equals(TypeEnum.JSONB.toString())) {
-				ObjectMapper mapper = new ObjectMapper();
-				try {
-					String json = mapper.writeValueAsString(value);
-					// DocumentContext documentContext = JsonPath.parse(json);
-					PGobject factorsObject = new PGobject();
-					factorsObject.setType("jsonb");
-					factorsObject.setValue(json);
-					obj[j] = factorsObject;
-				} catch (JsonProcessingException e) {
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else if (jsonPath.startsWith("default"))
-				obj[j] = null;
+                if (jsonPath.startsWith("default"))
+                    row.add(null);
 
-			else if (type.toString().equals(TypeEnum.LONG.toString())) {
-				if (dbType == null)
-					obj[j] = value;
-				else if (dbType.equals(TypeEnum.DATE.toString()))
-					obj[j] = new java.sql.Date(Long.parseLong(value.toString()));
-			} else if (type.toString().equals(TypeEnum.DATE.toString())) {
-				String date = value.toString();
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				java.util.Date startDate = null;
-				try {
-					startDate = df.parse(date);
-					String newDateString = df.format(startDate);
-					log.debug("newDateString:" + newDateString);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				obj[j] = startDate;
-			} else {
-				log.debug("else value:" + value);
-				obj[j] = value;
-			}
+                else if (type.equals(TypeEnum.JSON) && dbType.equals(TypeEnum.STRING)) {
+                    try {
+                        String json = objectMapper.writeValueAsString(value);
+                        row.add(json);
+                    } catch (JsonProcessingException e) {
+                        log.error("Error while processing JSON object to string", e);
+                    }
+                }
 
-		}
-		log.debug("Obj>>>" + Arrays.toString(obj));
-		dbObjArray.add(obj);
+                else if (type.equals(TypeEnum.JSON) && dbType.equals(TypeEnum.JSONB)) {
+                    try {
+                        String json = objectMapper.writeValueAsString(value);
 
-		try {
-			log.debug("query:" + query + ",object:" + dbObjArray.toString());
-			jdbcTemplate.batchUpdate(query, dbObjArray);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+                        PGobject pGobject = new PGobject();
+                        pGobject.setType("jsonb");
+                        pGobject.setValue(json);
+                        row.add(pGobject);
+                    } catch (JsonProcessingException e) {
+                        log.error("Error while processing JSON object to string", e);
+                    } catch (SQLException e) {
+                        log.error("Error while setting JSONB object", e);
+                    }
+                }
 
-	}
+                else if (type.equals(TypeEnum.LONG)) {
+                    if (dbType == null)
+                        row.add(value);
+                    else if (dbType.equals(TypeEnum.DATE))
+                        row.add(new java.sql.Date(Long.parseLong(value.toString())));
+                }
+
+                else if (type.equals(TypeEnum.DATE) & value != null) {
+
+                    String date = value.toString();
+                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    java.util.Date startDate = null;
+                    try {
+                        startDate = df.parse(date);
+                    } catch (ParseException e) {
+                        log.error("Unable to parse date", e);
+                    }
+                    row.add(startDate);
+                }
+
+                else
+                    row.add(value);
+
+            }
+            rows.add(row.toArray());
+        }
+
+        try {
+            if( ! rows.isEmpty()) {
+                log.info("Executing query : "+ query);
+			    jdbcTemplate.batchUpdate(query, rows);
+                log.info("Persisted {} row(s) to DB!", rows.size(), baseJsonPath);
+            }
+        } catch (Exception ex) {
+            log.error("Failed to persist {} row(s) using query: {}", rows.size(), query, ex);
+            throw ex;
+        }
+
+    }
+
+    /**
+     * Extract data from the tree using provided base json path
+     *  - If base path signifies bulk, then extract array of data
+     *  - If base path is not bulk, then extract single row of data and wrap as list
+     *
+     * @param baseJsonPath Base json path
+     * @param document Data source tree
+     * @return Partial data source tree based on provided json base path
+     */
+    private List<LinkedHashMap<String, Object>> extractData(String baseJsonPath, Object document) {
+        List<LinkedHashMap<String, Object>> list = null;
+        if(baseJsonPath.contains("*")) {
+            String arrayBasePath = baseJsonPath.substring(0, baseJsonPath.lastIndexOf(".*") + 2);
+            list = JsonPath.read(document, arrayBasePath);
+        }
+        else {
+            LinkedHashMap<String, Object> map = JsonPath.read(document, baseJsonPath);
+            list = Collections.singletonList(map);
+        }
+        return list;
+    }
+
+
+    /**
+     * Fetch leaf node value recursively based on json path from java represented json tree
+     * 
+     * @param jsonTree Java represented json tree
+     * @param jsonPath Path of leaf node
+     * @return Value of leaf node
+     */
+    private Object extractValueFromTree(LinkedHashMap<String, Object> jsonTree, String jsonPath) {
+        String[] objDepth = jsonPath.split("\\.");
+        Object value = null;
+        LinkedHashMap<String, Object> jsonTree1 = null;
+
+        for (int k = 0; k < objDepth.length; k++) {
+
+            if (objDepth.length > 1 && k != objDepth.length - 1) {
+                if (jsonTree1 == null)
+                    jsonTree1 = (LinkedHashMap<String, Object>) jsonTree.get(objDepth[k]);
+                else
+                    jsonTree1 = (LinkedHashMap<String, Object>) jsonTree1.get(objDepth[k]);
+                if (jsonTree1 == null) {
+                    value = null;
+                    break;
+                }
+
+            }
+
+            if (k == objDepth.length - 1) {
+                if (jsonTree1 != null)
+                    value = jsonTree1.get(objDepth[k]);
+                else
+                    value = jsonTree.get(objDepth[k]);
+            }
+        }
+        return value;
+    }
+
+    /**
+     * Check if leaf node, is null,
+     *  for ex, user has optional address in config, if address is null in datasource skip persisting to address table
+     *  
+     * @param baseJsonPath Base json path
+     * @param jsonTree Java represented json tree
+     * @return If node not available, return true, else false
+     */
+    private boolean isChildObjectEmpty(String baseJsonPath, LinkedHashMap<String, Object> jsonTree) {
+
+        if ( baseJsonPath.contains("*") && ! baseJsonPath.endsWith("*")) {
+            String baseJsonPathForNullCheck = baseJsonPath.substring(baseJsonPath.lastIndexOf("*.") + 2);
+            String[] baseObjectsForNullCheck = baseJsonPathForNullCheck.split("\\.");
+            LinkedHashMap<String, Object> temp = new LinkedHashMap<>(jsonTree);
+            for (String baseObjectForNullCheck : baseObjectsForNullCheck) {
+                if (isNull(temp.get(baseObjectForNullCheck))) {
+                    log.info("Skipping persisting record with basePath {} as it's empty!", baseJsonPath);
+                    return true;
+                }
+                else
+                    temp = (LinkedHashMap<String, Object>) jsonTree.get(baseObjectForNullCheck);
+            }
+            return false;
+        } else
+            return false;
+    }
+
 
 }

@@ -2,7 +2,6 @@ package org.egov.pt.web.controllers;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pt.service.PropertyService;
 import org.egov.pt.util.ResponseInfoFactory;
 import org.egov.pt.web.models.*;
@@ -54,7 +53,18 @@ public class PropertyController {
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
+
+	@RequestMapping(value = "/_cancel", method = RequestMethod.POST)
+	public ResponseEntity<PropertyResponse> cancel(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+												   @Valid @ModelAttribute PropertyCancelCriteria propertyCancelCriteria) {
+		List<Property> properties = propertyService.cancelProperty(propertyCancelCriteria,requestInfoWrapper.getRequestInfo());
+		PropertyResponse response = PropertyResponse.builder().properties(properties).responseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+
 	@RequestMapping(value = "/_plainsearch", method = RequestMethod.POST)
 	public ResponseEntity<PropertyResponse> plainsearch(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 			@Valid @ModelAttribute PropertyCriteria propertyCriteria) {

@@ -216,9 +216,7 @@ public class TLConfiguration {
 
     @Value("${is.external.workflow.enabled}")
     private Boolean isExternalWorkFlowEnabled;
-    
-    
-    
+
     //USER EVENTS
 	@Value("${egov.ui.app.host}")
 	private String uiAppHost;
@@ -237,7 +235,6 @@ public class TLConfiguration {
 
 	@Value("${egov.usr.events.pay.triggers}")
 	private String payTriggers;
-
 
 
 }

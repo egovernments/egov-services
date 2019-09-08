@@ -10,5 +10,5 @@ public class CronConstants {
 	public static final String SEARCHER_PGR_CHANNEL = "pgrChannelData";
 	public static final String SEARCHER_PT = "ptData";
 	public static final String SEARCHER_TL = "tlData";
-
+	
 }

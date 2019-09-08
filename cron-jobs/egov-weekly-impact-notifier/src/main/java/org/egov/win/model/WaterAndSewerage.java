@@ -18,10 +18,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class WaterAndSewerage {
 	
-	private List<Map<String, String>> ulbCovered;
+	private List<Map<String, Object>> ulbCovered;
 	
-	private List<Map<String, String>> revenueCollected; //unit - INR Crs.
+	private List<Map<String, Object>> revenueCollected; //unit - INR Crs.
 
-	private List<Map<String, String>> serviceApplied;
+	private List<Map<String, Object>> serviceApplied;
 
 }

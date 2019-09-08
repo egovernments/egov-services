@@ -40,24 +40,19 @@
 
 package org.egov.pt.web.models;
 
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Validated
 @Data
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

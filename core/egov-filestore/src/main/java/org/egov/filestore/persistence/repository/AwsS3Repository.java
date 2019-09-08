@@ -79,7 +79,7 @@ public class AwsS3Repository {
 	@Value("${is.bucket.fixed}")
 	private Boolean isBucketFixed;
 
-	@Value("${presigned.url.expiry.time}")
+	@Value("${presigned.url.expiry.time.in.secs}")	
 	private Long presignedUrlExpirytime;
 
 	private AmazonS3 s3Client;
@@ -87,7 +87,6 @@ public class AwsS3Repository {
 	private static final String TEMP_FILE_PATH_NAME = "TempFolder/localFile";
 
 	public void writeToS3(MultipartFile file, FileLocation fileLocation) {
-
 		if (null == s3Client)
 			getS3Client();
 		String completeName = fileLocation.getFileName();
@@ -162,7 +161,8 @@ public class AwsS3Repository {
 		} catch (Exception ioe) {
 
 			Map<String, String> map = new HashMap<>();
-			map.put("Image Source Invalid", "Image File present in upload request is Invalid/Not Readable");
+			log.error("Exception while uploading the image: ", ioe);
+			map.put("ERROR_AWS_S3_UPLOAD", "An error has occured while trying to upload image to S3 bucket.");
 			throw new CustomException(map);
 		}
 	}

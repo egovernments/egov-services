@@ -9,16 +9,7 @@ import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.PTConstants;
 import org.egov.pt.util.PropertyUtil;
-import org.egov.pt.web.models.Action;
-import org.egov.pt.web.models.ActionItem;
-import org.egov.pt.web.models.Event;
-import org.egov.pt.web.models.EventRequest;
-import org.egov.pt.web.models.Property;
-import org.egov.pt.web.models.PropertyDetail;
-import org.egov.pt.web.models.PropertyRequest;
-import org.egov.pt.web.models.Recepient;
-import org.egov.pt.web.models.SMSRequest;
-import org.egov.pt.web.models.Source;
+import org.egov.pt.web.models.*;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-
-import static org.egov.pt.util.PTConstants.NOTIFICATION_LOCALE;
 
 @Service
 @Slf4j
@@ -78,7 +67,7 @@ public class NotificationService {
                 if(null == propertyConfiguration.getIsUserEventsNotificationEnabled())
                 	propertyConfiguration.setIsUserEventsNotificationEnabled(true);
                 if(propertyConfiguration.getIsUserEventsNotificationEnabled()) {
-                	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, path);
+                	List<Event> eventsForAProperty = getEvents(listOfMobileNumber, customMessage, request, false);
                 	if(!CollectionUtils.isEmpty(eventsForAProperty)) {
                         events.addAll(eventsForAProperty);
                 	}
@@ -254,7 +243,7 @@ public class NotificationService {
      * @param request
      * @return
      */
-    private List<Event> getEvents(Set<String> mobileNumbers, String customizedMessage,PropertyRequest request, String path) {
+    public List<Event> getEvents(Set<String> mobileNumbers, String customizedMessage, PropertyRequest request, Boolean isActionReq) {
     	Map<String, String> mapOfPhnoAndUUIDs = fetchUserUUIDs(mobileNumbers, request.getRequestInfo(), request.getProperties().get(0).getTenantId());
 		if (CollectionUtils.isEmpty(mapOfPhnoAndUUIDs.keySet()) || StringUtils.isEmpty(customizedMessage))
 			return null;
@@ -269,7 +258,7 @@ public class NotificationService {
 			toUsers.add(mapOfPhnoAndUUIDs.get(mobile));
 			Recepient recepient = Recepient.builder().toUsers(toUsers).toRoles(null).build();
 			Action action = null;
-			if(!path.contains(PTConstants.NOTIFICATION_EMPLOYEE_UPDATE_CODE)) {
+			if(isActionReq) {
 				List<ActionItem> items = new ArrayList<>();
 				String actionLink = propertyConfiguration.getPayLink().replace("$mobile", mobile)
 							.replace("$assessmentId", property.getPropertyDetails().get(0).getAssessmentNumber())
@@ -340,7 +329,7 @@ public class NotificationService {
      * 
      * @param request
      */
-    private void sendEventNotification(EventRequest request) {
+    public void sendEventNotification(EventRequest request) {
         producer.push(propertyConfiguration.getSaveUserEventsTopic(), request);
     }
     

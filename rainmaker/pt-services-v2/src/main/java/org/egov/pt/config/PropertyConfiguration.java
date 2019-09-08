@@ -61,6 +61,14 @@ public class PropertyConfiguration {
 
     @Value("${persister.update.drafts.topic}")
     private String updateDraftsTopic;
+    
+    
+    //USER
+    @Value("${egov.user.host}")
+    private String userHost;
+    
+    @Value("${egov.user.search.path}")
+    private String userSearchEndpoint;
 
 
     //IDGEN
@@ -128,6 +136,23 @@ public class PropertyConfiguration {
 
     @Value("${egov.localization.search.endpoint}")
     private String localizationSearchEndpoint;
+    
+    
+    //USER EVENTS
+	@Value("${egov.ui.app.host}")
+	private String uiAppHost;
+    
+	@Value("${egov.usr.events.create.topic}")
+	private String saveUserEventsTopic;
+		
+	@Value("${egov.usr.events.pay.link}")
+	private String payLink;
+	
+	@Value("${egov.usr.events.pay.code}")
+	private String payCode;
+	
+	@Value("${egov.user.event.notification.enabled}")
+	private Boolean isUserEventsNotificationEnabled;
 
 
 }

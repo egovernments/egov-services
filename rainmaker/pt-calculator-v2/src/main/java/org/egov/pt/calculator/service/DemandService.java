@@ -326,6 +326,17 @@ public class DemandService {
 		DemandResponse res = mapper.convertValue(
 				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
 				DemandResponse.class);
+		BigDecimal totalCollectedAmount = res.getDemands().get(0)
+				.getDemandDetails().stream()
+				.map(d -> d.getCollectionAmount())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		if (totalCollectedAmount.remainder(BigDecimal.ONE ).compareTo(BigDecimal.ZERO) != 0 ){
+			// The total collected amount is fractional most probably because of previous
+			// round off dropping prior to BS/CS 1.1 release
+			throw new CustomException("INVALID_COLLECT_AMOUNT", "The collected amount is fractional, please contact support for data correction");
+		}
+
 		return res.getDemands().get(0);
 	}
 

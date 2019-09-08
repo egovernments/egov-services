@@ -12,6 +12,8 @@ import java.util.Properties;
 public class AppProperties {
 
     private String kafkaBootstrapServerConfig;
+    private Integer numberOfPartitions;
+    private Short replicationFactor;
 
     private String telemetryRawInput;
     private String telemetryValidatedMessages;
@@ -32,6 +34,11 @@ public class AppProperties {
 
     public AppProperties() {
         kafkaBootstrapServerConfig = System.getenv("BOOTSTRAP_SERVER_CONFIG");
+
+        if(System.getenv("NUMBER_OF_PARTITIONS") != null)
+            numberOfPartitions = Integer.parseInt(System.getenv("NUMBER_OF_PARTITIONS"));
+        if(System.getenv("REPLICATION_FACTOR") != null)
+            replicationFactor = Short.parseShort(System.getenv("REPLICATION_FACTOR"));
 
         telemetryRawInput = System.getenv("TELEMETRY_RAW_INPUT");
         telemetryValidatedMessages = System.getenv("TELEMETRY_VALIDATED_MESSAGES");
@@ -60,6 +67,14 @@ public class AppProperties {
 
         if(kafkaBootstrapServerConfig == null)
           kafkaBootstrapServerConfig = properties.getProperty("BOOTSTRAP_SERVER_CONFIG");
+
+        if(numberOfPartitions == null)
+            if(properties.getProperty("NUMBER_OF_PARTITIONS") != null)
+                numberOfPartitions = Integer.parseInt(properties.getProperty("NUMBER_OF_PARTITIONS"));
+
+        if(replicationFactor == null)
+            if(properties.getProperty("REPLICATION_FACTOR") != null)
+                replicationFactor = Short.parseShort(properties.getProperty("REPLICATION_FACTOR"));
 
         if(telemetryRawInput == null)
             telemetryRawInput = properties.getProperty("TELEMETRY_RAW_INPUT");

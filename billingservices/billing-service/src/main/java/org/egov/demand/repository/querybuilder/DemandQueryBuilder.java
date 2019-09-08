@@ -175,6 +175,18 @@ public class DemandQueryBuilder {
 			demandQuery.append("dmd.businessservice=?");
 			preparedStatementValues.add(demandCriteria.getBusinessService());
 		}
+		
+		if (demandCriteria.getPeriodFrom() != null) {
+			addAndClause(demandQuery);
+			demandQuery.append("dmd.taxPeriodFrom >= ?");
+			preparedStatementValues.add(demandCriteria.getPeriodFrom());
+		}
+		if(demandCriteria.getPeriodTo() != null){
+			addAndClause(demandQuery);
+			demandQuery.append("dmd.taxPeriodTo <= ?");
+			preparedStatementValues.add(demandCriteria.getPeriodTo());
+		}
+		
 		if (demandCriteria.getConsumerCode() != null && !demandCriteria.getConsumerCode().isEmpty()) {
 			addAndClause(demandQuery);
 			demandQuery.append("dmd.consumercode IN ("

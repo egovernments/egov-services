@@ -53,7 +53,7 @@ public class CalculatorConstants {
 
 	public static final String PT_ROUNDOFF = "PT_ROUNDOFF";
 	
-	public static final String RECEIPT_STATUS_APPROVED = "APPROVED";
+	public static final String ALLOWED_RECEIPT_STATUS = "APPROVED,REMITTED";
 
 	public static final List<String> TAXES_TO_BE_CONSIDERD_WHEN_CALUCLATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
 			.asList(PT_TAX));
@@ -182,6 +182,14 @@ public class CalculatorConstants {
 
 	public static final String SEPARATER = "&";
 
+	public static final String MDMS_FINACIALYEAR_PATH = "$.MdmsRes.egf-master.FinancialYear[?(@.code==\"{}\")]";
+
+	public static final String FINANCIALYEAR_MASTER_KEY = "FINANCIALYEAR";
+
+	public static final String TAXPERIOD_MASTER_KEY = "TAXPERIOD";
+
+	public static final String TAXHEADMASTER_MASTER_KEY = "TAXHEADMASTER";
+
 	/*
 	 * billing service field names
 	 */
@@ -266,4 +274,7 @@ public class CalculatorConstants {
 	
 	public static final String EG_PT_INVALID_DEMAND_ERROR = "EG_PT_INVALID_DEMAND_ERROR";
 	public static final String EG_PT_INVALID_DEMAND_ERROR_MSG = " Bill cannot be generated for previous assessments in a year, please use the latest assesmment to pay";
+
+    public static final Long TIMEZONE_OFFSET = 19800000l;
+
 }

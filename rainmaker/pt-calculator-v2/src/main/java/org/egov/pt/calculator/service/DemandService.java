@@ -215,6 +215,10 @@ public class DemandService {
 
 		List<Demand> demandsToBeUpdated = new LinkedList<>();
 
+		String tenantId = getBillCriteria.getTenantId();
+
+		List<TaxPeriod> taxPeriods = mstrDataService.getTaxPeriodList(requestInfoWrapper.getRequestInfo(), tenantId);
+
 		for (String consumerCode : getBillCriteria.getConsumerCodes()) {
 			Demand demand = consumerCodeToDemandMap.get(consumerCode);
 			if (demand == null)
@@ -226,7 +230,7 @@ public class DemandService {
 				throw new CustomException(CalculatorConstants.EG_PT_INVALID_DEMAND_ERROR,
 						CalculatorConstants.EG_PT_INVALID_DEMAND_ERROR_MSG);
 
-			applytimeBasedApplicables(demand, requestInfoWrapper, timeBasedExmeptionMasterMap);
+			applytimeBasedApplicables(demand, requestInfoWrapper, timeBasedExmeptionMasterMap,taxPeriods);
 
 			roundOffDecimalForDemand(demand, requestInfoWrapper);
 
@@ -280,8 +284,15 @@ public class DemandService {
 		log.debug("The old tax amount in string : " + oldTaxAmt.toPlainString());
 		log.debug("The new tax amount in string : " + newTax.toPlainString());
 		
-		if (oldTaxAmt.compareTo(newTax) > 0)
-			carryForward = BigDecimal.valueOf(-1);
+		if (oldTaxAmt.compareTo(newTax) > 0) {
+			boolean isDepreciationAllowed = utils.isAssessmentDepreciationAllowed(
+					criteria.getAssessmentYear(),
+					property.getTenantId(),
+					property.getPropertyId(),
+					new RequestInfoWrapper(requestInfo));
+			if (!isDepreciationAllowed)
+				carryForward = BigDecimal.valueOf(-1);
+		}
 
 		if (BigDecimal.ZERO.compareTo(carryForward) >= 0 || !cancelDemand) return carryForward;
 		
@@ -315,6 +326,17 @@ public class DemandService {
 		DemandResponse res = mapper.convertValue(
 				repository.fetchResult(utils.getDemandSearchUrl(latestAssessment), new RequestInfoWrapper(requestInfo)),
 				DemandResponse.class);
+		BigDecimal totalCollectedAmount = res.getDemands().get(0)
+				.getDemandDetails().stream()
+				.map(d -> d.getCollectionAmount())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		if (totalCollectedAmount.remainder(BigDecimal.ONE ).compareTo(BigDecimal.ZERO) != 0 ){
+			// The total collected amount is fractional most probably because of previous
+			// round off dropping prior to BS/CS 1.1 release
+			throw new CustomException("INVALID_COLLECT_AMOUNT", "The collected amount is fractional, please contact support for data correction");
+		}
+
 		return res.getDemands().get(0);
 	}
 
@@ -359,13 +381,13 @@ public class DemandService {
 	 * @return
 	 */
 	private boolean applytimeBasedApplicables(Demand demand,RequestInfoWrapper requestInfoWrapper,
-			Map<String, JSONArray> timeBasedExmeptionMasterMap) {
+			Map<String, JSONArray> timeBasedExmeptionMasterMap,List<TaxPeriod> taxPeriods) {
 
 		boolean isCurrentDemand = false;
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
 		
-		TaxPeriod taxPeriod = mstrDataService.getTaxPeriodList(requestInfoWrapper, tenantId).stream()
+		TaxPeriod taxPeriod = taxPeriods.stream()
 				.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0
 				&& demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
 		.findAny().orElse(null);
@@ -460,19 +482,10 @@ public class DemandService {
 		List<DemandDetail> details = demand.getDemandDetails();
 		String tenantId = demand.getTenantId();
 		String demandId = demand.getId();
-		
-		/*
-		 * isDecimalMatching 
-		 * 
-		 * This boolean variable will be set to true in case of the decimal tax-heads already being present in the demand
-		 * 
-		 * given that only debit or credit can exist at a time with value greater than zero
-		 */
-		boolean isDecimalMathcing = false;
 
 		BigDecimal taxAmount = BigDecimal.ZERO;
 
-		// Collecting the taxHead master codes with the isDebit field in a Map 
+		// Collecting the taxHead master codes with the isDebit field in a Map
 		Map<String, Boolean> isTaxHeadDebitMap = mstrDataService.getTaxHeadMasterMap(requestInfoWrapper.getRequestInfo(), tenantId).stream()
 				.collect(Collectors.toMap(TaxHeadMaster::getCode, TaxHeadMaster::getIsDebit));
 
@@ -496,41 +509,11 @@ public class DemandService {
 				? roundOffEstimate.getEstimateAmount() : BigDecimal.ZERO;
 
 		if(decimalRoundOff.compareTo(BigDecimal.ZERO)!=0){
-			DemandDetailAndCollection latestRoundOffDetail = utils.getLatestDemandDetailByTaxHead(PT_ROUNDOFF,demand.getDemandDetails());
-            if(latestRoundOffDetail==null || latestRoundOffDetail.getCollectionAmountForTaxHead().compareTo(BigDecimal.ZERO)!=0){
 				details.add(DemandDetail.builder().taxAmount(roundOffEstimate.getEstimateAmount())
 						.taxHeadMasterCode(roundOffEstimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());
-			}
-			else{
-            	updateTaxAmount(decimalRoundOff,latestRoundOffDetail);
-			}
-
 		}
 
-		/*
-		 *  Looping the demandDetails to update the tax Amount for the decimal demandDetails if they present
-		 *  
-		 *  If any decimal Detail found the isDecimalMatching will be set to true  
-		 */
-						
-		/*
-		for (DemandDetail detail : demand.getDemandDetails()) {
-			if (detail.getTaxHeadMasterCode().equalsIgnoreCase(CalculatorConstants.PT_ROUNDOFF)) {
-				if (detail.getCollectionAmount().compareTo(BigDecimal.ZERO) == 0)
-					detail.setTaxAmount(decimalRoundOff);
-				if (null != roundOffEstimate)
-					isDecimalMathcing = true;
-			}
-		}
 
-		*//*
-		 *  If isDecimalMatching set to false (meaning no decimal Detail is found already)
-		 *  
-		 *   then a new demandDetail will be created and added to the Demand. 
-		 *//*
-		if (!isDecimalMathcing && null != roundOffEstimate)
-			details.add(DemandDetail.builder().taxAmount(roundOffEstimate.getEstimateAmount())
-					.taxHeadMasterCode(roundOffEstimate.getTaxHeadCode()).demandId(demandId).tenantId(tenantId).build());*/
 	}
 
 

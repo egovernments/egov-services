@@ -106,10 +106,6 @@ public class WorkflowService {
                 break;
         }
 
-        // persist to db
-
-        collectionRepository.updateStatus(processedReceipts);
-
         return processedReceipts;
 
 
@@ -142,9 +138,10 @@ public class WorkflowService {
 
         List<Receipt> receipts = collectionRepository.fetchReceipts(receiptSearchCriteria);
         receipts.sort(reverseOrder(Comparator.comparingLong(Receipt::getReceiptDate)));
-
+        
         List<Receipt> validatedReceipts = workflowValidator.validateForCancel(new ArrayList<>
                         (workflowRequestByReceiptNumber.values()), receipts);
+        
 
         for(Receipt receipt : validatedReceipts) {
             BillDetail billDetail = receipt.getBill().get(0).getBillDetails().get(0);
@@ -158,6 +155,7 @@ public class WorkflowService {
         }
 
         collectionRepository.updateStatus(validatedReceipts);
+        
         collectionProducer.producer(applicationProperties.getCancelReceiptTopicName(), applicationProperties
                 .getCancelReceiptTopicKey(), new ReceiptReq(requestInfo, validatedReceipts));
 
@@ -215,6 +213,7 @@ public class WorkflowService {
         }
 
         collectionRepository.updateStatus(validatedReceipts);
+        
         collectionProducer.producer(applicationProperties.getCancelReceiptTopicName(), applicationProperties
                 .getCancelReceiptTopicKey(), new ReceiptReq(requestInfo, validatedReceipts));
         return validatedReceipts;
@@ -275,6 +274,7 @@ public class WorkflowService {
         }
 
         collectionRepository.updateStatus(validatedReceipts);
+        
         collectionProducer.producer(applicationProperties.getUpdateReceiptTopicName(), applicationProperties
                 .getUpdateReceiptTopicKey(), new ReceiptReq(requestInfo, validatedReceipts));
         return validatedReceipts;

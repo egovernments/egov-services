@@ -48,6 +48,7 @@ import org.egov.demand.model.enums.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -72,11 +73,16 @@ public class DemandCriteria {
 	
 	private BigDecimal demandTo;
 	
+	private Long periodFrom;
+	
+	private Long periodTo;
+	
 	private Type type;
 	
 	private String mobileNumber;
 	
 	private String email;
 	
+	@Default
 	private Boolean receiptRequired=false;
 }

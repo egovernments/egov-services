@@ -31,19 +31,22 @@ public class BillValidator {
 			throw new CustomException(BILL_GEN_MANDATORY_FIELDS_MISSING_KEY, BILL_GEN_MANDATORY_FIELDS_MISSING_MSG);
 
 	}
-	
-	public void validateBillSearchCriteria(BillSearchCriteria billCriteria,Errors errors){
-		
-		if(billCriteria.getBillId() == null && billCriteria.getIsActive() == null 
+
+	public void validateBillSearchCriteria(BillSearchCriteria billCriteria, Errors errors) {
+
+		if (billCriteria.getBillId() == null && billCriteria.getIsActive() == null
 				&& billCriteria.getIsCancelled() == null && billCriteria.getService() == null
-				&& billCriteria.getConsumerCode() == null){
-			errors.rejectValue("service","BILL_SEARCH_MANDATORY_FIELDS_MISSING",
+				&& billCriteria.getConsumerCode() == null && billCriteria.getMobileNumber() == null
+				&& billCriteria.getEmail() == null) {
+
+			errors.rejectValue("service", "BILL_SEARCH_MANDATORY_FIELDS_MISSING",
 					"Any one of the fields additional to tenantId is mandatory like service,"
-					+ "consumerCode,billId,isActiv,isCanceled");
-		}else if((billCriteria.getConsumerCode() != null && billCriteria.getService() == null)
-					|| (billCriteria.getService() != null && billCriteria.getConsumerCode() == null))
-					errors.rejectValue("consumerCode", "BILL_SEARCH_CONSUMERCODE_BUSINESSSERVICE",
-							"the consumerCode & Service values should be given together");
+							+ "consumerCode,billId,isActiv,isCanceled");
+		} else if ((billCriteria.getConsumerCode() != null && billCriteria.getService() == null)) {
+
+			errors.rejectValue("consumerCode", "BILL_SEARCH_CONSUMERCODE_BUSINESSSERVICE",
+					"the consumerCode & Service values should be given together or mobilenumber/email can be given ");
+		}
 	}
-	
+
 }

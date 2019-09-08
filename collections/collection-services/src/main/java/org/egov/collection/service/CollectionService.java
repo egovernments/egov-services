@@ -121,6 +121,10 @@ public class CollectionService {
 
         collectionProducer.producer(applicationProperties.getCreateReceiptTopicName(), applicationProperties
                 .getCreateReceiptTopicKey(), receiptReq);
+        
+        //Pushing for notification to the user on payment
+        collectionProducer.producer(applicationProperties.getPaymentReceiptLinkTopic(), applicationProperties
+                .getPaymentReceiptLinkTopicKey(), receiptReq);
 
         return receipt;
     }

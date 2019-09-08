@@ -38,35 +38,33 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.pt.web.models;
+package org.egov.tl.web.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.egov.common.contract.request.RequestInfo;
-import org.springframework.validation.annotation.Validated;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.List;
+public enum Status {
+	ACTIVE("ACTIVE"), INACTIVE("INACTIVE"), CANCELLED("CANCELLED");
 
-@Validated
-@Data
-@ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class EventRequest {
+	private String value;
 
-	@NotNull
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
-	
-	@NotNull
-	@Valid
-	@JsonProperty("events")
-	private List<Event> events;
+	Status(String value) {
+		this.value = value;
+	}
 
+	@Override
+	@JsonValue
+    public String toString() {
+        return name();
+    }
 
+	@JsonCreator
+	public static Status fromValue(String passedValue) {
+		for (Status obj : Status.values()) {
+			if (String.valueOf(obj.value).equals(passedValue.toUpperCase())) {
+				return obj;
+			}
+		}
+		return null;
+	}
 }

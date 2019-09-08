@@ -33,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.egov.collection.config.CollectionServiceConstants.*;
 import static org.egov.collection.model.enums.ReceiptStatus.APPROVALPENDING;
 import static org.egov.collection.model.enums.ReceiptStatus.APPROVED;
+import static org.egov.collection.model.enums.ReceiptStatus.REMITTED;
 import static org.egov.collection.util.Utils.jsonMerge;
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -46,6 +47,7 @@ public class ReceiptValidator {
 	ReceiptValidator(BusinessDetailsRepository businessDetailsRepository, CollectionRepository collectionRepository) {
 		this.businessDetailsRepository = businessDetailsRepository;
 		this.collectionRepository = collectionRepository;
+		
 	}
 
 	/**
@@ -59,14 +61,13 @@ public class ReceiptValidator {
 	 * tenant id could be different for each bill detail - Bill account details are
 	 * valid, checks for purpose and GL Codes - Cheque and DD dates are correct
 	 *
-	 * @param receiptRequest
-	 *            Receipt request to be validated
+	 * @param receiptRequest Receipt request to be validated
 	 */
 	public void validateReceiptForCreate(ReceiptReq receiptReq) {
 
 		Map<String, String> errorMap = new HashMap<>();
 		Receipt receipt = receiptReq.getReceipt().get(0);
-		
+
 		validateUserInfo(receiptReq, errorMap);
 
 		if (receipt.getBill().isEmpty())
@@ -76,22 +77,43 @@ public class ReceiptValidator {
 			errorMap.put(PAID_BY_MISSING_CODE, PAID_BY_MISSING_MESSAGE);
 
 		validateInstrument(receipt.getInstrument(), errorMap);
+		
+        Map<String, BigDecimal> mapOfBusinessSvcAndAmtPaid = receipt.getBill().get(0).getTaxAndPayments().stream()
+                .collect(Collectors.toMap(TaxAndPayment::getBusinessService, TaxAndPayment::getAmountPaid));
+        
+        mapOfBusinessSvcAndAmtPaid.entrySet().forEach( entryOfServiceAndAmtpaid -> {
+        	
+        	BigDecimal amtPaid = entryOfServiceAndAmtpaid.getValue();
+        	if(!Utils.isPositiveInteger(amtPaid))
+				errorMap.put("INVALID_PAID_AMOUNT",
+						"Invalid paid amount! Amount paid should be greater than or Equal to 0 and " + "without fractions");
+        });
+        
 
 		// Loop through all bill details [one for each service], and perform various
 		// validations
-		for (BillDetail billDetails : receipt.getBill().get(0).getBillDetails()) {
-			ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder().tenantId(billDetails.getTenantId())
-					.billIds(singletonList(billDetails.getBillNumber())).build();
+		for (BillDetail billDetail : receipt.getBill().get(0).getBillDetails()) {
+
+			ReceiptSearchCriteria criteria = ReceiptSearchCriteria.builder().tenantId(billDetail.getTenantId())
+					.billIds(singletonList(billDetail.getBillNumber())).build();
 			List<Receipt> receipts = collectionRepository.fetchReceipts(criteria);
-			log.info("receipts: "+receipts);
-			if (!receipts.isEmpty()) {
-				validateIfReceiptForBillPresent(errorMap, receipts, billDetails);
+
+			log.info("receipts: " + receipts);
+
+			if (isNull(billDetail.getTotalAmount()) || !Utils.isPositiveInteger(billDetail.getTotalAmount())) {
+				errorMap.put("INVALID_BILL_AMOUNT",
+						"Invalid bill amount! Amount should be  greater than or equal to 0 and " + "without fractions");
 			}
-			if (org.apache.commons.lang3.StringUtils.isEmpty(billDetails.getBusinessService())) {
+			
+			if (!receipts.isEmpty()) {
+				validateIfReceiptForBillPresent(errorMap, receipts, billDetail);
+			}
+
+			if (org.apache.commons.lang3.StringUtils.isEmpty(billDetail.getBusinessService())) {
 				errorMap.put("INVALID_BUSINESS_DETAILS", "Business details code cannot be empty");
 			}
 
-			List<String> collectionModesNotAllowed = billDetails.getCollectionModesNotAllowed();
+			List<String> collectionModesNotAllowed = billDetail.getCollectionModesNotAllowed();
 			if (collectionModesNotAllowed.contains(receipt.getInstrument().getInstrumentType())) {
 				errorMap.put("INVALID_COLLECTIONMODE_CODE", "Collectionmode is not allowed");
 			}
@@ -99,14 +121,14 @@ public class ReceiptValidator {
 			String instrumentType = receipt.getInstrument().getInstrumentType().getName();
 			if (instrumentType.equalsIgnoreCase(InstrumentTypesEnum.CHEQUE.name())
 					|| instrumentType.equalsIgnoreCase(InstrumentTypesEnum.DD.name())) {
-				validateChequeDD(billDetails, receipt.getInstrument(), errorMap);
+				validateChequeDD(billDetail, receipt.getInstrument(), errorMap);
 			}
 		}
 		BigDecimal totalAmountPaid = BigDecimal.ZERO;
 		for (TaxAndPayment entry : receipt.getBill().get(0).getTaxAndPayments()) {
 			totalAmountPaid = totalAmountPaid.add(entry.getAmountPaid());
 		}
-		
+
 		// Validation to ensure, Sum of amount paid on all bill details should be equal
 		// to the instrument amount
 		Instrument instrument = receipt.getInstrument();
@@ -116,20 +138,20 @@ public class ReceiptValidator {
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-		
-        List<Receipt> receipts = new ArrayList<>();
-        receipts.add(receipt);
-        receiptReq.setReceipt(receipts);
+
+		List<Receipt> receipts = new ArrayList<>();
+		receipts.add(receipt);
+		receiptReq.setReceipt(receipts);
 	}
-	
+
 	public void validateUserInfo(ReceiptReq receiptReq, Map<String, String> errorMap) {
-		if(null == receiptReq.getRequestInfo()) {
+		if (null == receiptReq.getRequestInfo()) {
 			errorMap.put("INVALID_REQUEST_INFO", "RequestInfo cannot be null");
-		}else {
-			if(null == receiptReq.getRequestInfo().getUserInfo()) {
+		} else {
+			if (null == receiptReq.getRequestInfo().getUserInfo()) {
 				errorMap.put("INVALID_USER_INFO", "UserInfo within RequestInfo cannot be null");
-			}else {
-				if(StringUtils.isEmpty(receiptReq.getRequestInfo().getUserInfo().getUuid())) {
+			} else {
+				if (StringUtils.isEmpty(receiptReq.getRequestInfo().getUserInfo().getUuid())) {
 					errorMap.put("INVALID_USER_ID", "UUID of the user within RequestInfo cannot be null");
 				}
 			}
@@ -143,8 +165,8 @@ public class ReceiptValidator {
 		Set<String> receiptNumbers = new HashSet<>();
 
 		/*
-		 * Collecting receipt number from bill details 
-		 * since receipt create/update request doesn't not have receipt number directly
+		 * Collecting receipt number from bill details since receipt create/update
+		 * request doesn't not have receipt number directly
 		 */
 		for (Receipt receipt : receipts) {
 			receipt.getBill().forEach(bill -> receiptNumbers.addAll(
@@ -166,7 +188,8 @@ public class ReceiptValidator {
 				Bill bill = receipt.getBill().get(0);
 				BillDetail billDetail = bill.getBillDetails().get(0);
 
-				Receipt receiptFromDb = receiptsByReceiptNumber.get(receipt.getBill().get(0).getBillDetails().get(0).getReceiptNumber()).get(0);
+				Receipt receiptFromDb = receiptsByReceiptNumber
+						.get(receipt.getBill().get(0).getBillDetails().get(0).getReceiptNumber()).get(0);
 				Bill billFromDb = receiptFromDb.getBill().get(0);
 				BillDetail billDetailFromDb = billFromDb.getBillDetails().get(0);
 
@@ -184,8 +207,8 @@ public class ReceiptValidator {
 					receiptFromDb.getInstrument().setPayee(bill.getPayerName());
 				}
 
-                if(!StringUtils.isEmpty(billDetail.getVoucherHeader()))
-                billDetailFromDb.setVoucherHeader(billDetail.getVoucherHeader());
+				if (!StringUtils.isEmpty(billDetail.getVoucherHeader()))
+					billDetailFromDb.setVoucherHeader(billDetail.getVoucherHeader());
 
 				billDetailFromDb.setAdditionalDetails(
 						jsonMerge(billDetailFromDb.getAdditionalDetails(), billDetail.getAdditionalDetails()));
@@ -217,11 +240,11 @@ public class ReceiptValidator {
 				// API
 
 				if (!isEmpty(billDetail.getStatus())
-						&& billDetail.getStatus().equalsIgnoreCase(ReceiptStatus.REMITTED.toString())) {
+						&& billDetail.getStatus().equalsIgnoreCase(REMITTED.toString())) {
 					ReceiptStatus receiptStatusInDb = ReceiptStatus.fromValue(billDetailFromDb.getStatus());
-					if (!isNull(receiptStatusInDb) && !receiptStatusInDb.equals(ReceiptStatus.REMITTED)) {
+					if (!isNull(receiptStatusInDb) && !receiptStatusInDb.equals(REMITTED)) {
 						if (receiptStatusInDb.isCategory(ReceiptStatus.Category.OPEN)) {
-							billDetailFromDb.setStatus(ReceiptStatus.REMITTED.toString());
+							billDetailFromDb.setStatus(REMITTED.toString());
 							billDetailFromDb.setVoucherHeader(billDetail.getVoucherHeader());
 							receiptFromDb.getInstrument().setInstrumentStatus(InstrumentStatusEnum.DEPOSITED);
 						} else {
@@ -327,10 +350,8 @@ public class ReceiptValidator {
 	 * - If part payment is not allowed, - Amount being paid should be equal to bill
 	 * value
 	 *
-	 * @param errorMap
-	 *            Map of errors occurred during validations
-	 * @param billDetail
-	 *            Bill detail for which payment is being made
+	 * @param errorMap   Map of errors occurred during validations
+	 * @param billDetail Bill detail for which payment is being made
 	 */
 
 	private void validateIfReceiptForBillAbsent(Map<String, String> errorMap, BillDetail billDetail) {
@@ -368,12 +389,9 @@ public class ReceiptValidator {
 	 * <p>
 	 * If not, proceed with validateIfReceiptForBillAbsent validations *
 	 *
-	 * @param errorMap
-	 *            Map of errors occurred during validations
-	 * @param receipts
-	 *            List of receipt headers
-	 * @param billDetail
-	 *            Bill detail for which payment is being made
+	 * @param errorMap   Map of errors occurred during validations
+	 * @param receipts   List of receipt headers
+	 * @param billDetail Bill detail for which payment is being made
 	 */
 	private void validateIfReceiptForBillPresent(Map<String, String> errorMap, List<Receipt> receipts,
 			BillDetail billDetail) {
@@ -381,7 +399,8 @@ public class ReceiptValidator {
 		for (Receipt receipt : receipts) {
 			String receiptStatus = receipt.getBill().get(0).getBillDetails().get(0).getStatus();
 			if (receiptStatus.equalsIgnoreCase(APPROVED.toString())
-					|| receiptStatus.equalsIgnoreCase(APPROVALPENDING.toString())) {
+					|| receiptStatus.equalsIgnoreCase(APPROVALPENDING.toString())
+					|| receiptStatus.equalsIgnoreCase(REMITTED.toString())) {
 				errorMap.put("BILL_ALREADY_PAID", "Bill has already been paid or is in pending state");
 				return;
 			}
@@ -468,44 +487,4 @@ public class ReceiptValidator {
 			}
 		}
 	}
-
-	private boolean isPositiveInteger(BigDecimal bd) {
-		return bd.compareTo(BigDecimal.ZERO) >= 0
-				&& (bd.signum() == 0 || bd.scale() <= 0 || bd.stripTrailingZeros().scale() <= 0);
-	}
 }
-
-// private void validateWorkFlowDetails(final ReceiptReq receiptRequest,
-// List<ErrorField> errorFields) {
-// String tenantId = receiptRequest.getReceipt().get(0).getTenantId();
-// CollectionConfigGetRequest collectionConfigGetRequest = new
-// CollectionConfigGetRequest();
-// collectionConfigGetRequest.setTenantId(tenantId);
-// collectionConfigGetRequest
-// .setName(RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
-//
-// Map<String, List<String>> workFlowConfigValues = collectionConfigService
-// .getCollectionConfiguration(collectionConfigGetRequest);
-// if (!workFlowConfigValues.isEmpty()
-// && workFlowConfigValues
-// .get(RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
-// .get(0)
-// .equalsIgnoreCase(
-// PREAPPROVED_CONFIG_VALUE)) {
-// List<Employee> employees = employeeRepository
-// .getPositionsForEmployee(receiptRequest.getRequestInfo(),
-// receiptRequest.getRequestInfo().getUserInfo()
-// .getId(), tenantId);
-// if (employees.isEmpty()) {
-// final ErrorField errorField = ErrorField
-// .builder()
-// .code(RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
-// .message(
-// RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
-// .field(RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
-// .build();
-// errorFields.add(errorField);
-// }
-// }
-//
-// }

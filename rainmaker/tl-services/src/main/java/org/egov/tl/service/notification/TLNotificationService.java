@@ -1,35 +1,19 @@
 package org.egov.tl.service.notification;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.util.NotificationUtil;
 import org.egov.tl.util.TLConstants;
-import org.egov.tl.web.models.SMSRequest;
-import org.egov.tl.web.models.TradeLicense;
-import org.egov.tl.web.models.TradeLicenseRequest;
-import org.egov.tl.web.models.uservevents.Action;
-import org.egov.tl.web.models.uservevents.ActionItem;
-import org.egov.tl.web.models.uservevents.Event;
-import org.egov.tl.web.models.uservevents.EventRequest;
-import org.egov.tl.web.models.uservevents.Recepient;
-import org.egov.tl.web.models.uservevents.Source;
+import org.egov.tl.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.jayway.jsonpath.JsonPath;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Slf4j

@@ -138,6 +138,24 @@ public class ApplicationProperties {
 
 	@Value("${bs.billdetail.seq.name}")
 	private String billDetailSeqName;
+	
+	@Value("${bs.bill.billnumber.format}")
+	private String billNumberFormat;
+	
+	@Value("${bs.bill.billnumber.format.module}")
+	private String moduleReplaceStirng;
+	
+	@Value("${bs.bill.billnumber.format.tenantid}")
+	private String tenantIdReplaceString;
+	
+	@Value("${istenantlevelbillnumberingenabled}")
+	private Boolean isTenantLevelBillNumberingEnabled;
+	
+	@Value("${egov.idgen.hostname}")
+	private String idGenHost;
+	
+	@Value("${egov.idgen.uri}")
+	private String idGenUrl;
 
 	@Value("${bs.billaccountdetail.seq.name}")
 	private String billAccDetailSeqName;

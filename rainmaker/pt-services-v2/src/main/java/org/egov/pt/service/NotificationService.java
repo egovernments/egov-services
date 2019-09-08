@@ -1,13 +1,7 @@
 package org.egov.pt.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
@@ -15,16 +9,7 @@ import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.PTConstants;
 import org.egov.pt.util.PropertyUtil;
-import org.egov.pt.web.models.Action;
-import org.egov.pt.web.models.ActionItem;
-import org.egov.pt.web.models.Event;
-import org.egov.pt.web.models.EventRequest;
-import org.egov.pt.web.models.Property;
-import org.egov.pt.web.models.PropertyDetail;
-import org.egov.pt.web.models.PropertyRequest;
-import org.egov.pt.web.models.Recepient;
-import org.egov.pt.web.models.SMSRequest;
-import org.egov.pt.web.models.Source;
+import org.egov.pt.web.models.*;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.jayway.jsonpath.JsonPath;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.*;
 
 @Service
 @Slf4j

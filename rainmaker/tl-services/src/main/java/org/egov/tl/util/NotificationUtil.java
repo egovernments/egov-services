@@ -1,42 +1,23 @@
 package org.egov.tl.util;
 
-import static org.egov.tl.util.TLConstants.ACTION_CANCEL_CANCELLED;
-import static org.egov.tl.util.TLConstants.ACTION_STATUS_APPLIED;
-import static org.egov.tl.util.TLConstants.ACTION_STATUS_APPROVED;
-import static org.egov.tl.util.TLConstants.ACTION_STATUS_FIELDINSPECTION;
-import static org.egov.tl.util.TLConstants.ACTION_STATUS_INITIATED;
-import static org.egov.tl.util.TLConstants.ACTION_STATUS_REJECTED;
-import static org.egov.tl.util.TLConstants.BILL_AMOUNT_JSONPATH;
-import static org.egov.tl.util.TLConstants.DEFAULT_OBJECT_MODIFIED_MSG;
-import static org.egov.tl.util.TLConstants.NOTIFICATION_LOCALE;
-import static org.egov.tl.util.TLConstants.TRADE_LICENSE_MODULE_CODE;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import com.jayway.jsonpath.JsonPath;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.ServiceRequestRepository;
-import org.egov.tl.web.models.Difference;
-import org.egov.tl.web.models.RequestInfoWrapper;
-import org.egov.tl.web.models.SMSRequest;
-import org.egov.tl.web.models.TradeLicense;
-import org.egov.tl.web.models.uservevents.EventRequest;
+import org.egov.tl.web.models.*;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.jayway.jsonpath.JsonPath;
+import java.math.BigDecimal;
+import java.util.*;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.egov.tl.util.TLConstants.*;
 
 @Component
 @Slf4j

@@ -54,7 +54,6 @@ public class UserService {
             property.getPropertyDetails().forEach(propertyDetail -> {
                 // Fetches the unique mobileNumbers from all the owners
                 Set<String> listOfMobileNumbers = getMobileNumbers(propertyDetail,requestInfo,property.getTenantId());
-                log.info("Unique MobileNumbers: "+listOfMobileNumbers);
                 propertyDetail.getOwners().forEach(owner -> {
                         addUserDefaultFields(property.getTenantId(),role,owner);
                         // Checks if the user is already present based on name of the owner and mobileNumber
@@ -70,11 +69,9 @@ public class UserService {
                             if(userDetailResponse.getUser().get(0).getUuid()==null){
                                 throw new CustomException("INVALID USER RESPONSE","The user created has uuid as null");
                             }
-                            log.info("owner created --> "+userDetailResponse.getUser().get(0).getUuid());
-
                         }
                         else
-                        { log.info("User update -> ","MobileNumber: ",owner.getMobileNumber()," Name: ",owner.getName());
+                        {
                           owner.setId(userDetailResponse.getUser().get(0).getId());
                           owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
                           addUserDefaultFields(property.getTenantId(),role,owner);
@@ -173,7 +170,7 @@ public class UserService {
         Set<String> availableMobileNumbers = new HashSet<>();
 
         listOfMobileNumbers.forEach(mobilenumber -> {
-            userSearchRequest.setMobileNumber(mobilenumber);
+            userSearchRequest.setUserName(mobilenumber);
             UserDetailResponse userDetailResponse =  userCall(userSearchRequest,uri);
             if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
                 availableMobileNumbers.add(mobilenumber);

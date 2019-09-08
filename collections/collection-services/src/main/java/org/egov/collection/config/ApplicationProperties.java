@@ -155,5 +155,11 @@ public class ApplicationProperties {
     
     @Value("${egov.user.create.user}")
     private String userCreateEnpoint;
+    
+    @Value("${kafka.topics.payment.receiptlink.name}")
+    private String paymentReceiptLinkTopic;
+    
+    @Value("${kafka.topics.payment.receiptlink.key}")
+    private String paymentReceiptLinkTopicKey;
 
 }

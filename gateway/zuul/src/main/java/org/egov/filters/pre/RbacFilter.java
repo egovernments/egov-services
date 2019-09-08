@@ -85,6 +85,8 @@ public class RbacFilter extends ZuulFilter {
 
         Set<String> tenantId = validateRequestAndSetRequestTenantId();
 
+        ctx.set(CURRENT_REQUEST_TENANTID, String.join(",", tenantId));
+
         AuthorizationRequest request = AuthorizationRequest.builder()
             .roles(new HashSet<>(user.getRoles()))
             .uri(requestUri)

@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.egov.pt.web.models.PropertyDetail.StatusEnum;
 import org.springframework.util.CollectionUtils;
 
 @Data
@@ -36,6 +38,8 @@ public class PropertyCriteria {
 	private String userName;
 
 	private String mobileNumber;
+	
+	private StatusEnum propertyDetailStatus;
 
 	private String name;
 

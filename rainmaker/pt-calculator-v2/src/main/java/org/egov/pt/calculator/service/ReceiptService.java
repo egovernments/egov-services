@@ -1,5 +1,6 @@
 package org.egov.pt.calculator.service;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,10 +49,24 @@ public class ReceiptService {
 	 * @return
 	 */
 	public List<Receipt> getReceiptsFromConsumerCode(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
-		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, demand.getConsumerCode().split(":")[0]);
+		return getReceiptsFromPropertyAndFY(assessmentYear, demand.getTenantId(), demand.getConsumerCode().split(":")[0], requestInfoWrapper);
+	}
+
+	/**
+	 * Gets all receipts corresponding to the given property and financial year
+	 * @param assessmentYear
+	 * @param tenantid
+	 * @param propertyId
+	 * @param requestInfoWrapper
+	 * @return
+	 */
+	public List<Receipt> getReceiptsFromPropertyAndFY(String assessmentYear, String tenantid, String propertyId, RequestInfoWrapper requestInfoWrapper) {
+		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, propertyId);
 		List<Receipt> receipts = new LinkedList<>();
 		if(!CollectionUtils.isEmpty(consumercodes))
-			receipts = getReceipts(demand.getTenantId(), consumercodes, requestInfoWrapper);
+			receipts = getReceipts(tenantid, consumercodes, requestInfoWrapper);
+		if(!CollectionUtils.isEmpty(receipts))
+			receipts.sort(Comparator.comparing(receipt -> receipt.getBill().get(0).getBillDetails().get(0).getReceiptDate()));
 		return receipts;
 	}
 
@@ -64,7 +79,7 @@ public class ReceiptService {
 	 * @param requestInfoWrapper
 	 * @return latestCollectedTime
 	 */
-	public Long getInterestLatestCollectedTime(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
+/*	public Long getInterestLatestCollectedTime(String assessmentYear, Demand demand, RequestInfoWrapper requestInfoWrapper) {
 
 		List<String> consumercodes =  getCosumerCodesForDemandFromCurrentFinancialYear (assessmentYear, demand.getConsumerCode().split(":")[0]);
 		List<Receipt> receipts = getReceipts(demand.getTenantId(), consumercodes, requestInfoWrapper);
@@ -75,12 +90,12 @@ public class ReceiptService {
 		for (Receipt receipt : receipts) {
 			
 			BillDetail detail = receipt.getBill().get(0).getBillDetails().get(0);
-			if (detail.getStatus().equalsIgnoreCase(CalculatorConstants.RECEIPT_STATUS_APPROVED)
+			if (CalculatorConstants.ALLOWED_RECEIPT_STATUS.contains(detail.getStatus())
 					&& detail.getReceiptDate().compareTo(latestCollectedDate) > 0)
 				latestCollectedDate = detail.getReceiptDate();
 		}
 		return latestCollectedDate;
-	}
+	}*/
 
 	private List<String> getCosumerCodesForDemandFromCurrentFinancialYear(String assessmentYear, String propertyId) {
 

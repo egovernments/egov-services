@@ -52,6 +52,7 @@ import static org.egov.demand.util.Constants.URL_PARAMS_FOR_SERVICE_BASED_DEMAND
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,13 +75,12 @@ import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.GenerateBillCriteria;
-import org.egov.demand.model.GlCodeMaster;
-import org.egov.demand.model.GlCodeMasterCriteria;
 import org.egov.demand.model.TaxAndPayment;
 import org.egov.demand.model.TaxHeadMaster;
 import org.egov.demand.model.TaxHeadMasterCriteria;
 import org.egov.demand.model.enums.Category;
 import org.egov.demand.repository.BillRepository;
+import org.egov.demand.repository.IdGenRepo;
 import org.egov.demand.repository.ServiceRequestRepository;
 import org.egov.demand.util.Util;
 import org.egov.demand.web.contract.BillRequest;
@@ -89,10 +89,11 @@ import org.egov.demand.web.contract.BusinessServiceDetailCriteria;
 import org.egov.demand.web.contract.RequestInfoWrapper;
 import org.egov.demand.web.contract.User;
 import org.egov.demand.web.contract.factory.ResponseFactory;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -104,7 +105,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BillService {
 
 	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private ResponseFactory responseFactory;
@@ -125,14 +126,17 @@ public class BillService {
 	private TaxHeadMasterService taxHeadService;
 	
 	@Autowired
-	private GlCodeMasterService glCodeMasterService;
-	
-	@Autowired
 	private Util util;
 	
 	@Autowired
 	private ServiceRequestRepository restRepository;
-
+	
+	@Autowired
+	private IdGenRepo idGenRepo;
+	
+	@Value("${kafka.topics.billgen.topic.name}")
+	private String notifTopicName;
+	
 	/**
 	 * Fetches the bill for given parameters
 	 * 
@@ -278,7 +282,9 @@ public class BillService {
 		else
 			throw new CustomException(EG_BS_BILL_NO_DEMANDS_FOUND_KEY, EG_BS_BILL_NO_DEMANDS_FOUND_MSG);
 
-		return create(BillRequest.builder().bills(bills).requestInfo(requestInfo).build());
+		BillRequest billRequest = BillRequest.builder().bills(bills).requestInfo(requestInfo).build();
+		kafkaTemplate.send(notifTopicName, null, billRequest);
+		return create(billRequest);
 	}
 
 	/**
@@ -312,14 +318,20 @@ public class BillService {
 		
 		Map<String, TaxHeadMaster> taxHeadMap = getTaxHeadMaster(taxHeadCodes, tenantId, requestInfo);
 		Map<String, BusinessServiceDetail> businessMap = getBusinessService(businessCodes, tenantId, requestInfo);
-
+		List<String> billNumbers = null;
+		Boolean isBusinessServiceOne = false;
+		
+		if(businessCodes.size() == 1) {
+			billNumbers = getBillNumbers(requestInfo, tenantId, demands.get(0).getBusinessService(), demands.size());
+			isBusinessServiceOne = true;
+		}
 		/*
 		 * looping demand to create bill-detail and account-details object
 		 * 
 		 * setting ids to the same
 		 */
 		String billId = UUID.randomUUID().toString();
-
+		int i = 0;
 		for (Demand demand : demands) {
 
 			/* bill detail Gen */
@@ -329,6 +341,10 @@ public class BillService {
 			String billDetailId = UUID.randomUUID().toString();
 			billDetail.setId(billDetailId);
 			billDetail.setBill(billId);
+			if(isBusinessServiceOne)
+				billDetail.setBillNumber(billNumbers.get(i++));
+			else 
+				billDetail.setBillNumber(getBillNumbers(requestInfo, tenantId, demands.get(0).getBusinessService(), 1).get(0));
 
 			for (BillAccountDetail accDetail : billDetail.getBillAccountDetails()) {
 
@@ -357,6 +373,19 @@ public class BillService {
 		return Arrays.asList(bill);
 	}
 	
+	private List<String> getBillNumbers(RequestInfo requestInfo, String tenantId, String module, int count) {
+
+		String billNumberFormat = appProps.getBillNumberFormat();
+		billNumberFormat = billNumberFormat.replace(appProps.getModuleReplaceStirng(), module);
+
+		if (appProps.getIsTenantLevelBillNumberingEnabled())
+			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), "_".concat(tenantId.split("\\.")[1]));
+		else
+			billNumberFormat = billNumberFormat.replace(appProps.getTenantIdReplaceString(), "");
+
+		return idGenRepo.getId(requestInfo, tenantId, "billnumberid", billNumberFormat, count);
+	}
+
 	/**
 	 * updates the total amount to be paid for each business service code
 	 * 
@@ -370,6 +399,11 @@ public class BillService {
 
 		String businessCode = billDetail.getBusinessService();
 		BigDecimal amountFromBillDetail = billDetail.getTotalAmount();
+		BigDecimal collectedAmt = BigDecimal.ZERO;
+		
+		for (BillAccountDetail accDeatil : billDetail.getBillAccountDetails()) {
+			collectedAmt = collectedAmt.add(accDeatil.getAdjustedAmount());
+		}
 
 		/* if business code already exists then add the amounts */
 		if (serviceCodeAndTaxAmountMap.containsKey(businessCode)) {
@@ -427,11 +461,17 @@ public class BillService {
 			collectedAmountForDemand = collectedAmountForDemand.add(demandDetail.getCollectionAmount());
 		}
 		
-		long billexpiryTime = null == demand.getBillExpiryTime() ? 0l : demand.getBillExpiryTime();
+		
+		Long billexpiryTime = demand.getBillExpiryTime();
+		if (null == billexpiryTime || 0 == billexpiryTime) {
+
+			Calendar cal = Calendar.getInstance();
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
+			billexpiryTime = cal.getTimeInMillis();
+		}
 		return BillDetail.builder()
 				.billAccountDetails(new ArrayList<>(taxCodeAccountdetailMap.values()))
 				.collectionModesNotAllowed(business.getCollectionModesNotAllowed())
-				.expiryDate(System.currentTimeMillis() + billexpiryTime)
 				.partPaymentAllowed(business.getPartPaymentAllowed())
 				.isAdvanceAllowed(business.getIsAdvanceAllowed())
 				.minimumAmount(demand.getMinimumAmountPayable())
@@ -441,6 +481,7 @@ public class BillService {
 				.billDate(System.currentTimeMillis())
 				.businessService(business.getCode())
 				.totalAmount(totalAmountForDemand)
+				.expiryDate(billexpiryTime)
 				.demandId(demand.getId())
 				.fromPeriod(startPeriod)
 				.toPeriod(endPeriod)
@@ -599,38 +640,7 @@ public class BillService {
 		return getBillResponse(billRequest.getBills());
 	}
 	
-	/*
-	 * @deprecated methods 
-	 * 
-	 */
 
-	@Deprecated
-	private Map<String, List<GlCodeMaster>> getGlCodes(List<Demand> demands, String service,String tenantId, RequestInfo requestInfo) {
-
-		List<DemandDetail> demandDetails = new ArrayList<>();
-		for(Demand demand : demands){
-			demandDetails.addAll(demand.getDemandDetails());
-		}
-
-		log.debug("getGlCodes demandDetails:"+demandDetails);
-
-		Set<String>  taxHeadMasterCode = demandDetails.stream().
-				map(demandDetail -> demandDetail.getTaxHeadMasterCode()).collect(Collectors.toSet());
-
-		log.debug("getGlCodes taxHeadMasterCode:"+taxHeadMasterCode);
-		List<GlCodeMaster> glCodeMasters = glCodeMasterService.getGlCodes(
-				GlCodeMasterCriteria.builder().taxHead(taxHeadMasterCode).service(
-				service).tenantId(tenantId).build(), requestInfo).getGlCodeMasters();
-		log.debug("getGlCodes glCodeMasters:"+glCodeMasters);
-		if(glCodeMasters.isEmpty())
-			throw new RuntimeException("No GlcodeMasters found for the given criteria");
-		Map<String, List<GlCodeMaster>> map = glCodeMasters.stream().collect(
-				Collectors.groupingBy(GlCodeMaster::getTaxHead, Collectors.toList()));
-
-		log.debug("getTaxHeadMaster map:"+map);
-		return map;
-	}
-	
 	@Deprecated
 	public BillResponse apportion(BillRequest billRequest) {
 		return new BillResponse(responseFactory.getResponseInfo(billRequest.getRequestInfo(), HttpStatus.OK), billRepository.apportion(billRequest));

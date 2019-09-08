@@ -132,16 +132,19 @@ public class AuthPreCheckFilter extends ZuulFilter {
 
     private void sanitizeAndSetRequest(RequestBodyInspector requestBodyInspector, CustomRequestWrapper requestWrapper) {
         HashMap<String, Object> requestInfo = requestBodyInspector.getRequestInfo();
+        RequestContext ctx = RequestContext.getCurrentContext();
         requestInfo.remove(USER_INFO_FIELD_NAME);
         requestInfo.remove(AUTH_TOKEN_REQUEST_BODY_FIELD_NAME);
         requestBodyInspector.updateRequestInfo(requestInfo);
         try {
-            requestWrapper.setPayload(objectMapper.writeValueAsString(requestBodyInspector.getRequestBody()));
+            String requestSanitizedBody = objectMapper.writeValueAsString(requestBodyInspector.getRequestBody());
+            ctx.set(CURRENT_REQUEST_SANITIZED_BODY, requestBodyInspector.getRequestBody());
+            requestWrapper.setPayload(requestSanitizedBody);
         } catch (JsonProcessingException e) {
             logger.error(FAILED_TO_SERIALIZE_REQUEST_BODY_MESSAGE, e);
             ExceptionUtils.RaiseException(e);
         }
-        RequestContext.getCurrentContext().setRequest(requestWrapper);
+        ctx.setRequest(requestWrapper);
     }
 
     private String getAuthTokenFromRequestHeader() {

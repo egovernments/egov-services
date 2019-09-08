@@ -12,6 +12,7 @@ import org.egov.win.model.PGR;
 import org.egov.win.model.PT;
 import org.egov.win.model.StateWide;
 import org.egov.win.model.TL;
+import org.egov.win.model.WaterAndSewerage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,44 +21,45 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class EmailService {
-	
+
 	@Autowired
 	private CronService service;
-	
-	public String formatEmail(Email email) {
-        Template t = service.getVelocityTemplate();
-        VelocityContext context = new VelocityContext();
-        buildEmailBody(email.getBody(), context);
-        StringWriter writer = new StringWriter(10000);
-        t.merge(context, writer);
 
-        return writer.toString();
+	public String formatEmail(Email email) {
+		Template t = service.getVelocityTemplate();
+		VelocityContext context = new VelocityContext();
+		buildEmailBody(email.getBody(), context);
+		StringWriter writer = new StringWriter(10000);
+		t.merge(context, writer);
+
+		return writer.toString();
 	}
 
-	
 	private void buildEmailBody(Body body, VelocityContext context) {
 		enrichHeaderData(body.getHeader(), context);
-		if(null != body.getStateWide()) 
+		if (null != body.getStateWide())
 			enrichStateWideData(body.getStateWide(), context);
-		if(null != body.getPgr())
+		if (null != body.getPgr())
 			enrichPGRData(body.getPgr(), context);
-		if(null != body.getPt())
+		if (null != body.getPt())
 			enrichPTData(body.getPt(), context);
-		if(null != body.getTl())
+		if (null != body.getTl())
 			enrichTLData(body.getTl(), context);
+		if (null != body.getWaterAndSewerage())
+			enrichWSData(body.getWaterAndSewerage(), context);
 	}
-	
+
 	private void enrichHeaderData(List<Map<String, Object>> header, VelocityContext context) {
 		fillData(header, context);
 	}
-	
+
 	private void enrichStateWideData(StateWide stateWide, VelocityContext context) {
 		fillData(stateWide.getNoOfCitizensResgistered(), context);
 		fillData(stateWide.getRevenueCollected(), context);
 		fillData(stateWide.getServicesApplied(), context);
 		fillData(stateWide.getUlbCovered(), context);
 	}
-	
+
 	private void enrichPGRData(PGR pgr, VelocityContext context) {
 		fillData(pgr.getRedressal(), context);
 		fillData(pgr.getTotalComplaints(), context);
@@ -66,21 +68,27 @@ public class EmailService {
 		fillData(pgr.getChannelBreakup().getMobileApp(), context);
 		fillData(pgr.getChannelBreakup().getWebApp(), context);
 	}
-	
+
 	private void enrichPTData(PT pt, VelocityContext context) {
 		fillData(pt.getNoOfProperties(), context);
 		fillData(pt.getRevenueCollected(), context);
 		fillData(pt.getUlbCovered(), context);
 	}
-	
+
 	private void enrichTLData(TL tl, VelocityContext context) {
 		fillData(tl.getLicenseIssued(), context);
 		fillData(tl.getUlbCovered(), context);
 	}
-		
+
+	private void enrichWSData(WaterAndSewerage ws, VelocityContext context) {
+		fillData(ws.getServiceApplied(), context);
+		fillData(ws.getRevenueCollected(), context);
+		fillData(ws.getUlbCovered(), context);
+	}
+
 	private void fillData(List<Map<String, Object>> dataFromQuery, VelocityContext context) {
 		dataFromQuery.forEach(record -> {
-			for(String key: record.keySet()) {
+			for (String key : record.keySet()) {
 				context.put(key, record.get(key));
 			}
 		});

@@ -64,7 +64,6 @@ import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandDue;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
-import org.egov.demand.producer.Producer;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.ServiceRequestRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -113,9 +112,6 @@ public class DemandService {
 	
 	@Autowired
 	private ObjectMapper mapper;
-	
-	@Autowired
-	private Producer producer;
 	
 	@Autowired
 	private Util util;

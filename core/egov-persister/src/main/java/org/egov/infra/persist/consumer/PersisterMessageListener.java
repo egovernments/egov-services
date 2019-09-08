@@ -17,19 +17,18 @@ public class PersisterMessageListener implements MessageListener<String, Object>
 	
 	@Autowired
 	private PersistService persistService;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@Override
 	public void onMessage(ConsumerRecord<String, Object> data) {
-        log.info("Topic: "+data.topic());
-        log.info("Value: "+data.value());
-        ObjectMapper objectMapper = new ObjectMapper();
 		String rcvData = null;
 		
 		try {
 			rcvData = objectMapper.writeValueAsString(data.value());
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Failed to serialize incoming message", e);
 		}
 		persistService.persist(data.topic(),rcvData);    
 	}

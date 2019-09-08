@@ -58,7 +58,8 @@ public class PropertyDetail   {
         public enum SourceEnum {
     MUNICIPAL_RECORDS("MUNICIPAL_RECORDS"),
     
-    FIELD_SURVEY("FIELD_SURVEY");
+    FIELD_SURVEY("FIELD_SURVEY"),
+    LEGACY_RECORD("LEGACY_RECORD");
 
     private String value;
 

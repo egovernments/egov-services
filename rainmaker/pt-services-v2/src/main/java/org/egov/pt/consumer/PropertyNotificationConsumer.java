@@ -6,6 +6,7 @@ import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.service.NotificationService;
 import org.egov.pt.service.PaymentNotificationService;
 import org.egov.pt.web.models.Property;
+import org.egov.pt.web.models.PropertyDetail;
 import org.egov.pt.web.models.PropertyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +44,10 @@ public class PropertyNotificationConsumer {
         }
         log.info("property Received: "+propertyRequest.getProperties().get(0).getPropertyId());
 
-        notificationService.process(propertyRequest,topic);
+        PropertyDetail.SourceEnum source = propertyRequest.getProperties().get(0).getPropertyDetails().get(0).getSource();
+
+        if (source == null || !source.equals(PropertyDetail.SourceEnum.LEGACY_RECORD))
+            notificationService.process(propertyRequest,topic);
     }
 
 

@@ -12,12 +12,18 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.contract.Action;
+import org.egov.pgr.contract.ActionItem;
+import org.egov.pgr.contract.Event;
+import org.egov.pgr.contract.EventRequest;
+import org.egov.pgr.contract.Recepient;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.model.Source;
 import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.service.NotificationService;
@@ -85,7 +91,29 @@ public class PGRNotificationConsumer {
 	
 	@Value("${egov.pgr.app.playstore.link}")
 	private String appDownloadLink;
-
+	
+	@Value("${notification.fallback.locale}")
+	private String fallbackLocale;
+	
+	@Value("${egov.usr.events.notification.enabled}")
+	private Boolean isUsrEventNotificationEnabled;
+	
+	@Value("${egov.usr.events.create.topic}")
+	private String saveUserEventsTopic;
+		
+	@Value("${egov.usr.events.rate.link}")
+	private String rateLink;
+	
+	@Value("${egov.usr.events.reopen.link}")
+	private String reopenLink;
+	
+	@Value("${egov.usr.events.rate.code}")
+	private String rateCode;
+	
+	@Value("${egov.usr.events.reopen.code}")
+	private String reopenCode;
+	
+	
 	@Autowired
 	private PGRUtils pGRUtils;
 
@@ -108,6 +136,12 @@ public class PGRNotificationConsumer {
 		process(serviceReqRequest);
 	}
 	
+	
+	/**
+	 * Sends notifications on different topics for the consumer to pick.
+	 * 
+	 * @param serviceReqRequest
+	 */
 	public void process(ServiceRequest serviceReqRequest) {
 		if (!CollectionUtils.isEmpty(serviceReqRequest.getActionInfo())) {
 			for (ActionInfo actionInfo : serviceReqRequest.getActionInfo()) {
@@ -130,6 +164,12 @@ public class PGRNotificationConsumer {
 								&& (null != service.getEmail() && !service.getEmail().isEmpty())) {
 							//get code from git using any check-in before 24/04/2018.
 						}
+						
+						if(isUsrEventNotificationEnabled) {
+							EventRequest request = prepareuserEvents(service, actionInfo, serviceReqRequest.getRequestInfo());
+							pGRProducer.push(saveUserEventsTopic, request);
+						}
+						
 					} else {
 						log.info("Notification disabled for this case!");
 						continue;
@@ -140,14 +180,80 @@ public class PGRNotificationConsumer {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Prepares event to be registered in user-event service.
+	 * Currently, only the notifications addressed to CITIZEN are considered.
+	 * 
+	 * @param serviceReq
+	 * @param actionInfo
+	 * @param requestInfo
+	 * @return
+	 */
+	public EventRequest prepareuserEvents(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo){
+		List<Event> events = new ArrayList<>();
+		if(StringUtils.isEmpty(actionInfo.getAssignee()) && !actionInfo.getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
+			try {
+				actionInfo.setAssignee(notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo));
+			}catch(Exception e) {
+				log.error("Exception while explicitly setting assignee!");
+			}
+		}
+		for(String role: pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
+			if(role.equals(PGRConstants.ROLE_EMPLOYEE)) 
+				continue;
+			String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
+			String data = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+			if (StringUtils.isEmpty(message))
+				continue;
+			List<String> toUsers = new ArrayList<>();
+			toUsers.add(data.split("[|]")[1]);
+			Recepient recepient = Recepient.builder()
+					.toUsers(toUsers).toRoles(null).build();
+			
+			Action action = null;
+			if(actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_RESOLVED)) {
+				List<ActionItem> items = new ArrayList<>();
+				String actionLink = rateLink.replace("$mobile", data.split("[|]")[0]).replace("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
+				actionLink = uiAppHost + actionLink;
+				ActionItem item = ActionItem.builder().actionUrl(actionLink).code(rateCode).build();
+				items.add(item);
+				actionLink = reopenLink.replace("$mobile", data.split("[|]")[0]).replace("$servicerequestid", serviceReq.getServiceRequestId().replaceAll("[/]", "%2F"));
+				actionLink = uiAppHost + actionLink;
+				item = ActionItem.builder().actionUrl(actionLink).code(reopenCode).build();
+				items.add(item);
+				
+				action = Action.builder().actionUrls(items).build();
+			}
+			Event event = Event.builder()
+					.tenantId(serviceReq.getTenantId())
+					.description(message)
+					.eventType(PGRConstants.USREVENTS_EVENT_TYPE)
+					.name(PGRConstants.USREVENTS_EVENT_NAME)
+					.postedBy(PGRConstants.USREVENTS_EVENT_POSTEDBY)
+					.source(Source.WEBAPP)
+					.recepient(recepient)
+					.eventDetails(null)
+					.actions(action).build();
+			
+			events.add(event);
+		}
+		return EventRequest.builder().requestInfo(requestInfo).events(events).build();
+	}
 
 	public List<SMSRequest> prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
 		List<SMSRequest> smsRequestsTobeSent = new ArrayList<>();
-		if(StringUtils.isEmpty(actionInfo.getAssignee())) {
-			actionInfo.setAssignee(notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo));
+		if(StringUtils.isEmpty(actionInfo.getAssignee()) && !actionInfo.getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
+			try {
+				actionInfo.setAssignee(notificationService.getCurrentAssigneeForTheServiceRequest(serviceReq, requestInfo));
+			}catch(Exception e) {
+				log.error("Exception while explicitly setting assignee!");
+			}
 		}
 		for(String role: pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
-			String phoneNumberRetrived = notificationService.getPhoneNumberForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+			String phoneNumberRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+			phoneNumberRetrived = phoneNumberRetrived.split("[|]")[0];
 			String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
 			String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
 			if (StringUtils.isEmpty(message))
@@ -163,11 +269,11 @@ public class PGRNotificationConsumer {
 		String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
 		String locale = null;
 		try {
-			locale = requestInfo.getMsgId().split(",")[1]; // Conventionally locale is sent in the first index of msgid.
+			locale = requestInfo.getMsgId().split("[|]")[1]; // Conventionally locale is sent in the first index of msgid split by |
 			if (StringUtils.isEmpty(locale)) 
-				locale = "en_IN";
+				locale = fallbackLocale;
 		} catch (Exception e) {
-			locale = "en_IN";
+			locale = fallbackLocale;
 		}
 		if (null == NotificationService.localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
 			notificationService.getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);

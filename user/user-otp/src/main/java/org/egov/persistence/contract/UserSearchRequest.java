@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSearchRequest {
-	private String mobileNumber;
+	private String userName;
 	private String tenantId;
 	private String userType;
 }

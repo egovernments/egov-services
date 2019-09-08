@@ -20,6 +20,7 @@ import org.egov.pt.web.models.Property.CreationReasonEnum;
 import org.egov.pt.web.models.PropertyDetail;
 import org.egov.pt.web.models.PropertyDetail.ChannelEnum;
 import org.egov.pt.web.models.PropertyDetail.SourceEnum;
+import org.egov.pt.web.models.PropertyDetail.StatusEnum;
 import org.egov.pt.web.models.PropertyInfo;
 import org.egov.pt.web.models.Unit;
 import org.egov.tracer.model.CustomException;
@@ -169,6 +170,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 						.usageCategoryMajor(rs.getString("usageCategoryMajor"))
 						.usageCategoryMinor(rs.getString("usageCategoryMinor"))
 						.adhocExemption(rs.getBigDecimal("adhocExemption"))
+						.status(StatusEnum.fromValue(rs.getString("propertydetailstatus")))
 						.adhocExemptionReason(rs.getString("adhocExemptionReason"))
 						.adhocPenalty(rs.getBigDecimal("adhocPenalty"))
 						.adhocPenaltyReason(rs.getString("adhocPenaltyReason"))

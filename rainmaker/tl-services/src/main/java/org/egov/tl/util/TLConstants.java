@@ -172,6 +172,11 @@ public class TLConstants {
 
     public static final List<String> FIELDS_TO_IGNORE = Collections.unmodifiableList(Arrays.asList(VARIABLE_ACTION,VARIABLE_WFDOCUMENTS,
             VARIABLE_CREATEDBY,VARIABLE_LASTMODIFIEDBY,VARIABLE_CREATEDTIME,VARIABLE_LASTMODIFIEDTIME));
+    
+    
+	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String  USREVENTS_EVENT_NAME = "Trade License";
+	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-TL";
 
 
     public TLConstants() {}

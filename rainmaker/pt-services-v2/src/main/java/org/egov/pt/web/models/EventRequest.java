@@ -37,67 +37,41 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.model.enums;
+
+package org.egov.pt.web.models;
+
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.springframework.validation.annotation.Validated;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Validated
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class EventRequest {
+
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
+	
+	@NotNull
+	@Valid
+	@JsonProperty("events")
+	private List<Event> events;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.HashSet;
-import java.util.Set;
-
-public enum ReceiptStatus {
-    APPROVED("Approved", Category.OPEN),
-    APPROVALPENDING("Approval Pending",Category.OPEN),
-    TOBESUBMITTED("To be Submitted", Category.OPEN),
-	REMITTED("Remitted", Category.OPEN),
-	REJECTED("Rejected", Category.CLOSED),
-	CANCELLED("Cancelled",Category.CLOSED),
-	DISHONOURED("Dishonoured", Category.CLOSED);
-
-    
-	private String value;
-
-    private Category category;
-
-	ReceiptStatus(String value, Category category) {
-		this.value = value;
-		this.category = category;
-	}
-
-    public boolean isCategory(Category category) {
-        return this.category == category;
-    }
-
-    public static Set<String> statusesByCategory(Category category) {
-	    Set<String> statuses = new HashSet<>();
-        for (ReceiptStatus b : ReceiptStatus.values()) {
-            if (b.category == category) {
-                statuses.add(b.value);
-            }
-        }
-
-        return statuses;
-    }
-
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
-
-	@JsonCreator
-	public static ReceiptStatus fromValue(String text) {
-		for (ReceiptStatus b : ReceiptStatus.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
-
-	public enum Category {
-		OPEN,
-		CLOSED;
-	}
 }

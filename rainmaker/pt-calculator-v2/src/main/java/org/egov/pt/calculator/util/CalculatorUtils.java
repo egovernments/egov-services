@@ -11,6 +11,7 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pt.calculator.service.ReceiptService;
 import org.egov.pt.calculator.web.models.Assessment;
 import org.egov.pt.calculator.web.models.DemandDetailAndCollection;
 import org.egov.pt.calculator.web.models.GetBillCriteria;
@@ -19,7 +20,9 @@ import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
+import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
@@ -35,6 +38,13 @@ public class CalculatorUtils {
 
 	@Autowired
 	private Configurations configurations;
+
+	@Autowired
+	private ReceiptService rcptService;
+
+	@Value("${customization.allowdepreciationonnoreceipts:false}")
+	Boolean allowDepreciationsOnNoReceipts;
+
 
 	private Map<String, Integer> taxHeadApportionPriorityMap;
 
@@ -316,7 +326,7 @@ public class CalculatorUtils {
 
  		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
 
- 				+ "(select Max(createdtime) as maxtime, propertyid, assessmentyear from eg_pt_assessment group by propertyid, assessmentyear) a2 "
+ 				+ "(select Max(createdtime) as maxtime, propertyid, assessmentyear from eg_pt_assessment WHERE Active = TRUE group by propertyid, assessmentyear) a2 "
 
  				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=? ");
 
@@ -422,8 +432,10 @@ public class CalculatorUtils {
 		List<BillAccountDetail> billAccountDetails = receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails();
 		for (BillAccountDetail detail : billAccountDetails) {
 			if (CalculatorConstants.TAXES_TO_BE_CONSIDERD.contains(detail.getTaxHeadCode()))
+			{
 				taxAmt = taxAmt.add(detail.getAmount());
-		    	amtPaid = amtPaid.add(detail.getAdjustedAmount());
+				amtPaid = amtPaid.add(detail.getAdjustedAmount());
+			}
 		}
 		return taxAmt.subtract(amtPaid);
 	}
@@ -442,6 +454,27 @@ public class CalculatorUtils {
 		return eodEpoch;
 	}
 
+	/**
+	 * Check if Depreciation is allowed for this Property.
+	 * In case there is no receipt the depreciation will be allowed
+	 * @param assessmentYear The year for which existing receipts needs to be checked
+	 * @param tenantId The tenantid of the property
+	 * @param propertyId The property id
+	 * @param requestInfoWrapper The incoming requestInfo
+	 */
 
+	public Boolean isAssessmentDepreciationAllowed(String assessmentYear, String tenantId, String propertyId,
+					RequestInfoWrapper requestInfoWrapper) {
+		boolean isDepreciationAllowed = false;
+		if (allowDepreciationsOnNoReceipts) {
+			List<Receipt> receipts = rcptService.getReceiptsFromPropertyAndFY(assessmentYear,tenantId, propertyId,
+					requestInfoWrapper);
+
+			if (receipts.size() == 0)
+				isDepreciationAllowed = true;
+		}
+
+		return isDepreciationAllowed;
+	}
 
 }

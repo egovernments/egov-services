@@ -728,5 +728,48 @@ serviceMaps:
            - jsonPath: $.Properties.*.propertyDetails.*.auditDetails.lastModifiedTime
 
 
+ - version: 1.0
+   description: Cancel property details in eg_pt_propertydetail_v2  table
+   fromTopic: cancel-pt-propertyDetail
+   isTransaction: true
+   queryMaps:
 
+     - query: UPDATE eg_pt_propertydetail_v2 SET status=? where propertyId=? AND assessmentNumber=? AND tenantId=?;
+       basePath: Properties.*.propertyDetails.*
+       jsonMaps:
 
+         - jsonPath: $.Properties.*.propertyDetails.*.status
+
+         - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].propertyId
+
+         - jsonPath: $.Properties.*.propertyDetails.*.assessmentNumber
+
+         - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].tenantId
+
+ - version: 1.0
+   description: Cancel property in eg_pt_property_v2  table
+   fromTopic: cancel-pt-property
+   isTransaction: true
+   queryMaps:
+
+     - query: UPDATE eg_pt_property_v2 SET status=? where propertyId=? AND tenantId=?;
+       basePath: Properties.*
+       jsonMaps:
+
+         - jsonPath: $.Properties.*.status
+
+         - jsonPath: $.Properties.*.propertyId
+
+         - jsonPath: $.Properties.*.tenantId
+
+     - query: UPDATE eg_pt_propertydetail_v2 SET status=? where propertyId=? AND assessmentNumber=? AND tenantId=?;
+       basePath: Properties.*.propertyDetails.*
+       jsonMaps:
+
+         - jsonPath: $.Properties.*.propertyDetails.*.status
+
+         - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].propertyId
+
+         - jsonPath: $.Properties.*.propertyDetails.*.assessmentNumber
+
+         - jsonPath: $.Properties[*][?({assessmentNumber} in @.propertyDetails[*].assessmentNumber)].tenantId

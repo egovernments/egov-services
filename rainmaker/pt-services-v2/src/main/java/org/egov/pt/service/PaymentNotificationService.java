@@ -5,13 +5,19 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.pt.config.PropertyConfiguration;
 import org.egov.pt.producer.Producer;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.PTConstants;
 import org.egov.pt.util.PropertyUtil;
+import org.egov.pt.web.models.Event;
+import org.egov.pt.web.models.EventRequest;
 import org.egov.pt.web.models.Property;
 import org.egov.pt.web.models.PropertyCriteria;
+import org.egov.pt.web.models.PropertyDetail;
+import org.egov.pt.web.models.PropertyRequest;
 import org.egov.pt.web.models.SMSRequest;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
@@ -22,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,10 +47,10 @@ public class PaymentNotificationService {
     private PropertyService propertyService;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private PropertyUtil util;
+    
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * Generates message from the received object and sends SMSRequest to kafka queue
@@ -85,21 +92,67 @@ public class PaymentNotificationService {
             LinkedHashMap responseMap = (LinkedHashMap)serviceRequestRepository.fetchResult(uri, requestInfo);
             String messagejson = new JSONObject(responseMap).toString();
             List<SMSRequest> smsRequests = new ArrayList<>();
-
+            String customMessage = null;
             if(topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic()) ||
                     (topic.equalsIgnoreCase(propertyConfiguration.getPgTopic()) && "FAILURE".equalsIgnoreCase(valMap.get("txnStatus")))){
                 String path = getJsonPath(topic,valMap);
                 Object messageObj = JsonPath.parse(messagejson).read(path);
                 String message = ((ArrayList<String>)messageObj).get(0);
-                String customMessage = getCustomizedMessage(valMap,message,path);
+                customMessage = getCustomizedMessage(valMap,message,path);
                 smsRequests = getSMSRequests(mobileNumbers,customMessage);
             }
             if(valMap.get("oldPropertyId")==null && topic.equalsIgnoreCase(propertyConfiguration.getReceiptTopic()))
                 smsRequests.addAll(addOldpropertyIdAbsentSMS(messagejson,valMap,mobileNumbers));
             sendSMS(smsRequests);
+            if(null == propertyConfiguration.getIsUserEventsNotificationEnabled())
+            	propertyConfiguration.setIsUserEventsNotificationEnabled(true);
+            if(propertyConfiguration.getIsUserEventsNotificationEnabled()) {
+            	sendEventNotification(requestInfo, customMessage, smsRequests, valMap);
+            }
         }
         catch(Exception e)
         {throw new CustomException("LOCALIZATION ERROR","Unable to get message from localization");}
+    }
+    
+    
+    /**
+     * Prepares event to be sent to the user as notification and sends it.
+     * 
+     * @param requestInfo
+     * @param customMessage
+     * @param smsRequests
+     * @param valMap
+     */
+    public void sendEventNotification(RequestInfo requestInfo, String customMessage, List<SMSRequest> smsRequests, Map<String,String> valMap) {
+    	List<Event> events = new ArrayList<>();
+    	Set<String> listOfMobileNumber = smsRequests.stream().map(SMSRequest :: getMobileNumber).collect(Collectors.toSet());
+    	PropertyRequest request = null;
+    	List<Property> properties = new ArrayList<>();
+    	List<PropertyDetail> propertyDetails = new ArrayList<>();
+    	PropertyDetail detail = PropertyDetail.builder().assessmentNumber(valMap.get("assessmentNumber"))
+    			.financialYear(valMap.get("financialYear")).build();
+    	propertyDetails.add(detail);
+    	Property property = new Property().builder().propertyId(valMap.get("propertyId")).tenantId(valMap.get("tenantId"))
+    			.propertyDetails(propertyDetails).build();
+    	properties.add(property);
+    	request = PropertyRequest.builder().requestInfo(requestInfo).properties(properties).build();
+    			
+    	List<Event> eventsForAProperty = notificationService.getEvents(listOfMobileNumber, customMessage, request, true);
+    	if(!CollectionUtils.isEmpty(eventsForAProperty)) {
+            events.addAll(eventsForAProperty);
+    	}
+    	if(!CollectionUtils.isEmpty(events)) {
+    		Role role = new Role();
+    		List<Role> roles = new ArrayList<>(); roles.add(role);
+            User user = User.builder()
+            		.tenantId("tenantId")
+            		.uuid("uuid")
+            		.roles(roles).build();
+            requestInfo.setUserInfo(user);
+        	EventRequest eventRequest = EventRequest.builder().requestInfo(requestInfo).events(events).build();
+        	notificationService.sendEventNotification(eventRequest);
+    	}
+    	
     }
 
     /**
@@ -186,7 +239,7 @@ public class PaymentNotificationService {
             tenantId = documentContext.read("$.Transaction.tenantId");
             valMap.put("tenantId",tenantId);
 
-            moduleId = documentContext.read("$.Transaction.moduleId");
+            moduleId = documentContext.read("$.Transaction.consumerCode");
             valMap.put("moduleId",moduleId);
             valMap.put("propertyId",moduleId.split(":")[0]);
             valMap.put("assessmentNumber",moduleId.split(":")[1]);
@@ -194,7 +247,7 @@ public class PaymentNotificationService {
             mobileNumber = documentContext.read("$.Transaction.user.mobileNumber");
             valMap.put("mobileNumber",mobileNumber);
 
-            module = documentContext.read("$.Transaction.module");
+            module = documentContext.read("$.Transaction.taxAndPayments[0].businessService");
             valMap.put("module",module);
         }
         catch (Exception e)

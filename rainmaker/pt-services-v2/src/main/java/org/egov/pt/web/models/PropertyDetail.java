@@ -58,7 +58,8 @@ public class PropertyDetail   {
         public enum SourceEnum {
     MUNICIPAL_RECORDS("MUNICIPAL_RECORDS"),
     
-    FIELD_SURVEY("FIELD_SURVEY");
+    FIELD_SURVEY("FIELD_SURVEY"),
+    LEGACY_RECORD("LEGACY_RECORD");
 
     private String value;
 
@@ -85,6 +86,40 @@ public class PropertyDetail   {
 
         @JsonProperty("source")
         private SourceEnum source;
+        
+        
+        public enum StatusEnum {
+        	
+            ACTIVE("ACTIVE"),
+            
+            INACTIVE("INACTIVE");
+            
+
+            private String value;
+
+            StatusEnum(String value) {
+              this.value = value;
+            }
+
+            @Override
+            @JsonValue
+            public String toString() {
+              return String.valueOf(value);
+            }
+
+            @JsonCreator
+            public static StatusEnum fromValue(String text) {
+              for (StatusEnum b : StatusEnum.values()) {
+                if (String.valueOf(b.value).equalsIgnoreCase(text)) {
+                  return b;
+                }
+              }
+              return null;
+            }
+          }
+        
+        @JsonProperty("status")
+        private StatusEnum status;
 
         @Size(max=64)
         @JsonProperty("usage")

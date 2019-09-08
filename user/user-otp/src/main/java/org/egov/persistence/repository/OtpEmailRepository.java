@@ -1,7 +1,7 @@
 package org.egov.persistence.repository;
 
-import org.egov.persistence.LogAwareKafkaTemplate;
 import org.egov.persistence.contract.EmailMessage;
+import org.egov.tracer.kafka.CustomKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class OtpEmailRepository {
     private static final String PASSWORD_RESET_SUBJECT = "Password Reset";
     private static final String PASSWORD_RESET_BODY = "Your OTP for recovering password is %s.";
-    private LogAwareKafkaTemplate<String, EmailMessage> kafkaTemplate;
+    private CustomKafkaTemplate<String, EmailMessage> kafkaTemplate;
     private String emailTopic;
 
     @Autowired
-    public OtpEmailRepository(LogAwareKafkaTemplate<String, EmailMessage> kafkaTemplate,
+    public OtpEmailRepository(CustomKafkaTemplate<String, EmailMessage> kafkaTemplate,
 							  @Value("${email.topic}") String emailTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.emailTopic = emailTopic;

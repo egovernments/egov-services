@@ -96,7 +96,6 @@ public class TransactionValidator {
 
     public boolean shouldGenerateReceipt(Transaction prevStatus, Transaction newStatus) {
         if(prevStatus.getTxnStatus().equals(Transaction.TxnStatusEnum.SUCCESS) && !isEmpty(prevStatus.getReceipt())) {
-            newStatus.setTxnStatusMsg(prevStatus.getTxnStatusMsg());
             return false;
         }
 

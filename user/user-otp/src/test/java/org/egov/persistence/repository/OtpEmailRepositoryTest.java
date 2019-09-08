@@ -1,7 +1,7 @@
 package org.egov.persistence.repository;
 
-import org.egov.persistence.LogAwareKafkaTemplate;
 import org.egov.persistence.contract.EmailMessage;
+import org.egov.tracer.kafka.CustomKafkaTemplate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +17,7 @@ public class OtpEmailRepositoryTest {
 
 	private static final String EMAIL_TOPIC = "email.topic";
 	@Mock
-	private LogAwareKafkaTemplate<String, EmailMessage> kakfaTemplate;
+	private CustomKafkaTemplate<String, EmailMessage> kakfaTemplate;
 	private OtpEmailRepository repository;
 
 	@Before

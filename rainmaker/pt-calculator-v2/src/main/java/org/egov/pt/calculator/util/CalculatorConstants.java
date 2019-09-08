@@ -47,9 +47,11 @@ public class CalculatorConstants {
 
 	public static final String PT_ADHOC_REBATE = "PT_ADHOC_REBATE";
 
-	public static final String PT_DECIMAL_CEILING_CREDIT = "PT_DECIMAL_CEILING_CREDIT";
+//	public static final String PT_DECIMAL_CEILING_CREDIT = "PT_DECIMAL_CEILING_CREDIT";
 	
-	public static final String PT_DECIMAL_CEILING_DEBIT = "PT_DECIMAL_CEILING_DEBIT";
+//	public static final String PT_DECIMAL_CEILING_DEBIT = "PT_DECIMAL_CEILING_DEBIT";
+
+	public static final String PT_ROUNDOFF = "PT_ROUNDOFF";
 	
 	public static final String RECEIPT_STATUS_APPROVED = "APPROVED";
 
@@ -58,7 +60,9 @@ public class CalculatorConstants {
 	
 	public static final List<String> TAXES_TO_BE_SUBTRACTED_WHEN_CALCULATING_REBATE_AND_PENALTY = Collections.unmodifiableList(Arrays
 			.asList(PT_OWNER_EXEMPTION, PT_UNIT_USAGE_EXEMPTION ));
-	
+
+	public static final List<String> TAXES_TO_BE_CONSIDERD = Collections.unmodifiableList(Arrays
+			.asList(PT_TAX,PT_OWNER_EXEMPTION, PT_UNIT_USAGE_EXEMPTION ));
 	/*
 	 * these lists has to be updated with every new additional taxes which will be applied on the principle tax(PT_TAX)  
 	 */
@@ -169,6 +173,8 @@ public class CalculatorConstants {
 	public static final String SERVICE_FIELD_FOR_SEARCH_URL = "service=";
 	
 	public static final String BUSINESSSERVICE_FIELD_FOR_SEARCH_URL = "businessService=";
+
+	public static final String STATUS_FIELD_FOR_SEARCH_URL = "status=";
 
 	public static final String SERVICE_FIELD_VALUE_PT = "PT";
 

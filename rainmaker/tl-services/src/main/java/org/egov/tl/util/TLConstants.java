@@ -2,6 +2,10 @@ package org.egov.tl.util;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class TLConstants {
 
@@ -30,6 +34,16 @@ public class TLConstants {
 
     public static final String NOTIFICATION_CANCELLED = "tl.en.counter.cancelled";
 
+    public static final String NOTIFICATION_FIELD_CHANGED = "tl.en.edit.field.change";
+
+    public static final String NOTIFICATION_OBJECT_ADDED = "tl.en.edit.object.added";
+
+    public static final String NOTIFICATION_OBJECT_REMOVED = "tl.en.edit.object.removed";
+
+    public static final String NOTIFICATION_OBJECT_MODIFIED = "tl.en.edit.object.modified";
+
+
+    public static final String DEFAULT_OBJECT_MODIFIED_MSG = "Dear <1>,Your Trade License with application number <APPLICATION_NUMBER> was modified.";
 
 
     // MDMS
@@ -103,6 +117,8 @@ public class TLConstants {
 
     public static final String ACTION_PAY  = "PAY";
 
+    public static final String ACTION_ADHOC  = "ADHOC";
+
 
     public static final String STATUS_INITIATED = "INITIATED";
 
@@ -136,6 +152,31 @@ public class TLConstants {
     public static final String ACTION_CANCEL_CANCELLED  = "CANCEL_CANCELLED";
 
     public static final String ACTION_STATUS_PAID  = "PAID";
+
+
+    public static final String VARIABLE_ACTION = "action";
+
+    public static final String VARIABLE_WFDOCUMENTS = "wfDocuments";
+
+    public static final String VARIABLE_ACTIVE = "active";
+
+    public static final String VARIABLE_USERACTIVE = "userActive";
+
+    public static final String VARIABLE_CREATEDBY = "createdBy";
+
+    public static final String VARIABLE_LASTMODIFIEDBY = "lastModifiedBy";
+
+    public static final String VARIABLE_CREATEDTIME = "createdTime";
+
+    public static final String VARIABLE_LASTMODIFIEDTIME = "lastModifiedTime";
+    
+	public static final String  USREVENTS_EVENT_TYPE = "SYSTEMGENERATED";
+	public static final String  USREVENTS_EVENT_NAME = "Trade License";
+	public static final String  USREVENTS_EVENT_POSTEDBY = "SYSTEM-TL";
+
+
+    public static final List<String> FIELDS_TO_IGNORE = Collections.unmodifiableList(Arrays.asList(VARIABLE_ACTION,VARIABLE_WFDOCUMENTS,
+            VARIABLE_CREATEDBY,VARIABLE_LASTMODIFIEDBY,VARIABLE_CREATEDTIME,VARIABLE_LASTMODIFIEDTIME));
 
 
     public TLConstants() {}

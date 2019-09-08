@@ -10,10 +10,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.TLRepository;
+import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.tl.web.models.workflow.BusinessService;
 import org.egov.tl.workflow.WorkflowIntegrator;
+import org.egov.tl.workflow.WorkflowService;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +46,22 @@ public class PaymentUpdateService {
 
 	private ObjectMapper mapper;
 
+	private WorkflowService workflowService;
+
+	private TradeUtil util;
+
 	@Autowired
 	public PaymentUpdateService(TradeLicenseService tradeLicenseService, TLConfiguration config, TLRepository repository,
-								WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService, ObjectMapper mapper) {
+								WorkflowIntegrator wfIntegrator, EnrichmentService enrichmentService, ObjectMapper mapper,
+								WorkflowService workflowService,TradeUtil util) {
 		this.tradeLicenseService = tradeLicenseService;
 		this.config = config;
 		this.repository = repository;
 		this.wfIntegrator = wfIntegrator;
 		this.enrichmentService = enrichmentService;
 		this.mapper = mapper;
+		this.workflowService = workflowService;
+		this.util = util;
 	}
 
 
@@ -84,6 +94,9 @@ public class PaymentUpdateService {
 				searchCriteria.setApplicationNumber(valMap.get(consumerCode));
 				List<TradeLicense> licenses = tradeLicenseService.getLicensesWithOwnerInfo(searchCriteria, requestInfo);
 
+				BusinessService businessService = workflowService.getBusinessService(licenses.get(0).getTenantId(), requestInfo);
+
+
 				if (CollectionUtils.isEmpty(licenses))
 					throw new CustomException("INVALID RECEIPT",
 							"No tradeLicense found for the comsumerCode " + searchCriteria.getApplicationNumber());
@@ -94,7 +107,7 @@ public class PaymentUpdateService {
 				// FIXME check why aniket is not using request info from consumer
 				// REMOVE SYSTEM HARDCODING AFTER ALTERING THE CONFIG IN WF FOR TL
 
-				Role role = Role.builder().code("SYSTEM_PAYMENT").build();
+				Role role = Role.builder().code("SYSTEM_PAYMENT").tenantId(licenses.get(0).getTenantId()).build();
 				requestInfo.getUserInfo().getRoles().add(role);
 				TradeLicenseRequest updateRequest = TradeLicenseRequest.builder().requestInfo(requestInfo)
 						.licenses(licenses).build();
@@ -112,7 +125,8 @@ public class PaymentUpdateService {
 				/*
 				 * calling repository to update the object in TL tables
 				 */
-				repository.update(updateRequest);
+				Map<String,Boolean> idToIsStateUpdatableMap = util.getIdToIsStateUpdatableMap(businessService,licenses);
+				repository.update(updateRequest,idToIsStateUpdatableMap);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

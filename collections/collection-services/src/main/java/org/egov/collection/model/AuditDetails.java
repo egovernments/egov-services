@@ -60,13 +60,13 @@ import lombok.ToString;
 public class AuditDetails {
 
     @JsonProperty("createdBy")
-    private Long createdBy = null;
+    private String createdBy = null;
 
     @JsonProperty("createdDate")
     private Long createdDate = null;
 
     @JsonProperty("lastModifiedBy")
-    private Long lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
     @JsonProperty("lastModifiedDate")
     private Long lastModifiedDate = null;

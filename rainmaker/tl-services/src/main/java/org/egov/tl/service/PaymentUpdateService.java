@@ -107,7 +107,7 @@ public class PaymentUpdateService {
 				// FIXME check why aniket is not using request info from consumer
 				// REMOVE SYSTEM HARDCODING AFTER ALTERING THE CONFIG IN WF FOR TL
 
-				Role role = Role.builder().code("SYSTEM_PAYMENT").build();
+				Role role = Role.builder().code("SYSTEM_PAYMENT").tenantId(licenses.get(0).getTenantId()).build();
 				requestInfo.getUserInfo().getRoles().add(role);
 				TradeLicenseRequest updateRequest = TradeLicenseRequest.builder().requestInfo(requestInfo)
 						.licenses(licenses).build();

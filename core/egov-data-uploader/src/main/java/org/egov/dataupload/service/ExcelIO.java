@@ -87,12 +87,10 @@ public class ExcelIO implements FileIO {
                                 if (HSSFDateUtil.isCellDateFormatted(cell)) {
                                     dataList.add(format.format(new Date(cell.getDateCellValue().getTime())));
                                 } else {
-                                    dataList.add(cell.getNumericCellValue());
-/*                                	if(validateEpoch(dataFormatter.formatCellValue(cell))) {
-                                    	logger.info("Adding epoch: "+dataFormatter.formatCellValue(cell));
-                                    	dataList.add(Long.valueOf(dataFormatter.formatCellValue(cell)));
+                                	if(validateEPoch(String.valueOf(cell.getNumericCellValue()))) {
+                                        dataList.add(getEpoch(String.valueOf(cell.getNumericCellValue())));
                                 	}
-                                    dataList.add(dataFormatter.formatCellValue(cell));*/
+                                    dataList.add(cell.getNumericCellValue());
                                 }
                                 break;
                             case STRING:
@@ -107,9 +105,6 @@ public class ExcelIO implements FileIO {
                                         logger.info("Couldn't parse date", e);
                                         dataList.add(cell.getStringCellValue());
                                     }
-                                } else if(validateEpoch(cell.getStringCellValue())) {
-                                	logger.info("Adding epoch: "+cell.getStringCellValue());
-                                	dataList.add(Long.valueOf(cell.getStringCellValue()));
                                 } else if (!cell.getStringCellValue().trim().isEmpty()) {
                                     logger.trace("string: " + cell.getStringCellValue());
                                     dataList.add(cell.getStringCellValue());
@@ -180,21 +175,24 @@ public class ExcelIO implements FileIO {
         return isValid;
     }
     
-    private boolean validateEpoch(String value) {
-    	try {
-    		if(value.length() == 13 || value.length() == 10) {
-    			Long.valueOf(value);
+    
+    private boolean validateEPoch(String value) {
+    	if(value.length() > 10) {
+    		if(value.contains("E") && value.contains(".")) {
     			return true;
     		}else {
-    	        DecimalFormat df = new DecimalFormat("#");
-    	        df.setMaximumFractionDigits(0);
-    	        df.format(Double.valueOf(value));
-    			Long.valueOf(value);
-    			return true;
+    			return false;
     		}
-    	}catch(Exception e) {
-    		return false;
-    	}    	
+    	}
+    	return false;
+    }
+    
+    
+    private Long getEpoch(String value) {
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(0);
+        String ret= df.format(Double.valueOf(value));
+        return Long.valueOf(ret);
     }
 
 

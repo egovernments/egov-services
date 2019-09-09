@@ -1,13 +1,7 @@
 package org.egov.pt.calculator.service;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.egov.pt.calculator.util.CalculatorConstants;
@@ -24,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import net.minidev.json.JSONArray;
+
+import static org.egov.pt.calculator.util.CalculatorConstants.TIMEZONE_OFFSET;
+import static org.egov.pt.calculator.util.CalculatorUtils.getEODEpoch;
 
 /**
  * Deals with the functionality that are performed 
@@ -68,8 +65,8 @@ public class PayService {
 
 		if (rebate.equals(BigDecimal.ZERO)) {
 			penalty = getPenalty(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.PENANLTY_MASTER));
-			interest = getInterest(taxAmt.subtract(collectedPtTax), assessmentYear,
-					timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER),receipts);
+			interest = getInterest(taxAmt, assessmentYear, timeBasedExmeptionMasterMap.get(CalculatorConstants.INTEREST_MASTER),
+					receipts);
 		}
 
 		estimates.put(CalculatorConstants.PT_TIME_REBATE, rebate.setScale(2, 2).negate());
@@ -119,8 +116,9 @@ public class PayService {
 		String[] time = getStartTime(assessmentYear,penalty);
 		Calendar cal = Calendar.getInstance();
 		setDateToCalendar(time, cal);
+		Long currentIST = System.currentTimeMillis()+TIMEZONE_OFFSET;
 
-		if (cal.getTimeInMillis() < System.currentTimeMillis()) 
+		if (cal.getTimeInMillis() < currentIST)
 			penaltyAmt = mDService.calculateApplicables(taxAmt, penalty);
 
 		return penaltyAmt;
@@ -145,48 +143,52 @@ public class PayService {
 
 		Calendar cal = Calendar.getInstance();
 		setDateToCalendar(time, cal);
-		long current = System.currentTimeMillis();
+		long currentUTC = System.currentTimeMillis();
+		long currentIST= System.currentTimeMillis()+TIMEZONE_OFFSET;
 		long interestStart = cal.getTimeInMillis();
 
-		if(interestStart < current){
+		if(interestStart < currentIST){
 
-			if(CollectionUtils.isEmpty(receipts)){
-				long numberOfDaysInMillies = current - interestStart;
-				BigDecimal interestCalculated = calculateInterest(numberOfDaysInMillies,taxAmt,interestMap);
-				return interestCalculated;
+			if (CollectionUtils.isEmpty(receipts)) {
+				
+				long numberOfDaysInMillies = getEODEpoch(currentUTC) - interestStart;
+				return calculateInterest(numberOfDaysInMillies, taxAmt, interestMap);
 			}
 			else{
+				
 				BigDecimal applicableAmount;
 				BigDecimal interestCalculated;
 				int numberOfPeriods = receipts.size()+1;
 				long numberOfDaysInMillies;
 				Receipt receipt;
 
-				for(int i = 0 ; i<numberOfPeriods; i++){
+				for (int i = 0; i < numberOfPeriods; i++) {
 
-					if(i!=numberOfPeriods-1)
-					 receipt = receipts.get(i);
-					else receipt = receipts.get(i-1);
-					Bill bill = receipt.getBill().get(0);
+					if (i != numberOfPeriods - 1)
+						receipt = receipts.get(i);
+					else
+						receipt = receipts.get(i - 1);
+					
 					BillDetail detail = receipt.getBill().get(0).getBillDetails().get(0);
 
-					if(i==0){
+					if (i == 0) {
+
 						applicableAmount = taxAmt;
-						numberOfDaysInMillies = detail.getReceiptDate() - interestStart;
-						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
-					}
-					else if(i==numberOfPeriods-1){
-						applicableAmount = getRemainingAmount(receipt);;
-						numberOfDaysInMillies = detail.getReceiptDate() - current;
-						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
-					}
-					else {
-						Receipt receiptPrev = receipts.get(i-1);
+						numberOfDaysInMillies = getEODEpoch(detail.getReceiptDate()) - interestStart;
+						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
+					} else if (i == numberOfPeriods - 1) {
+
+						applicableAmount = utils.getTaxAmtFromReceiptForApplicablesGeneration(receipt);
+						numberOfDaysInMillies = getEODEpoch(currentUTC) - getEODEpoch(detail.getReceiptDate());
+						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
+					} else {
+
+						Receipt receiptPrev = receipts.get(i - 1);
 						Bill billPrev = receiptPrev.getBill().get(0);
 						BillDetail detailPrev = billPrev.getBillDetails().get(0);
-						applicableAmount = getRemainingAmount(receiptPrev);
-						numberOfDaysInMillies = detail.getReceiptDate() - detailPrev.getReceiptDate();
-						interestCalculated = calculateInterest(numberOfDaysInMillies,applicableAmount,interestMap);
+						applicableAmount = utils.getTaxAmtFromReceiptForApplicablesGeneration(receiptPrev);
+						numberOfDaysInMillies = getEODEpoch(detail.getReceiptDate()) - getEODEpoch(detailPrev.getReceiptDate());
+						interestCalculated = calculateInterest(numberOfDaysInMillies, applicableAmount, interestMap);
 					}
 					interestAmt = interestAmt.add(interestCalculated);
 				}
@@ -297,6 +299,8 @@ public class PayService {
 	private void setDateToCalendar(String[] time, Calendar cal) {
 
 		cal.clear();
+		TimeZone timeZone = TimeZone.getTimeZone("Asia/Kolkata");
+		cal.setTimeZone(timeZone);
 		Integer day = Integer.valueOf(time[0]);
 		Integer month = Integer.valueOf(time[1])-1;
 		// One is subtracted because calender reads january as 0
@@ -399,25 +403,6 @@ public class PayService {
 	}
 
 
-	/**
-	 * Returns the amount remaining for the given receipt
-	 * @param receipt
-	 * @return
-	 */
-	private BigDecimal getRemainingAmount(Receipt receipt){
-		BigDecimal totalAmount = BigDecimal.ZERO;
-		BigDecimal amountPaid = BigDecimal.ZERO;
-		List<BillDetail> billDetails = new LinkedList<>();
 
-		receipt.getBill().forEach(bill -> {
-			billDetails.addAll(bill.getBillDetails());
-		});
-
-		for(BillDetail billDetail : billDetails){
-			totalAmount.add(billDetail.getTotalAmount());
-			amountPaid.add(billDetail.getAmountPaid());
-		}
-		return totalAmount.subtract(amountPaid);
-	}
 
 }

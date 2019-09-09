@@ -107,10 +107,11 @@ public class DataUploadService {
         uri.append(fileStoreHost).append(getFileEndpoint).append("?fileStoreId=").append(uploadJob
                 .getRequestFilePath()).append("&tenantId=").append(uploadJob.getTenantId());
         try {
-            String filePath = dataUploadRepository.getFileContents(uri.toString(), uploaderRequest.getUploadJobs()
-                    .get(0).getRequestFileName());
 
             uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName(), uploadJob.getDefName()));
+            String filePath = dataUploadRepository.getFileContents(uri.toString(), uploadJob.getCode()+"-"+uploaderRequest.getUploadJobs()
+                    .get(0).getRequestFileName());
+
             uploadJob.setRequesterName(uploaderRequest.getRequestInfo().getUserInfo().getUserName());
             AuditDetails auditDetails = AuditDetails.builder().createdBy(uploaderRequest.getRequestInfo().getUserInfo().getId().toString())
                     .createdTime(new Date().getTime())
@@ -131,13 +132,20 @@ public class DataUploadService {
         } */catch (RestClientException re) {
             logger.error("No .xls/.xlsx file found for: fileStoreId = " + uploadJob.getRequestFilePath()
                     + " AND tenantId = " + uploadJob.getTenantId());
-            throw new CustomException("400", "Unable to fetch file from filestore");
+            CustomException ex = new CustomException("400", "Unable to fetch file from filestore");
+            ex.initCause(re);
+            throw ex;
         } catch (DataAccessException de) {
             logger.error("Unable to persist job details onto DB", de);
-            throw new CustomException("400", "Unable to persist job details onto DB");
+
+            CustomException ex = new CustomException("400", "Unable to persist job details onto DB");
+            ex.initCause(de);
+            throw ex;
         } catch (Exception e) {
             logger.error("Error occurred while attempting to create job", e);
-            throw new CustomException("UNKNOWN_ERROR_OCCURRED", "UNKNOWN Error Occured");
+            CustomException ex = new CustomException("UNKNOWN_ERROR_OCCURRED", "UNKNOWN Error Occured");
+            ex.initCause(e);
+            throw ex;
         }
     }
 

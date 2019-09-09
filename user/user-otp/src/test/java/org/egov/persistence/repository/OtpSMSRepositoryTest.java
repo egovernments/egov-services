@@ -2,8 +2,8 @@ package org.egov.persistence.repository;
 
 import org.egov.domain.model.OtpRequest;
 import org.egov.domain.model.OtpRequestType;
-import org.egov.persistence.LogAwareKafkaTemplate;
 import org.egov.persistence.contract.SMSRequest;
+import org.egov.tracer.kafka.CustomKafkaTemplate;
 import org.hamcrest.CustomMatcher;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class OtpSMSRepositoryTest {
     private static final String SMS_TOPIC = "sms.topic";
     @Mock
-    private LogAwareKafkaTemplate<String, SMSRequest> kafkaTemplate;
+    private CustomKafkaTemplate<String, SMSRequest> kafkaTemplate;
     private OtpSMSRepository otpSMSRepository;
 
     @Before

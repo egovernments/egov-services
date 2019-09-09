@@ -93,6 +93,11 @@ public class BillQueryBuilder {
 			preparedStatementValues.add(searchBill.getService());
 		}
 		
+		if (searchBill.getBillNumber() != null) {
+			selectQuery.append(" AND bd.billno = ?");
+			preparedStatementValues.add(searchBill.getBillNumber());
+		}
+		
 		if(searchBill.getConsumerCode() != null){
 			selectQuery.append(" AND bd.consumercode = ?");
 			preparedStatementValues.add(searchBill.getConsumerCode());

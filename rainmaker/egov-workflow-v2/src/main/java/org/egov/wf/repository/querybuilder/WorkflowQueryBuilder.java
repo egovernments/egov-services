@@ -49,6 +49,8 @@ public class WorkflowQueryBuilder {
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";
 
+    private final String ORDERBY_CREATEDTIME = " ORDER BY result_offset.wf_createdTime DESC ";
+
     private final String LATEST_RECORD = " LIMIT 1";
 
     /**
@@ -79,6 +81,8 @@ public class WorkflowQueryBuilder {
 
 
         String query = addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
+        query = query + ORDERBY_CREATEDTIME;
+
         if(!criteria.getHistory())
             query = query + LATEST_RECORD;
 

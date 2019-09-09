@@ -37,6 +37,13 @@
             <version>1.4.6.RELEASE</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.netflix.netflix-commons/netflix-commons-util -->
+        <dependency>
+            <groupId>com.netflix.netflix-commons</groupId>
+            <artifactId>netflix-commons-util</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>tracer</artifactId>

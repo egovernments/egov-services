@@ -113,7 +113,8 @@ public class PayuGateway implements Gateway {
     @Override
     public Transaction fetchStatus(Transaction currentStatus, Map<String, String> params) {
         PayuResponse resp = objectMapper.convertValue(params, PayuResponse.class);
-        if( ! isNull(resp)){
+        if( ! isNull(resp.getHash()) && ! isNull(resp.getStatus()) && ! isNull(resp.getTxnid()) && ! isNull(resp.getAmount())
+            && !isNull(resp.getProductinfo()) && !isNull(resp.getFirstname()) ){
             resp.setTransaction_amount(resp.getAmount());
             String checksum = resp.getHash();
 

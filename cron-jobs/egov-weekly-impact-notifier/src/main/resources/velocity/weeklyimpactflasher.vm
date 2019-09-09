@@ -2,7 +2,7 @@
 	<br>Hi All,</br>
 </br>
 <br>DIGIT is starting to be adopted across the country rapidly through NUS. While this adoption takes place its important for all of us to be aware the extent of its adoption .
-</br></br><br>Here is the weekly emailer showcasing our impact of PT, PGR and TL across Punjab. We will add W&S data to the same down the lane.
+</br></br><br>Here is the weekly emailer showcasing our impact of PT, PGR, TL and W&S across Punjab.
 </br></br></br></br><table cellspacing="0" cellpadding="0" dir="ltr" border="1" style="table-layout:fixed;font-size:10pt;font-family:arial,sans,sans-serif;width:0px;border-collapse:collapse;border:none"><colgroup>
 <col width="172">
 	<col width="100">
@@ -152,8 +152,8 @@
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w4ptnoofprp</td>
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w3ptnoofprp</td>
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w2ptnoofprp</td>
-								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w2ptnoofprp</td>
-								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;background-color:rgb(208,224,227);text-align:right">$w1ptnoofprp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w1ptnoofprp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;background-color:rgb(208,224,227);text-align:right">$w0ptnoofprp</td>
 							</tr>
 							<tr style="height:21px">
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom"></td>
@@ -176,6 +176,37 @@
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w2tllicissued</td>
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w1tllicissued</td>
 								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;background-color:rgb(208,224,227);text-align:right">$w0tllicissued</td>
+							</tr>
+							<tr style="height:21px">
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom"></td>
+								<td rowspan="1" colspan="6" style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;font-weight:bold;text-align:center">Water and Sewerage</td>
+							</tr>
+							<tr style="height:21px">
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0);overflow:hidden;padding:2px 3px;vertical-align:bottom">ULB Covered</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w5wsulbc</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w4wsulbc</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w3wsulbc</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w2wsulbc</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w1wsulbc</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;background-color:rgb(208,224,227);text-align:right">$w0wsulbc</td>
+							</tr>
+							<tr style="height:21px">
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0);overflow:hidden;padding:2px 3px;vertical-align:bottom">Revenue Collected (INR Crs)</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w5wsrevcoll</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w4wsrevcoll</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w3wsrevcoll</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w2wsrevcoll</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w1wsrevcoll</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;background-color:rgb(208,224,227);text-align:right">$w0wsrevcoll</td>
+							</tr>
+							<tr style="height:21px">
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0);overflow:hidden;padding:2px 3px;vertical-align:bottom">Services Applied</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w5wsserapp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w4wsserapp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w3wsserapp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w2wsserapp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;text-align:right">$w1wsserapp</td>
+								<td style="border-width:1px;border-style:solid;border-color:rgb(204,204,204) rgb(0,0,0) rgb(0,0,0) rgb(204,204,204);overflow:hidden;padding:2px 3px;vertical-align:bottom;background-color:rgb(208,224,227);text-align:right">$w0wsserapp</td>
 							</tr>
 						</tbody>
 					</table>

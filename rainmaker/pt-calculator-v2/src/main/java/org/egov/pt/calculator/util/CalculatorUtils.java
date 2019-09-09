@@ -1,6 +1,7 @@
 package org.egov.pt.calculator.util;
 
 import java.math.BigDecimal;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -10,19 +11,25 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pt.calculator.service.ReceiptService;
 import org.egov.pt.calculator.web.models.Assessment;
 import org.egov.pt.calculator.web.models.DemandDetailAndCollection;
 import org.egov.pt.calculator.web.models.GetBillCriteria;
+import org.egov.pt.calculator.web.models.collections.Receipt;
+import org.egov.pt.calculator.web.models.demand.BillAccountDetail;
 import org.egov.pt.calculator.web.models.demand.Demand;
 import org.egov.pt.calculator.web.models.demand.DemandDetail;
 import org.egov.pt.calculator.web.models.property.AuditDetails;
+import org.egov.pt.calculator.web.models.property.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
-import static org.egov.pt.calculator.util.CalculatorConstants.RECEIPT_STATUS_APPROVED;
+import static org.egov.pt.calculator.util.CalculatorConstants.ALLOWED_RECEIPT_STATUS;
+import static org.egov.pt.calculator.util.CalculatorConstants.SERVICE_FIELD_VALUE_PT;
 import static org.egov.pt.calculator.util.CalculatorConstants.STATUS_FIELD_FOR_SEARCH_URL;
 
 @Component
@@ -31,6 +38,13 @@ public class CalculatorUtils {
 
 	@Autowired
 	private Configurations configurations;
+
+	@Autowired
+	private ReceiptService rcptService;
+
+	@Value("${customization.allowdepreciationonnoreceipts:false}")
+	Boolean allowDepreciationsOnNoReceipts;
+
 
 	private Map<String, Integer> taxHeadApportionPriorityMap;
 
@@ -58,6 +72,27 @@ public class CalculatorUtils {
 
 		MasterDetail mstrDetail = MasterDetail.builder().name(CalculatorConstants.FINANCIAL_YEAR_MASTER)
 				.filter("[?(@." + CalculatorConstants.FINANCIAL_YEAR_RANGE_FEILD_NAME + " IN [" + assesmentYear + "])]")
+				.build();
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(CalculatorConstants.FINANCIAL_MODULE)
+				.masterDetails(Arrays.asList(mstrDetail)).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(moduleDetail)).tenantId(tenantId)
+				.build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+
+	/**
+	 * Prepares and returns Mdms search request with financial master criteria
+	 *
+	 * @param requestInfo
+	 * @param assesmentYears
+	 * @return
+	 */
+	public MdmsCriteriaReq getFinancialYearRequest(RequestInfo requestInfo, Set<String> assesmentYears, String tenantId) {
+
+		String assessmentYearStr = StringUtils.join(assesmentYears,",");
+		MasterDetail mstrDetail = MasterDetail.builder().name(CalculatorConstants.FINANCIAL_YEAR_MASTER)
+				.filter("[?(@." + CalculatorConstants.FINANCIAL_YEAR_RANGE_FEILD_NAME + " IN [" + assessmentYearStr + "]" +
+						" && @.module== '"+SERVICE_FIELD_VALUE_PT+"')]")
 				.build();
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(CalculatorConstants.FINANCIAL_MODULE)
 				.masterDetails(Arrays.asList(mstrDetail)).build();
@@ -146,7 +181,7 @@ public class CalculatorUtils {
 				.append(CalculatorConstants.SEPARATER).append(CalculatorConstants.CONSUMER_CODE_SEARCH_FIELD_NAME)
 				.append(consumerCodes.toString().replace("[", "").replace("]", ""))
 				.append(CalculatorConstants.SEPARATER).append(STATUS_FIELD_FOR_SEARCH_URL)
-				.append(RECEIPT_STATUS_APPROVED);
+				.append(ALLOWED_RECEIPT_STATUS);
 	}
 
 	/**
@@ -176,7 +211,7 @@ public class CalculatorUtils {
 	/**
 	 * method to create demandsearch url with demand criteria
 	 *
-	 * @param criteria
+	 * @param assessment
 	 * @return
 	 */
 	public StringBuilder getDemandSearchUrl(Assessment assessment) {
@@ -291,7 +326,7 @@ public class CalculatorUtils {
 
  		StringBuilder query = new StringBuilder("SELECT * FROM eg_pt_assessment a1 INNER JOIN "
 
- 				+ "(select Max(createdtime) as maxtime, propertyid, assessmentyear from eg_pt_assessment group by propertyid, assessmentyear) a2 "
+ 				+ "(select Max(createdtime) as maxtime, propertyid, assessmentyear from eg_pt_assessment WHERE Active = TRUE group by propertyid, assessmentyear) a2 "
 
  				+ "ON a1.createdtime=a2.maxtime and a1.propertyid=a2.propertyid where a1.tenantId=? ");
 
@@ -385,5 +420,61 @@ public class CalculatorUtils {
 		}
 
 
+	/**
+	 * Returns the applicable total tax amount to be paid after the receipt
+	 *
+	 * @param receipt
+	 * @return
+	 */
+	public BigDecimal getTaxAmtFromReceiptForApplicablesGeneration(Receipt receipt) {
+		BigDecimal taxAmt = BigDecimal.ZERO;
+		BigDecimal amtPaid = BigDecimal.ZERO;
+		List<BillAccountDetail> billAccountDetails = receipt.getBill().get(0).getBillDetails().get(0).getBillAccountDetails();
+		for (BillAccountDetail detail : billAccountDetails) {
+			if (CalculatorConstants.TAXES_TO_BE_CONSIDERD.contains(detail.getTaxHeadCode()))
+			{
+				taxAmt = taxAmt.add(detail.getAmount());
+				amtPaid = amtPaid.add(detail.getAdjustedAmount());
+			}
+		}
+		return taxAmt.subtract(amtPaid);
+	}
+
+
+	/**
+	 * Returns the current end of the day epoch time for the given epoch time
+	 * @param epoch The epoch time for which end of day time is required
+	 * @return End of day epoch time for the given time
+	 */
+	public static Long getEODEpoch(Long epoch){
+		LocalDate date =
+				Instant.ofEpochMilli(epoch).atZone(ZoneId.of(ZoneId.SHORT_IDS.get("IST"))).toLocalDate();
+		LocalDateTime endOfDay = LocalDateTime.of(date, LocalTime.MAX);
+		Long eodEpoch = endOfDay.atZone(ZoneId.of(ZoneId.SHORT_IDS.get("IST"))).toInstant().toEpochMilli();
+		return eodEpoch;
+	}
+
+	/**
+	 * Check if Depreciation is allowed for this Property.
+	 * In case there is no receipt the depreciation will be allowed
+	 * @param assessmentYear The year for which existing receipts needs to be checked
+	 * @param tenantId The tenantid of the property
+	 * @param propertyId The property id
+	 * @param requestInfoWrapper The incoming requestInfo
+	 */
+
+	public Boolean isAssessmentDepreciationAllowed(String assessmentYear, String tenantId, String propertyId,
+					RequestInfoWrapper requestInfoWrapper) {
+		boolean isDepreciationAllowed = false;
+		if (allowDepreciationsOnNoReceipts) {
+			List<Receipt> receipts = rcptService.getReceiptsFromPropertyAndFY(assessmentYear,tenantId, propertyId,
+					requestInfoWrapper);
+
+			if (receipts.size() == 0)
+				isDepreciationAllowed = true;
+		}
+
+		return isDepreciationAllowed;
+	}
 
 }

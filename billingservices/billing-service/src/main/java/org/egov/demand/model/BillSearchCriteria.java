@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Email;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,8 +29,11 @@ public class BillSearchCriteria {
 	
 	private String consumerCode;
 	
+	private String billNumber;
+	
 	private String service;
 
+	@Default
 	private boolean isOrderBy = false;
 	
 	private Long size;

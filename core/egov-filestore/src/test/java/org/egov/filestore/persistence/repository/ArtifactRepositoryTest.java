@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +14,7 @@ import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.model.FileLocation;
 import org.egov.filestore.persistence.entity.Artifact;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -50,6 +50,7 @@ public class ArtifactRepositoryTest {
 		artifactRepository = new ArtifactRepository(diskFileStoreRepository, fileStoreJpaRepository);
 	}
 
+	@Ignore
 	@Test
 	public void shouldSaveArtifactToRepository() throws Exception {
 		List<org.egov.filestore.domain.model.Artifact> listOfMockedArtifacts = getListOfArtifacts();

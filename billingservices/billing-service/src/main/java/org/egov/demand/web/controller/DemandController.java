@@ -59,12 +59,14 @@ import org.egov.demand.web.contract.factory.ResponseFactory;
 import org.egov.demand.web.validator.DemandValidator;
 import org.egov.demand.web.validator.DemandValidatorV1;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -103,25 +105,25 @@ public class DemandController {
 
 	@PostMapping("_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest) {
+	public ResponseEntity<?> create(@RequestHeader HttpHeaders headers, @RequestBody @Valid DemandRequest demandRequest) {
 
 		log.info("the demand request object : " + demandRequest);
 		/*
 		 * validating master data using mdms and user data
 		 */
-		demandValidatorV1.validatedemandForCreate(demandRequest, true);
+		demandValidatorV1.validatedemandForCreate(demandRequest, true, headers);
 		DemandResponse demandResponse = demandService.create(demandRequest);
 
 		return new ResponseEntity<>(demandResponse, HttpStatus.CREATED);
 	}
 
 	@PostMapping("_update")
-	public ResponseEntity<?> update(@RequestBody @Valid DemandRequest demandRequest) {
+	public ResponseEntity<?> update(@RequestHeader HttpHeaders headers, @RequestBody @Valid DemandRequest demandRequest) {
 
 		/*
 		 * validating master data using mdms and user data
 		 */
-		demandValidatorV1.validateForUpdate(demandRequest);
+		demandValidatorV1.validateForUpdate(demandRequest, headers);
 		return new ResponseEntity<>(demandService.updateAsync(demandRequest), HttpStatus.CREATED);
 	}
 

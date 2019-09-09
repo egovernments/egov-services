@@ -7,13 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -61,9 +56,79 @@ public class DataUploadUtils {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-		
 
-	public Document readExcelFile(InputStream stream) throws IOException, InvalidFormatException {
+    public double getCellValueAsDouble(Cell cell) throws InvalidFormatException {
+
+        if (cell.getCellTypeEnum() == CellType.NUMERIC)
+        {
+            return cell.getNumericCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.STRING) {
+            return Double.parseDouble(cell.getStringCellValue());
+        } else if (cell.getCellTypeEnum() == CellType.BLANK || cell.getCellTypeEnum() == CellType._NONE) {
+            return 0;
+        } else {
+            throw new InvalidFormatException("Cannot read int from a " + cell.getCellTypeEnum().toString() + " field type");
+        }
+    }
+
+    public String getCellValueAsString(Cell cell) throws InvalidFormatException {
+        if (cell.getCellTypeEnum() == CellType.NUMERIC)
+        {
+            return Double.toString(cell.getNumericCellValue());
+        } else if (cell.getCellTypeEnum() == CellType.STRING || cell.getCellTypeEnum() == CellType.FORMULA) {
+            return cell.getStringCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+            return Boolean.toString(cell.getBooleanCellValue());
+        } else if (cell.getCellTypeEnum() == CellType.BLANK || cell.getCellTypeEnum() == CellType._NONE) {
+            return "";
+        }
+        else {
+            throw new InvalidFormatException("Cannot read string from a " + cell.getCellTypeEnum().toString() + " field type");
+        }
+    }
+
+    public Boolean getCellValueAsBoolean(Cell cell) throws InvalidFormatException {
+        if (cell.getCellTypeEnum() == CellType.NUMERIC)
+        {
+            return cell.getNumericCellValue() != 0;
+        } else if (cell.getCellTypeEnum() == CellType.STRING) {
+            String val = cell.getStringCellValue().toLowerCase().trim();
+            if (val.equals("true") || val.equals("yes") || val.equals("on")) {
+                return true;
+            } else if (val.equals("false") || val.equals("no") || val.equals("off") || val.isEmpty()) {
+                return false;
+            } else {
+                throw new InvalidFormatException("Unsupported boolean value " + cell.getStringCellValue() + " field type");
+            }
+        } else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+            return cell.getBooleanCellValue();
+        } else if (cell.getCellTypeEnum() == CellType.BLANK || cell.getCellTypeEnum() == CellType._NONE) {
+            return false;
+        } else {
+            throw new InvalidFormatException("Cannot read bool from a " + cell.getCellTypeEnum().toString() + " field type");
+        }
+    }
+
+    public String getCleanedName(String name) {
+        return name.replaceAll("[^a-zA-Z0-9]","").toUpperCase();
+    }
+
+    public Map<String, Integer> getColumnIndexMap(Row firstRow) throws InvalidFormatException {
+        Map<String, Integer> columnToIndex = new HashMap<>();
+
+        for (int i=0; i < firstRow.getLastCellNum(); i++) {
+            String columnName = getCellValueAsString(firstRow.getCell(i));
+            if (columnName == null || columnName.isEmpty()) {
+                continue;
+            }
+            columnName = getCleanedName(columnName);
+
+            columnToIndex.put(columnName, i);
+        }
+        return columnToIndex;
+    }
+
+    public Document readExcelFile(InputStream stream) throws IOException, InvalidFormatException {
 		try(Workbook wb = WorkbookFactory.create(stream)) {
             Sheet sheet = wb.getSheetAt(0);
 

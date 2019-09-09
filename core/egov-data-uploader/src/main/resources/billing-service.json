@@ -79,7 +79,7 @@
           "tenantIdPaths": [
             "$.Demands.tenantId"
           ],
-          "url": "https://egov-micro-dev.egovernments.org/billing-service/demand/_create",
+          "url": "http://billing-service:8080/billing-service/demand/_create",
           "additionalResFields": {
             "$.Demands.*.id[0]": "DemandId"
           }

@@ -485,7 +485,7 @@ public class DataUploadService {
             }
         }
 
-        logger.info("Adding tenantId...");
+        logger.debug("Adding tenantId...");
         for (String path : request.getTenantIdPaths()) {
             StringBuilder expression = new StringBuilder();
             String key = dataUploadUtils.getJsonPathKey(path, expression);
@@ -536,8 +536,8 @@ public class DataUploadService {
 
 
     public Object hitApi(String request, String url) throws RestClientException {
-        logger.info("Request: " + request);
-        logger.info("URI: " + url);
+        logger.debug("Request: " + request);
+        logger.debug("URI: " + url);
         try {
             Map<String, Object> data = objectMapper.readValue(request, Map.class);
             return dataUploadRepository.doApiCall(data, url);
@@ -648,7 +648,7 @@ public class DataUploadService {
             throws IOException {
 
         UploadJob uploadJob = uploaderRequest.uploadJobs.get(0);
-        logger.info("filteredList: " + filteredList);
+        logger.debug("filteredList: " + filteredList);
         List<Map<String, Object>> filteredListObjects = new ArrayList<>();
         for (int k = 0; k < filteredList.size(); k++) {
             for (int j = 0; j < columnHeaders.size(); j++) {
@@ -712,7 +712,7 @@ public class DataUploadService {
         for (Map map : filteredListObjects) {
             deepMerge(requestMap, map, uniqueKeysForInnerObject);
         }
-        logger.info("requestMap: " + requestMap);
+        logger.debug("requestMap: " + requestMap);
         try {
             requestMap.put("RequestInfo", uploaderRequest.getRequestInfo());
         } catch (Exception e) {
@@ -738,9 +738,9 @@ public class DataUploadService {
             } else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
                 logger.debug("Instance of list: ");
                 List originalChild = (List) original.get(key);
-                logger.info("originalChild: " + originalChild);
+                logger.debug("originalChild: " + originalChild);
                 List newChild = (List) newMap.get(key);
-                logger.info("newChild: " + newChild);
+                logger.debug("newChild: " + newChild);
                 if (originalChild.isEmpty() || newChild.isEmpty()) {
                     continue;
                 }
@@ -781,7 +781,7 @@ public class DataUploadService {
                     }
                 }
             } else {
-                logger.info("Adding new key: " + key + " value: " + newMap.get(key) + " to original");
+                logger.debug("Adding new key: " + key + " value: " + newMap.get(key) + " to original");
                 original.put(key, newMap.get(key));
             }
         }

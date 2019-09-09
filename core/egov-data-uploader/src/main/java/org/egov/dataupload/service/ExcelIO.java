@@ -103,6 +103,9 @@ public class ExcelIO implements FileIO {
                                         logger.info("Couldn't parse date", e);
                                         dataList.add(cell.getStringCellValue());
                                     }
+                                } else if(validateEpoch(cell.getStringCellValue())) {
+                                	logger.info("Adding epoch....");
+                                	dataList.add(Long.valueOf(cell.getStringCellValue()));
                                 } else if (!cell.getStringCellValue().trim().isEmpty()) {
                                     logger.trace("string: " + cell.getStringCellValue());
                                     dataList.add(cell.getStringCellValue());
@@ -171,6 +174,19 @@ public class ExcelIO implements FileIO {
             isValid = true;
 
         return isValid;
+    }
+    
+    private boolean validateEpoch(String value) {
+    	try {
+    		if(value.length() == 13 || value.length() == 10) {
+    			Long.valueOf(value);
+    			return true;
+    		}
+    	}catch(Exception e) {
+    		return false;
+    	}
+    	
+    	return false;
     }
 
 

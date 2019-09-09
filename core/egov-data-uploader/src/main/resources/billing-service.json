@@ -22,8 +22,7 @@
               "authToken": "51f84bcd-2819-4456-a5b5-10fe644cc40a",
               "correlationId": "dd114b8a-a9bb-4933-802a-b40484da487c"
             },
-            "Demands": [
-              {
+            "Demands": {
                 "tenantId": "tenantId",
                 "consumerCode": "consumerCode",
                 "consumerType": "consumerType",
@@ -42,7 +41,6 @@
                 ],
                 "minimumAmountPayable": 1
               }
-            ]
           },
           "excelHeadersToRequestMap": {
             "Consumer Code": [

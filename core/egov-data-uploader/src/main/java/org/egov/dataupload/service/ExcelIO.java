@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -179,17 +180,20 @@ public class ExcelIO implements FileIO {
     }
     
     private boolean validateEpoch(String value) {
-    	logger.info("Value to Epoch: "+value);
     	try {
     		if(value.length() == 13 || value.length() == 10) {
+    			Long.valueOf(value);
+    			return true;
+    		}else {
+    	        DecimalFormat df = new DecimalFormat("#");
+    	        df.setMaximumFractionDigits(0);
+    	        df.format(Double.valueOf(value));
     			Long.valueOf(value);
     			return true;
     		}
     	}catch(Exception e) {
     		return false;
-    	}
-    	
-    	return false;
+    	}    	
     }
 
 

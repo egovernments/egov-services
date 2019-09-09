@@ -17,7 +17,7 @@ public ColumnDetail() {
 		
 	}
 
-  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory,String rowTotal,String columnTotal, String initialValue, String minValue, String maxValue) {
+  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isLocalisationRequired,String localisationPrefix,Boolean isMandatory,String rowTotal,String columnTotal, String initialValue, String minValue, String maxValue) {
 
 		super();
 		this.showColumn = showColumn;
@@ -32,7 +32,8 @@ public ColumnDetail() {
 		this.initialValue = initialValue;
         this.maxValue = maxValue;
         this.minValue = minValue;
-
+        this.isLocalisationRequired=isLocalisationRequired;
+        this.localisationPrefix=localisationPrefix;
   }	
 
   public String getRowTotal() {
@@ -119,6 +120,12 @@ public ColumnDetail(String label, TypeEnum type, String name) {
 
   @JsonProperty("isMandatory")
   private Boolean isMandatory = false;
+
+  @JsonProperty("isLocalisationRequired")
+  private Boolean isLocalisationRequired = false;
+
+  @JsonProperty("localisationPrefix")
+  private String localisationPrefix = "";
 
   @JsonProperty("showColumn")
   private Boolean showColumn = true;
@@ -305,5 +312,6 @@ public ColumnDetail label(String label) {
   public void setMaxValue(String maxValue) {
     this.maxValue = maxValue;
   }
-
+  public Boolean getLocalisationRequired(){return isLocalisationRequired;}
+  public String getLocalisationPrefix(){return localisationPrefix;}
 }

@@ -83,12 +83,14 @@ public class ExcelIO implements FileIO {
                     } else {
                         switch (cell.getCellTypeEnum()) {
                             case NUMERIC:
-                                if (CellType.NUMERIC == cell.getCellTypeEnum()) {
-                                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                                        dataList.add(format.format(new Date(cell.getDateCellValue().getTime())));
-                                    } else {
-                                        dataList.add(dataFormatter.formatCellValue(cell));
-                                    }
+                                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                                    dataList.add(format.format(new Date(cell.getDateCellValue().getTime())));
+                                } else {
+                                	if(validateEpoch(dataFormatter.formatCellValue(cell))) {
+                                    	logger.info("Adding epoch: "+dataFormatter.formatCellValue(cell));
+                                    	dataList.add(Long.valueOf(dataFormatter.formatCellValue(cell)));
+                                	}
+                                    dataList.add(dataFormatter.formatCellValue(cell));
                                 }
                                 break;
                             case STRING:
@@ -104,7 +106,7 @@ public class ExcelIO implements FileIO {
                                         dataList.add(cell.getStringCellValue());
                                     }
                                 } else if(validateEpoch(cell.getStringCellValue())) {
-                                	logger.info("Adding epoch....");
+                                	logger.info("Adding epoch: "+cell.getStringCellValue());
                                 	dataList.add(Long.valueOf(cell.getStringCellValue()));
                                 } else if (!cell.getStringCellValue().trim().isEmpty()) {
                                     logger.trace("string: " + cell.getStringCellValue());
@@ -177,6 +179,7 @@ public class ExcelIO implements FileIO {
     }
     
     private boolean validateEpoch(String value) {
+    	logger.info("Value to Epoch: "+value);
     	try {
     		if(value.length() == 13 || value.length() == 10) {
     			Long.valueOf(value);

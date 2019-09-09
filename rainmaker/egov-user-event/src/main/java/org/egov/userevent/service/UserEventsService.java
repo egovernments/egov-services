@@ -297,13 +297,13 @@ public class UserEventsService {
 			if(null != event.getEventDetails()) {
 				if(event.getEventType().equals(UserEventsConstants.MEN_MDMS_BROADCAST_CODE)) {				
 					if(null != event.getEventDetails().getFromDate()) {
-						if((event.getEventDetails().getFromDate() <= utils.getTomorrowsEpoch())) {
+						if((event.getEventDetails().getFromDate() <= utils.getTomorrowsEpoch()) && event.getStatus().equals(Status.INACTIVE)) {
 							event.setStatus(Status.ACTIVE);
 							tobeAdded = true;
 						}
 					}
-					if(null != event.getEventDetails().getToDate()) {
-						if((event.getEventDetails().getToDate() < utils.getTomorrowsEpoch())) {
+					if(null != event.getEventDetails().getToDate() ) {
+						if((event.getEventDetails().getToDate() < utils.getTomorrowsEpoch() && event.getStatus().equals(Status.ACTIVE))) {
 							event.setStatus(Status.INACTIVE);
 							tobeAdded = true;
 						}
@@ -313,12 +313,14 @@ public class UserEventsService {
 						if(event.getEventDetails().getFromDate().equals(event.getEventDetails().getToDate())) {
 							Long dateInSecs = event.getEventDetails().getFromDate() / 1000;
 							Long currDateInSecs = new Date().getTime() / 1000;
-							if(((dateInSecs - 86400) < currDateInSecs) && (currDateInSecs < dateInSecs)) {
+							if((((dateInSecs - 86400) < currDateInSecs) && (currDateInSecs < dateInSecs)) && event.getStatus().equals(Status.INACTIVE)) {
 								event.setStatus(Status.ACTIVE);
 								tobeAdded = true;
 							}else {
-								event.setStatus(Status.INACTIVE);
-								tobeAdded = true;
+								if(event.getStatus().equals(Status.ACTIVE)) {
+									event.setStatus(Status.INACTIVE);
+									tobeAdded = true;
+								}
 							}
 						}// UI sends EOD epoch, which makes fromDate and toDate same incase of 1 day event, which is why the range is manually calculated. Fix at UI needed.
 					}

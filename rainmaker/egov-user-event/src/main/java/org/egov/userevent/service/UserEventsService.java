@@ -335,8 +335,10 @@ public class UserEventsService {
 					}
 				}
 				
-				if(tobeAdded)
+				if(tobeAdded) {
+					event.setInternallyUpdted(true);
 					eventsTobeUpdated.add(event);
+				}
 			}
 		});
 		if(!CollectionUtils.isEmpty(eventsTobeUpdated)) {
@@ -464,8 +466,18 @@ public class UserEventsService {
 			event.setRecepientEventMap(recepientEventList);
 
 			AuditDetails auditDetails = event.getAuditDetails();
-			auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
-			auditDetails.setLastModifiedTime(new Date().getTime());
+			if(null != event.getInternallyUpdted()) {
+				if(event.getInternallyUpdted()) {
+					auditDetails = event.getAuditDetails();
+				}else {
+					auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
+					auditDetails.setLastModifiedTime(new Date().getTime());
+				}
+			}else {
+				auditDetails.setLastModifiedBy(request.getRequestInfo().getUserInfo().getUuid());
+				auditDetails.setLastModifiedTime(new Date().getTime());
+			}
+			
 
 			event.setAuditDetails(auditDetails);
 

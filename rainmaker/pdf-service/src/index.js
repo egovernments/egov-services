@@ -280,7 +280,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
 }
 catch(error)
 {
-  logger.error(error.stack);
+  logger.error(error.stack || error);
   res.status(500);
   res.json({
     ResponseInfo:requestInfo,

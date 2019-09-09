@@ -50,17 +50,18 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
         variableTovalueMap[directArr[i].jPath]=fun(directArr[i].val[0]); 
       }
       else if (directArr[i].type == "image") {
-        axios.get(directArr[i].url, {
-          responseType: 'arraybuffer'
-      })
-        .then((response) => {
-           variableTovalueMap[directArr[i].jPath]="data:" + response.headers["content-type"] + ";base64,"+new Buffer(response.data).toString('base64');
-          //  logger.info("loaded image: "+directArr[i].url);
-        })
-        .catch((error) => {
+        try{
+          var response=await axios.get(directArr[i].url, {
+            responseType: 'arraybuffer'
+          })
+          variableTovalueMap[directArr[i].jPath]="data:" + response.headers["content-type"] + ";base64,"+new Buffer(response.data).toString('base64');
+            //  logger.info("loaded image: "+directArr[i].url);
+        }
+        catch(error)
+        {
           logger.error(error.stack || error);
-          logger.error("error while loading image from: "+directArr[i].url);
-        });
+          throw {message:`error while loading image from: ${directArr[i].url}`}; 
+        };
       }
       else if (directArr[i].type == "array") {   
         let arrayOfOwnerObject = [];

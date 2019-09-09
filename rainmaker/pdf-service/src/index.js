@@ -71,7 +71,7 @@ let borderLayout = {
  * @param {*} errorCallback - callback when error
  * @param {*} tenantId - tenantID
  */
- function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId,starttime) {
+ function createPdfBinary(key,listDocDefinition, successCallback, errorCallback,tenantId,starttime,totalobjectcount) {
    try {
     var fontDescriptors = {
       Roboto: {
@@ -118,10 +118,10 @@ let borderLayout = {
                   var jobid=`${key}${fileNameAppend}`;
 
                   logger.info("PDF uploaded to filestore");
-                  insertStoreIds(jobid,listOfFilestoreIds,tenantId,starttime,successCallback,errorCallback);
+                  insertStoreIds(jobid,listOfFilestoreIds,tenantId,starttime,successCallback,errorCallback,totalobjectcount);
                 }
                 }).catch(err=>{
-                    logger.error(err.stack);
+                    logger.error(err.stack || err);
                     errorCallback({message:"error occurred while uploading pdf: "+((typeof err)==='string')?err:err.message});
                   });
               });
@@ -149,7 +149,7 @@ let borderLayout = {
         });
     }
   } catch (err) {
-    logger.error(err.stack);
+    logger.error(err.stack || err);
     errorCallback({message:" error occured while creating pdf: "+((typeof err)==='string')?err:err.message});
   }
 }
@@ -196,10 +196,12 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
     let isCommonTableBorderRequired=get(dataconfig,"DataConfigs.isCommonTableBorderRequired");
     let formatObjectArrayObject=[];
     let formatConfigByFile=[];
+    let totalobjectcount=0;
     let countOfObjectsInCurrentFile=0;
     let moduleObjectsArray=checkifNullAndSetValue(jp.query(req.body,baseKeyPath),[],baseKeyPath);
       if(Array.isArray(moduleObjectsArray) && (moduleObjectsArray.length>0))
       {
+        totalobjectcount=moduleObjectsArray.length;
         for(var i=0, len=moduleObjectsArray.length; i < len; i++)
         {
           let moduleObject=moduleObjectsArray[i];
@@ -259,9 +261,10 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           message: response.message,
           filestoreIds:response.filestoreIds,
           jobid:response.jobid,
-          starttime:response.starttime,
+          createdtime:response.starttime,
           endtime:response.endtime,
-          tenantid:response.tenantid
+          tenantid:response.tenantid,
+          totalcount:response.totalcount
         });
       },
       error => {
@@ -271,7 +274,7 @@ app.post("/pdf/v1/_create", asyncHandler(async (req, res)=> {
           ResponseInfo:requestInfo,
           message: "error in createPdfBinary "+error.message
         });
-      },tenantId,starttime
+      },tenantId,starttime,totalobjectcount
     );
    }
 }
@@ -322,7 +325,7 @@ app.post("/pdf/v1/_search", asyncHandler(async (req, res)=> {
   }
   catch(error)
   {
-    logger.error(error.stack);
+    logger.error(error.stack || error);
     res.status(500);
     res.json({
       ResponseInfo:requestInfo,

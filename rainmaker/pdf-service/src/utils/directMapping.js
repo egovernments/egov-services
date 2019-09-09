@@ -1,4 +1,6 @@
 import get from "lodash/get";
+import logger from "../config/logger";
+import axios from 'axios';
 import {findAndUpdateLocalisation,getDateInRequiredFormat,checkifNullAndSetValue} from "./commons";
 
 var jp = require('jsonpath');
@@ -23,6 +25,7 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
         val: item.value && checkifNullAndSetValue(jp.query(req,item.value.path),"NA",item.value.path),
         valJsonPath: item.value && item.value.path,
         type: item.type,
+        url: item.url,
         format: item.format,
         localisation: item.localisation,
         uCaseNeeded: item.isUpperCaseRequired
@@ -45,6 +48,19 @@ export const directMapping=async(req,dataconfig,variableTovalueMap,localisationM
       else if (directArr[i].type == "function") {
         var fun = Function("type",directArr[i].format);
         variableTovalueMap[directArr[i].jPath]=fun(directArr[i].val[0]); 
+      }
+      else if (directArr[i].type == "image") {
+        axios.get(directArr[i].url, {
+          responseType: 'arraybuffer'
+      })
+        .then((response) => {
+           variableTovalueMap[directArr[i].jPath]="data:" + response.headers["content-type"] + ";base64,"+new Buffer(response.data).toString('base64');
+          //  logger.info("loaded image: "+directArr[i].url);
+        })
+        .catch((error) => {
+          logger.error(error.stack || error);
+          logger.error("error while loading image from: "+directArr[i].url);
+        });
       }
       else if (directArr[i].type == "array") {   
         let arrayOfOwnerObject = [];

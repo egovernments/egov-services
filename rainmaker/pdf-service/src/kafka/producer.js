@@ -21,7 +21,7 @@ producer.on("ready", function() {
 
 producer.on("error", function(err) {
   logger.error("Producer is in error state");
-  logger.error(err.stack);
+  logger.error(err.stack || err);
 });
 
 export default producer;

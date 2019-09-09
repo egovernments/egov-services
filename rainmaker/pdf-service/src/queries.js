@@ -27,7 +27,7 @@ export const getFileStoreIds = (jobid,tenantId,callback) => {
       }
       pool.query(searchquery, queryparams, (error, results) => {
       if (error) {
-        logger.error(error.stack);
+        logger.error(error.stack || error);
         callback({status:500,message:`error occured while searching records in DB : ${error.message}`});
       }
       else
@@ -37,7 +37,7 @@ export const getFileStoreIds = (jobid,tenantId,callback) => {
         {
           var searchresult=[];
           results.rows.map(crow=>{
-            searchresult.push({filestoreids:crow.filestoreids,jobid:crow.jobid,tenantid:crow.tenantid,createdtime:crow.createdtime,endtime:crow.endtime})
+            searchresult.push({filestoreids:crow.filestoreids,jobid:crow.jobid,tenantid:crow.tenantid,createdtime:crow.createdtime,endtime:crow.endtime,totalcount:crow.totalcount})
           }
           );
           logger.info(results.rows.length+" matching records found in search");
@@ -52,23 +52,23 @@ export const getFileStoreIds = (jobid,tenantId,callback) => {
     });
   }
 
-  export const insertStoreIds = (jobid,filestoreids,tenantId,starttime,successCallback,errorCallback) => {
+  export const insertStoreIds = (jobid,filestoreids,tenantId,starttime,successCallback,errorCallback,totalcount) => {
 
       var payloads = [];
       var endtime=new Date().getTime();
       payloads.push({
         topic: createJobKafkaTopic,
-        messages: JSON.stringify({jobid,filestoreids,tenantId,createdtime:starttime,endtime})
+        messages: JSON.stringify({jobid,filestoreids,tenantId,createdtime:starttime,endtime,totalcount})
       });
       producer.send(payloads, function(err, data) {
 
         if(err){
-          logger.error(err.stack);
+          logger.error(err.stack || err);
           errorCallback({message:`error while publishing to kafka: ${err.message}`});
         }
         else{
           logger.info("jobid: "+jobid+": published to kafka successfully");
-          successCallback({message:"Success",jobid:jobid,filestoreIds:filestoreids,tenantid:tenantId,starttime,endtime});
+          successCallback({message:"Success",jobid:jobid,filestoreIds:filestoreids,tenantid:tenantId,starttime,endtime,totalcount});
         }
       });
   }

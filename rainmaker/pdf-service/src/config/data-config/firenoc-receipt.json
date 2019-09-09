@@ -19,6 +19,11 @@
                          }
                       },
                       {
+                        "variable": "variable32",                        
+                        "url":"https://s3.ap-south-1.amazonaws.com/pb-egov-assets/pb.amritsar/logo.png",
+                        "type":"image"
+                      },   
+                      {
                         "variable": "variable3",
                         "value": {
                              "path":"$.fireNOCDetails.applicantDetails.ownerShipType"                              

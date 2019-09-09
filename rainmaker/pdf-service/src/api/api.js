@@ -23,7 +23,7 @@ export const httpRequest= async(
     });
     
 try {
-   const response =  await instance.post(endPoint,requestBody);
+  const response =  await instance.post(endPoint,requestBody);
   const responseStatus = parseInt(response.status, 10);
   if (responseStatus === 200 || responseStatus === 201) {
      //console.log(response.data);
@@ -31,7 +31,7 @@ try {
     }
 } catch (error) {
   var errorResponse = error.response;
-  logger.error(error.stack) ; 
+  logger.error(error.stack || error) ; 
   throw {message:"error occured while making request to "+endPoint+": response returned by call :"+(errorResponse ? parseInt(errorResponse.status, 10):error.message)};  
 }
     

@@ -87,11 +87,12 @@ public class ExcelIO implements FileIO {
                                 if (HSSFDateUtil.isCellDateFormatted(cell)) {
                                     dataList.add(format.format(new Date(cell.getDateCellValue().getTime())));
                                 } else {
-                                	if(validateEpoch(dataFormatter.formatCellValue(cell))) {
+                                    dataList.add(cell.getNumericCellValue());
+/*                                	if(validateEpoch(dataFormatter.formatCellValue(cell))) {
                                     	logger.info("Adding epoch: "+dataFormatter.formatCellValue(cell));
                                     	dataList.add(Long.valueOf(dataFormatter.formatCellValue(cell)));
                                 	}
-                                    dataList.add(dataFormatter.formatCellValue(cell));
+                                    dataList.add(dataFormatter.formatCellValue(cell));*/
                                 }
                                 break;
                             case STRING:

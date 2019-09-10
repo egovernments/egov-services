@@ -89,8 +89,9 @@ public class ExcelIO implements FileIO {
                                 } else {
                                 	if(validateEPoch(String.valueOf(cell.getNumericCellValue()))) {
                                         dataList.add(getEpoch(String.valueOf(cell.getNumericCellValue())));
+                                	}else {
+                                        dataList.add(cell.getNumericCellValue());
                                 	}
-                                    dataList.add(cell.getNumericCellValue());
                                 }
                                 break;
                             case STRING:
